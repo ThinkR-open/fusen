@@ -1,4 +1,4 @@
-Package: blowbox
+Package: fusen
 Title: Build A Package From Rmarkdown file
 Version: 0.0.0.9000
 Authors@R: c(
@@ -14,3 +14,6 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 6.1.1
 Imports: 
     magrittr
+Suggests: 
+    knitr,
+    rmarkdown

@@ -4,6 +4,7 @@ usethis::use_build_ignore("inst/dev")
 usethis::use_build_ignore("rsconnect")
 usethis::use_git_ignore("docs/")
 usethis::use_git_ignore("rsconnect/")
+usethis::use_build_ignore("img")
 # usethis::create_package(".")
 
 # description ----
@@ -11,7 +12,7 @@ library(desc)
 unlink("DESCRIPTION")
 my_desc <- description$new("!new")
 my_desc$set_version("0.0.0.9000")
-my_desc$set(Package = "blowbox")
+my_desc$set(Package = "fusen")
 my_desc$set(Title = "Build A Package From Rmarkdown file")
 my_desc$set(Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.")
 my_desc$set("Authors@R",
@@ -41,6 +42,7 @@ usethis::use_test("app")
 
 # _CI
 usethis::use_git()
+usethis::use_github()
 # usethis::use_travis()
 # usethis::use_appveyor()
 # usethis::use_coverage()
