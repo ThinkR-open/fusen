@@ -1,0 +1,16 @@
+Package: blowbox
+Title: Build A Package From Rmarkdown file
+Version: 0.0.0.9000
+Authors@R: c(
+  person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+  person(given = "ThinkR", role = "cph")
+ )
+Description: Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.
+License: MIT + file LICENSE
+LazyData: true
+Encoding: UTF-8
+VignetteBuilder: knitr
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 6.1.1
+Imports: 
+    magrittr
