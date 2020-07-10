@@ -52,6 +52,7 @@ usethis::use_github()
 
 
 # Documentation ----
+usethis::use_data_raw()
 # _Readme
 usethis::use_readme_rmd()
 # _News

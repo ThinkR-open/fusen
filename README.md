@@ -7,6 +7,8 @@
 
 <!-- badges: end -->
 
+> Inflate your package from your flat Rmd
+
 A fusen is an origami. It is a page of paper that you fold in a specific
 way so that at the end, you can magically inflate it to let a nice box
 appear.
