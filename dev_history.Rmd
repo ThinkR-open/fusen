@@ -116,7 +116,7 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
   
   path <- normalizePath(pkg)
   
-  desc_file <- path(path, "DESCRIPTION")
+  desc_file <- file.path(path, "DESCRIPTION")
   
   if (file.exists(desc_file) & !isTRUE(overwrite)) {
     stop("DESCRIPTION already exists. Set overwrite = TRUE to overwrite.") 
@@ -235,7 +235,7 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
   }
   
   if(!file.exists(rmd_path)){
-    stop(rmd, "does not exists, please use fusen::add_dev_history() to create it.")
+    stop(rmd, " does not exists, please use fusen::add_dev_history() to create it.")
   }
   
   # Create NAMESPACE
@@ -252,25 +252,78 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
   R_dir <- file.path(pkg_path, "R")
   if (!dir.exists(R_dir)) {dir.create(R_dir)}
   
-  # Check if there are functions
-  rmd_fun <- parsed_tbl[!is.na(parsed_tbl$label) &
-                          grepl("function", parsed_tbl$label),]
+  # Check if there are functions ----
+  which_parsed_fun <- which(!is.na(parsed_tbl$label) &
+                          grepl("function", parsed_tbl$label))
+  rmd_fun <- parsed_tbl[which_parsed_fun,]
   if (nrow(rmd_fun) != 0) {
     parse_fun <- function(x) { # x <- rmd_fun[1,]
       code <- rmd_get_chunk(x)$code
       # find function name
       fun_name <- stringr::str_extract(
-        code[grep("function", code)],
+        code[grep("function(\\s*)\\(", code)],
         "\\w*(?=(\\s*)(<-|=)(\\s*)function)"
       ) %>% 
         gsub(" ", "", .) # remove spaces
       
       # create R file with code content and fun name
       r_file <- file.path(pkg_path, "R", paste0(fun_name, ".R"))
-      if (file.exists(r_file)) {warning(r_file, "has been overwritten")}
+      if (file.exists(r_file)) {warning(basename(r_file), " has been overwritten")}
       cat(code, file = r_file, sep = "\n")
+      
+      fun_name
     }
-    lapply(rmd_fun, parse_fun)
+    fun_names <- unlist(lapply(seq_along(nrow(rmd_fun)), function(x) parse_fun(rmd_fun[x,])))
+    
+    # Add function name to parsed_tbl ----
+    parsed_tbl$order <- 1:nrow(parsed_tbl)
+    parsed_tbl$sec_title <- paste(parsed_tbl[["sec_h1"]], parsed_tbl[["sec_h2"]], sep = "-")
+    parsed_tbl$fun <- NA_character_
+    # Function name
+    parsed_tbl[["fun"]][which_parsed_fun] <- fun_names
+        
+    pkg_filled <- lapply(na.omit(unique(parsed_tbl[["sec_title"]])), function(x) {
+      group <- which(parsed_tbl[["sec_title"]] == x)
+      parsed_tbl[group,] <- tidyr::fill(parsed_tbl[group,], fun)
+    }) %>% 
+      do.call("rbind", .)
+    parsed_tbl[["fun"]][pkg_filled[["order"]]] <- pkg_filled[["fun"]]
+  }
+  
+  
+  # Check if there are unit tests ----
+  rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
+                          grepl("test", parsed_tbl$label),]
+  if (nrow(rmd_test) != 0) {
+    # setup testhat
+    test_dir <- file.path(pkg_path, "tests")
+    if (!dir.exists(test_dir)) {
+      dir.create(test_dir)
+      dir.create(file.path(test_dir, "testthat"))
+      cat('library(testthat)',
+          paste0('library(', basename(pkg_path), ')'),
+          '',
+          paste0('test_check("', basename(pkg_path), '")'),
+          sep = "\n",
+          file = file.path(test_dir, "testthat.R"))
+    }
+    
+    parse_test <- function(x) { # x <- rmd_test[1,]
+      code <- rmd_get_chunk(x)$code
+
+      # create R file with code content and fun name
+      fun_name <- x[["fun"]]
+      if (is.na(fun_name) || fun_name == "") {
+        stop("No function found associated to chunk ", x[["label"]])
+      }
+      
+      test_file <- file.path(pkg_path, "tests", "testthat", paste0("test_", fun_name, ".R"))
+      if (file.exists(test_file)) {warning(basename(test_file), " has been overwritten")}
+      cat(code, file = test_file, sep = "\n")
+      
+      fun_name
+    }
+    out <- unlist(lapply(seq_along(nrow(rmd_test)), function(x) parse_test(rmd_test[x,])))
   }
   
   

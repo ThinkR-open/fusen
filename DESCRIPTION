@@ -11,9 +11,10 @@ LazyData: true
 Encoding: UTF-8
 VignetteBuilder: knitr
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.1
 Imports: 
     magrittr
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat
