@@ -5,3 +5,4 @@
 ^README\.Rmd$
 ^img$
 ^data-raw$
+^dev_history\.Rmd$

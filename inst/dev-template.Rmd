@@ -1,0 +1,81 @@
+---
+title: "dev_history.Rmd for working package"
+author: "Sébastien Rochette"
+date: "23/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(testthat)
+```
+
+# Description of your package
+
+This will fill the description of your package.
+Add this chunk using `fusen::description_chunk()`
+```{r description}
+fill_description(
+  pkg = dummypackage,
+  fields = list(
+    Title = "Build A Package From Rmarkdown file",
+    Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.",
+    `Authors@R` = c(
+      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+      person(given = "ThinkR", role = "cph")
+    )
+  )
+)
+```
+
+# Calculate the median of a vector
+
+```{r function}
+#' My median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' # Do not fill if you have an example chunk following this function
+my_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+```{r examples}
+my_median(1:12)
+```
+
+```{r tests}
+test_that("my_median works properly and show error if needed", {
+  expect_true(my_median(1:12) == 6.5)
+  expect_error(my_median("text"))
+})
+```
+
+# There can be development actions
+
+These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
+
+```{r dev}
+# fusen::inflate() # Run but keep commented to avoid infinite loop
+usethis::use_mit_license("Sébastien Rochette")
+```
+
+
+# Inflate your package
+
+You're one inflate from paper to box.
+Build your package from this very Rmarkdown using `fusen::inflate()`
+
+- Verify your `"DESCRIPTION"` file has been updated
+- Verify your function is in `"R/"` directory
+- Verify your test is in `"tests/testthat/"` directory
+- Verify this Rmd appears in `"vignettes/"` directory

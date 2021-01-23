@@ -1,0 +1,302 @@
+---
+title: "dev_history.Rmd"
+author: "Sébastien Rochette"
+date: "23/01/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = TRUE
+)
+
+library(testthat)
+```
+
+# A chunk for package description
+
+This will fill the description of your package.
+Add this chunk using `fusen::description_chunk()`
+```{r description}
+fusen::fill_description(
+  fields = list(
+    Title = "Build A Package From Rmarkdown file",
+    Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.",
+    `Authors@R` = c(
+      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+      person(given = "ThinkR", role = "cph")
+    )
+  )
+)
+```
+
+# Add dev_history template
+
+```{r function}
+#' Add dev_history.Rmd file that drives package development
+#'
+#' @param pkg Path where to save file
+#' @param overwrite Whether to overwrite existing dev_history.Rmd file
+#'
+#' @return
+#' Create a dev_history.Rmd file and return its path
+#' @export
+#'
+#' @examples
+add_dev_history <- function(pkg = ".", overwrite = FALSE) {
+  pkg_path <- normalizePath(pkg)
+  dev_path <- file.path(pkg_path, "dev_history.Rmd")
+  if (file.exists(dev_path) & overwrite == FALSE) {
+    stop("dev_history.Rmd already existed. It was not deleted.")
+  } else {
+    file.copy(system.file("dev-template.Rmd", package = "fusen"),
+              dev_path)
+  }
+  
+  cat('^dev_history\\.Rmd$', file = file.path(pkg_path, ".Rbuildignore"))
+  dev_path
+}
+```
+
+```{r example}
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+dir.create(dummypackage)
+browseURL(dummypackage)
+
+# Add
+add_dev_history(pkg = dummypackage, overwrite = TRUE)
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+```
+
+```{r tests}
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+dir.create(dummypackage)
+browseURL(dummypackage)
+
+# Add
+add_dev_history(pkg = dummypackage)
+
+test_that("add_dev_history adds dev_history.Rmd", {
+  expect_true(file.exists(file.path(dummypackage, "dev_history.Rmd")))
+  expect_true(file.exists(file.path(dummypackage, ".RBuildignore")))
+  
+  # Second time error
+  expect_error(add_dev_history(pkg = dummypackage))
+})
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+```
+
+
+
+# fill_description
+
+```{r function}
+#' Fill DESCRIPTION file of the package
+#'
+#' @param pkg Path to package
+#' @param overwrite Whether to overwrite existing DESCRIPTION
+#' @inheritParams usethis use_description_defaults
+#'
+#' @return
+#' FIll DESCRIPTION file with fields. Return path to file.
+#' @export
+#'
+#' @examples
+fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
+  old <- setwd(pkg)
+  on.exit(old)
+  
+  path <- normalizePath(pkg)
+  
+  desc_file <- path(path, "DESCRIPTION")
+  
+  if (file.exists(desc_file) & !isTRUE(overwrite)) {
+    stop("DESCRIPTION already exists. Set overwrite = TRUE to overwrite.") 
+  }
+    # usethis::use_description(fields = fields)
+    
+    fields_new <- usethis::use_description_defaults(
+      package = basename(path),
+      roxygen = TRUE,
+      fields = fields)
+    desc <- desc::desc(text = glue::glue("{names(fields_new)}: {fields_new}"))
+  
+  desc$write(file = desc_file)
+  desc_file
+}
+```
+
+```{r example}
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+dir.create(dummypackage)
+browseURL(dummypackage)
+
+fill_description(
+  pkg = dummypackage,
+  fields = list(
+    Title = "Build A Package From Rmarkdown file",
+    Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.",
+    `Authors@R` = c(
+      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+      person(given = "ThinkR", role = "cph")
+    )
+  )
+)
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+```
+
+```{r tests}
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+dir.create(dummypackage)
+
+fill_description(
+  pkg = dummypackage,
+  fields = list(
+    Title = "Build A Package From Rmarkdown file",
+    Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.",
+    `Authors@R` = c(
+      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+      person(given = "ThinkR", role = "cph")
+    )
+  )
+)
+
+test_that("fill_description adds DESCRIPTION", {
+  expect_true(file.exists(file.path(dummypackage, "DESCRIPTION")))
+  lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
+  expect_true(lines[1] == "Package: dummypackage")
+  
+  # Second launch error and no change
+  expect_error(fill_description(
+    pkg = dummypackage, fields = list(Title = "Second launch")))
+  lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
+  expect_true(lines[1] == "Package: dummypackage")
+})
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+```
+
+# There can be development actions
+
+These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
+
+```{r dev, eval=FALSE}
+usethis::use_mit_license("Sébastien Rochette")
+```
+
+
+# Inflate your package
+
+You're one inflate from paper to box.
+Build your package from this very Rmarkdown using `fusen::inflate()`
+
+- Verify your `"DESCRIPTION"` file has been updated
+- Verify your function is in `"R/"` directory
+- Verify your test is in `"tests/testthat/"` directory
+- Verify this Rmd appears in `"vignettes/"` directory
+
+```{r function}
+library(parsermd)
+
+#' Inflate Rmd to package
+#'
+#' @param pkg Path to package
+#' @param x Path to Rmd file to inflate
+#'
+#' @return
+#' Package structure. Return path to current package.
+#' @export
+#'
+#' @examples
+inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
+  pkg_path <- normalizePath(pkg)
+  rmd <- normalizePath(rmd, mustWork = FALSE)
+  
+  if (grepl(pkg_path, rmd)) {
+    # Rmd already contains pkgpath
+    rmd_path <- rmd
+  } else {
+    rmd_path <- file.path(pkg_path, rmd)
+  }
+  
+  if(!file.exists(rmd_path)){
+    stop(rmd, "does not exists, please use fusen::add_dev_history() to create it.")
+  }
+  
+  # Create NAMESPACE
+  namespace_file <- file.path(pkg_path, "NAMESPACE")
+  if (!file.exists(namespace_file)) {
+    roxygen2::roxygenise(pkg_path)
+  }
+  
+  parsed_rmd <- parse_rmd(rmd)
+  parsed_tbl <- as_tibble(parsed_rmd)
+
+  # Get functions ----
+  # Create R directory if needed
+  R_dir <- file.path(pkg_path, "R")
+  if (!dir.exists(R_dir)) {dir.create(R_dir)}
+  
+  # Check if there are functions
+  rmd_fun <- parsed_tbl[!is.na(parsed_tbl$label) &
+                          grepl("function", parsed_tbl$label),]
+  if (nrow(rmd_fun) != 0) {
+    parse_fun <- function(x) { # x <- rmd_fun[1,]
+      code <- rmd_get_chunk(x)$code
+      # find function name
+      fun_name <- stringr::str_extract(
+        code[grep("function", code)],
+        "\\w*(?=(\\s*)(<-|=)(\\s*)function)"
+      ) %>% 
+        gsub(" ", "", .) # remove spaces
+      
+      # create R file with code content and fun name
+      r_file <- file.path(pkg_path, "R", paste0(fun_name, ".R"))
+      if (file.exists(r_file)) {warning(r_file, "has been overwritten")}
+      cat(code, file = r_file, sep = "\n")
+    }
+    lapply(rmd_fun, parse_fun)
+  }
+  
+  
+  # Run attachment
+  attachment::att_amend_desc(path = pkg_path)
+
+  # Check
+  if (isTRUE(check)) {
+    devtools::check(pkg = pkg_path)
+  }
+}
+```
+
+```{r example}
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+
+inflate(pkg = dummypackage, rmd = dev_file)
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+```
+
