@@ -248,17 +248,39 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
   parsed_tbl <- as_tibble(parsed_rmd)
   
   # Get functions ----
+  # Check if there are functions ----
+  fun_code <- get_functions(parsed_tbl)
+  fun_names <- fun_code[["fun_name"]] 
+  parsed_tbl <- add_fun_to_parsed(parsed_tbl, fun_names)
+  # _Get examples
+  fun_code <- add_fun_code_examples(fun_code)
+
+  # _Create function files in R/
   # Create R directory if needed
   R_dir <- file.path(pkg_path, "R")
   if (!dir.exists(R_dir)) {dir.create(R_dir)}
   
-  # Check if there are functions ----
-  # _Get function names ----
-  which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-                          grepl("function", parsed_tbl$label))
-  rmd_fun <- parsed_tbl[which_parsed_fun,]
+  create_r_files(fun_code, pkg_path)
+  create_tests_files(parsed_tbl, pkg_path)
 
-   if (nrow(rmd_fun) != 0) {   
+  # Run attachment
+  attachment::att_amend_desc(path = pkg_path)
+
+  # Check
+  if (isTRUE(check)) {
+    devtools::check(pkg = pkg_path)
+  }
+  
+  pkg_path
+}
+
+#' Get function names ----
+get_functions <- function(parsed_tbl) {
+  which_parsed_fun <- which(!is.na(parsed_tbl$label) &
+                              grepl("function", parsed_tbl$label))
+  rmd_fun <- parsed_tbl[which_parsed_fun,]
+  
+  if (nrow(rmd_fun) != 0) {   
     parse_fun <- function(x) { # x <- rmd_fun[1,]
       code <- rmd_get_chunk(x)$code
       # find function name
@@ -280,87 +302,92 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
     }
     fun_code <- lapply(seq_along(nrow(rmd_fun)), function(x) parse_fun(rmd_fun[x,]))
     fun_code <- do.call("rbind", fun_code)
-    fun_names <- fun_code[["fun_name"]] 
     
-    # Add function name to parsed_tbl ----
-    parsed_tbl$order <- 1:nrow(parsed_tbl)
-    parsed_tbl$sec_title <- paste(parsed_tbl[["sec_h1"]], parsed_tbl[["sec_h2"]], sep = "-")
-    parsed_tbl$fun_name <- NA_character_
-    # Function name
-    parsed_tbl[["fun_name"]][which_parsed_fun] <- fun_names
-        
-    pkg_filled <- lapply(na.omit(unique(parsed_tbl[["sec_title"]])), function(x) {
-      group <- which(parsed_tbl[["sec_title"]] == x)
-      parsed_tbl[group,] <- tidyr::fill(parsed_tbl[group,], fun_name)
-    }) %>% 
-      do.call("rbind", .)
-    parsed_tbl[["fun_name"]][pkg_filled[["order"]]] <- pkg_filled[["fun_name"]]
-    
-    # _Get examples
-    # Example already in skeleton
-    fun_code$example_in <- apply(fun_code, 1, function(x) {
-      # browser()
-      if (length(x[["example_pos_start"]]) == 1) {
-        list(x[["code"]][x[["example_pos_start"]]:x[["example_pos_end"]]])
-      } else {
-        list("#' @examples")
-      }
-    }) %>% lapply(., function(x) x[[1]])
-
-    # Example in separate chunk
-      which_parsed_ex <- which(!is.na(parsed_tbl$label) &
-                          grepl("example", parsed_tbl$label))
-      rmd_ex <- parsed_tbl[which_parsed_ex,]
-      
-      if (nrow(rmd_ex) != 0) {  
-        example_code <- lapply(seq_along(nrow(rmd_ex)), 
-                          function(x) {
-                            tibble::tibble(
-                              fun_name = rmd_ex[x,][["fun_name"]],
-                              example_chunk = paste("#'", rmd_get_chunk(rmd_ex[x,])$code)
-                            )
-                          })
-        # Add to function tibble
-        fun_code <- merge(fun_code, example_code, by = "fun_name") %>% tibble::as_tibble()
-        fun_code[["example"]] <- lapply(seq_along(nrow(fun_code)), function(x) {
-          unlist(c(fun_code[["example_in"]][x], fun_code[["example_chunk"]][x]))
-        })
-        
-        # Add to function code
-        fun_code[["code_example"]] <- lapply(seq_along(nrow(fun_code)), function(x) {
-          fun_code_x <- fun_code[x,]
-          all_fun_code <- c(
-            unlist(fun_code_x[["code"]])[1:(fun_code_x[["example_pos_start"]]-1)],
-            unlist(fun_code_x[["example"]]),
-            unlist(fun_code_x[["code"]])[
-              (fun_code_x[["example_pos_end"]]+1):length(unlist(fun_code_x[["code"]]))]
-            )
-          all_fun_code[!grepl("# Do not fill", all_fun_code)]
-        })
-      } else {
-        fun_code[["code_example"]] <- fun_code[["code"]]
-      }
-      
-    # _Create function files in R/
-    # create R file with code content and fun name
-      create_r_file <- function(x) {
-
-      }
-      r_files <- lapply(seq_along(nrow(fun_code)), function(x) {
-        fun_name <- fun_code[x,][["fun_name"]]
-        r_file <- file.path(pkg_path, "R", paste0(fun_name, ".R"))
-        if (file.exists(r_file)) {warning(basename(r_file), " has been overwritten")}
-        cat(
-          unlist(fun_code[x,][["code_example"]]),
-          file = r_file, sep = "\n")
-        r_file
-      })
   }
+}
+
+#' Add function name to parsed_tbl ----
+add_fun_to_parsed <- function(parsed_tbl, fun_names) {
+  parsed_tbl$order <- 1:nrow(parsed_tbl)
+  parsed_tbl$sec_title <- paste(parsed_tbl[["sec_h1"]], parsed_tbl[["sec_h2"]], sep = "-")
+  parsed_tbl$fun_name <- NA_character_
+  # Function name
+  parsed_tbl[["fun_name"]][which_parsed_fun] <- fun_names
   
+  pkg_filled <- lapply(na.omit(unique(parsed_tbl[["sec_title"]])), function(x) {
+    group <- which(parsed_tbl[["sec_title"]] == x)
+    parsed_tbl[group,] <- tidyr::fill(parsed_tbl[group,], fun_name)
+  }) %>% 
+    do.call("rbind", .)
+  parsed_tbl[["fun_name"]][pkg_filled[["order"]]] <- pkg_filled[["fun_name"]]
+  parsed_tbl
+}
+
+#' Add examples in function code
+add_fun_code_examples <- function(fun_code) {
+  #  Example already in skeleton
+  fun_code$example_in <- apply(fun_code, 1, function(x) {
+    # browser()
+    if (length(x[["example_pos_start"]]) == 1) {
+      list(x[["code"]][x[["example_pos_start"]]:x[["example_pos_end"]]])
+    } else {
+      list("#' @examples")
+    }
+  }) %>% lapply(., function(x) x[[1]])
   
-  # Check if there are unit tests ----
+  # Example in separate chunk
+  which_parsed_ex <- which(!is.na(parsed_tbl$label) &
+                             grepl("example", parsed_tbl$label))
+  rmd_ex <- parsed_tbl[which_parsed_ex,]
+  
+  if (nrow(rmd_ex) != 0) {  
+    example_code <- lapply(seq_along(nrow(rmd_ex)), 
+                           function(x) {
+                             tibble::tibble(
+                               fun_name = rmd_ex[x,][["fun_name"]],
+                               example_chunk = paste("#'", rmd_get_chunk(rmd_ex[x,])$code)
+                             )
+                           })
+    # Add to function tibble
+    fun_code <- merge(fun_code, example_code, by = "fun_name") %>% tibble::as_tibble()
+    fun_code[["example"]] <- lapply(seq_along(nrow(fun_code)), function(x) {
+      unlist(c(fun_code[["example_in"]][x], fun_code[["example_chunk"]][x]))
+    })
+    
+    # Add to function code
+    fun_code[["code_example"]] <- lapply(seq_along(nrow(fun_code)), function(x) {
+      fun_code_x <- fun_code[x,]
+      all_fun_code <- c(
+        unlist(fun_code_x[["code"]])[1:(fun_code_x[["example_pos_start"]]-1)],
+        unlist(fun_code_x[["example"]]),
+        unlist(fun_code_x[["code"]])[
+          (fun_code_x[["example_pos_end"]]+1):length(unlist(fun_code_x[["code"]]))]
+      )
+      all_fun_code[!grepl("# Do not fill", all_fun_code)]
+    })
+  } else {
+    fun_code[["code_example"]] <- fun_code[["code"]]
+  }
+  fun_code
+}
+
+#' create R file with code content and fun name
+create_r_files <- function(fun_code, pkg_path) {
+  r_files <- lapply(seq_along(nrow(fun_code)), function(x) {
+    fun_name <- fun_code[x,][["fun_name"]]
+    r_file <- file.path(pkg_path, "R", paste0(fun_name, ".R"))
+    if (file.exists(r_file)) {warning(basename(r_file), " has been overwritten")}
+    cat(
+      unlist(fun_code[x,][["code_example"]]),
+      file = r_file, sep = "\n")
+    r_file
+  })
+}
+
+# Check if there are unit tests ----
+create_tests_files <- function(parsed_tbl, pkg_path) {
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
-                          grepl("test", parsed_tbl$label),]
+                           grepl("test", parsed_tbl$label),]
   if (nrow(rmd_test) != 0) {
     # setup testhat
     test_dir <- file.path(pkg_path, "tests")
@@ -377,9 +404,9 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
     
     parse_test <- function(x) { # x <- rmd_test[1,]
       code <- rmd_get_chunk(x)$code
-
+      
       # create R file with code content and fun name
-      fun_name <- x[["fun"]]
+      fun_name <- x[["fun_name"]]
       if (is.na(fun_name) || fun_name == "") {
         stop("No function found associated to chunk ", x[["label"]])
       }
@@ -392,16 +419,6 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
     }
     out <- unlist(lapply(seq_along(nrow(rmd_test)), function(x) parse_test(rmd_test[x,])))
   }
-  
-  # Run attachment
-  attachment::att_amend_desc(path = pkg_path)
-
-  # Check
-  if (isTRUE(check)) {
-    devtools::check(pkg = pkg_path)
-  }
-  
-  pkg_path
 }
 ```
 
