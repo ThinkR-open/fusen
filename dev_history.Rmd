@@ -11,10 +11,33 @@ library(testthat)
 usethis::use_code_of_conduct()
 ```
 
+# How to use {fusen}
+
+- Create a new directory / new project
+- Add the Rmarkdown template
+- Follow the `"dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
+  - Chunk named `function` gets the code of a function
+  - Chunk named `example` gets the code for examples of using the function. This will be used for function `@examples` and will be kept for the vignette
+  - Chunk named `tests` gets the code for unit testing
+  - Chunk named `development` gets the code for development purposes, usually only used once like {usethis} functions
+- Inflate the template to transform it as a package with functions, unit tests and the current Rmd transformed as a vignette. And check.
+- Build your {pkgdown} site to verify everything is at the right place
+
+## Limitations
+
+- One title / one chunk is for one function
+- `examples` and `tests` chunks need to be placed after the associated `function` chunk
+- You can add sub-functions in the `function` chunk to store them in the same R file, but they won't have `@examples`. Only the first function of the chunk will be able to get examples.
+- As for any Rmd file, chunk names need to be unique. Thus, you can use `examples-1`, `examples-2`, ...
+- _Do not forget to regularly clear your Workspace to avoid functions hidden by global environment_
+
+<!--
 # A chunk for package description
 
 This will fill the description of your package.
 Add this chunk using `fusen::description_chunk()`
+-->
+
 ```{r description}
 fusen::fill_description(
   fields = list(
@@ -45,22 +68,39 @@ fusen::fill_description(
 add_dev_history <- function(pkg = ".", overwrite = FALSE, open = TRUE) {
   old <- setwd(pkg)
   on.exit(setwd(old))
-  
+
   pkg_path <- normalizePath(pkg)
   dev_path <- file.path(pkg_path, "dev_history.Rmd")
-  
+
   if (file.exists(dev_path) & overwrite == FALSE) {
     n < length(list.files(pattern = "^dev_history"))
     dev_path <- file.path(pkg_path, paste0("dev_history_", n + 1, ".Rmd"))
-    message("dev_history.Rmd already exists. New dev file is renamed '",
-            basename(dev_path), "'. Use overwrite = TRUE, if you want to ",
-            "overwrite the existing dev_history.Rmd file, or rename it.")
-  } 
-  file.copy(system.file("dev-template.Rmd", package = "fusen"),
-            dev_path)
-  
-  if (!file.exists(".Rbuildignore")) {file.create(".Rbuildignore")}
-  usethis::use_build_ignore(basename(dev_path))
+    message(
+      "dev_history.Rmd already exists. New dev file is renamed '",
+      basename(dev_path), "'. Use overwrite = TRUE, if you want to ",
+      "overwrite the existing dev_history.Rmd file, or rename it."
+    )
+  }
+  file.copy(
+    system.file("dev-template.Rmd", package = "fusen"),
+    dev_path
+  )
+
+  # .Rbuildignore
+  # Files to ignore
+  lines <- paste0("^", gsub(".", "\\.", basename(dev_path), fixed = TRUE), "$")
+
+  buildfile <- normalizePath(file.path(pkg_path, ".Rbuildignore"), mustWork = FALSE)
+  if (!file.exists(buildfile)) {
+    existing_lines <- ""
+  } else {
+    existing_lines <- readLines(buildfile, warn = FALSE, encoding = "UTF-8")
+  }
+  new <- setdiff(lines, existing_lines)
+  if (length(new) != 0) {
+    all <- c(existing_lines, new)
+    cat(all, file = buildfile, sep = "\n")
+  }
 
   dev_path
 }
@@ -92,8 +132,11 @@ add_dev_history(pkg = dummypackage, open = FALSE)
 
 test_that("add_dev_history adds dev_history.Rmd", {
   expect_true(file.exists(file.path(dummypackage, "dev_history.Rmd")))
-  expect_true(file.exists(file.path(dummypackage, ".RBuildignore")))
-  
+  rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
+  expect_true(file.exists(rbuildignore_file))
+  rbuildignore_lines <- readLines(rbuildignore_file)
+  expect_true(any(grepl("^dev_history\\.Rmd$", rbuildignore_lines, fixed = TRUE)))
+
   # Second time error
   expect_error(add_dev_history(pkg = dummypackage))
 })
@@ -106,7 +149,7 @@ unlink(dummypackage, recursive = TRUE)
 
 # fill_description
 
-```{r function}
+```{r function-2}
 #' Fill DESCRIPTION file of the package
 #'
 #' @param pkg Path to package
@@ -121,28 +164,29 @@ unlink(dummypackage, recursive = TRUE)
 fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
   old <- setwd(pkg)
   on.exit(setwd(old))
-  
+
   path <- normalizePath(pkg)
-  
+
   desc_file <- file.path(path, "DESCRIPTION")
-  
+
   if (file.exists(desc_file) & !isTRUE(overwrite)) {
-    stop("DESCRIPTION already exists. Set overwrite = TRUE to overwrite.") 
+    stop("DESCRIPTION already exists. Set overwrite = TRUE to overwrite.")
   }
-    # usethis::use_description(fields = fields)
-    
-    fields_new <- usethis::use_description_defaults(
-      package = basename(path),
-      roxygen = TRUE,
-      fields = fields)
-    desc <- desc::desc(text = glue::glue("{names(fields_new)}: {fields_new}"))
-  
+  # usethis::use_description(fields = fields)
+
+  fields_new <- usethis::use_description_defaults(
+    package = basename(path),
+    roxygen = TRUE,
+    fields = fields
+  )
+  desc <- desc::desc(text = glue::glue("{names(fields_new)}: {fields_new}"))
+
   desc$write(file = desc_file)
   desc_file
 }
 ```
 
-```{r example}
+```{r example-2}
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
@@ -165,7 +209,7 @@ fill_description(
 unlink(dummypackage, recursive = TRUE)
 ```
 
-```{r tests}
+```{r tests-2}
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
@@ -187,10 +231,11 @@ test_that("fill_description adds DESCRIPTION", {
   expect_true(file.exists(file.path(dummypackage, "DESCRIPTION")))
   lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
   expect_true(lines[1] == "Package: dummypackage")
-  
+
   # Second launch error and no change
   expect_error(fill_description(
-    pkg = dummypackage, fields = list(Title = "Second launch")))
+    pkg = dummypackage, fields = list(Title = "Second launch")
+  ))
   lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
   expect_true(lines[1] == "Package: dummypackage")
 })
@@ -203,8 +248,10 @@ unlink(dummypackage, recursive = TRUE)
 
 These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
 
-```{r dev, eval=FALSE}
+```{r development, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
 usethis::use_mit_license("Sébastien Rochette")
+fusen::inflate(rmd = "dev_history.Rmd")
 ```
 
 
@@ -218,7 +265,7 @@ Build your package from this very Rmarkdown using `fusen::inflate()`
 - Verify your test is in `"tests/testthat/"` directory
 - Verify this Rmd appears in `"vignettes/"` directory
 
-```{r function}
+```{r function-3}
 library(parsermd)
 
 #' Inflate Rmd to package
@@ -239,51 +286,55 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", name = "exploration", ch
 
   pkg_path <- normalizePath(pkg)
   rmd <- normalizePath(rmd, mustWork = FALSE)
-  
+
   if (length(list.files(pkg_path, pattern = ".Rproj")) > 0) {
-    if (!file.exists(".Rbuildignore")) {file.create(".Rbuildignore")}
+    if (!file.exists(".Rbuildignore")) {
+      file.create(".Rbuildignore")
+    }
     usethis::use_build_ignore(basename(rmd))
     usethis::use_build_ignore(paste0(basename(pkg), ".Rproj"))
     usethis::use_build_ignore(".Rproj.user")
   }
-    
+
   if (grepl(pkg_path, rmd)) {
     # Rmd already contains pkgpath
     rmd_path <- rmd
   } else {
     rmd_path <- file.path(pkg_path, rmd)
   }
-  
-  if(!file.exists(rmd_path)){
+
+  if (!file.exists(rmd_path)) {
     stop(rmd, " does not exists, please use fusen::add_dev_history() to create it.")
   }
-  
+
   # Create NAMESPACE
   namespace_file <- file.path(pkg_path, "NAMESPACE")
   if (!file.exists(namespace_file)) {
     roxygen2::roxygenise(pkg_path)
   }
-  
+
   parsed_rmd <- parse_rmd(rmd)
   parsed_tbl <- as_tibble(parsed_rmd)
-  
+
   # Get functions ----
   # Check if there are functions ----
   fun_code <- get_functions(parsed_tbl)
-  fun_names <- fun_code[["fun_name"]] 
+  fun_names <- fun_code[["fun_name"]]
   parsed_tbl <- add_fun_to_parsed(parsed_tbl, fun_names)
   # _Get examples
-  fun_code <- add_fun_code_examples(fun_code)
+  fun_code <- add_fun_code_examples(parsed_tbl, fun_code)
 
   # _Create function files in R/
   # Create R directory if needed
   R_dir <- file.path(pkg_path, "R")
-  if (!dir.exists(R_dir)) {dir.create(R_dir)}
-  
+  if (!dir.exists(R_dir)) {
+    dir.create(R_dir)
+  }
+
   create_r_files(fun_code, pkg_path)
   create_tests_files(parsed_tbl, pkg_path)
-  create_vignette(parsed_tbl, pkg_path, name) 
-  
+  create_vignette(parsed_tbl, pkg_path, name)
+
   # Run attachment
   attachment::att_amend_desc(path = pkg_path)
 
@@ -291,121 +342,155 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", name = "exploration", ch
   if (isTRUE(check)) {
     devtools::check(pkg = pkg_path)
   }
-  
+
   pkg_path
 }
 
 #' Get function names ----
 #' @param parsed_tbl tibble of a parsed Rmd
 get_functions <- function(parsed_tbl) {
-  which_parsed_fun <-   which(!is.na(parsed_tbl$label) &
-                              grepl("function", parsed_tbl$label))
-  rmd_fun <- parsed_tbl[which_parsed_fun,]
-  
-  if (nrow(rmd_fun) != 0) {   
-    parse_fun <- function(x) { # x <- rmd_fun[1,]
+  which_parsed_fun <- which(!is.na(parsed_tbl$label) &
+    grepl("function", parsed_tbl$label))
+  rmd_fun <- parsed_tbl[which_parsed_fun, ]
+
+  if (nrow(rmd_fun) != 0) {
+    parse_fun <- function(x) { # x <- rmd_fun[3,]
+      # browser()
       code <- rmd_get_chunk(x)$code
       # find function name
       fun_name <- stringr::str_extract(
         code[grep("function(\\s*)\\(", code)],
         "\\w*(?=(\\s*)(<-|=)(\\s*)function)"
-      ) %>% 
+      ) %>%
         gsub(" ", "", .) # remove spaces
-      
+
       all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
-      example_pos_start <- grep("^#'\\s*@example", code)
+      example_pos_start <- grep("^#'\\s*@example", code)[1]
+
       example_pos_end <- all_arobase[all_arobase > example_pos_start][1] - 1
-      
+      example_pos_end <- ifelse(is.na(example_pos_end),
+        grep("function(\\s*)\\(", code) - 1,
+        example_pos_end
+      )
+
       tibble::tibble(
-        fun_name = fun_name,
+        fun_name = fun_name[1],
         code = list(code),
         example_pos_start = example_pos_start,
-        example_pos_end = example_pos_end)
+        example_pos_end = example_pos_end
+      )
     }
-    fun_code <- lapply(seq_along(nrow(rmd_fun)), function(x) parse_fun(rmd_fun[x,]))
+    fun_code <- lapply(seq_len(nrow(rmd_fun)), function(x) parse_fun(rmd_fun[x, ]))
     fun_code <- do.call("rbind", fun_code)
-    
+    fun_code
   }
 }
 
 #' Add function name to parsed_tbl ----
 #' @param parsed_tbl tibble of a parsed Rmd
 add_fun_to_parsed <- function(parsed_tbl, fun_names) {
-  which_parsed_fun <-   which(!is.na(parsed_tbl$label) &
-                              grepl("function", parsed_tbl$label))
-  
+  which_parsed_fun <- which(!is.na(parsed_tbl$label) &
+    grepl("function", parsed_tbl$label))
+
   parsed_tbl$order <- 1:nrow(parsed_tbl)
   parsed_tbl$sec_title <- paste(parsed_tbl[["sec_h1"]], parsed_tbl[["sec_h2"]], sep = "-")
   parsed_tbl$fun_name <- NA_character_
   # Function name
   parsed_tbl[["fun_name"]][which_parsed_fun] <- fun_names
-  
+
   pkg_filled <- lapply(na.omit(unique(parsed_tbl[["sec_title"]])), function(x) {
     group <- which(parsed_tbl[["sec_title"]] == x)
-    parsed_tbl[group,] <- tidyr::fill(parsed_tbl[group,], fun_name)
-  }) %>% 
+    parsed_tbl[group, ] <- tidyr::fill(parsed_tbl[group, ], fun_name)
+  }) %>%
     do.call("rbind", .)
   parsed_tbl[["fun_name"]][pkg_filled[["order"]]] <- pkg_filled[["fun_name"]]
   parsed_tbl
 }
 
 #' Add examples in function code
-add_fun_code_examples <- function(fun_code) {
+add_fun_code_examples <- function(parsed_tbl, fun_code) {
   #  Example already in skeleton
   fun_code$example_in <- apply(fun_code, 1, function(x) {
     # browser()
-    if (length(x[["example_pos_start"]]) == 1) {
+    if (!is.na(x[["example_pos_start"]]) && length(x[["example_pos_start"]]) == 1) {
       list(x[["code"]][x[["example_pos_start"]]:x[["example_pos_end"]]])
     } else {
       list("#' @examples")
     }
   }) %>% lapply(., function(x) x[[1]])
-  
+
   # Example in separate chunk
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
-                             grepl("example", parsed_tbl$label))
-  rmd_ex <- parsed_tbl[which_parsed_ex,]
-  
-  if (nrow(rmd_ex) != 0) {  
-    example_code <- lapply(seq_along(nrow(rmd_ex)), 
-                           function(x) {
-                             tibble::tibble(
-                               fun_name = rmd_ex[x,][["fun_name"]],
-                               example_chunk = paste("#'", rmd_get_chunk(rmd_ex[x,])$code)
-                             )
-                           })
+    grepl("example", parsed_tbl$label))
+  rmd_ex <- parsed_tbl[which_parsed_ex, ]
+
+  if (nrow(rmd_ex) != 0) {
+    example_code <- lapply(
+      seq_len(nrow(rmd_ex)),
+      function(x) {
+        tibble::tibble(
+          fun_name = rmd_ex[x, ][["fun_name"]],
+          example_chunk = paste("#'", rmd_get_chunk(rmd_ex[x, ])$code)
+        )
+      }
+    ) %>% do.call("rbind", .)
     # Add to function tibble
-    fun_code <- merge(fun_code, example_code, by = "fun_name") %>% tibble::as_tibble()
-    fun_code[["example"]] <- lapply(seq_along(nrow(fun_code)), function(x) {
-      unlist(c(fun_code[["example_in"]][x], fun_code[["example_chunk"]][x]))
-    })
-    
-    # Add to function code
-    fun_code[["code_example"]] <- lapply(seq_along(nrow(fun_code)), function(x) {
-      fun_code_x <- fun_code[x,]
-      all_fun_code <- c(
-        unlist(fun_code_x[["code"]])[1:(fun_code_x[["example_pos_start"]]-1)],
-        unlist(fun_code_x[["example"]]),
-        unlist(fun_code_x[["code"]])[
-          (fun_code_x[["example_pos_end"]]+1):length(unlist(fun_code_x[["code"]]))]
-      )
-      all_fun_code[!grepl("# Do not fill", all_fun_code)]
+    fun_code <- merge(fun_code, example_code, by = "fun_name", all.x = TRUE) %>%
+      tibble::as_tibble()
+    fun_code[["example"]] <- lapply(seq_len(nrow(fun_code)), function(x) {
+      example <- stats::na.omit(unlist(c(
+        fun_code[["example_in"]][x],
+        fun_code[["example_chunk"]][x]
+      )))
     })
   } else {
-    fun_code[["code_example"]] <- fun_code[["code"]]
+    fun_code[["example"]] <- fun_code[["example_in"]]
   }
+
+  # Remove if example is empty
+  fun_code[["example"]] <- lapply(fun_code[["example"]], function(example) {
+    if (length(example) == 1 & example[1] == "#' @examples") {
+      return(NA)
+    } else {
+      return(example)
+    }
+  })
+
+  # Add to function code
+  fun_code[["code_example"]] <- lapply(seq_len(nrow(fun_code)), function(x) {
+    fun_code_x <- fun_code[x, ]
+    all_fun_code <- stats::na.omit(c(
+      # begin
+      unlist(fun_code_x[["code"]])[1:(
+        ifelse(is.na(fun_code_x[["example_pos_start"]]),
+          fun_code_x[["example_pos_end"]],
+          fun_code_x[["example_pos_start"]] - 1
+      ))],
+      # examples
+      unlist(fun_code_x[["example"]]),
+      # end
+      unlist(fun_code_x[["code"]])[
+        (fun_code_x[["example_pos_end"]] + 1):length(unlist(fun_code_x[["code"]]))
+      ]
+    ))
+    all_fun_code[!grepl("# Do not fill", all_fun_code)]
+  })
+
   fun_code
 }
 
 #' create R file with code content and fun name
 create_r_files <- function(fun_code, pkg_path) {
-  r_files <- lapply(seq_along(nrow(fun_code)), function(x) {
-    fun_name <- fun_code[x,][["fun_name"]]
+  r_files <- lapply(seq_len(nrow(fun_code)), function(x) {
+    fun_name <- fun_code[x, ][["fun_name"]]
     r_file <- file.path(pkg_path, "R", paste0(fun_name, ".R"))
-    if (file.exists(r_file)) {warning(basename(r_file), " has been overwritten")}
+    if (file.exists(r_file)) {
+      warning(basename(r_file), " has been overwritten")
+    }
     cat(
-      unlist(fun_code[x,][["code_example"]]),
-      file = r_file, sep = "\n")
+      unlist(fun_code[x, ][["code_example"]]),
+      file = r_file, sep = "\n"
+    )
     r_file
   })
 }
@@ -413,37 +498,40 @@ create_r_files <- function(fun_code, pkg_path) {
 #' Check if there are unit tests ----
 create_tests_files <- function(parsed_tbl, pkg_path) {
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
-                           grepl("test", parsed_tbl$label),]
+    grepl("test", parsed_tbl$label), ]
   if (nrow(rmd_test) != 0) {
     # setup testhat
     test_dir <- file.path(pkg_path, "tests")
     if (!dir.exists(test_dir)) {
       dir.create(test_dir)
       dir.create(file.path(test_dir, "testthat"))
-      cat('library(testthat)',
-          paste0('library(', basename(pkg_path), ')'),
-          '',
-          paste0('test_check("', basename(pkg_path), '")'),
-          sep = "\n",
-          file = file.path(test_dir, "testthat.R"))
+      cat("library(testthat)",
+        paste0("library(", basename(pkg_path), ")"),
+        "",
+        paste0('test_check("', basename(pkg_path), '")'),
+        sep = "\n",
+        file = file.path(test_dir, "testthat.R")
+      )
     }
-    
+
     parse_test <- function(x) { # x <- rmd_test[1,]
       code <- rmd_get_chunk(x)$code
-      
+
       # create R file with code content and fun name
       fun_name <- x[["fun_name"]]
       if (is.na(fun_name) || fun_name == "") {
         stop("No function found associated to chunk ", x[["label"]])
       }
-      
+
       test_file <- file.path(pkg_path, "tests", "testthat", paste0("test_", fun_name, ".R"))
-      if (file.exists(test_file)) {warning(basename(test_file), " has been overwritten")}
+      if (file.exists(test_file)) {
+        warning(basename(test_file), " has been overwritten")
+      }
       cat(code, file = test_file, sep = "\n")
-      
+
       fun_name
     }
-    out <- unlist(lapply(seq_along(nrow(rmd_test)), function(x) parse_test(rmd_test[x,])))
+    out <- unlist(lapply(seq_len(nrow(rmd_test)), function(x) parse_test(rmd_test[x, ])))
   }
 }
 
@@ -451,29 +539,45 @@ create_tests_files <- function(parsed_tbl, pkg_path) {
 create_vignette <- function(parsed_tbl, pkg_path, name) {
   # Create vignette directory if needed
   vignette_dir <- file.path(pkg_path, "vignettes")
-  if (!dir.exists(vignette_dir)) {dir.create(vignette_dir)}
-  
+  if (!dir.exists(vignette_dir)) {
+    dir.create(vignette_dir)
+  }
+
   # _remove dev, description, function and tests.
   # Keep examples and unnamed
   vignette_tbl <- parsed_tbl[
     !(grepl("description|function|test|development", parsed_tbl[["label"]]) |
-        grepl("rmd_yaml_list", parsed_tbl[["type"]])),]
-  
-  vignette_file <- file.path(vignette_dir, paste0(name, ".Rmd"))
+      grepl("rmd_yaml_list", parsed_tbl[["type"]])),
+  ]
+
+  # Make chunk names unique
+  # vignette_tbl[["label"]] <- ifelse(
+  #   is.na(vignette_tbl[["label"]]) & vignette_tbl[["type"]] == "rmd_chunk",
+  #                                   gsub("[.]+", "-", make.names(name)),
+  #                                   vignette_tbl[["label"]])
+  #
+  # vignette_tbl[["label"]] <- make.unique(vignette_tbl[["label"]], sep = "-")
+  # # Not re-used in as_document()
+
   usethis::use_vignette(name)
-  
+  vignette_file <- file.path("vignettes", paste0(gsub("[^a-zA-Z0-9_-]+", "-", name), ".Rmd"))
+  if (!file.exists(vignette_file)) {
+    stop(
+      "Vignette could not be filled because of naming problem.",
+      "Have you used some special characters in `name`?"
+    )
+  }
+
   # Write vignette
   cat("",
-      parsermd::as_document(vignette_tbl),
-      sep = "\n", append = TRUE,
-      file = vignette_file
+    parsermd::as_document(vignette_tbl),
+    sep = "\n", append = TRUE,
+    file = vignette_file
   )
 }
-
-
 ```
 
-```{r example}
+```{r example-3}
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
@@ -484,11 +588,61 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
 inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
 
+# Try pkgdown build
+# pkgdown::build_site(dummypackage)
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 ```
 
-```{r test}
+```{r test-3}
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+dir.create(dummypackage)
 
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+# More complicated example for tests
+dev_file <- file.path(dummypackage, "dev_history.Rmd")
+file.copy(
+  system.file("dev-template-tests.Rmd", package = "fusen"),
+  dev_file,
+  overwrite = TRUE
+)
+inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
+
+test_that("inflate() worked correctly", {
+  # R files
+  my_median_file <- file.path(dummypackage, "R", "my_median.R")
+  expect_true(file.exists(my_median_file))
+  expect_true(file.exists(file.path(dummypackage, "R", "my_other_median.R")))
+  my_third_median_file <- file.path(dummypackage, "R", "my_third_median.R")
+  expect_true(file.exists(my_third_median_file))
+  # examples in R files
+  my_median_lines <- readLines(my_median_file)
+  expect_true(all(my_median_lines[10:12] == c(
+    "#' @examples", "#' my_median(2:20)", "#' my_median(1:12)"
+  )))
+  my_third_median_lines <- readLines(my_third_median_file)
+  # _no example
+  expect_true(all(!grepl("#' @examples", my_third_median_lines)))
+
+  # vignette
+  expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+
+  # tests
+  expect_true(file.exists(
+    file.path(dummypackage, "tests", "testthat", "test_my_median.R")
+  ))
+  expect_true(file.exists(
+    file.path(dummypackage, "tests", "testthat", "test_my_other_median.R")
+  ))
+
+  # Namespace
+  expect_true(file.exists(file.path(dummypackage, "NAMESPACE")))
+})
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
 ```
-

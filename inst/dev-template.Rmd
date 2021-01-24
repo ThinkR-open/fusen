@@ -9,11 +9,14 @@ output: html_document
 library(testthat)
 ```
 
+<!--
 # Description of your package
 
 This will fill the description of your package.
 Add this chunk using `fusen::description_chunk()`
-```{r description}
+--> 
+
+```{r description, eval=FALSE}
 fill_description(
   pkg = dummypackage,
   fields = list(
@@ -58,13 +61,52 @@ test_that("my_median works properly and show error if needed", {
 })
 ```
 
+# Calculate the mean of a vector
+## Use sub-functions in the same chunk
+
+```{r function-1}
+#' My Other median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' # Do not fill if you have an example chunk following this function
+my_other_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  sub_median(x, na.rm =na.rm)
+}
+
+#' Core of the median not exported
+#' @examples
+sub_median <- function(x, na.rm = TRUE) {
+  stats::median(x, na.rm)
+}
+```
+
+```{r examples-1}
+my_other_median(1:12)
+```
+
+```{r tests-1}
+test_that("my_median works properly and show error if needed", {
+  expect_true(my_other_median(1:12) == 6.5)
+  expect_error(my_other_median("text"))
+})
+```
+
 # There can be development actions
 
 These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
 
-```{r development}
-# fusen::inflate() # Run but keep commented to avoid infinite loop
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
 usethis::use_mit_license("Sébastien Rochette")
+fusen::inflate(rmd = "dev_history.Rmd")
 ```
 
 
