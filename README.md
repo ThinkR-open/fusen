@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![R build
+status](https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg)](https://github.com/ThinkR-open/fusen/actions)
 <!-- badges: end -->
 
 {fusen} inflates a Rmarkdown file to magically create a package.

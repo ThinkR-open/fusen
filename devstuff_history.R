@@ -70,6 +70,10 @@ chameleon::build_pkgdown(
   move = FALSE, clean_before = TRUE, clean_after = FALSE
 )
 
+# Doc
+usethis::use_github_action_check_standard()
+usethis::use_github_action("pkgdown")
+
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")
 attachment::att_to_description()
