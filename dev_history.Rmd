@@ -5,12 +5,10 @@ date: "23/01/2021"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(
-  echo = TRUE
-)
-
+```{r development, include=FALSE}
 library(testthat)
+
+usethis::use_code_of_conduct()
 ```
 
 # A chunk for package description
@@ -37,23 +35,33 @@ fusen::fill_description(
 #'
 #' @param pkg Path where to save file
 #' @param overwrite Whether to overwrite existing dev_history.Rmd file
+#' @param open Logical. Whether to open file after creation
 #'
 #' @return
 #' Create a dev_history.Rmd file and return its path
 #' @export
 #'
 #' @examples
-add_dev_history <- function(pkg = ".", overwrite = FALSE) {
+add_dev_history <- function(pkg = ".", overwrite = FALSE, open = TRUE) {
+  old <- setwd(pkg)
+  on.exit(setwd(old))
+  
   pkg_path <- normalizePath(pkg)
   dev_path <- file.path(pkg_path, "dev_history.Rmd")
-  if (file.exists(dev_path) & overwrite == FALSE) {
-    stop("dev_history.Rmd already existed. It was not deleted.")
-  } else {
-    file.copy(system.file("dev-template.Rmd", package = "fusen"),
-              dev_path)
-  }
   
-  cat('^dev_history\\.Rmd$', file = file.path(pkg_path, ".Rbuildignore"))
+  if (file.exists(dev_path) & overwrite == FALSE) {
+    n < length(list.files(pattern = "^dev_history"))
+    dev_path <- file.path(pkg_path, paste0("dev_history_", n + 1, ".Rmd"))
+    message("dev_history.Rmd already exists. New dev file is renamed '",
+            basename(dev_path), "'. Use overwrite = TRUE, if you want to ",
+            "overwrite the existing dev_history.Rmd file, or rename it.")
+  } 
+  file.copy(system.file("dev-template.Rmd", package = "fusen"),
+            dev_path)
+  
+  if (!file.exists(".Rbuildignore")) {file.create(".Rbuildignore")}
+  usethis::use_build_ignore(basename(dev_path))
+
   dev_path
 }
 ```
@@ -66,7 +74,7 @@ dir.create(dummypackage)
 browseURL(dummypackage)
 
 # Add
-add_dev_history(pkg = dummypackage, overwrite = TRUE)
+add_dev_history(pkg = dummypackage, open = FALSE)
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -80,7 +88,7 @@ dir.create(dummypackage)
 browseURL(dummypackage)
 
 # Add
-add_dev_history(pkg = dummypackage)
+add_dev_history(pkg = dummypackage, open = FALSE)
 
 test_that("add_dev_history adds dev_history.Rmd", {
   expect_true(file.exists(file.path(dummypackage, "dev_history.Rmd")))
@@ -474,10 +482,13 @@ dir.create(dummypackage)
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
-
 inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
+```
+
+```{r test}
+
 ```
 
