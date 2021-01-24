@@ -16,8 +16,8 @@ This will fill the description of your package.
 Add this chunk using `fusen::description_chunk()`
 --> 
 
-```{r description, eval=FALSE}
-fill_description(
+```{r description}
+fusen::fill_description(
   pkg = dummypackage,
   fields = list(
     Title = "Build A Package From Rmarkdown file",
@@ -106,7 +106,7 @@ These will be included in the `dev_history.R` file of your package, but won't be
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 usethis::use_mit_license("Sébastien Rochette")
-fusen::inflate(rmd = "dev_history.Rmd")
+fusen::inflate(rmd = "dev/dev_history.Rmd")
 ```
 
 

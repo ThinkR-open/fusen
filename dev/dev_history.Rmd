@@ -7,14 +7,12 @@ output: html_document
 
 ```{r development, include=FALSE}
 library(testthat)
-
-usethis::use_code_of_conduct()
 ```
 
 # How to use {fusen}
 
 - Create a new directory / new project
-- Add the Rmarkdown template
+- Add the Rmarkdown template with `fusen::add_dev_history()`
 - Follow the `"dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
   - Chunk named `function` gets the code of a function
   - Chunk named `example` gets the code for examples of using the function. This will be used for function `@examples` and will be kept for the vignette
@@ -22,6 +20,8 @@ usethis::use_code_of_conduct()
   - Chunk named `development` gets the code for development purposes, usually only used once like {usethis} functions
 - Inflate the template to transform it as a package with functions, unit tests and the current Rmd transformed as a vignette. And check.
 - Build your {pkgdown} site to verify everything is at the right place
+
+> Create multiple `"dev_history_xxx.Rmd"` files with `fusen::add_dev_history()` if needed
 
 ## Limitations
 
@@ -38,7 +38,7 @@ This will fill the description of your package.
 Add this chunk using `fusen::description_chunk()`
 -->
 
-```{r description}
+```{r description, eval=FALSE}
 fusen::fill_description(
   fields = list(
     Title = "Build A Package From Rmarkdown file",
@@ -51,7 +51,7 @@ fusen::fill_description(
 )
 ```
 
-# Add dev_history template
+# Add a new dev_history.Rmd template in "dev" directory
 
 ```{r function}
 #' Add dev_history.Rmd file that drives package development
@@ -59,22 +59,25 @@ fusen::fill_description(
 #' @param pkg Path where to save file
 #' @param overwrite Whether to overwrite existing dev_history.Rmd file
 #' @param open Logical. Whether to open file after creation
+#' @param dev_dir Name of directory for development Rmd files. Default to "dev".
 #'
 #' @return
 #' Create a dev_history.Rmd file and return its path
 #' @export
 #'
 #' @examples
-add_dev_history <- function(pkg = ".", overwrite = FALSE, open = TRUE) {
+add_dev_history <- function(pkg = ".", overwrite = FALSE,
+                            open = TRUE, dev_dir = "dev") {
   old <- setwd(pkg)
   on.exit(setwd(old))
 
   pkg_path <- normalizePath(pkg)
-  dev_path <- file.path(pkg_path, "dev_history.Rmd")
+  if (!dir.exists(dev_dir)) {dir.create(dev_dir)}
+  dev_path <- file.path(pkg_path, dev_dir, "dev_history.Rmd")
 
   if (file.exists(dev_path) & overwrite == FALSE) {
-    n < length(list.files(pattern = "^dev_history"))
-    dev_path <- file.path(pkg_path, paste0("dev_history_", n + 1, ".Rmd"))
+    n <- length(list.files(dev_dir, pattern = "^dev_history"))
+    dev_path <- file.path(pkg_path, dev_dir, paste0("dev_history_", n + 1, ".Rmd"))
     message(
       "dev_history.Rmd already exists. New dev file is renamed '",
       basename(dev_path), "'. Use overwrite = TRUE, if you want to ",
@@ -88,7 +91,8 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE, open = TRUE) {
 
   # .Rbuildignore
   # Files to ignore
-  lines <- paste0("^", gsub(".", "\\.", basename(dev_path), fixed = TRUE), "$")
+  # lines <- paste0("^", gsub(".", "\\.", basename(dev_path), fixed = TRUE), "$")
+  lines <- dev_dir
 
   buildfile <- normalizePath(file.path(pkg_path, ".Rbuildignore"), mustWork = FALSE)
   if (!file.exists(buildfile)) {
@@ -102,6 +106,11 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE, open = TRUE) {
     cat(all, file = buildfile, sep = "\n")
   }
 
+  # Add a gitignore file in dev_dir
+  if (!file.exists(file.path(dev_dir, ".gitignore"))) {
+    cat("*.html", "*.R", sep = "\n", file = file.path(dev_dir, ".gitignore"))
+  }
+  
   dev_path
 }
 ```
@@ -114,7 +123,7 @@ dir.create(dummypackage)
 browseURL(dummypackage)
 
 # Add
-add_dev_history(pkg = dummypackage, open = FALSE)
+add_dev_history(pkg = dummypackage)
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -128,17 +137,18 @@ dir.create(dummypackage)
 browseURL(dummypackage)
 
 # Add
-add_dev_history(pkg = dummypackage, open = FALSE)
+dev_path <- add_dev_history(pkg = dummypackage, open = FALSE)
 
 test_that("add_dev_history adds dev_history.Rmd", {
-  expect_true(file.exists(file.path(dummypackage, "dev_history.Rmd")))
+  expect_true(file.exists(dev_path))
   rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
-  expect_true(any(grepl("^dev_history\\.Rmd$", rbuildignore_lines, fixed = TRUE)))
+  expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
 
   # Second time error
-  expect_error(add_dev_history(pkg = dummypackage))
+  expect_message(add_dev_history(pkg = dummypackage))
+  expect_true(file.exists(file.path(dummypackage, "dev", "dev_history_2.Rmd")))
 })
 
 # Delete dummy package
@@ -146,8 +156,7 @@ unlink(dummypackage, recursive = TRUE)
 ```
 
 
-
-# fill_description
+# Fill your package Description
 
 ```{r function-2}
 #' Fill DESCRIPTION file of the package
@@ -248,22 +257,25 @@ unlink(dummypackage, recursive = TRUE)
 
 These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
 
-```{r development, eval=FALSE}
+```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 usethis::use_mit_license("Sébastien Rochette")
 fusen::inflate(rmd = "dev_history.Rmd")
 ```
 
 
-# Inflate your package
+# Inflate your package from dev Rmd template
 
 You're one inflate from paper to box.
 Build your package from this very Rmarkdown using `fusen::inflate()`
+
+After that, you can:
 
 - Verify your `"DESCRIPTION"` file has been updated
 - Verify your function is in `"R/"` directory
 - Verify your test is in `"tests/testthat/"` directory
 - Verify this Rmd appears in `"vignettes/"` directory
+- Build your documentation using `pkgdown::build()` for vignette and examples verifications
 
 ```{r function-3}
 library(parsermd)
@@ -280,7 +292,7 @@ library(parsermd)
 #' @export
 #'
 #' @examples
-inflate <- function(pkg = ".", rmd = "dev_history.Rmd", name = "exploration", check = TRUE) {
+inflate <- function(pkg = ".", rmd = "dev/dev_history.Rmd", name = "exploration", check = TRUE) {
   old <- setwd(pkg)
   on.exit(setwd(old))
 
@@ -586,7 +598,7 @@ dir.create(dummypackage)
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
-inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
+inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 
 # Try pkgdown build
 # pkgdown::build_site(dummypackage)
@@ -610,7 +622,7 @@ file.copy(
   dev_file,
   overwrite = TRUE
 )
-inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
+inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 
 test_that("inflate() worked correctly", {
   # R files
@@ -646,3 +658,10 @@ test_that("inflate() worked correctly", {
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 ```
+
+
+```{r development-2, eval=FALSE}
+usethis::use_code_of_conduct()
+inflate(rmd = "dev_history.Rmd", name = "use_fusen")
+```
+
