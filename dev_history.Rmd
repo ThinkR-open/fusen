@@ -112,7 +112,7 @@ unlink(dummypackage, recursive = TRUE)
 #' @examples
 fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
   old <- setwd(pkg)
-  on.exit(old)
+  on.exit(setwd(old))
   
   path <- normalizePath(pkg)
   
@@ -216,17 +216,29 @@ library(parsermd)
 #' Inflate Rmd to package
 #'
 #' @param pkg Path to package
-#' @param x Path to Rmd file to inflate
+#' @param name Name of the resulting vignette
+#' @param rmd Path to Rmd file to inflate
+#' @param check Logical. Whether to check package after Rmd inflating
 #'
 #' @return
 #' Package structure. Return path to current package.
 #' @export
 #'
 #' @examples
-inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
+inflate <- function(pkg = ".", rmd = "dev_history.Rmd", name = "exploration", check = TRUE) {
+  old <- setwd(pkg)
+  on.exit(setwd(old))
+
   pkg_path <- normalizePath(pkg)
   rmd <- normalizePath(rmd, mustWork = FALSE)
   
+  if (length(list.files(pkg_path, pattern = ".Rproj")) > 0) {
+    if (!file.exists(".Rbuildignore")) {file.create(".Rbuildignore")}
+    usethis::use_build_ignore(basename(rmd))
+    usethis::use_build_ignore(paste0(basename(pkg), ".Rproj"))
+    usethis::use_build_ignore(".Rproj.user")
+  }
+    
   if (grepl(pkg_path, rmd)) {
     # Rmd already contains pkgpath
     rmd_path <- rmd
@@ -262,7 +274,8 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
   
   create_r_files(fun_code, pkg_path)
   create_tests_files(parsed_tbl, pkg_path)
-
+  create_vignette(parsed_tbl, pkg_path, name) 
+  
   # Run attachment
   attachment::att_amend_desc(path = pkg_path)
 
@@ -275,8 +288,9 @@ inflate <- function(pkg = ".", rmd = "dev_history.Rmd", check = TRUE) {
 }
 
 #' Get function names ----
+#' @param parsed_tbl tibble of a parsed Rmd
 get_functions <- function(parsed_tbl) {
-  which_parsed_fun <- which(!is.na(parsed_tbl$label) &
+  which_parsed_fun <-   which(!is.na(parsed_tbl$label) &
                               grepl("function", parsed_tbl$label))
   rmd_fun <- parsed_tbl[which_parsed_fun,]
   
@@ -307,7 +321,11 @@ get_functions <- function(parsed_tbl) {
 }
 
 #' Add function name to parsed_tbl ----
+#' @param parsed_tbl tibble of a parsed Rmd
 add_fun_to_parsed <- function(parsed_tbl, fun_names) {
+  which_parsed_fun <-   which(!is.na(parsed_tbl$label) &
+                              grepl("function", parsed_tbl$label))
+  
   parsed_tbl$order <- 1:nrow(parsed_tbl)
   parsed_tbl$sec_title <- paste(parsed_tbl[["sec_h1"]], parsed_tbl[["sec_h2"]], sep = "-")
   parsed_tbl$fun_name <- NA_character_
@@ -384,7 +402,7 @@ create_r_files <- function(fun_code, pkg_path) {
   })
 }
 
-# Check if there are unit tests ----
+#' Check if there are unit tests ----
 create_tests_files <- function(parsed_tbl, pkg_path) {
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
                            grepl("test", parsed_tbl$label),]
@@ -420,6 +438,31 @@ create_tests_files <- function(parsed_tbl, pkg_path) {
     out <- unlist(lapply(seq_along(nrow(rmd_test)), function(x) parse_test(rmd_test[x,])))
   }
 }
+
+#' Create vignette
+create_vignette <- function(parsed_tbl, pkg_path, name) {
+  # Create vignette directory if needed
+  vignette_dir <- file.path(pkg_path, "vignettes")
+  if (!dir.exists(vignette_dir)) {dir.create(vignette_dir)}
+  
+  # _remove dev, description, function and tests.
+  # Keep examples and unnamed
+  vignette_tbl <- parsed_tbl[
+    !(grepl("description|function|test|development", parsed_tbl[["label"]]) |
+        grepl("rmd_yaml_list", parsed_tbl[["type"]])),]
+  
+  vignette_file <- file.path(vignette_dir, paste0(name, ".Rmd"))
+  usethis::use_vignette(name)
+  
+  # Write vignette
+  cat("",
+      parsermd::as_document(vignette_tbl),
+      sep = "\n", append = TRUE,
+      file = vignette_file
+  )
+}
+
+
 ```
 
 ```{r example}
@@ -432,7 +475,7 @@ dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
 
-inflate(pkg = dummypackage, rmd = dev_file)
+inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
