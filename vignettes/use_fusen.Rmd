@@ -1,0 +1,140 @@
+---
+title: "use_fusen"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{use_fusen}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(fusen)
+```
+
+# How to use {fusen}
+
+- Create a new directory / new project
+- Add the Rmarkdown template with `fusen::add_dev_history()`
+- Follow the `"dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
+  - Chunk named `function` gets the code of a function
+  - Chunk named `example` gets the code for examples of using the function. This will be used for function `@examples` and will be kept for the vignette
+  - Chunk named `tests` gets the code for unit testing
+  - Chunk named `development` gets the code for development purposes, usually only used once like {usethis} functions
+- Inflate the template to transform it as a package with functions, unit tests and the current Rmd transformed as a vignette. And check.
+- Build your {pkgdown} site to verify everything is at the right place
+
+> Create multiple `"dev_history_xxx.Rmd"` files with `fusen::add_dev_history()` if needed
+
+
+## Limitations
+
+- One title / one chunk is for one function
+- `examples` and `tests` chunks need to be placed after the associated `function` chunk
+- You can add sub-functions in the `function` chunk to store them in the same R file, but they won't have `@examples`. Only the first function of the chunk will be able to get examples.
+- As for any Rmd file, chunk names need to be unique. Thus, you can use `examples-1`, `examples-2`, ...
+- _Do not forget to regularly clear your Workspace to avoid functions hidden by global environment_
+
+<!--
+
+# A chunk for package description
+
+This will fill the description of your package.
+Add this chunk using `fusen::description_chunk()`
+-->
+
+
+# Add a new dev_history.Rmd template in "dev" directory
+
+```{r example}
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+dir.create(dummypackage)
+browseURL(dummypackage)
+
+# Add
+add_dev_history(pkg = dummypackage)
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+```
+
+# Fill your package Description
+
+```{r example-2}
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+dir.create(dummypackage)
+browseURL(dummypackage)
+
+fill_description(
+  pkg = dummypackage,
+  fields = list(
+    Title = "Build A Package From Rmarkdown file",
+    Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.",
+    `Authors@R` = c(
+      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+      person(given = "ThinkR", role = "cph")
+    )
+  )
+)
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+```
+
+# There can be development actions
+
+These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
+
+Name the following chunk with `{r development-1, eval=FALSE}`
+
+```
+
+# Run but keep eval=FALSE to avoid infinite loop
+
+usethis::use_mit_license("Sébastien Rochette")
+fusen::inflate(rmd = "dev_history.Rmd")
+```
+
+
+
+# Inflate your package from dev Rmd template
+
+You're one inflate from paper to box.
+Build your package from this very Rmarkdown using `fusen::inflate()`
+
+After that, you can:
+
+- Verify your `"DESCRIPTION"` file has been updated
+- Verify your function is in `"R/"` directory
+- Verify your test is in `"tests/testthat/"` directory
+- Verify this Rmd appears in `"vignettes/"` directory
+- Build your documentation using `pkgdown::build()` for vignette and examples verifications
+
+
+```{r example-3, eval = FALSE}
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+
+# Try pkgdown build
+# pkgdown::build_site(dummypackage)
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+```
+

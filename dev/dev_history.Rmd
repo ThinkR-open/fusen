@@ -163,7 +163,9 @@ unlink(dummypackage, recursive = TRUE)
 #'
 #' @param pkg Path to package
 #' @param overwrite Whether to overwrite existing DESCRIPTION
-#' @inheritParams usethis use_description_defaults
+#' @param fields A named list of fields to add to DESCRIPTION, potentially
+#'  overriding default values. See \code{\link[usethis]{use_description}} for how you can set
+#'  personalized defaults using package options
 #'
 #' @return
 #' FIll DESCRIPTION file with fields. Return path to file.
@@ -257,7 +259,9 @@ unlink(dummypackage, recursive = TRUE)
 
 These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
 
-```{r development-1, eval=FALSE}
+Name the following chunk with `{r development-1, eval=FALSE}`
+
+```
 # Run but keep eval=FALSE to avoid infinite loop
 usethis::use_mit_license("Sébastien Rochette")
 fusen::inflate(rmd = "dev_history.Rmd")
@@ -278,8 +282,6 @@ After that, you can:
 - Build your documentation using `pkgdown::build()` for vignette and examples verifications
 
 ```{r function-3}
-library(parsermd)
-
 #' Inflate Rmd to package
 #'
 #' @param pkg Path to package
@@ -287,6 +289,7 @@ library(parsermd)
 #' @param rmd Path to Rmd file to inflate
 #' @param check Logical. Whether to check package after Rmd inflating
 #'
+#' @importFrom parsermd parse_rmd as_tibble
 #' @return
 #' Package structure. Return path to current package.
 #' @export
@@ -303,8 +306,8 @@ inflate <- function(pkg = ".", rmd = "dev/dev_history.Rmd", name = "exploration"
     if (!file.exists(".Rbuildignore")) {
       file.create(".Rbuildignore")
     }
-    usethis::use_build_ignore(basename(rmd))
-    usethis::use_build_ignore(paste0(basename(pkg), ".Rproj"))
+    # usethis::use_build_ignore(basename(rmd))
+    usethis::use_build_ignore(paste0(basename(pkg_path), ".Rproj"))
     usethis::use_build_ignore(".Rproj.user")
   }
 
@@ -360,6 +363,7 @@ inflate <- function(pkg = ".", rmd = "dev/dev_history.Rmd", name = "exploration"
 
 #' Get function names ----
 #' @param parsed_tbl tibble of a parsed Rmd
+#' @importFrom parsermd rmd_get_chunk
 get_functions <- function(parsed_tbl) {
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
     grepl("function", parsed_tbl$label))
@@ -400,6 +404,8 @@ get_functions <- function(parsed_tbl) {
 
 #' Add function name to parsed_tbl ----
 #' @param parsed_tbl tibble of a parsed Rmd
+#' @param fun_names Names of functions in Rmd
+#' @importFrom stats na.omit
 add_fun_to_parsed <- function(parsed_tbl, fun_names) {
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
     grepl("function", parsed_tbl$label))
@@ -420,6 +426,8 @@ add_fun_to_parsed <- function(parsed_tbl, fun_names) {
 }
 
 #' Add examples in function code
+#' @param parsed_tbl tibble of a parsed Rmd
+#' @param fun_code R code of functions in Rmd as character
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
   #  Example already in skeleton
   fun_code$example_in <- apply(fun_code, 1, function(x) {
@@ -442,7 +450,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
       function(x) {
         tibble::tibble(
           fun_name = rmd_ex[x, ][["fun_name"]],
-          example_chunk = paste("#'", rmd_get_chunk(rmd_ex[x, ])$code)
+          example_chunk = list(paste("#'", rmd_get_chunk(rmd_ex[x, ])$code))
+          # example_chunk = rmd_get_chunk(rmd_ex[x, ])$code
         )
       }
     ) %>% do.call("rbind", .)
@@ -485,13 +494,14 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
         (fun_code_x[["example_pos_end"]] + 1):length(unlist(fun_code_x[["code"]]))
       ]
     ))
-    all_fun_code[!grepl("# Do not fill", all_fun_code)]
   })
 
   fun_code
 }
 
 #' create R file with code content and fun name
+#' @param fun_code R code of functions in Rmd as character
+#' @param pkg_path Path to package
 create_r_files <- function(fun_code, pkg_path) {
   r_files <- lapply(seq_len(nrow(fun_code)), function(x) {
     fun_name <- fun_code[x, ][["fun_name"]]
@@ -508,6 +518,9 @@ create_r_files <- function(fun_code, pkg_path) {
 }
 
 #' Check if there are unit tests ----
+#' @param parsed_tbl tibble of a parsed Rmd
+#' @param pkg_path Path to package
+#' @importFrom parsermd rmd_get_chunk
 create_tests_files <- function(parsed_tbl, pkg_path) {
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
     grepl("test", parsed_tbl$label), ]
@@ -548,6 +561,9 @@ create_tests_files <- function(parsed_tbl, pkg_path) {
 }
 
 #' Create vignette
+#' @param parsed_tbl tibble of a parsed Rmd
+#' @param pkg_path Path to package
+#' @param name Name of the resulting vignette
 create_vignette <- function(parsed_tbl, pkg_path, name) {
   # Create vignette directory if needed
   vignette_dir <- file.path(pkg_path, "vignettes")
@@ -589,7 +605,7 @@ create_vignette <- function(parsed_tbl, pkg_path, name) {
 }
 ```
 
-```{r example-3}
+```{r example-3, eval=FALSE}
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
@@ -628,13 +644,19 @@ test_that("inflate() worked correctly", {
   # R files
   my_median_file <- file.path(dummypackage, "R", "my_median.R")
   expect_true(file.exists(my_median_file))
-  expect_true(file.exists(file.path(dummypackage, "R", "my_other_median.R")))
+  my_other_median_file <- file.path(dummypackage, "R", "my_other_median.R")
+  expect_true(file.exists(my_other_median_file))
   my_third_median_file <- file.path(dummypackage, "R", "my_third_median.R")
   expect_true(file.exists(my_third_median_file))
   # examples in R files
   my_median_lines <- readLines(my_median_file)
   expect_true(all(my_median_lines[10:12] == c(
     "#' @examples", "#' my_median(2:20)", "#' my_median(1:12)"
+  )))
+  my_other_median_lines <- readLines(my_other_median_file)
+  expect_true(all(my_other_median_lines[10:13] == c(
+    "#' @examples", "#' my_other_median(1:12)",
+    "#' my_other_median(8:20)", "#' my_other_median(20:50)"
   )))
   my_third_median_lines <- readLines(my_third_median_file)
   # _no example
@@ -657,11 +679,11 @@ test_that("inflate() worked correctly", {
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
-```
 
+```
 
 ```{r development-2, eval=FALSE}
 usethis::use_code_of_conduct()
-inflate(rmd = "dev_history.Rmd", name = "use_fusen")
+inflate(rmd = "dev/dev_history.Rmd", name = "use_fusen", check = FALSE)
 ```
 

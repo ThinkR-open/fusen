@@ -1,20 +1,38 @@
 Package: fusen
 Title: Build A Package From Rmarkdown file
 Version: 0.0.0.9000
-Authors@R: c(
-  person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
-  person(given = "ThinkR", role = "cph")
- )
-Description: Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.
+Authors@R: 
+    c(person(given = "Sebastien",
+             family = "Rochette",
+             role = c("aut", "cre"),
+             email = "sebastien@thinkr.fr",
+             comment = c(ORCID = "0000-0002-1565-9313")),
+      person(given = "ThinkR",
+             role = "cph"))
+Description: Use Rmd First method to build your package. Start
+    your package with documentation. Everything can be set from a Rmd file
+    in your project.
 License: MIT + file LICENSE
-LazyData: true
-Encoding: UTF-8
-VignetteBuilder: knitr
-Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.1
 Imports: 
-    magrittr
+    attachment,
+    desc,
+    devtools,
+    glue,
+    magrittr,
+    parsermd,
+    roxygen2,
+    stats,
+    stringr,
+    testthat,
+    tibble,
+    tidyr,
+    usethis
 Suggests: 
     knitr,
-    rmarkdown,
-    testthat
+    rmarkdown
+VignetteBuilder: 
+    knitr
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1

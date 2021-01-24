@@ -43,7 +43,6 @@ fusen::fill_description(
 #' @export
 #'
 #' @examples
-#' # Do not fill if you have an example chunk following this function
 my_median <- function(x, na.rm = TRUE) {
   if (!is.numeric(x)) {stop("x should be numeric")}
   stats::median(x, na.rm = na.rm)
@@ -75,14 +74,12 @@ test_that("my_median works properly and show error if needed", {
 #' @export
 #'
 #' @examples
-#' # Do not fill if you have an example chunk following this function
 my_other_median <- function(x, na.rm = TRUE) {
   if (!is.numeric(x)) {stop("x should be numeric")}
   sub_median(x, na.rm =na.rm)
 }
 
 #' Core of the median not exported
-#' @examples
 sub_median <- function(x, na.rm = TRUE) {
   stats::median(x, na.rm)
 }

@@ -43,7 +43,6 @@ fusen::fill_description(
 #' @export
 #'
 #' @examples
-#' # Do not fill if you have an example chunk following this function
 #' my_median(2:20)
 my_median <- function(x, na.rm = TRUE) {
   if (!is.numeric(x)) {stop("x should be numeric")}
@@ -76,7 +75,6 @@ test_that("my_median works properly and show error if needed", {
 #' @export
 #'
 #' @examples
-#' # Do not fill if you have an example chunk following this function
 my_other_median <- function(x, na.rm = TRUE) {
   if (!is.numeric(x)) {stop("x should be numeric")}
   sub_median(x, na.rm =na.rm)
@@ -90,6 +88,8 @@ sub_median <- function(x, na.rm = TRUE) {
 
 ```{r examples-1}
 my_other_median(1:12)
+my_other_median(8:20)
+my_other_median(20:50)
 ```
 
 ```{r tests-1}
