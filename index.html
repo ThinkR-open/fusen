@@ -145,6 +145,7 @@
 <span class="co"># {fusen} steps</span>
 <span class="fu"><a href="reference/fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="co"># You may need to execute inflate() in the console directly</span>
 <span class="fu"><a href="reference/inflate.html">inflate</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, rmd <span class="op">=</span> <span class="va">dev_file</span>, name <span class="op">=</span> <span class="st">"exploration"</span><span class="op">)</span>
 <span class="co"># Build {pkgdown} to test it</span>
 <span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span>
