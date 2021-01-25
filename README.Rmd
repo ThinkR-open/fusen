@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 
 <!-- badges: start -->
 [![R build status](https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg)](https://github.com/ThinkR-open/fusen/actions)
+[![Codecov test coverage](https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg)](https://codecov.io/gh/ThinkR-open/fusen?branch=master)
 <!-- badges: end -->
 
 {fusen} inflates a Rmarkdown file to magically create a package.

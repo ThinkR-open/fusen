@@ -29,7 +29,8 @@ Imports:
     usethis
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    covr
 Remotes:
     rundel/parsermd
 VignetteBuilder: 

@@ -74,6 +74,7 @@ chameleon::build_pkgdown(
 usethis::use_github_action_check_standard()
 usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
+usethis::use_coverage()
 
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")
