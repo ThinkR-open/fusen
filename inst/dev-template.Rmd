@@ -103,6 +103,7 @@ These will be included in the `dev_history.R` file of your package, but won't be
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 usethis::use_mit_license("Sébastien Rochette")
+# Execute in the console directly
 fusen::inflate(rmd = "dev/dev_history.Rmd")
 ```
 

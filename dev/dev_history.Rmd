@@ -267,6 +267,7 @@ Name the following chunk with `{r development-1, eval=FALSE}`
 ```
 # Run but keep eval=FALSE to avoid infinite loop
 usethis::use_mit_license("Sébastien Rochette")
+# Execute in the console directly
 fusen::inflate(rmd = "dev_history.Rmd")
 ```
 
