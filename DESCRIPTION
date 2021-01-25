@@ -30,6 +30,8 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown
+Remotes:
+    rundel/parsermd
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
