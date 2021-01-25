@@ -16,17 +16,18 @@ License: MIT + file LICENSE
 Imports: 
     attachment,
     desc,
-    devtools,
     glue,
     magrittr,
     parsermd,
+    rcmdcheck,
     roxygen2,
     stats,
     stringr,
     testthat,
     tibble,
     tidyr,
-    usethis
+    usethis,
+    utils
 Suggests: 
     knitr,
     rmarkdown

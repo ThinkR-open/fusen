@@ -105,6 +105,9 @@ Name the following chunk with `{r development-1, eval=FALSE}`
 # Run but keep eval=FALSE to avoid infinite loop
 
 usethis::use_mit_license("Sébastien Rochette")
+
+# Execute in the console directly
+
 fusen::inflate(rmd = "dev_history.Rmd")
 ```
 
@@ -137,6 +140,8 @@ inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 
 # Try pkgdown build
 # pkgdown::build_site(dummypackage)
+# usethis::use_build_ignore("docs")
+# usethis::use_git_ignore("docs")
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 ```

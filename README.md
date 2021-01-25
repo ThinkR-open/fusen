@@ -25,10 +25,42 @@ You can install the development version of {fusen} from GitHub:
 remotes::install_github("fusen")
 ```
 
-## How to use it
+## You are one Rmarkdown away from building a package\!
 
-  - Create a new directory / new project
-  - Add the Rmarkdown template
+  - Create and open a new directory or a new project
+  - **Add the templated Rmd** inside and open it
+
+<!-- end list -->
+
+``` r
+dev_file <- fusen::add_dev_history(open = TRUE)
+```
+
+  - Run the first chunks asking to describe your package and license it
+
+<!-- end list -->
+
+``` r
+fill_description(fields = list(Title = "My Awesome Package"))
+usethis::use_mit_license("Sébastien Rochette")
+```
+
+  - Follow the guide to write your analysis and functionnalities
+      - You probably develop them with a few examples and tests
+      - *For the first time, you can let the code as is, this is already
+        the content for a working package*
+  - **Transform this Rmd as a package**
+
+<!-- end list -->
+
+``` r
+fusen::inflate(rmd = dev_file, name = "my-functionnality", check = TRUE)
+```
+
+**That’s it\! You built a package\!**
+
+## The RMarkdown template
+
   - Follow the `"dev_history.Rmd"` template to write your documentation
     and build your functions and test your examples.
       - Chunk named `function` gets the code of a function
@@ -40,12 +72,17 @@ remotes::install_github("fusen")
         purposes, usually only used once like {usethis} functions
   - Inflate the template to transform it as a package with functions,
     unit tests and the current Rmd transformed as a vignette. And check.
-  - Build your {pkgdown} site to verify everything is at the right place
 
 *Note that the `"dev_history.Rmd"` template is indeed a working
 example.*  
 *Note also that {fusen} was itself created from the `"dev_history.Rmd"`
 template available in its GitHub repository.*
+
+## A reproducible example
+
+  - Build a package from Rmd template in a temporary directory
+
+<!-- end list -->
 
 ``` r
 # Create a new project
@@ -54,13 +91,28 @@ dummypackage <- file.path(tmpdir, "dummypackage")
 dir.create(dummypackage)
 
 # {fusen} steps
-fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+# Add the template in your package
+dev_file <- fusen::add_dev_history(pkg = dummypackage, overwrite = TRUE)
+# Description
+fusen::fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+# Define License with use_*_license()
+usethis::use_mit_license("Sébastien Rochette")
 # You may need to execute inflate() in the console directly
-inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
+fusen::inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
+```
+
+  - Test the correct documentation of the package with its dedicated
+    website
+
+<!-- end list -->
+
+``` r
 # Build {pkgdown} to test it
 pkgdown::build_site(pkg = dummypackage)
 # > See references and articles
+# Hide output from package and git
+usethis::use_build_ignore("docs")
+usethis::use_git_ignore("docs")
 ```
 
 ## Who is {fusen} for?
@@ -71,13 +123,13 @@ functions, you test your functions with examples and you maybe write
 some unit tests to verify the outputs. This is even more true if you
 follow this guide : [‘Rmd first’: When development starts with
 documentation](https://rtask.thinkr.fr/blog/rmd-first-when-development-starts-with-documentation/)
-After that, you need to move your functions in the correct place. Let
-{fusen} do that for you.
+After that, you need to move your functions and scripts in the correct
+place. Let {fusen} do that for you\!
 
 {fusen} is first addressed to people who never wrote a package before
 but know how to write a Rmarkdown file. Understanding package
 infrastructure and correctly settling it can be frightening. This
-package may help them do the first step.
+package may help them do the first step\!
 
 {fusen} is also addressed to more advanced developers who are fed up
 with switching between R files, tests files, vignettes. In particular,
@@ -87,9 +139,9 @@ forget one.
 
 ## Why is this package named {fusen} ?
 
-A fusen is an origami. It is a page of paper that you fold in a specific
-way so that at the end, you can magically inflate it to let a nice box
-appear.
+A fusen is an origami. It is a piece of paper that you fold in a
+specific way so that at the end, you can magically inflate it to let a
+nice box appear.
 
 <img src="img/fusen-origami.jpg" width="25%" />
 

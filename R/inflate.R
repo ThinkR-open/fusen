@@ -23,6 +23,8 @@
 #' 
 #' # Try pkgdown build
 #' # pkgdown::build_site(dummypackage)
+#' # usethis::use_build_ignore("docs")
+#' # usethis::use_git_ignore("docs")
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
 inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name = "exploration", check = TRUE) {
@@ -85,7 +87,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
 
   # Check
   if (isTRUE(check)) {
-    devtools::check(pkg = pkg_path)
+    rcmdcheck::rcmdcheck(pkg = pkg_path)
   }
 
   pkg_path

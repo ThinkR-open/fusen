@@ -17,8 +17,8 @@ Add this chunk using `fusen::description_chunk()`
 --> 
 
 ```{r description}
+# Describe your package
 fusen::fill_description(
-  pkg = dummypackage,
   fields = list(
     Title = "Build A Package From Rmarkdown file",
     Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.",
@@ -28,6 +28,8 @@ fusen::fill_description(
     )
   )
 )
+# Define License with use_*_license()
+usethis::use_mit_license("Sébastien Rochette")
 ```
 
 # Calculate the median of a vector
@@ -80,6 +82,8 @@ my_other_median <- function(x, na.rm = TRUE) {
 }
 
 #' Core of the median not exported
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
 sub_median <- function(x, na.rm = TRUE) {
   stats::median(x, na.rm)
 }
@@ -102,7 +106,6 @@ These will be included in the `dev_history.R` file of your package, but won't be
 
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
-usethis::use_mit_license("Sébastien Rochette")
 # Execute in the console directly
 fusen::inflate(rmd = "dev/dev_history.Rmd")
 ```

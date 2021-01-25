@@ -39,6 +39,8 @@ inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 
 # Try pkgdown build
 # pkgdown::build_site(dummypackage)
+# usethis::use_build_ignore("docs")
+# usethis::use_git_ignore("docs")
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 }
