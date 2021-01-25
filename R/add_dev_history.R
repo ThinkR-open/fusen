@@ -58,12 +58,12 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
   new <- setdiff(lines, existing_lines)
   if (length(new) != 0) {
     all <- c(existing_lines, new)
-    cat(all, file = buildfile, sep = "\n")
+    cat(enc2utf8(all), file = buildfile, sep = "\n")
   }
 
   # Add a gitignore file in dev_dir
   if (!file.exists(file.path(dev_dir, ".gitignore"))) {
-    cat("*.html", "*.R", sep = "\n", file = file.path(dev_dir, ".gitignore"))
+    cat(enc2utf8(c("*.html", "*.R")), sep = "\n", file = file.path(dev_dir, ".gitignore"))
   }
   
   dev_path

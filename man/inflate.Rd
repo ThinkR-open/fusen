@@ -6,7 +6,7 @@
 \usage{
 inflate(
   pkg = ".",
-  rmd = "dev/dev_history.Rmd",
+  rmd = file.path("dev", "dev_history.Rmd"),
   name = "exploration",
   check = TRUE
 )

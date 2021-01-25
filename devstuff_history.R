@@ -7,6 +7,8 @@ usethis::use_git_ignore("rsconnect/")
 usethis::use_build_ignore("img")
 # usethis::create_package(".")
 
+usethis::git_vaccinate()
+
 # description ----
 library(desc)
 unlink("DESCRIPTION")
@@ -75,6 +77,7 @@ usethis::use_github_action_check_standard()
 usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
 usethis::use_coverage()
+usethis::use_build_ignore("_pkgdown.yml")
 
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")

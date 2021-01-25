@@ -25,7 +25,7 @@
 #' # pkgdown::build_site(dummypackage)
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
-inflate <- function(pkg = ".", rmd = "dev/dev_history.Rmd", name = "exploration", check = TRUE) {
+inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name = "exploration", check = TRUE) {
   old <- setwd(pkg)
   on.exit(setwd(old))
 
@@ -41,7 +41,7 @@ inflate <- function(pkg = ".", rmd = "dev/dev_history.Rmd", name = "exploration"
     usethis::use_build_ignore(".Rproj.user")
   }
 
-  if (grepl(pkg_path, rmd)) {
+  if (grepl(pkg_path, rmd, fixed = TRUE)) {
     # Rmd already contains pkgpath
     rmd_path <- rmd
   } else {
@@ -240,7 +240,7 @@ create_r_files <- function(fun_code, pkg_path) {
       warning(basename(r_file), " has been overwritten")
     }
     cat(
-      unlist(fun_code[x, ][["code_example"]]),
+      enc2utf8(unlist(fun_code[x, ][["code_example"]])),
       file = r_file, sep = "\n"
     )
     r_file
@@ -260,10 +260,11 @@ create_tests_files <- function(parsed_tbl, pkg_path) {
     if (!dir.exists(test_dir)) {
       dir.create(test_dir)
       dir.create(file.path(test_dir, "testthat"))
-      cat("library(testthat)",
+      cat(enc2utf8(c("library(testthat)",
         paste0("library(", basename(pkg_path), ")"),
         "",
-        paste0('test_check("', basename(pkg_path), '")'),
+        paste0('test_check("', basename(pkg_path), '")')
+        )),
         sep = "\n",
         file = file.path(test_dir, "testthat.R")
       )
@@ -282,7 +283,7 @@ create_tests_files <- function(parsed_tbl, pkg_path) {
       if (file.exists(test_file)) {
         warning(basename(test_file), " has been overwritten")
       }
-      cat(code, file = test_file, sep = "\n")
+      cat(enc2utf8(code), file = test_file, sep = "\n")
 
       fun_name
     }
@@ -328,7 +329,7 @@ create_vignette <- function(parsed_tbl, pkg_path, name) {
 
   # Write vignette
   cat("",
-    parsermd::as_document(vignette_tbl),
+    enc2utf8(parsermd::as_document(vignette_tbl)),
     sep = "\n", append = TRUE,
     file = vignette_file
   )

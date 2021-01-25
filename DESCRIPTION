@@ -1,5 +1,5 @@
 Package: fusen
-Title: Build A Package From Rmarkdown file
+Title: Build A Package From RMarkdown File
 Version: 0.0.0.9000
 Authors@R: 
     c(person(given = "Sebastien",
@@ -29,12 +29,11 @@ Imports:
     usethis
 Suggests: 
     knitr,
-    rmarkdown,
-    covr
-Remotes:
-    rundel/parsermd
+    rmarkdown
 VignetteBuilder: 
     knitr
+Remotes:
+    rundel/parsermd
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

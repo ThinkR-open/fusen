@@ -32,9 +32,12 @@ fill_description(
   pkg = dummypackage,
   fields = list(
     Title = "Build A Package From Rmarkdown file",
-    Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.",
+    Description = paste("Use Rmd First method to build your package.", 
+                        "Start your package with documentation.", 
+                        "Everything can be set from a Rmd file in your project."),
     `Authors@R` = c(
-      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", 
+             role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
       person(given = "ThinkR", role = "cph")
     )
   )
