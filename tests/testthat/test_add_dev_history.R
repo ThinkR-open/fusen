@@ -15,7 +15,7 @@ test_that("add_dev_history adds dev_history.Rmd", {
   expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
 
   # Second time error
-  expect_message(add_dev_history(pkg = dummypackage))
+  expect_message(add_dev_history(pkg = dummypackage, open = FALSE))
   expect_true(file.exists(file.path(dummypackage, "dev", "dev_history_2.Rmd")))
 })
 

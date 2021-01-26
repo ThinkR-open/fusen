@@ -34,7 +34,7 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 
 # Try pkgdown build

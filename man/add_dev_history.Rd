@@ -29,7 +29,7 @@ dir.create(dummypackage)
 browseURL(dummypackage)
 
 # Add
-add_dev_history(pkg = dummypackage)
+add_dev_history(pkg = dummypackage, open = FALSE)
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)

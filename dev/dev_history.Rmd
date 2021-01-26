@@ -125,7 +125,7 @@ dir.create(dummypackage)
 browseURL(dummypackage)
 
 # Add
-add_dev_history(pkg = dummypackage)
+add_dev_history(pkg = dummypackage, open = FALSE)
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -149,7 +149,7 @@ test_that("add_dev_history adds dev_history.Rmd", {
   expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
 
   # Second time error
-  expect_message(add_dev_history(pkg = dummypackage))
+  expect_message(add_dev_history(pkg = dummypackage, open = FALSE))
   expect_true(file.exists(file.path(dummypackage, "dev", "dev_history_2.Rmd")))
 })
 
@@ -620,7 +620,7 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 
 # Try pkgdown build
@@ -639,7 +639,7 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 # More complicated example for tests
 dev_file <- file.path(dummypackage, "dev_history.Rmd")
 file.copy(
