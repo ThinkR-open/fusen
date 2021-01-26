@@ -17,7 +17,7 @@
 #' browseURL(dummypackage)
 #' 
 #' # Add
-#' add_dev_history(pkg = dummypackage, open = FALSE)
+#' add_dev_history(pkg = dummypackage)
 #' 
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
@@ -66,7 +66,7 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     cat(enc2utf8(c("*.html", "*.R")), sep = "\n", file = file.path(dev_dir, ".gitignore"))
   }
   
-  if (isTRUE(open)) {utils::file.edit(dev_path)}
+  if (isTRUE(open) & interactive()) {utils::file.edit(dev_path)}
   
   dev_path
 }

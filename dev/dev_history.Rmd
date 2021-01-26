@@ -111,7 +111,7 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     cat(enc2utf8(c("*.html", "*.R")), sep = "\n", file = file.path(dev_dir, ".gitignore"))
   }
   
-  if (isTRUE(open)) {utils::file.edit(dev_path)}
+  if (isTRUE(open) & interactive()) {utils::file.edit(dev_path)}
   
   dev_path
 }
@@ -125,7 +125,7 @@ dir.create(dummypackage)
 browseURL(dummypackage)
 
 # Add
-add_dev_history(pkg = dummypackage, open = FALSE)
+add_dev_history(pkg = dummypackage)
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -139,7 +139,7 @@ dir.create(dummypackage)
 browseURL(dummypackage)
 
 # Add
-dev_path <- add_dev_history(pkg = dummypackage, open = FALSE)
+dev_path <- add_dev_history(pkg = dummypackage)
 
 test_that("add_dev_history adds dev_history.Rmd", {
   expect_true(file.exists(dev_path))
@@ -149,7 +149,7 @@ test_that("add_dev_history adds dev_history.Rmd", {
   expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
 
   # Second time error
-  expect_message(add_dev_history(pkg = dummypackage, open = FALSE))
+  expect_message(add_dev_history(pkg = dummypackage))
   expect_true(file.exists(file.path(dummypackage, "dev", "dev_history_2.Rmd")))
 })
 
@@ -620,7 +620,7 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
 inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 
 # Try pkgdown build
@@ -639,7 +639,7 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
 # More complicated example for tests
 dev_file <- file.path(dummypackage, "dev_history.Rmd")
 file.copy(
