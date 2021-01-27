@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# fusen
+# fusen <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
 
@@ -127,7 +127,7 @@ After that, you need to move your functions and scripts in the correct
 place. Let {fusen} do that for you\!
 
 {fusen} is first addressed to people who never wrote a package before
-but know how to write a Rmarkdown file. Understanding package
+but know how to write a RMarkdown file. Understanding package
 infrastructure and correctly settling it can be frightening. This
 package may help them do the first step\!
 
@@ -143,7 +143,7 @@ A fusen is an origami. It is a piece of paper that you fold in a
 specific way so that at the end, you can magically inflate it to let a
 nice box appear.
 
-<img src="img/fusen-origami.jpg" width="25%" />
+<img src="man/figures/fusen_seb_crop_small.jpg" width="25%" />
 
 Similarly, the {fusen} package uses one page of RMarkdown, that you fill
 in a specific way so that at the end, you can magically `inflate()` it

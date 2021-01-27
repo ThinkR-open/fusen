@@ -6,6 +6,11 @@ usethis::use_git_ignore("docs/")
 usethis::use_git_ignore("rsconnect/")
 usethis::use_build_ignore("img")
 # usethis::create_package(".")
+usethis::use_git_ignore("docs")
+usethis::use_git_ignore("pkgdown")
+usethis::use_build_ignore("docs")
+usethis::use_build_ignore("pkgdown")
+
 
 usethis::git_vaccinate()
 
@@ -81,7 +86,7 @@ usethis::use_build_ignore("_pkgdown.yml")
 
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")
-attachment::att_to_description()
+attachment::att_amend_desc()
 # attachment::create_dependencies_file()
 
 # Description and Bibliography
