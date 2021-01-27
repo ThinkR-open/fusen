@@ -8,6 +8,13 @@
 
 <title>Inflate Rmd to package — inflate • fusen</title>
 
+<!-- favicons -->
+<link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="../apple-touch-icon.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="../apple-touch-icon-120x120.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="../apple-touch-icon-76x76.png" />
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="../apple-touch-icon-60x60.png" />
 
 <!-- jquery -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
@@ -37,6 +44,7 @@
 
 <meta property="og:title" content="Inflate Rmd to package — inflate" />
 <meta property="og:description" content="Inflate Rmd to package" />
+<meta property="og:image" content="https://thinkr-open.github.io/fusen/logo.png" />
 <meta name="twitter:card" content="summary" />
 
 
@@ -89,7 +97,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.0.0.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.0</span>
       </span>
     </div>
 
@@ -184,12 +192,12 @@
 
 <span class='co'># {fusen} steps</span>
 <span class='fu'><a href='fill_description.html'>fill_description</a></span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, fields <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>Title <span class='op'>=</span> <span class='st'>"Dummy Package"</span><span class='op'>)</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpMkaPyS/dummypackage/DESCRIPTION"</div><div class='input'><span class='va'>dev_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='add_dev_history.html'>add_dev_history</a></span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmplKShVC/dummypackage/DESCRIPTION"</div><div class='input'><span class='va'>dev_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='add_dev_history.html'>add_dev_history</a></span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
 <span class='fu'>inflate</span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, rmd <span class='op'>=</span> <span class='va'>dev_file</span>, name <span class='op'>=</span> <span class='st'>"exploration"</span>, check <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>First time using roxygen2. Upgrading automatically...</span></div><div class='output co'>#&gt; <span class='message'>Loading dummypackage</span></div><div class='output co'>#&gt; Writing NAMESPACE</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span><span> Setting active project to </span><span style='color: #0000BB;'>'/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpMkaPyS/dummypackage'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Adding </span><span style='color: #0000BB;'>'knitr'</span><span> to </span><span style='color: #00BB00;'>Suggests</span><span> field in DESCRIPTION</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Setting </span><span style='color: #00BB00;'>VignetteBuilder</span><span> field in DESCRIPTION to </span><span style='color: #0000BB;'>'knitr'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Adding </span><span style='color: #0000BB;'>'inst/doc'</span><span> to </span><span style='color: #0000BB;'>'.gitignore'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Adding </span><span style='color: #0000BB;'>'*.html'</span><span>, </span><span style='color: #0000BB;'>'*.R'</span><span> to </span><span style='color: #0000BB;'>'vignettes/.gitignore'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Adding </span><span style='color: #0000BB;'>'rmarkdown'</span><span> to </span><span style='color: #00BB00;'>Suggests</span><span> field in DESCRIPTION</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Writing </span><span style='color: #0000BB;'>'vignettes/exploration.Rmd'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BB0000;'>●</span><span> Edit </span><span style='color: #0000BB;'>'vignettes/exploration.Rmd'</span><span></span></div><div class='output co'>#&gt; <span class='message'>Updating dummypackage documentation</span></div><div class='output co'>#&gt; <span class='message'>Loading dummypackage</span></div><div class='output co'>#&gt; Writing NAMESPACE
+</div><div class='output co'>#&gt; <span class='message'>First time using roxygen2. Upgrading automatically...</span></div><div class='output co'>#&gt; <span class='message'>Loading dummypackage</span></div><div class='output co'>#&gt; Writing NAMESPACE</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span><span> Setting active project to </span><span style='color: #0000BB;'>'/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmplKShVC/dummypackage'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Adding </span><span style='color: #0000BB;'>'knitr'</span><span> to </span><span style='color: #00BB00;'>Suggests</span><span> field in DESCRIPTION</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Setting </span><span style='color: #00BB00;'>VignetteBuilder</span><span> field in DESCRIPTION to </span><span style='color: #0000BB;'>'knitr'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Adding </span><span style='color: #0000BB;'>'inst/doc'</span><span> to </span><span style='color: #0000BB;'>'.gitignore'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Adding </span><span style='color: #0000BB;'>'*.html'</span><span>, </span><span style='color: #0000BB;'>'*.R'</span><span> to </span><span style='color: #0000BB;'>'vignettes/.gitignore'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Adding </span><span style='color: #0000BB;'>'rmarkdown'</span><span> to </span><span style='color: #00BB00;'>Suggests</span><span> field in DESCRIPTION</span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #00BB00;'>✔</span><span> Writing </span><span style='color: #0000BB;'>'vignettes/exploration.Rmd'</span><span></span></div><div class='output co'>#&gt; <span class='message'></span><span style='color: #BB0000;'>●</span><span> Edit </span><span style='color: #0000BB;'>'vignettes/exploration.Rmd'</span><span></span></div><div class='output co'>#&gt; <span class='message'>Updating dummypackage documentation</span></div><div class='output co'>#&gt; <span class='message'>Loading dummypackage</span></div><div class='output co'>#&gt; Writing NAMESPACE
 #&gt; Writing my_median.Rd
 #&gt; Writing my_other_median.Rd
-#&gt; Writing sub_median.Rd</div><div class='output co'>#&gt; <span class='message'>[+] 2 package(s) added: stats, testthat.</span></div><div class='output co'>#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpMkaPyS/dummypackage"</div><div class='input'>
+#&gt; Writing sub_median.Rd</div><div class='output co'>#&gt; <span class='message'>[+] 2 package(s) added: stats, testthat.</span></div><div class='output co'>#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmplKShVC/dummypackage"</div><div class='input'>
 <span class='co'># Try pkgdown build</span>
 <span class='co'># pkgdown::build_site(dummypackage)</span>
 <span class='co'># usethis::use_build_ignore("docs")</span>
