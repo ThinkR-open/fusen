@@ -87,7 +87,7 @@ usethis::use_build_ignore("_pkgdown.yml")
 
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")
-attachment::att_amend_desc()
+attachment::att_amend_desc(pkg_ignore = "testthat", extra.suggests = "testthat")
 # attachment::create_dependencies_file()
 
 # Description and Bibliography

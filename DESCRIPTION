@@ -13,6 +13,8 @@ Description: Use Rmd First method to build your package. Start
     your package with documentation. Everything can be set from a Rmd file
     in your project.
 License: MIT + file LICENSE
+URL: https://thinkr-open.github.io/fusen/,
+    https://github.com/Thinkr-open/fusen
 Imports: 
     attachment,
     desc,

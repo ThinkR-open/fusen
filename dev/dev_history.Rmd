@@ -531,6 +531,7 @@ create_tests_files <- function(parsed_tbl, pkg_path) {
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
     grepl("test", parsed_tbl$label), ]
   if (nrow(rmd_test) != 0) {
+    requireNamespace("testthat")
     # setup testhat
     test_dir <- file.path(pkg_path, "tests")
     if (!dir.exists(test_dir)) {

@@ -51,6 +51,7 @@ usethis::use_mit_license("Sébastien Rochette")
 ```
 
   - Follow the guide to write your analysis and functionnalities
+    following the template
       - You probably develop them with a few examples and tests
       - *For the first time, you can let the code as is, this is already
         the content for a working package*
