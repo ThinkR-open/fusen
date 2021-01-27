@@ -11,6 +11,7 @@ usethis::use_git_ignore("pkgdown")
 usethis::use_build_ignore("docs")
 usethis::use_build_ignore("pkgdown")
 
+usethis::use_lifecycle_badge("Experimental")
 
 usethis::git_vaccinate()
 

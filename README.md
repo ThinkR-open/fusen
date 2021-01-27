@@ -9,6 +9,8 @@
 status](https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg)](https://github.com/ThinkR-open/fusen/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg)](https://codecov.io/gh/ThinkR-open/fusen?branch=master)
+[![Lifecycle:
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 <!-- badges: end -->
 
 {fusen} inflates a Rmarkdown file to magically create a package.
@@ -24,6 +26,9 @@ You can install the development version of {fusen} from GitHub:
 # install.packages("remotes")
 remotes::install_github("fusen")
 ```
+
+*Note that this package relies on {parsermd}, which is also under
+development and not currently released on CRAN.*
 
 ## You are one Rmarkdown away from building a package\!
 
