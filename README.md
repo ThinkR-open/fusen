@@ -24,7 +24,7 @@ You can install the development version of {fusen} from GitHub:
 
 ``` r
 # install.packages("remotes")
-remotes::install_github("fusen")
+remotes::install_github("ThinkR-open/fusen")
 ```
 
 *Note that this package relies on {parsermd}, which is also under
