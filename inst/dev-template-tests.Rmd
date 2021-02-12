@@ -3,6 +3,8 @@ title: "dev_history.Rmd for working package"
 author: "Sébastien Rochette"
 date: "23/01/2021"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r development, include=FALSE}
@@ -17,6 +19,7 @@ Add this chunk using `fusen::description_chunk()`
 -->
 
 ```{r description, eval=FALSE}
+# --> for parse tests
 fusen::fill_description  pkg = dummypackage,
   fields = list(
     Title = "Build A Package From Rmarkdown file",
@@ -119,6 +122,38 @@ my_third_median <- function(x, na.rm = TRUE) {
 }
 ```
 
+
+## Empty ones
+
+```{r function-3}
+
+
+```
+
+```{r examples-3}
+
+```
+
+```{r tests-3}
+
+```
+
+# The third median without example
+
+```{r function-2}
+#' My third median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+my_third_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
 
 # There can be development actions
 
