@@ -1,0 +1,177 @@
+---
+title: "dev_history.Rmd for working package"
+author: "Sébastien Rochette"
+date: "23/01/2021"
+output: html_document
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+# Calculate the median of a vector
+
+```{r function}
+#' Split Rmd file 
+#'
+#' @param file Path to Rmd file
+#'
+#' @return A tibble with a line for each Rmd part
+split_rmd <- function(file) {
+  
+  target_labels <- c("description", "development", "function", "example", "test")
+  
+  groups <- group_rmd(file)
+  first_of_group <- c(TRUE, (head(groups, -1)) != tail(groups, -1))
+  count_groups <- cumsum(first_of_group)
+  
+  extract_labels <- function(x, type, lines, target_labels) {
+    if (type[[x]] != "rmd_chunk") { 
+      return(NA_character_) 
+    } else {
+      stringr::str_extract(lines[[x]][1], paste(target_labels, collapse = "|"))
+    }
+  }
+  extract_title <- function(x, type, lines) {
+    if (type[[x]] != "rmd_heading") { 
+      return(NA_character_) 
+    } else {
+      gsub("^#+\\s+", "", lines[[x]])
+    }
+  }
+  extract_code <- function(x, type, lines) {
+    if (type[[x]] != "rmd_chunk") { 
+      return(NA_character_) 
+    } else {
+      lines[[x]][-c(1, length(lines[[x]]))]
+    }
+  }
+  
+  parsed <- tibble::tibble(  
+    groups = groups[first_of_group],
+    type = stringr::str_extract(groups, "(\\w+)"),
+    lines = split(x, count_groups),
+    labels = unlist(
+      lapply(seq_along(type), extract_labels, 
+             type = type, lines = lines, target_labels = target_labels)
+    ),
+    title = unlist(lapply(seq_along(type), extract_title, 
+                          type = type, lines = lines)),
+    section = c(NA_character_, title[!is.na(title)])[1 + cumsum(!is.na(title))],
+    code = lapply(seq_along(type), extract_code, 
+                  type = type, lines = lines)
+  )
+  parsed
+}
+
+#' Groupe parts of Rmd file
+#'
+#' @param file path to Rmd file
+#'
+#' @return Character vector of groups of lines
+#'
+#' @examples
+#' file <- system.file("dev-template-tests.Rmd", package = "fusen")
+#' group_rmd(file)
+group_rmd <- function(file) {
+  x <- xfun::read_utf8(file)
+  
+  # Info 
+  x_info <- rep(NA_character_, length(x))
+  
+  # Yaml
+  yaml_begin <- 1
+  yaml_end <- which(grepl("^---", x))[2]
+  x_info[yaml_begin:yaml_end] <- "rmd_yaml_list"
+  
+  # Chunks
+  chunk.begin <- knitr::all_patterns$md$chunk.begin
+  chunk.end <- knitr::all_patterns$md$chunk.end
+  blks = grepl(chunk.begin, x)
+  txts = utils::getFromNamespace("filter_chunk_end", "knitr")(blks, grepl(chunk.end, x))
+  if (length(blks) != length(txts)) {
+    stop("You may have let some not closed chunks")
+  }
+  chunks_lines_list <- lapply(seq_along(which(blks)), 
+                              function(x) {which(blks)[x]:which(txts)[x]})
+  count_chunks <- seq_along(chunks_lines_list)
+  count_chunks <- formatC(count_chunks, flag = "0", width = max(nchar(count_chunks)))
+  chunks_lines_nb <- unlist(lapply(seq_along(chunks_lines_list), 
+                                   function(x) rep(paste0("rmd_chunk-", count_chunks[x]),
+                                                   length(chunks_lines_list[[x]]))))
+  chunks_lines_vec <- unlist(chunks_lines_list)
+  x_info[chunks_lines_vec] <- chunks_lines_nb
+  
+  # Comments
+  comment.begin <- "^<!--"
+  comment.end <- "-->"
+  starts <- which(grepl(comment.begin, x))
+  starts <- starts[!starts %in% c(yaml_begin:yaml_end, chunks_lines_vec)]
+  ends <- which(grepl(comment.end, x))
+  ends <- ends[!ends %in% c(yaml_begin:yaml_end, chunks_lines_vec)]
+  if (length(starts) != length(ends)) {
+    stop("You may have let some not closed comments tags like <!-- or --> in your text")
+  }
+  comments_lines_list <- lapply(seq_along(starts), 
+                              function(x) {starts[x]:ends[x]})
+  count_comments <- seq_along(comments_lines_list)
+  count_comments <- formatC(count_comments, flag = "0", width = max(nchar(count_comments)))
+  comments_lines_nb <- unlist(lapply(seq_along(comments_lines_list), 
+                                   function(x) rep(paste0("rmd_comment-", count_comments[x]),
+                                                   length(comments_lines_list[[x]]))))
+  comments_lines_vec <- unlist(comments_lines_list)
+  x_info[comments_lines_vec] <- comments_lines_nb
+  
+  
+  # hashtags
+  hashtag <- which(grepl("^#", x))
+  titles <- hashtag[!hashtag %in% 
+                      c(yaml_begin:yaml_end, chunks_lines_vec, comments_lines_vec)]
+  count_titles <- seq_along(titles)
+  count_titles <- formatC(count_titles, flag = "0", width = max(nchar(count_titles)))
+  x_info[titles] <- paste0("rmd_heading-", count_titles)
+  
+  # text
+  all_text <- which(is.na(x_info))
+  # Prev is text
+  count_text <- cumsum(c(TRUE, (head(all_text, -1) + 1) != tail(all_text, -1)))
+  count_text <- formatC(count_text, flag = "0", width = max(nchar(count_text)))
+  texts <- paste0("rmd_markdown-", count_text)
+  x_info[all_text] <- texts
+  
+  # Return groups
+  x_info
+}
+```
+
+```{r examples}
+file <- system.file("dev-template-tests.Rmd", package = "fusen")
+groups <- group_rmd(file)
+
+
+```
+
+```{r tests}
+file <- system.file("dev-template-tests.Rmd", package = "fusen")
+groups <- group_rmd(file)
+test_that("group_rmd works properly", {
+  expect_true(all(groups[1:8] == "rmd_yaml_list"))
+  expect_true(all(groups[10:12] == "rmd_chunk-01"))
+  expect_true(all(groups[14:19] == "rmd_comment-1"))
+  expect_true(all(groups[21:35] == "rmd_chunk-02"))
+  expect_true(all(groups[37] == "rmd_heading-1"))
+})
+
+file <- system.file("dev-template-test-parse-nothing.Rmd", package = "fusen")
+groups <- group_rmd(file)
+test_that("group_rmd does not fail", {
+  expect_true(all(groups[1:8] == "yaml"))
+})
+
+file <- system.file("dev-template-tests.Rmd", package = "fusen")
+tbl_rmd <- split_rmd(file)
+test_that("split_rmd works", {
+  expect_true(tbl_rmd)
+})
+
+```

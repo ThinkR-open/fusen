@@ -28,8 +28,7 @@ Imports:
     testthat,
     tibble,
     tidyr,
-    usethis,
-    utils
+    usethis
 Suggests: 
     knitr,
     rmarkdown

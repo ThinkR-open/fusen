@@ -31,7 +31,7 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
   dev_path <- file.path(pkg_path, dev_dir, "dev_history.Rmd")
 
   if (file.exists(dev_path) & overwrite == FALSE) {
-    n <- length(list.files(dev_dir, pattern = "^dev_history"))
+    n <- length(list.files(dev_dir, pattern = "^dev_history.*[.]Rmd"))
     dev_path <- file.path(pkg_path, dev_dir, paste0("dev_history_", n + 1, ".Rmd"))
     message(
       "dev_history.Rmd already exists. New dev file is renamed '",
@@ -44,10 +44,12 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     dev_path
   )
 
+  # TODO Modify fusen::inflate(rmd = "dev/dev_history.Rmd") with file name
+  
   # .Rbuildignore
   # Files to ignore
   # lines <- paste0("^", gsub(".", "\\.", basename(dev_path), fixed = TRUE), "$")
-  lines <- dev_dir
+  lines <- paste0('^', dev_dir, '$')
 
   buildfile <- normalizePath(file.path(pkg_path, ".Rbuildignore"), mustWork = FALSE)
   if (!file.exists(buildfile)) {
@@ -66,7 +68,7 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     cat(enc2utf8(c("*.html", "*.R")), sep = "\n", file = file.path(dev_dir, ".gitignore"))
   }
   
-  if (isTRUE(open) & interactive()) {utils::file.edit(dev_path)}
+  if (isTRUE(open) & interactive()) {usethis::edit_file(dev_path)}
   
   dev_path
 }
