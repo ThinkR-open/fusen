@@ -1,6 +1,6 @@
 Package: fusen
 Title: Build a Package from RMarkdown File
-Version: 0.1.0
+Version: 0.1.1
 Authors@R: 
     c(person(given = "Sebastien",
              family = "Rochette",
