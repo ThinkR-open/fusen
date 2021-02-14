@@ -856,6 +856,7 @@ unlink(dummypackage, recursive = TRUE)
 
 ```{r development-2, eval=FALSE}
 usethis::use_code_of_conduct()
+usethis::use_news_md()
 
 fusen::inflate(rmd = file.path("dev", "dev_history.Rmd"), name = "use_fusen", check = FALSE)
 
