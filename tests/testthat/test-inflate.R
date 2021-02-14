@@ -52,8 +52,10 @@ test_that("inflate() worked correctly", {
 })
 
 # Test package no check errors
-check_out <- rcmdcheck::rcmdcheck(dummypackage, quiet = TRUE)
-# stop(check_out[["warnings"]])
+check_out <- rcmdcheck::rcmdcheck(dummypackage, quiet = TRUE,
+                                  args = c("--no-manual"))
+# stop(paste(check_out[["errors"]], check_out[["warnings"]], check_out[["notes"]], collapse = "\n---\n"))
+# stop(paste(check_out[["notes"]], collapse = "\n---\n"))
 test_that("inflate() output error", {
   # No errors
   expect_true(length(check_out[["errors"]]) == 0)
@@ -61,7 +63,7 @@ test_that("inflate() output error", {
   # expect_true(length(check_out[["warnings"]]) == 1)
   expect_true(grepl("license", check_out[["warnings"]][1]))
   # No Notes
-  expect_true(length(check_out[["notes"]]) == 0)
+  expect_true(length(check_out[["notes"]]) ==  0)
 })
 # Clean R, tests and vignettes
 unlink(file.path(dummypackage, "R"), recursive = TRUE)
