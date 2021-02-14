@@ -13,3 +13,5 @@
 ^_pkgdown\.yml$
 ^docs$
 ^pkgdown$
+rstudio\_dotconfig
+rstudio\_dotrstudio

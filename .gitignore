@@ -5,3 +5,6 @@ inst/doc
 .DS_Store
 docs
 pkgdown
+rstudio_dotrstudio
+rstudio_dotconfig
+check
