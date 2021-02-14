@@ -26,7 +26,6 @@ Add dev_history.Rmd file that drives package development
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
 dir.create(dummypackage)
-browseURL(dummypackage)
 
 # Add
 add_dev_history(pkg = dummypackage)

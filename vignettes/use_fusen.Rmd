@@ -22,7 +22,7 @@ library(fusen)
 
 - Create a new directory / new project
 - Add the Rmarkdown template with `fusen::add_dev_history()`
-- Follow the `"dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
+- Follow the `"dev/dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
   - Chunk named `function` gets the code of a function
   - Chunk named `example` gets the code for examples of using the function. This will be used for function `@examples` and will be kept for the vignette
   - Chunk named `tests` gets the code for unit testing
@@ -57,7 +57,6 @@ Add this chunk using `fusen::description_chunk()`
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
 dir.create(dummypackage)
-browseURL(dummypackage)
 
 # Add
 add_dev_history(pkg = dummypackage)
@@ -73,7 +72,6 @@ unlink(dummypackage, recursive = TRUE)
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
 dir.create(dummypackage)
-browseURL(dummypackage)
 
 fill_description(
   pkg = dummypackage,
@@ -96,7 +94,7 @@ unlink(dummypackage, recursive = TRUE)
 
 # There can be development actions
 
-These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
+These will be included in the `dev/dev_history.R` file of your package, but won't be direct part of it.
 
 Name the following chunk with `{r development-1, eval=FALSE}`
 
@@ -108,7 +106,7 @@ usethis::use_mit_license("Sébastien Rochette")
 
 # Execute in the console directly
 
-fusen::inflate(rmd = "dev_history.Rmd")
+fusen::inflate(rmd = "dev/dev_history.Rmd")
 ```
 
 

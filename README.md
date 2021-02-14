@@ -30,53 +30,50 @@ remotes::install_github("fusen")
 *Note that this package relies on {parsermd}, which is also under
 development and not currently released on CRAN.*
 
-## You are one Rmarkdown away from building a package\!
+## You are one Rmarkdown away from building a package!
 
-  - Create and open a new directory or a new project
-  - **Add the templated Rmd** inside and open it
-
-<!-- end list -->
+-   Create and open a new directory or a new project
+-   Run the following code to **add the templated Rmd** inside and open
+    it:
 
 ``` r
 dev_file <- fusen::add_dev_history(open = TRUE)
 ```
 
-  - Run the first chunks asking to describe your package and license it
-
-<!-- end list -->
+-   In the template, run the first chunks asking to describe your
+    package and license it
+    -   They look like these lines of code:
 
 ``` r
 fill_description(fields = list(Title = "My Awesome Package"))
 usethis::use_mit_license("Sébastien Rochette")
 ```
 
-  - Follow the guide to write your analysis and functionnalities
-    following the template
-      - You probably develop them with a few examples and tests
-      - *For the first time, you can let the code as is, this is already
+-   Write your analysis and functionnalities following the Rmd template
+    -   You probably develop them with a few examples and tests
+    -   *For the first time, you can let the code as is, this is already
         the content for a working package*
-  - **Transform this Rmd as a package**
-
-<!-- end list -->
+-   Run the following code to **transform the templated Rmd as a
+    package**
 
 ``` r
 fusen::inflate(rmd = dev_file, name = "my-functionnality", check = TRUE)
 ```
 
-**That’s it\! You built a package\!**
+**That’s it! You built a package!**
 
-## The RMarkdown template
+## Description of the RMarkdown template
 
-  - Follow the `"dev_history.Rmd"` template to write your documentation
-    and build your functions and test your examples.
-      - Chunk named `function` gets the code of a function
-      - Chunk named `example` gets the code for examples of using the
+-   Follow the `"dev/dev_history.Rmd"` template to write your
+    documentation and build your functions and test your examples.
+    -   Chunk named `function` gets the code of a function
+    -   Chunk named `example` gets the code for examples of using the
         function. This will be used for function `@examples` and will be
         kept for the vignette
-      - Chunk named `tests` gets the code for unit testing
-      - Chunk named `development` gets the code for development
+    -   Chunk named `tests` gets the code for unit testing
+    -   Chunk named `development` gets the code for development
         purposes, usually only used once like {usethis} functions
-  - Inflate the template to transform it as a package with functions,
+-   Inflate the template to transform it as a package with functions,
     unit tests and the current Rmd transformed as a vignette. And check.
 
 *Note that the `"dev_history.Rmd"` template is indeed a working
@@ -86,9 +83,7 @@ template available in its GitHub repository.*
 
 ## A reproducible example
 
-  - Build a package from Rmd template in a temporary directory
-
-<!-- end list -->
+-   Build a package from Rmd template in a temporary directory
 
 ``` r
 # Create a new project
@@ -107,10 +102,8 @@ usethis::use_mit_license("Sébastien Rochette")
 fusen::inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
 ```
 
-  - Test the correct documentation of the package with its dedicated
+-   Test the correct documentation of the package with its dedicated
     website
-
-<!-- end list -->
 
 ``` r
 # Build {pkgdown} to test it
@@ -130,12 +123,12 @@ some unit tests to verify the outputs. This is even more true if you
 follow this guide : [‘Rmd first’: When development starts with
 documentation](https://rtask.thinkr.fr/blog/rmd-first-when-development-starts-with-documentation/)
 After that, you need to move your functions and scripts in the correct
-place. Let {fusen} do that for you\!
+place. Let {fusen} do that for you!
 
 {fusen} is first addressed to people who never wrote a package before
 but know how to write a RMarkdown file. Understanding package
 infrastructure and correctly settling it can be frightening. This
-package may help them do the first step\!
+package may help them do the first step!
 
 {fusen} is also addressed to more advanced developers who are fed up
 with switching between R files, tests files, vignettes. In particular,
@@ -157,12 +150,12 @@ to let a nice package appear.
 
 ## Aknowledgments
 
-  - Thanks to Deemah who asked me to go further ‘Rmd first’ after my
+-   Thanks to Deemah who asked me to go further ‘Rmd first’ after my
     presentation at use’R 2019 in Toulouse: [‘The “Rmd first” method:
     when projects start with
     documentation’](https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf)
     (Video on Youtube: <https://youtu.be/cB1BCxFbhtk>).
-  - Thanks to @rundel and its package {parsermd} who helped me get back
+-   Thanks to @rundel and its package {parsermd} who helped me get back
     in this project with ease : <https://github.com/rundel/parsermd>
 
 ## Code of Conduct

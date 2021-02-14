@@ -2,7 +2,6 @@
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
 dir.create(dummypackage)
-browseURL(dummypackage)
 
 # Add
 dev_path <- add_dev_history(pkg = dummypackage)

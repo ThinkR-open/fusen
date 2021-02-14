@@ -123,25 +123,10 @@ my_third_median <- function(x, na.rm = TRUE) {
 ```
 
 
-## Empty ones
+# The fourth median without example in but one out
 
 ```{r function-3}
-
-
-```
-
-```{r examples-3}
-
-```
-
-```{r tests-3}
-
-```
-
-# The third median without example
-
-```{r function-2}
-#' My third median
+#' My fourth median
 #'
 #' @param x Vector of Numeric values
 #' @inheritParams stats::median
@@ -149,10 +134,55 @@ my_third_median <- function(x, na.rm = TRUE) {
 #' @return
 #' Median of vector x
 #' @export
-my_third_median <- function(x, na.rm = TRUE) {
+my_fourth_median <- function(x, na.rm = TRUE) {
   if (!is.numeric(x)) {stop("x should be numeric")}
   stats::median(x, na.rm = na.rm)
 }
+```
+
+```{r examples-3}
+my_fourth_median(1:12)
+my_fourth_median(8:20)
+```
+
+# The fifth median without empty example and test
+
+```{r function-4}
+#' My fifth median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+my_fifth_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+```{r examples-4}
+
+```
+
+```{r tests-4}
+
+```
+
+## Empty ones
+
+```{r function-5}
+
+
+```
+
+```{r examples-5}
+
+```
+
+```{r tests-5}
+
 ```
 
 # There can be development actions

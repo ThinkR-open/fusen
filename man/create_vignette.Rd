@@ -4,12 +4,12 @@
 \alias{create_vignette}
 \title{Create vignette}
 \usage{
-create_vignette(parsed_tbl, pkg_path, name)
+create_vignette(parsed_tbl, pkg, name)
 }
 \arguments{
 \item{parsed_tbl}{tibble of a parsed Rmd}
 
-\item{pkg_path}{Path to package}
+\item{pkg}{Path to package}
 
 \item{name}{Name of the resulting vignette}
 }
