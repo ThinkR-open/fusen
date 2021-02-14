@@ -14,7 +14,6 @@
 #' tmpdir <- tempdir()
 #' dummypackage <- file.path(tmpdir, "dummypackage")
 #' dir.create(dummypackage)
-#' browseURL(dummypackage)
 #' 
 #' # Add
 #' add_dev_history(pkg = dummypackage)
@@ -26,13 +25,13 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
   old <- setwd(pkg)
   on.exit(setwd(old))
 
-  pkg_path <- normalizePath(pkg)
+  pkg <- normalizePath(pkg)
   if (!dir.exists(dev_dir)) {dir.create(dev_dir)}
-  dev_path <- file.path(pkg_path, dev_dir, "dev_history.Rmd")
+  dev_path <- file.path(pkg, dev_dir, "dev_history.Rmd")
 
   if (file.exists(dev_path) & overwrite == FALSE) {
     n <- length(list.files(dev_dir, pattern = "^dev_history.*[.]Rmd"))
-    dev_path <- file.path(pkg_path, dev_dir, paste0("dev_history_", n + 1, ".Rmd"))
+    dev_path <- file.path(pkg, dev_dir, paste0("dev_history_", n + 1, ".Rmd"))
     message(
       "dev_history.Rmd already exists. New dev file is renamed '",
       basename(dev_path), "'. Use overwrite = TRUE, if you want to ",
@@ -44,14 +43,11 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     dev_path
   )
 
-  # TODO Modify fusen::inflate(rmd = "dev/dev_history.Rmd") with file name
-  
   # .Rbuildignore
-  # Files to ignore
-  # lines <- paste0("^", gsub(".", "\\.", basename(dev_path), fixed = TRUE), "$")
-  lines <- paste0('^', dev_dir, '$')
+  # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
+  lines <- paste0("^", dev_dir, "$")
 
-  buildfile <- normalizePath(file.path(pkg_path, ".Rbuildignore"), mustWork = FALSE)
+  buildfile <- normalizePath(file.path(pkg, ".Rbuildignore"), mustWork = FALSE)
   if (!file.exists(buildfile)) {
     existing_lines <- ""
   } else {
@@ -62,12 +58,23 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     all <- c(existing_lines, new)
     cat(enc2utf8(all), file = buildfile, sep = "\n")
   }
-
-  # Add a gitignore file in dev_dir
-  if (!file.exists(file.path(dev_dir, ".gitignore"))) {
-    cat(enc2utf8(c("*.html", "*.R")), sep = "\n", file = file.path(dev_dir, ".gitignore"))
-  }
   
+  # Add a gitignore file in dev_dir
+  # Files to ignore
+  lines <- c("*.html", "*.R")
+
+  gitfile <- normalizePath(file.path(dev_dir, ".gitignore"), mustWork = FALSE)
+  if (!file.exists(gitfile)) {
+    existing_lines <- ""
+  } else {
+    existing_lines <- readLines(gitfile, warn = FALSE, encoding = "UTF-8")
+  }
+  new <- setdiff(lines, existing_lines)
+  if (length(new) != 0) {
+    all <- c(existing_lines, new)
+    cat(enc2utf8(all), file = gitfile, sep = "\n")
+  }
+
   if (isTRUE(open) & interactive()) {usethis::edit_file(dev_path)}
   
   dev_path

@@ -4,12 +4,12 @@
 \alias{create_r_files}
 \title{create R file with code content and fun name}
 \usage{
-create_r_files(fun_code, pkg_path)
+create_r_files(fun_code, pkg)
 }
 \arguments{
 \item{fun_code}{R code of functions in Rmd as character}
 
-\item{pkg_path}{Path to package}
+\item{pkg}{Path to package}
 }
 \description{
 create R file with code content and fun name

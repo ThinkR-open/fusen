@@ -40,28 +40,29 @@ _Note that this package relies on {parsermd}, which is also under development an
 ## You are one Rmarkdown away from building a package! 
 
 - Create and open a new directory or a new project
-- **Add the templated Rmd** inside and open it
+- Run the following code to **add the templated Rmd** inside and open it:
 ```{r, eval=FALSE}
 dev_file <- fusen::add_dev_history(open = TRUE)
 ```
-- Run the first chunks asking to describe your package and license it
+- In the template, run the first chunks asking to describe your package and license it
+  + They look like these lines of code:
 ```{r, eval=FALSE}
 fill_description(fields = list(Title = "My Awesome Package"))
 usethis::use_mit_license("Sébastien Rochette")
 ```
-- Follow the guide to write your analysis and functionnalities following the template
+- Write your analysis and functionnalities following the Rmd template
   + You probably develop them with a few examples and tests
   + *For the first time, you can let the code as is, this is already the content for a working package*
-- **Transform this Rmd as a package**
+- Run the following code to **transform the templated Rmd as a package**
 ```{r, eval=FALSE}
 fusen::inflate(rmd = dev_file, name = "my-functionnality", check = TRUE)
 ```
 
 **That's it! You built a package!**
 
-## The RMarkdown template
+## Description of the RMarkdown template
 
-- Follow the `"dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
+- Follow the `"dev/dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
   - Chunk named `function` gets the code of a function
   - Chunk named `example` gets the code for examples of using the function. This will be used for function `@examples` and will be kept for the vignette
   - Chunk named `tests` gets the code for unit testing

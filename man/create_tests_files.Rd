@@ -4,12 +4,12 @@
 \alias{create_tests_files}
 \title{Check if there are unit tests ----}
 \usage{
-create_tests_files(parsed_tbl, pkg_path)
+create_tests_files(parsed_tbl, pkg)
 }
 \arguments{
 \item{parsed_tbl}{tibble of a parsed Rmd}
 
-\item{pkg_path}{Path to package}
+\item{pkg}{Path to package}
 }
 \description{
 Check if there are unit tests ----

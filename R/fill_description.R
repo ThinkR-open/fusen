@@ -15,7 +15,6 @@
 #' tmpdir <- tempdir()
 #' dummypackage <- file.path(tmpdir, "dummypackage")
 #' dir.create(dummypackage)
-#' browseURL(dummypackage)
 #' 
 #' fill_description(
 #'   pkg = dummypackage,
