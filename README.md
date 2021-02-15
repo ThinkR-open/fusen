@@ -32,15 +32,17 @@ development and not currently released on CRAN.*
 
 ## You are one Rmarkdown away from building a package!
 
--   Create and open a new directory or a new project
--   Run the following code to **add the templated Rmd** inside and open
-    it:
+-   Create and open a new directory or a new RStudio project
+    -   Choose your directory/package name like `my.package` for
+        instance
+-   Run the following code directly in the console to **add the
+    templated Rmd** in the project and open it:
 
 ``` r
 dev_file <- fusen::add_dev_history(open = TRUE)
 ```
 
--   In the template, run the first chunks asking to describe your
+-   In the Rmd template, run the first chunks asking to describe your
     package and license it
     -   They look like these lines of code:
 
@@ -55,12 +57,42 @@ usethis::use_mit_license("Sébastien Rochette")
         the content for a working package*
 -   Run the following code to **transform the templated Rmd as a
     package**
+    -   This will open the vignette created
 
 ``` r
 fusen::inflate(rmd = dev_file, name = "my-functionnality", check = TRUE)
 ```
 
 **That’s it! You built a package!**
+
+Let’s test it now:
+
+-   Install your package locally
+
+``` r
+remotes::install_local()
+```
+
+-   Restart your R session to clean environment
+    -   You can restart your RStudio session to let appear the “Build”
+        tab panel
+-   Test functions of your package
+
+``` r
+my.package::my_median(1:12)
+```
+
+-   Test the correct documentation of the package with its dedicated
+    website
+
+``` r
+# Build {pkgdown} to test it
+pkgdown::build_site()
+# > See references and articles
+# Hide output from package and git
+usethis::use_build_ignore("docs")
+usethis::use_git_ignore("docs")
+```
 
 ## Description of the RMarkdown template
 
@@ -84,6 +116,7 @@ template available in its GitHub repository.*
 ## A reproducible example
 
 -   Build a package from Rmd template in a temporary directory
+    -   *This is for testing purposes*
 
 ``` r
 # Create a new project
@@ -100,18 +133,6 @@ fusen::fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package
 usethis::use_mit_license("Sébastien Rochette")
 # You may need to execute inflate() in the console directly
 fusen::inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
-```
-
--   Test the correct documentation of the package with its dedicated
-    website
-
-``` r
-# Build {pkgdown} to test it
-pkgdown::build_site(pkg = dummypackage)
-# > See references and articles
-# Hide output from package and git
-usethis::use_build_ignore("docs")
-usethis::use_git_ignore("docs")
 ```
 
 ## Who is {fusen} for?
