@@ -39,6 +39,8 @@ _Note that this package relies on {parsermd}, which is also under development an
 
 ## You are one Rmarkdown away from building a package! 
 
+*{fusen} is all about correctly separating and naming chunks.*  
+
 - Create and open a new directory or a new RStudio project
   + Choose your directory/package name like `my.package` for instance
 - Run the following code directly in the console to **add the templated Rmd** in the project and open it:
@@ -87,9 +89,12 @@ usethis::use_git_ignore("docs")
 
 ## Description of the RMarkdown template
 
+As I said earlier, this is all about using the correct split and name for your chunks.
+
 - Follow the `"dev/dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
   - Chunk named `function` gets the code of a function
-  - Chunk named `example` gets the code for examples of using the function. This will be used for function `@examples` and will be kept for the vignette
+  - Chunk named `example` gets the code for examples of using the function. This will be used for function `@examples` and will be kept for the vignette. 
+    + As chunk names should be unique in the future vignette, you can add numbers like `example-1`, `example-2`, ...
   - Chunk named `tests` gets the code for unit testing
   - Chunk named `development` gets the code for development purposes, usually only used once like {usethis} functions
 - Inflate the template to transform it as a package with functions, unit tests and the current Rmd transformed as a vignette. And check.

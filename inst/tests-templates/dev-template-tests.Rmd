@@ -34,6 +34,26 @@ fusen::fill_description  pkg = dummypackage,
 usethis::use_mit_license("Sébastien Rochette")
 ```
 
+# Read data
+
+<!-- Store your dataset in a directory named "inst/" at the root of your project -->
+<!-- Use it for your tests in this Rmd thanks to `load_all()` to make it available
+and `system.file()` to read it in your examples 
+-->
+
+```{r development-2}
+# Run all in the console directly
+# Create "inst/" directory
+dir.create(here::here("inst"))
+# Example dataset
+# file.copy(system.file("clients.csv", package = "fusen"), "inst")
+# Make your dataset file available to the current Rmd
+pkgload::load_all(path = here::here(), export_all = FALSE)
+# You will be able to read your data file as follows
+datafile <- system.file("clients.csv", package = "<my_package_name>")
+clients <- read.csv(datafile)
+```
+
 # Calculate the median of a vector
 
 ```{r function}

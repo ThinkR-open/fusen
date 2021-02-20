@@ -38,14 +38,19 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
       "overwrite the existing dev_history.Rmd file, or rename it."
     )
   }
-  file.copy(
-    system.file("dev-template.Rmd", package = "fusen"),
-    dev_path
-  )
+  
+  # Change lines asking for pkg name
+  lines_template <- readLines(system.file("dev-template.Rmd", package = "fusen"))
+  
+  lines_template[grepl("<my_package_name>", lines_template)] <-
+    gsub("<my_package_name>", basename(pkg), 
+         lines_template[grepl("<my_package_name>", lines_template)])
+  
+  cat(enc2utf8(lines_template), file = dev_path, sep = "\n")
 
   # .Rbuildignore
   # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
-  lines <- paste0("^", dev_dir, "$")
+  lines <- c(paste0("^", dev_dir, "$"), "^\\.here$")
 
   buildfile <- normalizePath(file.path(pkg, ".Rbuildignore"), mustWork = FALSE)
   if (!file.exists(buildfile)) {
@@ -75,6 +80,7 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     cat(enc2utf8(all), file = gitfile, sep = "\n")
   }
 
+  here::set_here(pkg)
   if (isTRUE(open) & interactive()) {usethis::edit_file(dev_path)}
   
   dev_path
