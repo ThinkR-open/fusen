@@ -18,9 +18,10 @@ This will fill the description of your package.
 Add this chunk using `fusen::description_chunk()`
 -->
 
-```{r description, eval=FALSE}
+```{r description}
 # --> for parse tests
-fusen::fill_description  pkg = dummypackage,
+fusen::fill_description(
+  pkg = here::here(),
   fields = list(
     Title = "Build A Package From Rmarkdown file",
     Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.",
@@ -42,16 +43,24 @@ and `system.file()` to read it in your examples
 -->
 
 ```{r development-2}
+# Set , error=TRUE for checks() if needed
 # Run all in the console directly
 # Create "inst/" directory
 dir.create(here::here("inst"))
 # Example dataset
-# file.copy(system.file("clients.csv", package = "fusen"), "inst")
+file.copy(system.file("nyc_squirrels_sample.csv", package = "fusen"), here::here("inst"))
 # Make your dataset file available to the current Rmd
 pkgload::load_all(path = here::here(), export_all = FALSE)
-# You will be able to read your data file as follows
-datafile <- system.file("clients.csv", package = "<my_package_name>")
-clients <- read.csv(datafile)
+# You will be able to read your example data file in each of your function examples and tests as follows
+# For check() only, we need to shim system.file, otherwise base::system.file does not recognised load_all()
+pkgload:::shim_system.file(package = "<my_package_name>")
+system.file(package = "<my_package_name>")
+list.files(system.file(package = "<my_package_name>"))
+datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
+datafile <- pkgload:::shim_system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
+here::here()
+datafile
+nyc_squirrels <- read.csv(datafile)
 ```
 
 # Calculate the median of a vector

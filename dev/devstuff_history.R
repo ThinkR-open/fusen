@@ -103,6 +103,9 @@ remotes::install_github("rundel/parsermd")
 # Utils for dev ----
 devtools::install(upgrade = "never")
 # devtools::load_all()
+devtools::test()
 devtools::check(vignettes = TRUE)
+rcmdcheck::rcmdcheck()
+rcmdcheck::rcmdcheck(args = "--as-cran")
 # ascii
 stringi::stri_trans_general("é", "hex")

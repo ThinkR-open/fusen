@@ -26,13 +26,15 @@ Imports:
     roxygen2,
     stats,
     stringr,
-    testthat,
     tibble,
     tidyr,
     usethis
 Suggests: 
     knitr,
-    rmarkdown
+    pkgload,
+    rmarkdown,
+    testthat,
+    withr
 VignetteBuilder: 
     knitr
 Remotes:
