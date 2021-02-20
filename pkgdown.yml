@@ -3,7 +3,7 @@ pkgdown: 1.6.1
 pkgdown_sha: ~
 articles:
   use_fusen: use_fusen.html
-last_built: 2021-02-15T08:05Z
+last_built: 2021-02-20T18:55Z
 urls:
   reference: https://thinkr-open.github.io/fusen//reference
   article: https://thinkr-open.github.io/fusen//articles

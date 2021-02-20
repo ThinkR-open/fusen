@@ -138,6 +138,7 @@
 <div id="you-are-one-rmarkdown-away-from-building-a-package" class="section level2">
 <h2 class="hasAnchor">
 <a href="#you-are-one-rmarkdown-away-from-building-a-package" class="anchor"></a>You are one Rmarkdown away from building a package!</h2>
+<p><em>{fusen} is all about correctly separating and naming chunks.</em></p>
 <ul>
 <li>Create and open a new directory or a new RStudio project
 <ul>
@@ -204,11 +205,16 @@
 <div id="description-of-the-rmarkdown-template" class="section level2">
 <h2 class="hasAnchor">
 <a href="#description-of-the-rmarkdown-template" class="anchor"></a>Description of the RMarkdown template</h2>
+<p>As I said earlier, this is all about using the correct split and name for your chunks.</p>
 <ul>
 <li>Follow the <code>"dev/dev_history.Rmd"</code> template to write your documentation and build your functions and test your examples.
 <ul>
 <li>Chunk named <code>function</code> gets the code of a function</li>
-<li>Chunk named <code>example</code> gets the code for examples of using the function. This will be used for function <code>@examples</code> and will be kept for the vignette</li>
+<li>Chunk named <code>example</code> gets the code for examples of using the function. This will be used for function <code>@examples</code> and will be kept for the vignette.
+<ul>
+<li>As chunk names should be unique in the future vignette, you can add numbers like <code>example-1</code>, <code>example-2</code>, …</li>
+</ul>
+</li>
 <li>Chunk named <code>tests</code> gets the code for unit testing</li>
 <li>Chunk named <code>development</code> gets the code for development purposes, usually only used once like {usethis} functions</li>
 </ul>
