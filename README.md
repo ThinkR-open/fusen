@@ -18,6 +18,10 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 > If you know how to create a Rmarkdown file, then you know how to build
 > a package.
 
+Indeed, this {fusen} package is a real-world example of {fusen} use as
+it was itself created from the `"dev_history.Rmd"` templates availables
+in `"dev/"` folder in its GitHub repository.
+
 ## Installation
 
 You can install the development version of {fusen} from GitHub:
@@ -116,9 +120,7 @@ for your chunks.
     unit tests and the current Rmd transformed as a vignette. And check.
 
 *Note that the `"dev_history.Rmd"` template is indeed a working
-example.*  
-*Note also that {fusen} was itself created from the `"dev_history.Rmd"`
-template available in its GitHub repository.*
+example.*
 
 ## A reproducible example
 

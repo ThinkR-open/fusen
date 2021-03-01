@@ -25,6 +25,7 @@ knitr::opts_chunk$set(
 
 > If you know how to create a Rmarkdown file, then you know how to build a package.
 
+Indeed, this {fusen} package is a real-world example of {fusen} use as it was itself created from the `"dev_history.Rmd"` templates availables in `"dev/"` folder in its GitHub repository.
 
 ## Installation
 
@@ -100,7 +101,6 @@ As I said earlier, this is all about using the correct split and name for your c
 - Inflate the template to transform it as a package with functions, unit tests and the current Rmd transformed as a vignette. And check.
 
 _Note that the `"dev_history.Rmd"` template is indeed a working example._  
-_Note also that {fusen} was itself created from the `"dev_history.Rmd"` template available in its GitHub repository._
 
 ## A reproducible example
 
