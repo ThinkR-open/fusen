@@ -227,6 +227,15 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")
 
 # Inflate your package
 
+```{r}
+# duplicate empty name
+```
+
+```{r}
+# duplicate empty name
+```
+
+
 You're one inflate from paper to box.
 Build your package from this very Rmarkdown using `fusen::inflate()`
 

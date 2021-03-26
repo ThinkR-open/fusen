@@ -470,6 +470,7 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg) {
   dev_labels_noex_regex <- paste(dev_labels_noex, collapse = "|")
   labels_in_vignette <- na.omit(parsed_tbl[["label"]][
     !grepl(dev_labels_noex_regex, parsed_tbl[["label"]])])
+  labels_in_vignette <- labels_in_vignette[!grepl("", labels_in_vignette)]
   
   if (any(duplicated(labels_in_vignette))) {
     stop("There are duplicated chunk names, ",
