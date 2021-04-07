@@ -19,7 +19,10 @@
 #' # {fusen} steps
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 #' dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
-#' inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+#' inflate(pkg = dummypackage, rmd = dev_file, name = "Exploration of my Data", check = FALSE)
+#' 
+#' # Explore directory of the package
+#' # browseURL(dummypackage)
 #' 
 #' # Try pkgdown build
 #' # pkgdown::build_site(dummypackage)
@@ -387,8 +390,18 @@ create_vignette <- function(parsed_tbl, pkg, name) {
   # vignette_tbl[["label"]] <- make.unique(vignette_tbl[["label"]], sep = "-")
   # # Not re-used in as_document()
 
-  usethis::use_vignette(name)
-  vignette_file <- file.path("vignettes", paste0(gsub("[^a-zA-Z0-9_-]+", "-", name), ".Rmd"))
+  # name <- "y  _ p n@ é ! 1"
+  cleaned_name <- gsub("^-|-$", "",
+                       gsub("-+", "-",
+                            gsub("-_|_-", "-",
+                                 gsub("[^([:alnum:]*_*-*)*]", "-", name))))
+  # grepl("^[[:alpha:]][[:alnum:]_-]*$", cleaned_name)
+  # asciify from {usethis} usethis:::asciify()
+  cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name)
+
+  
+  usethis::use_vignette(name = cleaned_name, title = name)
+  vignette_file <- file.path("vignettes", paste0(cleaned_name, ".Rmd"))
   if (!file.exists(vignette_file)) {
     stop(
       "Vignette could not be filled because of naming problem.",

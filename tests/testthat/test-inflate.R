@@ -51,7 +51,7 @@ test_that("inflate() worked correctly", {
   expect_true(file.exists(file.path(dummypackage, "NAMESPACE")))
 })
 
-# Test package no check errors
+# Test package no check errors ----
 check_out <- rcmdcheck::rcmdcheck(dummypackage, quiet = TRUE,
                                   args = c("--no-manual"))
 # stop(paste(check_out[["errors"]], check_out[["warnings"]], check_out[["notes"]], collapse = "\n---\n"))
@@ -71,7 +71,7 @@ unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
 
-# Tests no errors - no example, no tests
+# Tests no errors - no example, no tests ----
 file.copy(
   system.file("tests-templates/dev-template-no-example-no-tests.Rmd", package = "fusen"),
   dev_file,
@@ -89,7 +89,7 @@ unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
 
-# Tests no errors - empty
+# Tests no errors - empty ----
 file.copy(
   system.file("tests-templates/dev-template-test-parse-nothing.Rmd", package = "fusen"),
   dev_file,
@@ -104,7 +104,7 @@ unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
 
-# Tests errors - duplicate functions
+# Tests errors - duplicate functions ----
 file.copy(
   system.file("tests-templates/dev-template-stop-duplicate-fun.Rmd", package = "fusen"),
   dev_file,
@@ -133,7 +133,7 @@ unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
 
-# Test inflate with .Rproj and no .here, it works
+# Test no errors - inflate with .Rproj and no .here ----
 file.remove(file.path(dummypackage, ".here"))
 file.remove(file.path(dummypackage, ".Rbuildignore"))
 cat("", file = file.path(dummypackage, 'dummy.Rproj'))
@@ -168,6 +168,35 @@ test_that("add_dev_history inflates with .Rproj and no .here", {
 unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
+
+# Test no errors - clean name for vignette ----
+# name <- "# y  _ p n@ é ! 1"
+# name <- "exploration"
+# cleaned_name <- gsub("^-|-$", "",
+#                      gsub("-+", "-",
+#                           gsub("-_|_-", "-",
+#                           gsub("[^([:alnum:]*_*-*)*]", "-", name))))
+# grepl("^[[:alpha:]][[:alnum:]_-]*$", cleaned_name)
+# # asciify from {usethis} usethis:::asciify()
+# cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name)
+# usethis::use_vignette(name = cleaned_name, title = name)
+
+inflate(pkg = dummypackage, rmd = dev_file, name = "# y  _ p n@ é ! 1", check = FALSE)
+# Vignette name is also cleaned by {usethis} for special characters
+vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
+
+test_that("vignette is created with clean name", {
+  expect_true(file.exists(vignette_path))
+  vig_lines <- readLines(vignette_path)
+  expect_true(sum(grepl("# y  _ p n@ é ! 1", vig_lines, fixed = TRUE)) == 2)
+  expect_true(sum(grepl("y-p-n---1", vig_lines, fixed = TRUE)) == 0)
+})
+
+# Clean R, tests and vignettes
+unlink(file.path(dummypackage, "R"), recursive = TRUE)
+unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
+unlink(file.path(dummypackage, "tests"), recursive = TRUE)
+
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)

@@ -35,7 +35,10 @@ dir.create(dummypackage)
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
-inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+inflate(pkg = dummypackage, rmd = dev_file, name = "Exploration of my Data", check = FALSE)
+
+# Explore directory of the package
+# browseURL(dummypackage)
 
 # Try pkgdown build
 # pkgdown::build_site(dummypackage)
