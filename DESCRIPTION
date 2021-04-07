@@ -9,9 +9,9 @@ Authors@R:
              comment = c(ORCID = "0000-0002-1565-9313")),
       person(given = "ThinkR",
              role = "cph"))
-Description: Use Rmd First method to build your package. Start
-    your package with documentation. Everything can be set from a Rmd file
-    in your project.
+Description: Use Rmd First method to build your package. Start your
+    package with documentation. Everything can be set from a Rmd file in
+    your project.
 License: MIT + file LICENSE
 URL: https://thinkr-open.github.io/fusen/,
     https://github.com/Thinkr-open/fusen

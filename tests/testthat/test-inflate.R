@@ -132,6 +132,44 @@ unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
+
+# Test inflate with .Rproj and no .here, it works
+file.remove(file.path(dummypackage, ".here"))
+file.remove(file.path(dummypackage, ".Rbuildignore"))
+cat("", file = file.path(dummypackage, 'dummy.Rproj'))
+
+# Add
+# {fusen} steps
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+
+test_that("add_dev_history inflates with .Rproj and no .here", {
+  expect_true(file.exists(dev_file))
+  expect_false(file.exists(file.path(dummypackage, ".here")))
+  
+  rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
+  expect_true(file.exists(rbuildignore_file))
+  rbuildignore_lines <- readLines(rbuildignore_file)
+  expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
+  expect_false(any(grepl("[.]here", rbuildignore_lines)))
+  
+  # R files
+  my_median_file <- file.path(dummypackage, "R", "my_median.R")
+  expect_true(file.exists(my_median_file))
+  # vignette
+  expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+  # tests
+  expect_true(file.exists(
+    file.path(dummypackage, "tests", "testthat", "test-my_median.R")
+  ))
+})
+
+# Clean R, tests and vignettes
+unlink(file.path(dummypackage, "R"), recursive = TRUE)
+unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
+unlink(file.path(dummypackage, "tests"), recursive = TRUE)
+
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
+# Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...

@@ -99,7 +99,11 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
 
   # .Rbuildignore
   # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
-  lines <- c(paste0("^", dev_dir, "$"), "^\\.here$")
+  if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
+    lines <- c(paste0("^", dev_dir, "$"), "^\\.here$")
+  } else {
+    lines <- c(paste0("^", dev_dir, "$"))
+  }
 
   buildfile <- normalizePath(file.path(pkg, ".Rbuildignore"), mustWork = FALSE)
   if (!file.exists(buildfile)) {
@@ -129,7 +133,9 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     cat(enc2utf8(all), file = gitfile, sep = "\n")
   }
 
-  here::set_here(pkg)
+  if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
+    here::set_here(pkg)
+  }
   if (isTRUE(open) & interactive()) {usethis::edit_file(dev_path)}
   
   dev_path
@@ -167,6 +173,7 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
   expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
+  expect_true(any(grepl("[.]here", rbuildignore_lines)))
 
   dev_lines <- readLines(dev_path)
   expect_true(length(grep("dummypackage", dev_lines)) == 1)
@@ -174,6 +181,30 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
   # Second time error
   expect_message(add_dev_history(pkg = dummypackage))
   expect_true(file.exists(file.path(dummypackage, "dev", "dev_history_2.Rmd")))
+})
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+
+# Test with .Rproj and no .here, it works
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+# unlink(dummypackage, recursive = TRUE)
+dir.create(dummypackage)
+cat("", file = file.path(dummypackage, 'dummy.Rproj'))
+
+# Add
+dev_path <- add_dev_history(pkg = dummypackage, open = FALSE)
+
+test_that("add_dev_history works with .Rproj and no .here", {
+  expect_true(file.exists(dev_path))
+  expect_false(file.exists(file.path(dummypackage, ".here")))
+  
+  rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
+  expect_true(file.exists(rbuildignore_file))
+  rbuildignore_lines <- readLines(rbuildignore_file)
+  expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
+  expect_false(any(grepl("[.]here", rbuildignore_lines)))
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -926,16 +957,54 @@ unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
+
+# Test inflate with .Rproj and no .here, it works
+file.remove(file.path(dummypackage, ".here"))
+file.remove(file.path(dummypackage, ".Rbuildignore"))
+cat("", file = file.path(dummypackage, 'dummy.Rproj'))
+
+# Add
+# {fusen} steps
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+
+test_that("add_dev_history inflates with .Rproj and no .here", {
+  expect_true(file.exists(dev_file))
+  expect_false(file.exists(file.path(dummypackage, ".here")))
+  
+  rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
+  expect_true(file.exists(rbuildignore_file))
+  rbuildignore_lines <- readLines(rbuildignore_file)
+  expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
+  expect_false(any(grepl("[.]here", rbuildignore_lines)))
+  
+  # R files
+  my_median_file <- file.path(dummypackage, "R", "my_median.R")
+  expect_true(file.exists(my_median_file))
+  # vignette
+  expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+  # tests
+  expect_true(file.exists(
+    file.path(dummypackage, "tests", "testthat", "test-my_median.R")
+  ))
+})
+
+# Clean R, tests and vignettes
+unlink(file.path(dummypackage, "R"), recursive = TRUE)
+unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
+unlink(file.path(dummypackage, "tests"), recursive = TRUE)
+
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
+# Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...
 ```
 
 ```{r development-2, eval=FALSE}
 usethis::use_code_of_conduct()
 usethis::use_news_md()
 
-fusen::inflate(rmd = file.path("dev", "dev_history.Rmd"), name = "use_fusen", check = FALSE)
+fusen::inflate(rmd = file.path("dev", "dev_history_core.Rmd"), name = "use_fusen", check = FALSE)
 attachment::att_amend_desc(
   pkg_ignore = "testthat",
   extra.suggests = c("testthat", "pkgload")

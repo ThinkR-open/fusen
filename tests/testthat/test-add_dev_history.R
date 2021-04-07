@@ -15,6 +15,7 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
   expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
+  expect_true(any(grepl("[.]here", rbuildignore_lines)))
 
   dev_lines <- readLines(dev_path)
   expect_true(length(grep("dummypackage", dev_lines)) == 1)
@@ -22,6 +23,30 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
   # Second time error
   expect_message(add_dev_history(pkg = dummypackage))
   expect_true(file.exists(file.path(dummypackage, "dev", "dev_history_2.Rmd")))
+})
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+
+# Test with .Rproj and no .here, it works
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummypackage")
+# unlink(dummypackage, recursive = TRUE)
+dir.create(dummypackage)
+cat("", file = file.path(dummypackage, 'dummy.Rproj'))
+
+# Add
+dev_path <- add_dev_history(pkg = dummypackage, open = FALSE)
+
+test_that("add_dev_history works with .Rproj and no .here", {
+  expect_true(file.exists(dev_path))
+  expect_false(file.exists(file.path(dummypackage, ".here")))
+  
+  rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
+  expect_true(file.exists(rbuildignore_file))
+  rbuildignore_lines <- readLines(rbuildignore_file)
+  expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
+  expect_false(any(grepl("[.]here", rbuildignore_lines)))
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)

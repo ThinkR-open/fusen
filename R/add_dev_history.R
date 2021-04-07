@@ -50,7 +50,11 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
 
   # .Rbuildignore
   # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
-  lines <- c(paste0("^", dev_dir, "$"), "^\\.here$")
+  if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
+    lines <- c(paste0("^", dev_dir, "$"), "^\\.here$")
+  } else {
+    lines <- c(paste0("^", dev_dir, "$"))
+  }
 
   buildfile <- normalizePath(file.path(pkg, ".Rbuildignore"), mustWork = FALSE)
   if (!file.exists(buildfile)) {
@@ -80,7 +84,9 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     cat(enc2utf8(all), file = gitfile, sep = "\n")
   }
 
-  here::set_here(pkg)
+  if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
+    here::set_here(pkg)
+  }
   if (isTRUE(open) & interactive()) {usethis::edit_file(dev_path)}
   
   dev_path
