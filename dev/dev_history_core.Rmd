@@ -1009,7 +1009,9 @@ unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
 # Test no errors - clean name for vignette ----
 # name <- "# y  _ p n@ é ! 1"
-# name <- "exploration"
+# name <- "# y  _ p n@ \u00E9 ! 1"
+# stringi::stri_trans_general("é", "hex")
+# # name <- "exploration"
 # cleaned_name <- gsub("^-|-$", "",
 #                      gsub("-+", "-",
 #                           gsub("-_|_-", "-",
@@ -1019,14 +1021,16 @@ unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 # cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name)
 # usethis::use_vignette(name = cleaned_name, title = name)
 
-inflate(pkg = dummypackage, rmd = dev_file, name = "# y  _ p n@ é ! 1", check = FALSE)
+
+
+inflate(pkg = dummypackage, rmd = dev_file, name = "# y  _ p n@ \u00E9 ! 1", check = FALSE)
 # Vignette name is also cleaned by {usethis} for special characters
 vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
 
 test_that("vignette is created with clean name", {
   expect_true(file.exists(vignette_path))
   vig_lines <- readLines(vignette_path)
-  expect_true(sum(grepl("# y  _ p n@ é ! 1", vig_lines, fixed = TRUE)) == 2)
+  expect_true(sum(grepl("# y  _ p n@ \u00E9 ! 1", vig_lines, fixed = TRUE)) == 2)
   expect_true(sum(grepl("y-p-n---1", vig_lines, fixed = TRUE)) == 0)
 })
 
