@@ -19,9 +19,9 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Build a Package from RMarkdown File">
-<meta property="og:description" content="Use Rmd First method to build your package. Start
-    your package with documentation. Everything can be set from a Rmd file
-    in your project.">
+<meta property="og:description" content="Use Rmd First method to build your package. Start your
+    package with documentation. Everything can be set from a Rmd file in
+    your project.">
 <meta property="og:image" content="https://thinkr-open.github.io/fusen/logo.png">
 <meta name="twitter:card" content="summary">
 <!-- mathjax
@@ -81,7 +81,10 @@
   </a>
   <ul class="dropdown-menu" role="menu">
 <li>
-      <a href="articles/use_fusen.html">use_fusen</a>
+      <a href="articles/How-to-use-fusen.html">How to use fusen</a>
+    </li>
+    <li>
+      <a href="articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
     </li>
   </ul>
 </li>
@@ -249,6 +252,20 @@
 <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html">use_mit_license</a></span><span class="op">(</span><span class="st">"Sébastien Rochette"</span><span class="op">)</span>
 <span class="co"># You may need to execute inflate() in the console directly</span>
 <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/inflate.html">inflate</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, rmd <span class="op">=</span> <span class="va">dev_file</span>, name <span class="op">=</span> <span class="st">"exploration"</span><span class="op">)</span></code></pre></div>
+</div>
+<div id="how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages" class="section level2">
+<h2 class="hasAnchor">
+<a href="#how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages" class="anchor"></a>How to maintain a {fusen}? Can I use {fusen} with old-way packages?</h2>
+<p>There is a dedicated vignette to answer this: <a href="https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html" class="uri">https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html</a></p>
+<ul>
+<li>
+<strong>Option 1</strong>: Modifications are only added to the “dev_history.Rmd” file, which then is inflated to update all packages files</li>
+<li>
+<strong>Option 2</strong>: Modifications are realized in the package files directly, and the “dev_history.Rmd” file must be protected from any use.</li>
+</ul>
+<blockquote>
+<p>Advice : Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place</p>
+</blockquote>
 </div>
 <div id="who-is-fusen-for" class="section level2">
 <h2 class="hasAnchor">
