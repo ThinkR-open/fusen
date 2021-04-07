@@ -1,0 +1,67 @@
+---
+title: "dev_history.Rmd for working package"
+author: "Sébastien Rochette"
+date: "23/01/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+# How to maintain a {fusen}? Can I use {fusen} with old-way packages ?
+
+After you `inflate()` the "dev_history.Rmd", your code appears twice in the package. In the "dev_history.Rmd" itself and in the correct place for it to be a package.  
+Maintaining such a package requires a choice:  
+
+- **Option 1**: Modifications are only added to the "dev_history.Rmd" file, which then is inflated to update all packages files
+- **Option 2**: Modifications are realized in the package files directly, and the "dev_history.Rmd" file must be protected from any use.
+
+Your first `inflate()` may not directly work as expected. In this case, you can continue to implement your functionnality using **Option 1**. 
+
+> Advice 1 : Use Option 1 until you find it too complicated to be used ! I assure you, you will find the moment when you say : ok this is not possible anymore...
+
+> Advice 2 : Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place
+
+## Option 1: Continue with the "dev_history.Rmd"
+
+- (+) This does not require to fully understand the package structure and files to continue building your package, and you continue to develop in a unique file
+- (+) You are encouraged to continue documenting and testing all parts of your package
+- (-) You need to pay attention to checking and debugging tools that may direct you to the R file directly. This requires to pay attention and always be sure you are modifying code in the dev_history file, to be inflated.
+- (-) This may trouble co-developers who already built packages
+
+
+=> {fusen} itself is built as is. Each modification is added to the dedicated dev_history file and then inflated
+
+
+## Option 2: Maintain like a classical package
+
+- (+) You can use dedicated checking and debugging tools as is, in particular in RStudio. There are built to direct you as quickly as possible to the source of the problem
+- (+) This allows collaboration with more advanced developers who are used to debug in the package structure directly
+- (-) This requires to understand the structure and files of a package and how they interact each other, and be able to jump from one file to the other, in the correct folder. This may drives you lazy to continue documenting and testing your modifications
+- This requires to protect the dev_history file, so that you never use it again. `<!-- Do not edit by hand-->` is the minimum. Then you can add `<!-- File used to start new functionnalities, do not use anymore, go directly to appropriate files in the package -->`
+
+
+=> This is the way I add new functionalities in packages that started in the old way, or which I build in collaboration with other devs. 
+ 
+
+## What about packages already built the old way ?
+
+The "dev_history.Rmd" template only modifies files related to functions presented inside the template. 
+This does not remove or modify previous functions, tests or vignettes, provided that names are different.
+
+- {fusen} itself was started in the classical way before having enough functions to be able to build a package from itself. This does not prevent me at all to use {fusen} to build himself now ! 
+- If you want to modify existing functionalities, you will need to continue maintain your already-built package in the classical way
+- If you want to add new functionnalities, correctly documented and tested, you can use {fusen}. This will not delete previous work. 
+- Use the "Option 2" above to continue after the development of your functionnality
+
+
+
+```{r development-2, eval=FALSE}
+fusen::inflate(rmd = file.path("dev", "dev_history_maintain.Rmd"), name = "Maintain packages with {fusen}", check = FALSE)
+attachment::att_amend_desc(
+  pkg_ignore = "testthat",
+  extra.suggests = c("testthat", "pkgload")
+)
+
+rcmdcheck::rcmdcheck(check_dir = "check")
+rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
+```

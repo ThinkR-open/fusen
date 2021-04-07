@@ -144,6 +144,20 @@ usethis::use_mit_license("Sébastien Rochette")
 fusen::inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
 ```
 
+## How to maintain a {fusen}? Can I use {fusen} with old-way packages?
+
+There is a dedicated vignette to answer this:
+<https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html>
+
+-   **Option 1**: Modifications are only added to the “dev\_history.Rmd”
+    file, which then is inflated to update all packages files
+-   **Option 2**: Modifications are realized in the package files
+    directly, and the “dev\_history.Rmd” file must be protected from any
+    use.
+
+> Advice : Use git as soon as possible, this will avoid losing your work
+> if you made some modifications in the wrong place
+
 ## Who is {fusen} for?
 
 When you write a Rmarkdown file (or a vignette), you create a
