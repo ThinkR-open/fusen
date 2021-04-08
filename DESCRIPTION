@@ -19,7 +19,7 @@ Imports:
     attachment,
     desc,
     glue,
-    here,
+    here (>= 1.0.0),
     magrittr,
     parsermd,
     rcmdcheck,

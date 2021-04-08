@@ -71,9 +71,9 @@ jobs:
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
 
-      - name: Setup tmate session
-        if: runner.os == 'Windows'
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   if: runner.os == 'Windows'
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Check
         env:
