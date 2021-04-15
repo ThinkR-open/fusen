@@ -4,7 +4,13 @@
 \alias{add_dev_history}
 \title{Add dev_history.Rmd file that drives package development}
 \usage{
-add_dev_history(pkg = ".", overwrite = FALSE, open = TRUE, dev_dir = "dev")
+add_dev_history(
+  pkg = ".",
+  overwrite = FALSE,
+  open = TRUE,
+  dev_dir = "dev",
+  name = c("full", "minimal", "additional")
+)
 }
 \arguments{
 \item{pkg}{Path where to save file}
@@ -14,12 +20,22 @@ add_dev_history(pkg = ".", overwrite = FALSE, open = TRUE, dev_dir = "dev")
 \item{open}{Logical. Whether to open file after creation}
 
 \item{dev_dir}{Name of directory for development Rmd files. Default to "dev".}
+
+\item{name}{Name of the template file. See details.}
 }
 \value{
 Create a dev_history.Rmd file and return its path
 }
 \description{
 Add dev_history.Rmd file that drives package development
+}
+\details{
+Choose \code{name} among the different templates available:
+\itemize{
+\item "full": the full template with a reproducible package to inflate directly. Default.
+\item "minimal": Minimal template to start a new package when you already know {fusen}.
+\item "additional": Template for an additionnal vignette, thus additional functions.
+}
 }
 \examples{
 # Create a new project
