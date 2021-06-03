@@ -37,8 +37,6 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
-Remotes:
-    rundel/parsermd
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)

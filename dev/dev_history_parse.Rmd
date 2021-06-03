@@ -9,15 +9,20 @@ output: html_document
 library(testthat)
 ```
 
-# Calculate the median of a vector
+# Parse and split a Rmd file, and transform as tibble
 
 ```{r function}
 #' Split Rmd file 
 #'
 #' @param file Path to Rmd file
+#' @importFrom utils head tail
+#'
+#' @export
 #'
 #' @return A tibble with a line for each Rmd part
 split_rmd <- function(file) {
+  
+  x <- xfun::read_utf8(file)
   
   target_labels <- c("description", "development", "function", "example", "test")
   
@@ -67,6 +72,9 @@ split_rmd <- function(file) {
 #' Groupe parts of Rmd file
 #'
 #' @param file path to Rmd file
+#'
+#' @importFrom utils head tail
+#' @export
 #'
 #' @return Character vector of groups of lines
 #'
@@ -146,9 +154,10 @@ group_rmd <- function(file) {
 
 ```{r examples}
 file <- system.file("dev-template-tests.Rmd", package = "fusen")
-groups <- group_rmd(file)
-
-
+# Attribute group to each line
+group_rmd(file)
+# Split Rmd by group into tibble
+split_rmd(file)
 ```
 
 ```{r tests}
@@ -165,13 +174,27 @@ test_that("group_rmd works properly", {
 file <- system.file("dev-template-test-parse-nothing.Rmd", package = "fusen")
 groups <- group_rmd(file)
 test_that("group_rmd does not fail", {
-  expect_true(all(groups[1:8] == "yaml"))
+  expect_true(all(groups[1:8] == "rmd_yaml_list"))
 })
 
 file <- system.file("dev-template-tests.Rmd", package = "fusen")
 tbl_rmd <- split_rmd(file)
 test_that("split_rmd works", {
-  expect_true(tbl_rmd)
+  expect_true(nrow(tbl_rmd) == 47)
+  expect_true(ncol(tbl_rmd) == 7)
+  expect_true(all(tbl_rmd[["lines"]][[3]] == 
+                c("```{r development, include=FALSE}", "library(testthat)", "```")))
+  expect_true(tbl_rmd[["type"]][3] == "rmd_chunk")
+  expect_true(tbl_rmd[["type"]][9] == "rmd_heading")
+  expect_true(tbl_rmd[["labels"]][3] == "development")
+  expect_true(tbl_rmd[["title"]][9] == "Calculate the median of a vector")
+  expect_true(tbl_rmd[["section"]][10] == "Calculate the median of a vector")
+  expect_true(tbl_rmd[["code"]][[3]] == "library(testthat)")
 })
+
+```
+
+```{r development-2, eval=FALSE}
+fusen::inflate(rmd = file.path("dev", "dev_history_parse.Rmd"), name = "parse_rmd", check = FALSE)
 
 ```

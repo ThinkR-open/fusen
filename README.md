@@ -31,9 +31,6 @@ You can install the development version of {fusen} from GitHub:
 remotes::install_github("ThinkR-open/fusen")
 ```
 
-*Note that this package relies on {parsermd}, which is also under
-development and not currently released on CRAN.*
-
 ## You are one Rmarkdown away from building a package!
 
 *{fusen} is all about correctly separating and naming chunks.*

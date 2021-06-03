@@ -2,6 +2,7 @@
 
 **features**
 * Allow non-clean vignette name
+* Allow different "dev_history" templates: "full", "minimal" and "additional"
 
 **documentation**
 * Add vignette to explain how to maintain a package with {fusen}

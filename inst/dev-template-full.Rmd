@@ -18,7 +18,7 @@ This will fill the description of your package.
 Add this chunk using `fusen::description_chunk()`
 --> 
 
-```{r description}
+```{r description, eval=FALSE}
 # Describe your package
 fusen::fill_description(
   pkg = here::here(),
