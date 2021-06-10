@@ -9,7 +9,7 @@ add_dev_history(
   overwrite = FALSE,
   open = TRUE,
   dev_dir = "dev",
-  name = c("full", "minimal", "additional")
+  name = c("full", "minimal", "additional", "teaching")
 )
 }
 \arguments{
@@ -35,6 +35,8 @@ Choose \code{name} among the different templates available:
 \item "full": the full template with a reproducible package to inflate directly. Default.
 \item "minimal": Minimal template to start a new package when you already know {fusen}.
 \item "additional": Template for an additionnal vignette, thus additional functions.
+\item "teaching": Template with a reproducible package, simpler than "full", but everything to
+teach the minimal structure of a package.
 }
 }
 \examples{

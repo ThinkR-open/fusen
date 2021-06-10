@@ -12,6 +12,8 @@
 #' - "full": the full template with a reproducible package to inflate directly. Default.
 #' - "minimal": Minimal template to start a new package when you already know {fusen}.
 #' - "additional": Template for an additionnal vignette, thus additional functions.
+#' - "teaching": Template with a reproducible package, simpler than "full", but everything to
+#'  teach the minimal structure of a package.
 #'
 #' @return
 #' Create a dev_history.Rmd file and return its path
@@ -30,7 +32,7 @@
 #' unlink(dummypackage, recursive = TRUE)
 add_dev_history <- function(pkg = ".", overwrite = FALSE,
                             open = TRUE, dev_dir = "dev", 
-                            name = c("full", "minimal", "additional")) {
+                            name = c("full", "minimal", "additional", "teaching")) {
   old <- setwd(pkg)
   on.exit(setwd(old))
 

@@ -38,7 +38,6 @@ library(parsermd)
 # A chunk for package description
 
 This will fill the description of your package.
-Add this chunk using `fusen::description_chunk()`
 -->
 
 ```{r description, eval=FALSE}
@@ -71,6 +70,8 @@ fusen::fill_description(
 #' - "full": the full template with a reproducible package to inflate directly. Default.
 #' - "minimal": Minimal template to start a new package when you already know {fusen}.
 #' - "additional": Template for an additionnal vignette, thus additional functions.
+#' - "teaching": Template with a reproducible package, simpler than "full", but everything to
+#'  teach the minimal structure of a package.
 #'
 #' @return
 #' Create a dev_history.Rmd file and return its path
@@ -79,7 +80,7 @@ fusen::fill_description(
 #' @examples
 add_dev_history <- function(pkg = ".", overwrite = FALSE,
                             open = TRUE, dev_dir = "dev", 
-                            name = c("full", "minimal", "additional")) {
+                            name = c("full", "minimal", "additional", "teaching")) {
   old <- setwd(pkg)
   on.exit(setwd(old))
 

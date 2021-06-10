@@ -46,7 +46,6 @@ library(fusen)
 # A chunk for package description
 
 This will fill the description of your package.
-Add this chunk using `fusen::description_chunk()`
 -->
 
 

@@ -1,0 +1,160 @@
+---
+title: "dev_history.Rmd for working package"
+author: "Sébastien Rochette"
+date: "23/01/2021"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+<!--
+'development' chunk where to call libraries needed to run chunks line by line, as in a classical Rmd for analysis
+-->
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+<!--
+> Like here, comment the markdown text that is not directly part of the story of your package
+
+# Description of your package
+
+This will fill the description of your package.
+Fill and run the content of this chunk, before anything else. 
+--> 
+
+```{r description, eval=FALSE}
+# Describe your package
+fusen::fill_description(
+  pkg = here::here(),
+  fields = list(
+    Title = "Learn how to build A Package From Rmarkdown file",
+    Description = "A Set of tools to understand packages structure. Use Rmd First method to build a package from a defined template. Start your package with documentation. Everything can be set from a Rmd file in your project.",
+    `Authors@R` = c(
+      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre")),
+      person(given = "ThinkR", role = "cph")
+    )
+  )
+)
+# Define License with use_*_license()
+usethis::use_mit_license("Sébastien Rochette")
+```
+
+# Calculate the median of a vector
+
+This is the first tools of our wonderful package. 
+You can calculate the median of a numeric vector using function `my_median()`.  
+
+- Note that this will first verify that the vector is numeric, otherwise it stops with a meaningful message.
+
+<!-- 
+This first example shows
+
+- the three parts necessary for a package: 'function', 'examples' and 'tests'.  
+  + Note that the three following chunks have names accordingly.
+- the use of roxygen2 skeleton to document a function
+  + Use of @importFrom to list dependencies
+  
+-->
+
+```{r function}
+#' My median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#' @importFrom stats median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+my_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  median(x, na.rm = na.rm)
+}
+```
+
+<!--
+Here is an example on how to use the function.
+This should be a reproducible and working example
+-->
+
+```{r examples}
+my_median(1:12)
+```
+
+<!--
+Here are some unit tests to verify the function works as expected.
+-->
+
+```{r tests}
+test_that("my_median works properly and show error if needed", {
+  expect_true(my_median(1:12) == 6.5)
+  expect_error(my_median("text"))
+})
+```
+
+# Calculate again the median of a vector
+## Use sub-functions in the same chunk
+
+Here is the second wonderful function of our package: `my_other_median()`.
+This looks like the first one for sure, but when we teach, it is better to repeat things.
+
+```{r function-1}
+#' My Other median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+my_other_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  sub_median(x, na.rm = na.rm)
+}
+
+#' Core of the median not exported
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#' @importFrom stats median
+#' @noRd
+sub_median <- function(x, na.rm = TRUE) {
+  median(x, na.rm)
+}
+```
+
+```{r examples-1}
+my_other_median(1:12)
+```
+
+```{r tests-1}
+test_that("my_median works properly and show error if needed", {
+  expect_true(my_other_median(1:12) == 6.5)
+  expect_error(my_other_median("text"))
+})
+```
+
+That's it ! This the end of the documented story of our package. All components are there.
+
+<!-- # Inflate your package -->
+
+<!-- You're one inflate from paper to box. -->
+<!-- Build your package from this very Rmarkdown using `fusen::inflate()` -->
+
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(rmd = "dev/dev_history.Rmd")
+```
+
+
+<!-- - Verify your `"DESCRIPTION"` file has been updated -->
+<!-- - Verify your function is in `"R/"` directory -->
+<!-- - Verify your test is in `"tests/testthat/"` directory -->
+<!-- - Verify this Rmd appears in `"vignettes/"` directory -->
