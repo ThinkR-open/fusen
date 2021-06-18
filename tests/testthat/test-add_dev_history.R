@@ -4,7 +4,7 @@ dummypackage <- file.path(tmpdir, "dummypackage")
 # unlink(dummypackage, recursive = TRUE)
 dir.create(dummypackage)
 
-# Add
+# Add ----
 dev_path <- add_dev_history(pkg = dummypackage, open = FALSE)
 
 test_that("add_dev_history adds dev_history.Rmd and co.", {
@@ -27,7 +27,7 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
-# Test with .Rproj and no .here, it works
+# Test with .Rproj and no .here, it works ----
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
@@ -50,6 +50,19 @@ test_that("add_dev_history works with .Rproj and no .here", {
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
+
+# Add failed with malformed package name ----
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummy_package9")
+# unlink(dummypackage, recursive = TRUE)
+dir.create(dummypackage)
+cat("", file = file.path(dummypackage, 'dummy.Rproj'))
+
+# Add
+test_that("add_dev_history fails", {
+  expect_error(add_dev_history(pkg = dummypackage, open = FALSE))
+})
 
 # More complicated example for tests
 # This will render the Rmd template that is supposed to build a package

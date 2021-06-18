@@ -16,6 +16,8 @@ library(parsermd)
 
 - Create a new directory / new project
 - Add the Rmarkdown template with `fusen::add_dev_history()`
+- Run the content of the first `development` chunk with `library(testthat)` inside
+- Modify and run the content of the chunk named `description`
 - Follow the `"dev/dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
   - Chunk named `function` gets the code of a function
   - Chunk named `example` gets the code for examples of using the function. This will be used for function `@examples` and will be kept for the vignette
@@ -81,6 +83,13 @@ fusen::fill_description(
 add_dev_history <- function(pkg = ".", overwrite = FALSE,
                             open = TRUE, dev_dir = "dev", 
                             name = c("full", "minimal", "additional", "teaching")) {
+  
+  project_name <- basename(normalizePath(pkg))
+  if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
+    stop("Please rename your project/directory with: ", asciify_name(project_name, to_pkg = TRUE),
+         " as a package name should only contain letters, numbers and dots.")
+  }
+  
   old <- setwd(pkg)
   on.exit(setwd(old))
 
@@ -154,6 +163,28 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
   
   dev_path
 }
+
+#' Clean names for vignettes and package
+#' @param name Character to clean
+#' @param to_pkg Transform all non authorized characters to dots for packages, instead of dash
+#' @noRd
+asciify_name <- function(name, to_pkg = FALSE) {
+  # name <- "y  _ p n@ é ! 1"
+  cleaned_name <- gsub("^-|-$", "",
+                       gsub("-+", "-",
+                            gsub("-_|_-", "-",
+                                 gsub("[^([:alnum:]*_*-*)*]", "-", name))))
+  # grepl("^[[:alpha:]][[:alnum:]_-]*$", cleaned_name)
+
+  if (isTRUE(to_pkg)) {
+    cleaned_name <- gsub("[^a-zA-Z0-9]+", ".", 
+                         gsub("^[0-9]+", "", cleaned_name))
+  } else {
+    # asciify from {usethis} usethis:::asciify()
+    cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name) 
+  }
+  cleaned_name
+}
 ```
 
 ```{r example}
@@ -176,7 +207,7 @@ dummypackage <- file.path(tmpdir, "dummypackage")
 # unlink(dummypackage, recursive = TRUE)
 dir.create(dummypackage)
 
-# Add
+# Add ----
 dev_path <- add_dev_history(pkg = dummypackage, open = FALSE)
 
 test_that("add_dev_history adds dev_history.Rmd and co.", {
@@ -199,7 +230,7 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
-# Test with .Rproj and no .here, it works
+# Test with .Rproj and no .here, it works ----
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
@@ -222,6 +253,19 @@ test_that("add_dev_history works with .Rproj and no .here", {
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
+
+# Add failed with malformed package name ----
+# Create a new project
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "dummy_package9")
+# unlink(dummypackage, recursive = TRUE)
+dir.create(dummypackage)
+cat("", file = file.path(dummypackage, 'dummy.Rproj'))
+
+# Add
+test_that("add_dev_history fails", {
+  expect_error(add_dev_history(pkg = dummypackage, open = FALSE))
+})
 
 # More complicated example for tests
 # This will render the Rmd template that is supposed to build a package
@@ -792,15 +836,8 @@ create_vignette <- function(parsed_tbl, pkg, name) {
   # vignette_tbl[["label"]] <- make.unique(vignette_tbl[["label"]], sep = "-")
   # # Not re-used in as_document()
 
-  # name <- "y  _ p n@ é ! 1"
-  cleaned_name <- gsub("^-|-$", "",
-                       gsub("-+", "-",
-                            gsub("-_|_-", "-",
-                                 gsub("[^([:alnum:]*_*-*)*]", "-", name))))
-  # grepl("^[[:alpha:]][[:alnum:]_-]*$", cleaned_name)
-  # asciify from {usethis} usethis:::asciify()
-  cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name)
-
+  
+  cleaned_name <- asciify_name(name)
   
   usethis::use_vignette(name = cleaned_name, title = name)
   vignette_file <- file.path("vignettes", paste0(cleaned_name, ".Rmd"))
@@ -825,6 +862,7 @@ create_vignette <- function(parsed_tbl, pkg, name) {
     )
   }
 }
+
 ```
 
 ```{r example-3, eval=FALSE}

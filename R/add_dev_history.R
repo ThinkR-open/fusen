@@ -33,6 +33,13 @@
 add_dev_history <- function(pkg = ".", overwrite = FALSE,
                             open = TRUE, dev_dir = "dev", 
                             name = c("full", "minimal", "additional", "teaching")) {
+  
+  project_name <- basename(normalizePath(pkg))
+  if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
+    stop("Please rename your project/directory with: ", asciify_name(project_name, to_pkg = TRUE),
+         " as a package name should only contain letters, numbers and dots.")
+  }
+  
   old <- setwd(pkg)
   on.exit(setwd(old))
 
@@ -105,4 +112,26 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
   if (isTRUE(open) & interactive()) {usethis::edit_file(dev_path)}
   
   dev_path
+}
+
+#' Clean names for vignettes and package
+#' @param name Character to clean
+#' @param to_pkg Transform all non authorized characters to dots for packages, instead of dash
+#' @noRd
+asciify_name <- function(name, to_pkg = FALSE) {
+  # name <- "y  _ p n@ é ! 1"
+  cleaned_name <- gsub("^-|-$", "",
+                       gsub("-+", "-",
+                            gsub("-_|_-", "-",
+                                 gsub("[^([:alnum:]*_*-*)*]", "-", name))))
+  # grepl("^[[:alpha:]][[:alnum:]_-]*$", cleaned_name)
+
+  if (isTRUE(to_pkg)) {
+    cleaned_name <- gsub("[^a-zA-Z0-9]+", ".", 
+                         gsub("^[0-9]+", "", cleaned_name))
+  } else {
+    # asciify from {usethis} usethis:::asciify()
+    cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name) 
+  }
+  cleaned_name
 }

@@ -22,6 +22,8 @@ library(fusen)
 
 - Create a new directory / new project
 - Add the Rmarkdown template with `fusen::add_dev_history()`
+- Run the content of the first `development` chunk with `library(testthat)` inside
+- Modify and run the content of the chunk named `description`
 - Follow the `"dev/dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
   - Chunk named `function` gets the code of a function
   - Chunk named `example` gets the code for examples of using the function. This will be used for function `@examples` and will be kept for the vignette
