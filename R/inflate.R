@@ -43,6 +43,11 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
   pkg <- normalizePath(pkg)
   rmd <- normalizePath(rmd, mustWork = FALSE)
 
+  if (!file.exists(file.path(normalizePath(pkg), "DESCRIPTION"))) {
+    stop("DESCRIPTION file does not exist in your directory:", normalizePath(pkg), ".\n",
+         "Have you run the content of the 'description' chunk of your {fusen} template?")
+  }
+  
   if (length(list.files(pkg, pattern = ".Rproj")) > 0) {
     if (!file.exists(".Rbuildignore")) {
       file.create(".Rbuildignore")

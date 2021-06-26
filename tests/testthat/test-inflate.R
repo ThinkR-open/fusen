@@ -146,13 +146,13 @@ inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 test_that("add_dev_history inflates with .Rproj and no .here", {
   expect_true(file.exists(dev_file))
   expect_false(file.exists(file.path(dummypackage, ".here")))
-  
+
   rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
   expect_true(any(grepl("dev", rbuildignore_lines, fixed = TRUE)))
   expect_false(any(grepl("[.]here", rbuildignore_lines)))
-  
+
   # R files
   my_median_file <- file.path(dummypackage, "R", "my_median.R")
   expect_true(file.exists(my_median_file))
@@ -188,7 +188,6 @@ unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 inflate(pkg = dummypackage, rmd = dev_file, name = "# y  _ p n@ \u00E9 ! 1", check = FALSE)
 # Vignette name is also cleaned by {usethis} for special characters
 vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
-vignette_path <- file.path("vignettes", "y-p-n---1.Rmd")
 
 test_that("vignette is created with clean name", {
   expect_true(file.exists(vignette_path))
@@ -203,6 +202,13 @@ unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
+# Test stop when no DESCRIPTION file ----
+unlink(file.path(dummypackage, "DESCRIPTION"), recursive = TRUE)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+
+test_that("stop when no DESCRIPTION file", {
+  expect_error(inflate(pkg = dummypackage, rmd = dev_file, check = FALSE), "DESCRIPTION file")
+})
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)

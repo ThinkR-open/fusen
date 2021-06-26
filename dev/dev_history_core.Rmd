@@ -489,6 +489,11 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
   pkg <- normalizePath(pkg)
   rmd <- normalizePath(rmd, mustWork = FALSE)
 
+  if (!file.exists(file.path(normalizePath(pkg), "DESCRIPTION"))) {
+    stop("DESCRIPTION file does not exist in your directory:", normalizePath(pkg), ".\n",
+         "Have you run the content of the 'description' chunk of your {fusen} template?")
+  }
+  
   if (length(list.files(pkg, pattern = ".Rproj")) > 0) {
     if (!file.exists(".Rbuildignore")) {
       file.create(".Rbuildignore")
@@ -1078,7 +1083,6 @@ unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 inflate(pkg = dummypackage, rmd = dev_file, name = "# y  _ p n@ \u00E9 ! 1", check = FALSE)
 # Vignette name is also cleaned by {usethis} for special characters
 vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
-vignette_path <- file.path("vignettes", "y-p-n---1.Rmd")
 
 test_that("vignette is created with clean name", {
   expect_true(file.exists(vignette_path))
@@ -1093,6 +1097,13 @@ unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
+# Test stop when no DESCRIPTION file ----
+unlink(file.path(dummypackage, "DESCRIPTION"), recursive = TRUE)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+
+test_that("stop when no DESCRIPTION file", {
+  expect_error(inflate(pkg = dummypackage, rmd = dev_file, check = FALSE), "DESCRIPTION file")
+})
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
