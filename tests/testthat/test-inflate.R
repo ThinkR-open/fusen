@@ -5,7 +5,10 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+
+usethis::with_project(dummypackage, {
+
 # More complicated example for tests
 file.copy(
   system.file("tests-templates/dev-template-tests.Rmd", package = "fusen"),
@@ -50,8 +53,10 @@ test_that("inflate() worked correctly", {
   # Namespace
   expect_true(file.exists(file.path(dummypackage, "NAMESPACE")))
 })
+})
 
 # Test package no check errors ----
+usethis::with_project(dummypackage, {
 check_out <- rcmdcheck::rcmdcheck(dummypackage, quiet = TRUE,
                                   args = c("--no-manual"))
 # stop(paste(check_out[["errors"]], check_out[["warnings"]], check_out[["notes"]], collapse = "\n---\n"))
@@ -69,9 +74,10 @@ test_that("inflate() output error", {
 unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
-
+})
 
 # Tests no errors - no example, no tests ----
+usethis::with_project(dummypackage, {
 file.copy(
   system.file("tests-templates/dev-template-no-example-no-tests.Rmd", package = "fusen"),
   dev_file,
@@ -87,9 +93,10 @@ test_that("inflate() output error", {
 unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
-
+})
 
 # Tests no errors - empty ----
+usethis::with_project(dummypackage, {
 file.copy(
   system.file("tests-templates/dev-template-test-parse-nothing.Rmd", package = "fusen"),
   dev_file,
@@ -102,9 +109,10 @@ test_that("inflate() output error", {
 unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
-
+})
 
 # Tests errors - duplicate functions ----
+usethis::with_project(dummypackage, {
 file.copy(
   system.file("tests-templates/dev-template-stop-duplicate-fun.Rmd", package = "fusen"),
   dev_file,
@@ -131,16 +139,17 @@ test_that("inflate() output error duplicate label names for vignette", {
 unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
-
+})
 
 # Test no errors - inflate with .Rproj and no .here ----
+usethis::with_project(dummypackage, {
 file.remove(file.path(dummypackage, ".here"))
 file.remove(file.path(dummypackage, ".Rbuildignore"))
 cat("", file = file.path(dummypackage, 'dummy.Rproj'))
 
 # Add
 # {fusen} steps
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 
 test_that("add_dev_history inflates with .Rproj and no .here", {
@@ -168,6 +177,7 @@ test_that("add_dev_history inflates with .Rproj and no .here", {
 unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
+})
 
 # Test no errors - clean name for vignette ----
 # name <- "# y  _ p n@ é ! 1"
@@ -184,7 +194,7 @@ unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 # usethis::use_vignette(name = cleaned_name, title = name)
 
 
-
+usethis::with_project(dummypackage, {
 inflate(pkg = dummypackage, rmd = dev_file, name = "# y  _ p n@ \u00E9 ! 1", check = FALSE)
 # Vignette name is also cleaned by {usethis} for special characters
 vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
@@ -201,13 +211,24 @@ test_that("vignette is created with clean name", {
 unlink(file.path(dummypackage, "R"), recursive = TRUE)
 unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
 unlink(file.path(dummypackage, "tests"), recursive = TRUE)
+})
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+
 
 # Test stop when no DESCRIPTION file ----
-unlink(file.path(dummypackage, "DESCRIPTION"), recursive = TRUE)
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+tmpdir <- tempdir()
+dummypackage <- file.path(tmpdir, "descpackage")
+dir.create(dummypackage)
+dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 
-test_that("stop when no DESCRIPTION file", {
-  expect_error(inflate(pkg = dummypackage, rmd = dev_file, check = FALSE), "DESCRIPTION file")
+usethis::with_project(dummypackage, {
+#  unlink(file.path(dummypackage, "DESCRIPTION"), recursive = TRUE)
+
+  test_that("stop when no DESCRIPTION file", {
+    expect_error(inflate(pkg = dummypackage, rmd = dev_file, check = FALSE), "DESCRIPTION file")
+  })
 })
 
 # Delete dummy package
