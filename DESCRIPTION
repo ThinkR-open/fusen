@@ -17,6 +17,7 @@ URL: https://thinkr-open.github.io/fusen/,
     https://github.com/Thinkr-open/fusen
 Imports: 
     attachment,
+    cli,
     desc,
     glue,
     here (>= 1.0.0),
@@ -28,7 +29,7 @@ Imports:
     stringr,
     tibble,
     tidyr,
-    usethis
+    usethis (>= 1.5.0)
 Suggests: 
     knitr,
     pkgload,
