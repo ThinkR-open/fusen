@@ -8,7 +8,8 @@ inflate(
   pkg = ".",
   rmd = file.path("dev", "dev_history.Rmd"),
   name = "exploration",
-  check = TRUE
+  check = TRUE,
+  document = TRUE
 )
 }
 \arguments{
@@ -19,6 +20,8 @@ inflate(
 \item{name}{Name of the resulting vignette}
 
 \item{check}{Logical. Whether to check package after Rmd inflating}
+
+\item{document}{Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}}
 }
 \value{
 Package structure. Return path to current package.

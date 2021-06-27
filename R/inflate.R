@@ -4,6 +4,7 @@
 #' @param name Name of the resulting vignette
 #' @param rmd Path to Rmd file to inflate
 #' @param check Logical. Whether to check package after Rmd inflating
+#' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
 #'
 #' @importFrom parsermd parse_rmd as_tibble
 #' @return
@@ -30,7 +31,7 @@
 #' # usethis::use_git_ignore("docs")
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
-inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name = "exploration", check = TRUE) {
+inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name = "exploration", check = TRUE, document = TRUE) {
   old <- setwd(pkg)
   on.exit(setwd(old))
   
@@ -89,7 +90,9 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
   create_vignette(parsed_tbl, pkg, name)
 
   # Run attachment
-  attachment::att_amend_desc(path = pkg)
+  if (isTRUE(document)) {
+    attachment::att_amend_desc(path = pkg)
+  }
 
   # Check
   if (isTRUE(check)) {
@@ -302,7 +305,7 @@ create_r_files <- function(fun_code, pkg) {
     fun_name <- fun_code[x, ][["fun_name"]]
     r_file <- file.path(pkg, "R", paste0(fun_name, ".R"))
     if (file.exists(r_file)) {
-      warning(basename(r_file), " has been overwritten")
+      cli::cli_alert_warning(paste(basename(r_file), "has been overwritten"))
     }
     cat(
       enc2utf8(unlist(fun_code[x, ][["code_example"]])),
@@ -350,7 +353,7 @@ create_tests_files <- function(parsed_tbl, pkg) {
 
       test_file <- file.path(pkg, "tests", "testthat", paste0("test-", fun_name, ".R"))
       if (file.exists(test_file)) {
-        warning(basename(test_file), " has been overwritten")
+        cli::cli_alert_warning(paste(basename(test_file), "has been overwritten"))
       }
       cat(enc2utf8(code), file = test_file, sep = "\n")
 
