@@ -59,7 +59,7 @@ usethis::with_project(dummypackage, {
 usethis::with_project(dummypackage, {
   # If this check is run inside a not "--as-cran" check, then it wont work as expected
   check_out <- rcmdcheck::rcmdcheck(dummypackage, quiet = TRUE,
-                                    args = c("--no-manual", "--as-cran"))
+                                    args = c("--no-manual"))
 
   test_that("inflate() output error", {
     # No errors
@@ -72,6 +72,7 @@ usethis::with_project(dummypackage, {
     if (length(check_out[["notes"]]) == 1) {
       # if tested as cran
       # 1 note on CRAN for new submission
+      print(check_out[["notes"]])
       expect_true(grepl("New submission", check_out[["notes"]][1]))
     } else {
       expect_true(length(check_out[["notes"]]) == 0)
