@@ -21,7 +21,7 @@ library(fusen)
 # How to use {fusen}
 
 - Create a new directory / new project
-- Add the Rmarkdown template with `fusen::add_dev_history()`
+- Add the RMarkdown template with `fusen::add_dev_history()`
 - Run the content of the first `development` chunk with `library(testthat)` inside
 - Modify and run the content of the chunk named `description`
 - Follow the `"dev/dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
@@ -77,7 +77,7 @@ dir.create(dummypackage)
 fill_description(
   pkg = dummypackage,
   fields = list(
-    Title = "Build A Package From Rmarkdown file",
+    Title = "Build A Package From RMarkdown file",
     Description = paste("Use Rmd First method to build your package.", 
                         "Start your package with documentation.", 
                         "Everything can be set from a Rmd file in your project."),
@@ -115,7 +115,7 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")
 # Inflate your package from dev Rmd template
 
 You're one inflate from paper to box.
-Build your package from this very Rmarkdown using `fusen::inflate()`
+Build your package from this very RMarkdown using `fusen::inflate()`
 
 After that, you can:
 
@@ -123,7 +123,7 @@ After that, you can:
 - Verify your function is in `"R/"` directory
 - Verify your test is in `"tests/testthat/"` directory
 - Verify this Rmd appears in `"vignettes/"` directory
-- Build your documentation using `pkgdown::build()` for vignette and examples verifications
+- Build your documentation using `pkgdown::build()` for vignette and examples checks
 
 
 ```{r example-3, eval = FALSE}

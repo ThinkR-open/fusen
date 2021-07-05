@@ -15,3 +15,5 @@
 ^pkgdown$
 rstudio\_dotconfig
 rstudio\_dotrstudio
+^cran-comments\.md$
+^CRAN-RELEASE$

@@ -8,10 +8,10 @@
 #'
 #' @details
 #' Choose `name` among the different templates available:
-#' 
+#'
 #' - "full": the full template with a reproducible package to inflate directly. Default.
 #' - "minimal": Minimal template to start a new package when you already know {fusen}.
-#' - "additional": Template for an additionnal vignette, thus additional functions.
+#' - "additional": Template for an additional vignette, thus additional functions.
 #' - "teaching": Template with a reproducible package, simpler than "full", but everything to
 #'  teach the minimal structure of a package.
 #'
@@ -24,29 +24,29 @@
 #' tmpdir <- tempdir()
 #' dummypackage <- file.path(tmpdir, "dummypackage")
 #' dir.create(dummypackage)
-#' 
+#'
 #' # Add
 #' add_dev_history(pkg = dummypackage)
-#' 
+#'
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
 add_dev_history <- function(pkg = ".", overwrite = FALSE,
-                            open = TRUE, dev_dir = "dev", 
+                            open = TRUE, dev_dir = "dev",
                             name = c("full", "minimal", "additional", "teaching")) {
-  
+
   project_name <- basename(normalizePath(pkg))
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
     stop("Please rename your project/directory with: ", asciify_name(project_name, to_pkg = TRUE),
          " as a package name should only contain letters, numbers and dots.")
   }
-  
+
   old <- setwd(pkg)
   on.exit(setwd(old))
 
   name <- match.arg(name)
   # Which template
   template <- system.file(paste0("dev-template-", name, ".Rmd"), package = "fusen")
-  
+
   pkg <- normalizePath(pkg)
   if (!dir.exists(dev_dir)) {dir.create(dev_dir)}
   dev_path <- file.path(pkg, dev_dir, "dev_history.Rmd")
@@ -60,14 +60,14 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
       "overwrite the existing dev_history.Rmd file, or rename it."
     )
   }
-  
+
   # Change lines asking for pkg name
   lines_template <- readLines(template)
-  
+
   lines_template[grepl("<my_package_name>", lines_template)] <-
-    gsub("<my_package_name>", basename(pkg), 
+    gsub("<my_package_name>", basename(pkg),
          lines_template[grepl("<my_package_name>", lines_template)])
-  
+
   cat(enc2utf8(lines_template), file = dev_path, sep = "\n")
 
   # .Rbuildignore
@@ -89,7 +89,7 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     all <- c(existing_lines, new)
     cat(enc2utf8(all), file = buildfile, sep = "\n")
   }
-  
+
   # Add a gitignore file in dev_dir
   # Files to ignore
   lines <- c("*.html", "*.R")
@@ -110,7 +110,7 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     here::set_here(pkg)
   }
   if (isTRUE(open) & interactive()) {usethis::edit_file(dev_path)}
-  
+
   dev_path
 }
 
@@ -127,11 +127,11 @@ asciify_name <- function(name, to_pkg = FALSE) {
   # grepl("^[[:alpha:]][[:alnum:]_-]*$", cleaned_name)
 
   if (isTRUE(to_pkg)) {
-    cleaned_name <- gsub("[^a-zA-Z0-9]+", ".", 
+    cleaned_name <- gsub("[^a-zA-Z0-9]+", ".",
                          gsub("^[0-9]+", "", cleaned_name))
   } else {
     # asciify from {usethis} usethis:::asciify()
-    cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name) 
+    cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name)
   }
   cleaned_name
 }

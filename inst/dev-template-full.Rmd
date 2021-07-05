@@ -22,7 +22,7 @@ This will fill the description of your package.
 fusen::fill_description(
   pkg = here::here(),
   fields = list(
-    Title = "Build A Package From Rmarkdown file",
+    Title = "Build A Package From RMarkdown file",
     Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmd file in your project.",
     `Authors@R` = c(
       person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
@@ -137,7 +137,7 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")
 # Inflate your package
 
 You're one inflate from paper to box.
-Build your package from this very Rmarkdown using `fusen::inflate()`
+Build your package from this very RMarkdown using `fusen::inflate()`
 
 - Verify your `"DESCRIPTION"` file has been updated
 - Verify your function is in `"R/"` directory

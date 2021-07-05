@@ -1,3 +1,4 @@
+<!-- Do not edit by hand -->
 ---
 title: "dev_history.Rmd"
 author: "Sébastien Rochette"
@@ -71,7 +72,7 @@ fusen::fill_description(
 #' 
 #' - "full": the full template with a reproducible package to inflate directly. Default.
 #' - "minimal": Minimal template to start a new package when you already know {fusen}.
-#' - "additional": Template for an additionnal vignette, thus additional functions.
+#' - "additional": Template for an additional vignette, thus additional functions.
 #' - "teaching": Template with a reproducible package, simpler than "full", but everything to
 #'  teach the minimal structure of a package.
 #'
@@ -460,7 +461,7 @@ After that, you can:
 - Verify your function is in `"R/"` directory
 - Verify your test is in `"tests/testthat/"` directory
 - Verify this Rmd appears in `"vignettes/"` directory
-- Build your documentation using `pkgdown::build()` for vignette and examples verifications
+- Build your documentation using `pkgdown::build()` for vignette and examples checks
 
 ```{r function-3}
 #' Inflate Rmd to package
@@ -1158,11 +1159,12 @@ unlink(dummypackage, recursive = TRUE)
 usethis::use_code_of_conduct()
 usethis::use_news_md()
 
-fusen::inflate(rmd = file.path("dev", "dev_history_core.Rmd"), name = "How to use fusen", check = FALSE, document = FALSE)
-attachment::att_amend_desc(
-  pkg_ignore = "testthat",
-  extra.suggests = c("testthat", "pkgload")
-)
+# /!\ Do not inflate anymore - maintain these functions as usual package /!\ 
+# fusen::inflate(rmd = file.path("dev", "dev_history_core.Rmd"), name = "How to use fusen", check = FALSE, document = FALSE)
+# attachment::att_amend_desc(
+#   pkg_ignore = "testthat",
+#   extra.suggests = c("testthat", "pkgload")
+# )
 
 usethis::use_git_ignore("check")
 rcmdcheck::rcmdcheck(check_dir = "check")

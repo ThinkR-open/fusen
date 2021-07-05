@@ -1,4 +1,8 @@
-# fusen 0.1.1
+# v0.2.0
+
+* Prepare for CRAN
+
+# v0.1.1
 
 **features**
 * Allow non-clean vignette name
@@ -12,6 +16,6 @@
 **tests**
 * Add tests for corner cases in Rmd templates
 
-# fusen 0.1.0
+# v0.1.0
 
 * First release

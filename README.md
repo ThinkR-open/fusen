@@ -10,16 +10,16 @@ status](https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg)](h
 [![Codecov test
 coverage](https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg)](https://codecov.io/gh/ThinkR-open/fusen?branch=master)
 [![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
+experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
-{fusen} inflates a Rmarkdown file to magically create a package.
+{fusen} inflates a RMarkdown file to magically create a package.
 
-> If you know how to create a Rmarkdown file, then you know how to build
+> If you know how to create a RMarkdown file, then you know how to build
 > a package.
 
 Indeed, this {fusen} package is a real-world example of {fusen} use as
-it was itself created from the `"dev_history.Rmd"` templates availables
+it was itself created from the `"dev_history.Rmd"` templates available
 in `"dev/"` folder in its GitHub repository.
 
 ## Installation
@@ -31,15 +31,15 @@ You can install the development version of {fusen} from GitHub:
 remotes::install_github("ThinkR-open/fusen")
 ```
 
-## You are one Rmarkdown away from building a package!
+## You are one RMarkdown away from building a package!
 
 *{fusen} is all about correctly separating and naming chunks.*
 
 -   Create and open a new directory or a new RStudio project
     -   Choose your directory/package name like `my.package` for
         instance
--   Run the following code directly in the console to **add the
-    templated Rmd** in the project and open it:
+-   Run the following code directly in the console to **add the template
+    Rmd** in the project and open it:
 
 ``` r
 dev_file <- fusen::add_dev_history(open = TRUE)
@@ -58,7 +58,7 @@ usethis::use_mit_license("Sébastien Rochette")
     -   You probably develop them with a few examples and tests
     -   *For the first time, you can let the code as is, this is already
         the content for a working package*
--   Run the following code to **transform the templated Rmd as a
+-   Run the following code to **transform the template Rmd as a
     package**
     -   This will open the vignette created
 
@@ -157,12 +157,12 @@ There is a dedicated vignette to answer this:
 
 ## Who is {fusen} for?
 
-When you write a Rmarkdown file (or a vignette), you create a
+When you write a RMarkdown file (or a vignette), you create a
 documentation for your analysis (or package). Inside, you write some
 functions, you test your functions with examples and you maybe write
 some unit tests to verify the outputs. This is even more true if you
 follow this guide : [‘Rmd first’: When development starts with
-documentation](https://rtask.thinkr.fr/blog/rmd-first-when-development-starts-with-documentation/)
+documentation](https://rtask.thinkr.fr/when-development-starts-with-documentation/)
 After that, you need to move your functions and scripts in the correct
 place. Let {fusen} do that for you!
 
@@ -189,10 +189,10 @@ Similarly, the {fusen} package uses one page of RMarkdown, that you fill
 in a specific way so that at the end, you can magically `inflate()` it
 to let a nice package appear.
 
-## Aknowledgments
+## Acknowledgments
 
 -   Thanks to Deemah who asked me to go further ‘Rmd first’ after my
-    presentation at use’R 2019 in Toulouse: [‘The “Rmd first” method:
+    presentation at useR 2019 in Toulouse: [‘The “Rmd first” method:
     when projects start with
     documentation’](https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf)
     (Video on Youtube: <https://youtu.be/cB1BCxFbhtk>).
@@ -201,7 +201,7 @@ to let a nice package appear.
 
 ## Code of Conduct
 
-Please note that the dummypackage project is released with a
-[Contributor Code of
+Please note that the {fusen} project is released with a [Contributor
+Code of
 Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.

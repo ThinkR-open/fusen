@@ -1,6 +1,6 @@
 Package: fusen
 Title: Build a Package from RMarkdown File
-Version: 0.1.1
+Version: 0.2.0
 Authors@R: 
     c(person(given = "Sebastien",
              family = "Rochette",
@@ -9,9 +9,12 @@ Authors@R:
              comment = c(ORCID = "0000-0002-1565-9313")),
       person(given = "ThinkR",
              role = "cph"))
-Description: Use Rmd First method to build your package. Start your
-    package with documentation. Everything can be set from a Rmd file in
-    your project.
+Description: Use RMarkdown First method to build your package. Start your
+    package with documentation, functions, examples and tests in the same
+    unique file.  Everything can be set from the RMarkdown template
+    provided in your project, then inflated as a package. Inflating the
+    template copies the relevant chunks and sections in the appropriate
+    files required for package development.
 License: MIT + file LICENSE
 URL: https://thinkr-open.github.io/fusen/,
     https://github.com/Thinkr-open/fusen
@@ -34,11 +37,13 @@ Suggests:
     knitr,
     pkgload,
     rmarkdown,
+    spelling,
     testthat,
     withr
 VignetteBuilder: 
     knitr
 Encoding: UTF-8
+Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.1

@@ -16,15 +16,15 @@
 #' tmpdir <- tempdir()
 #' dummypackage <- file.path(tmpdir, "dummypackage")
 #' dir.create(dummypackage)
-#' 
+#'
 #' # {fusen} steps
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 #' dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
 #' inflate(pkg = dummypackage, rmd = dev_file, name = "Exploration of my Data", check = FALSE)
-#' 
+#'
 #' # Explore directory of the package
 #' # browseURL(dummypackage)
-#' 
+#'
 #' # Try pkgdown build
 #' # pkgdown::build_site(dummypackage)
 #' # usethis::use_build_ignore("docs")
@@ -34,7 +34,7 @@
 inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name = "exploration", check = TRUE, document = TRUE) {
   old <- setwd(pkg)
   on.exit(setwd(old))
-  
+
   old_proj <- usethis::proj_get()
   if (normalizePath(old_proj) != normalizePath(pkg)) {
     on.exit(usethis::proj_set(old_proj))
@@ -48,7 +48,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
     stop("DESCRIPTION file does not exist in your directory:", normalizePath(pkg), ".\n",
          "Have you run the content of the 'description' chunk of your {fusen} template?")
   }
-  
+
   if (length(list.files(pkg, pattern = ".Rproj")) > 0) {
     if (!file.exists(".Rbuildignore")) {
       file.create(".Rbuildignore")
@@ -86,7 +86,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
   } else {
     message("No chunks named 'function-xx' were found in the Rmd file: ", rmd)
   }
-  
+
   create_vignette(parsed_tbl, pkg, name)
 
   # Run attachment
@@ -107,30 +107,31 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
 #' @param fun_code tibble as issued from \code{get_functions}
 #' @param pkg Path to package
 #' @importFrom stats na.omit
+#' @noRd
 create_functions_all <- function(parsed_tbl, fun_code, pkg) {
   fun_names <- fun_code[["fun_name"]]
-  
+
   if (length(unique(fun_names)) != length(fun_names)) {
     stop("Some functions names are not unique: ", paste(sort(fun_names), collapse = ", "))
   }
-  
+
   parsed_tbl <- add_fun_to_parsed(parsed_tbl, fun_names)
-  
+
   # Verify labels are unique
   dev_labels_noex <- c("development", "description", "function", "test")
   dev_labels_noex_regex <- paste(dev_labels_noex, collapse = "|")
   labels_in_vignette <- na.omit(parsed_tbl[["label"]][
     !grepl(dev_labels_noex_regex, parsed_tbl[["label"]])])
   labels_in_vignette <- labels_in_vignette[!grepl("", labels_in_vignette)]
-  
+
   if (any(duplicated(labels_in_vignette))) {
     stop("There are duplicated chunk names, ",
-         "please rename chunks with 'name-01' for instance.\n", 
+         "please rename chunks with 'name-01' for instance.\n",
          "Duplicates: ",
          paste(labels_in_vignette[duplicated(labels_in_vignette)],
                collapse = ", "))
   }
-  
+
   # _Get examples
   fun_code <- add_fun_code_examples(parsed_tbl, fun_code)
 
@@ -148,6 +149,7 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg) {
 #' Get function names ----
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @importFrom parsermd rmd_get_chunk
+#' @noRd
 get_functions <- function(parsed_tbl) {
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
     grepl("function", parsed_tbl$label))
@@ -190,6 +192,7 @@ get_functions <- function(parsed_tbl) {
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param fun_names Names of functions in Rmd
 #' @importFrom stats na.omit
+#' @noRd
 add_fun_to_parsed <- function(parsed_tbl, fun_names) {
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
     grepl("function", parsed_tbl$label))
@@ -212,6 +215,7 @@ add_fun_to_parsed <- function(parsed_tbl, fun_names) {
 #' Add examples in function code
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param fun_code R code of functions in Rmd as character
+#' @noRd
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
 
   fun_code <- fun_code[!is.na(fun_code[["fun_name"]]),]
@@ -230,8 +234,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
     grepl("example", parsed_tbl$label))
   rmd_ex <- parsed_tbl[which_parsed_ex, ]
   rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]),]
-  
-  
+
+
   if (nrow(rmd_ex) != 0) {
     example_code <- lapply(
       seq_len(nrow(rmd_ex)),
@@ -274,12 +278,12 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
     # x <- 5
     fun_code_x <- fun_code[x, ]
     if (is.na(fun_code_x[["fun_name"]])) { return(NA_character_) }
-    
+
     end_skeleton <- ifelse(is.na(fun_code_x[["example_pos_start"]]),
                   fun_code_x[["example_pos_end"]],
                   fun_code_x[["example_pos_start"]] - 1
     )
-    
+
     all_fun_code <- stats::na.omit(c(
       # begin
       if (!is.na(end_skeleton)) {unlist(fun_code_x[["code"]])[1:end_skeleton]},
@@ -298,9 +302,10 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 #' create R file with code content and fun name
 #' @param fun_code R code of functions in Rmd as character
 #' @param pkg Path to package
+#' @noRd
 create_r_files <- function(fun_code, pkg) {
   fun_code <- fun_code[!is.na(fun_code[["fun_name"]]),]
-  
+
   r_files <- lapply(seq_len(nrow(fun_code)), function(x) {
     fun_name <- fun_code[x, ][["fun_name"]]
     r_file <- file.path(pkg, "R", paste0(fun_name, ".R"))
@@ -319,12 +324,13 @@ create_r_files <- function(fun_code, pkg) {
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param pkg Path to package
 #' @importFrom parsermd rmd_get_chunk
+#' @noRd
 create_tests_files <- function(parsed_tbl, pkg) {
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
     grepl("test", parsed_tbl$label), ]
-  
+
   rmd_test <- rmd_test[!is.na(rmd_test[["fun_name"]]),]
-  
+
   if (nrow(rmd_test) != 0) {
     requireNamespace("testthat")
     # setup testhat
@@ -367,15 +373,16 @@ create_tests_files <- function(parsed_tbl, pkg) {
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param pkg Path to package
 #' @param name Name of the resulting vignette
+#' @noRd
 create_vignette <- function(parsed_tbl, pkg, name) {
   old_proj <- usethis::proj_get()
-  
+
   if (normalizePath(old_proj) != normalizePath(pkg)) {
     on.exit(usethis::proj_set(old_proj))
     usethis::proj_set(pkg)
   }
 
-  
+
   # Create vignette directory if needed
   vignette_dir <- file.path(pkg, "vignettes")
   if (!dir.exists(vignette_dir)) {
@@ -398,9 +405,9 @@ create_vignette <- function(parsed_tbl, pkg, name) {
   # vignette_tbl[["label"]] <- make.unique(vignette_tbl[["label"]], sep = "-")
   # # Not re-used in as_document()
 
-  
+
   cleaned_name <- asciify_name(name)
-  
+
   usethis::use_vignette(name = cleaned_name, title = name)
   vignette_file <- file.path("vignettes", paste0(cleaned_name, ".Rmd"))
   if (!file.exists(vignette_file)) {

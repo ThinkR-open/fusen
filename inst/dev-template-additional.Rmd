@@ -42,7 +42,7 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")
 <!-- # Inflate your package -->
 
 <!-- You're one inflate from paper to box. -->
-<!-- Build your package from this very Rmarkdown using `fusen::inflate()` -->
+<!-- Build your package from this very RMarkdown using `fusen::inflate()` -->
 
 <!-- - Verify your `"DESCRIPTION"` file has been updated -->
 <!-- - Verify your function is in `"R/"` directory -->
