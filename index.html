@@ -19,9 +19,12 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Build a Package from RMarkdown File">
-<meta property="og:description" content="Use Rmd First method to build your package. Start your
-    package with documentation. Everything can be set from a Rmd file in
-    your project.">
+<meta property="og:description" content="Use RMarkdown First method to build your package. Start your
+    package with documentation, functions, examples and tests in the same
+    unique file.  Everything can be set from the RMarkdown template
+    provided in your project, then inflated as a package. Inflating the
+    template copies the relevant chunks and sections in the appropriate
+    files required for package development.">
 <meta property="og:image" content="https://thinkr-open.github.io/fusen/logo.png">
 <meta name="twitter:card" content="summary">
 <!-- mathjax
@@ -58,7 +61,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -125,11 +128,11 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>{fusen} inflates a Rmarkdown file to magically create a package.</p>
+<p>{fusen} inflates a RMarkdown file to magically create a package.</p>
 <blockquote>
-<p>If you know how to create a Rmarkdown file, then you know how to build a package.</p>
+<p>If you know how to create a RMarkdown file, then you know how to build a package.</p>
 </blockquote>
-<p>Indeed, this {fusen} package is a real-world example of {fusen} use as it was itself created from the <code>"dev_history.Rmd"</code> templates availables in <code>"dev/"</code> folder in its GitHub repository.</p>
+<p>Indeed, this {fusen} package is a real-world example of {fusen} use as it was itself created from the <code>"dev_history.Rmd"</code> templates available in <code>"dev/"</code> folder in its GitHub repository.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -140,7 +143,7 @@
 </div>
 <div id="you-are-one-rmarkdown-away-from-building-a-package" class="section level2">
 <h2 class="hasAnchor">
-<a href="#you-are-one-rmarkdown-away-from-building-a-package" class="anchor"></a>You are one Rmarkdown away from building a package!</h2>
+<a href="#you-are-one-rmarkdown-away-from-building-a-package" class="anchor"></a>You are one RMarkdown away from building a package!</h2>
 <p><em>{fusen} is all about correctly separating and naming chunks.</em></p>
 <ul>
 <li>Create and open a new directory or a new RStudio project
@@ -148,7 +151,7 @@
 <li>Choose your directory/package name like <code>my.package</code> for instance</li>
 </ul>
 </li>
-<li>Run the following code directly in the console to <strong>add the templated Rmd</strong> in the project and open it:</li>
+<li>Run the following code directly in the console to <strong>add the template Rmd</strong> in the project and open it:</li>
 </ul>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>open <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -169,7 +172,7 @@
 <li><em>For the first time, you can let the code as is, this is already the content for a working package</em></li>
 </ul>
 </li>
-<li>Run the following code to <strong>transform the templated Rmd as a package</strong>
+<li>Run the following code to <strong>transform the template Rmd as a package</strong>
 <ul>
 <li>This will open the vignette created</li>
 </ul>
@@ -269,7 +272,7 @@
 <div id="who-is-fusen-for" class="section level2">
 <h2 class="hasAnchor">
 <a href="#who-is-fusen-for" class="anchor"></a>Who is {fusen} for?</h2>
-<p>When you write a Rmarkdown file (or a vignette), you create a documentation for your analysis (or package). Inside, you write some functions, you test your functions with examples and you maybe write some unit tests to verify the outputs. This is even more true if you follow this guide : <a href="https://rtask.thinkr.fr/blog/rmd-first-when-development-starts-with-documentation/">‘Rmd first’: When development starts with documentation</a> After that, you need to move your functions and scripts in the correct place. Let {fusen} do that for you!</p>
+<p>When you write a RMarkdown file (or a vignette), you create a documentation for your analysis (or package). Inside, you write some functions, you test your functions with examples and you maybe write some unit tests to verify the outputs. This is even more true if you follow this guide : <a href="https://rtask.thinkr.fr/when-development-starts-with-documentation/">‘Rmd first’: When development starts with documentation</a> After that, you need to move your functions and scripts in the correct place. Let {fusen} do that for you!</p>
 <p>{fusen} is first addressed to people who never wrote a package before but know how to write a RMarkdown file. Understanding package infrastructure and correctly settling it can be frightening. This package may help them do the first step!</p>
 <p>{fusen} is also addressed to more advanced developers who are fed up with switching between R files, tests files, vignettes. In particular, when changing arguments of a function, we need to change examples, unit tests in multiple places. Here, you can do it in one place. No risk to forget one.</p>
 </div>
@@ -280,11 +283,11 @@
 <p><img src="reference/figures/fusen_seb_crop_small.jpg" width="25%"></p>
 <p>Similarly, the {fusen} package uses one page of RMarkdown, that you fill in a specific way so that at the end, you can magically <code><a href="reference/inflate.html">inflate()</a></code> it to let a nice package appear.</p>
 </div>
-<div id="aknowledgments" class="section level2">
+<div id="acknowledgments" class="section level2">
 <h2 class="hasAnchor">
-<a href="#aknowledgments" class="anchor"></a>Aknowledgments</h2>
+<a href="#acknowledgments" class="anchor"></a>Acknowledgments</h2>
 <ul>
-<li>Thanks to Deemah who asked me to go further ‘Rmd first’ after my presentation at use’R 2019 in Toulouse: <a href="https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf">‘The “Rmd first” method: when projects start with documentation’</a> (Video on Youtube: <a href="https://youtu.be/cB1BCxFbhtk" class="uri">https://youtu.be/cB1BCxFbhtk</a>).</li>
+<li>Thanks to Deemah who asked me to go further ‘Rmd first’ after my presentation at useR 2019 in Toulouse: <a href="https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf">‘The “Rmd first” method: when projects start with documentation’</a> (Video on Youtube: <a href="https://youtu.be/cB1BCxFbhtk" class="uri">https://youtu.be/cB1BCxFbhtk</a>).</li>
 <li>Thanks to @rundel and its package {parsermd} who helped me get back in this project with ease : <a href="https://github.com/rundel/parsermd" class="uri">https://github.com/rundel/parsermd</a>
 </li>
 </ul>
@@ -292,7 +295,7 @@
 <div id="code-of-conduct" class="section level2">
 <h2 class="hasAnchor">
 <a href="#code-of-conduct" class="anchor"></a>Code of Conduct</h2>
-<p>Please note that the dummypackage project is released with a <a href="https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
+<p>Please note that the {fusen} project is released with a <a href="https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
   </div>
@@ -331,7 +334,7 @@
 <ul class="list-unstyled">
 <li><a href="https://github.com/ThinkR-open/fusen/actions"><img src="https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
 <li><a href="https://codecov.io/gh/ThinkR-open/fusen?branch=master"><img src="https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg" alt="Codecov test coverage"></a></li>
-<li><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
+<li><a href="https://lifecycle.r-lib.org/articles/stages.html"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 </ul>
 </div>
 </div>

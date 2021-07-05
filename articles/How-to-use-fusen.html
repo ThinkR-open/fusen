@@ -56,7 +56,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.1.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.0</span>
       </span>
     </div>
 
@@ -135,7 +135,7 @@
 <a href="#how-to-use-fusen" class="anchor"></a>How to use {fusen}</h1>
 <ul>
 <li>Create a new directory / new project</li>
-<li>Add the Rmarkdown template with <code><a href="../reference/add_dev_history.html">fusen::add_dev_history()</a></code>
+<li>Add the RMarkdown template with <code><a href="../reference/add_dev_history.html">fusen::add_dev_history()</a></code>
 </li>
 <li>Run the content of the first <code>development</code> chunk with <code><a href="https://testthat.r-lib.org">library(testthat)</a></code> inside</li>
 <li>Modify and run the content of the chunk named <code>description</code>
@@ -184,8 +184,8 @@ This will fill the description of your package.
 
 <span class="co"># Add</span>
 <span class="fu"><a href="../reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span>
-<span class="co">#&gt; Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpr7gLQR/dummypackage . Please start a new R session in the new project directory.</span>
-<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpr7gLQR/dummypackage/dev/dev_history.Rmd"</span>
+<span class="co">#&gt; Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmp3bOXcH/dummypackage . Please start a new R session in the new project directory.</span>
+<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmp3bOXcH/dummypackage/dev/dev_history.Rmd"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -202,7 +202,7 @@ This will fill the description of your package.
 <span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span>
   pkg <span class="op">=</span> <span class="va">dummypackage</span>,
   fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-    Title <span class="op">=</span> <span class="st">"Build A Package From Rmarkdown file"</span>,
+    Title <span class="op">=</span> <span class="st">"Build A Package From RMarkdown file"</span>,
     Description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Use Rmd First method to build your package."</span>, 
                         <span class="st">"Start your package with documentation."</span>, 
                         <span class="st">"Everything can be set from a Rmd file in your project."</span><span class="op">)</span>,
@@ -213,7 +213,7 @@ This will fill the description of your package.
     <span class="op">)</span>
   <span class="op">)</span>
 <span class="op">)</span>
-<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpr7gLQR/dummypackage/DESCRIPTION"</span>
+<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmp3bOXcH/dummypackage/DESCRIPTION"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -235,14 +235,14 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")</a></code></pre>
 <div id="inflate-your-package-from-dev-rmd-template" class="section level1">
 <h1 class="hasAnchor">
 <a href="#inflate-your-package-from-dev-rmd-template" class="anchor"></a>Inflate your package from dev Rmd template</h1>
-<p>You’re one inflate from paper to box. Build your package from this very Rmarkdown using <code><a href="../reference/inflate.html">fusen::inflate()</a></code></p>
+<p>You’re one inflate from paper to box. Build your package from this very RMarkdown using <code><a href="../reference/inflate.html">fusen::inflate()</a></code></p>
 <p>After that, you can:</p>
 <ul>
 <li>Verify your <code>"DESCRIPTION"</code> file has been updated</li>
 <li>Verify your function is in <code>"R/"</code> directory</li>
 <li>Verify your test is in <code>"tests/testthat/"</code> directory</li>
 <li>Verify this Rmd appears in <code>"vignettes/"</code> directory</li>
-<li>Build your documentation using <code>pkgdown::build()</code> for vignette and examples verifications</li>
+<li>Build your documentation using <code>pkgdown::build()</code> for vignette and examples checks</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create a new project</span>
