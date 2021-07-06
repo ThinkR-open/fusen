@@ -13,10 +13,10 @@ coverage](https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg)
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
-{fusen} inflates a RMarkdown file to magically create a package.
+{fusen} inflates a Rmd file to magically create a package.
 
-> If you know how to create a RMarkdown file, then you know how to build
-> a package.
+> If you know how to create a Rmd file, then you know how to build a
+> package.
 
 Indeed, this {fusen} package is a real-world example of {fusen} use as
 it was itself created from the `"dev_history.Rmd"` templates available
@@ -31,7 +31,7 @@ You can install the development version of {fusen} from GitHub:
 remotes::install_github("ThinkR-open/fusen")
 ```
 
-## You are one RMarkdown away from building a package!
+## You are one Rmd away from building a package!
 
 *{fusen} is all about correctly separating and naming chunks.*
 
@@ -97,7 +97,7 @@ usethis::use_build_ignore("docs")
 usethis::use_git_ignore("docs")
 ```
 
-## Description of the RMarkdown template
+## Description of the Rmd template
 
 As I said earlier, this is all about using the correct split and name
 for your chunks.
@@ -157,19 +157,19 @@ There is a dedicated vignette to answer this:
 
 ## Who is {fusen} for?
 
-When you write a RMarkdown file (or a vignette), you create a
-documentation for your analysis (or package). Inside, you write some
-functions, you test your functions with examples and you maybe write
-some unit tests to verify the outputs. This is even more true if you
-follow this guide : [‘Rmd first’: When development starts with
+When you write a Rmd file (or a vignette), you create a documentation
+for your analysis (or package). Inside, you write some functions, you
+test your functions with examples and you maybe write some unit tests to
+verify the outputs. This is even more true if you follow this guide :
+[‘Rmd first’: When development starts with
 documentation](https://rtask.thinkr.fr/when-development-starts-with-documentation/)
 After that, you need to move your functions and scripts in the correct
 place. Let {fusen} do that for you!
 
 {fusen} is first addressed to people who never wrote a package before
-but know how to write a RMarkdown file. Understanding package
-infrastructure and correctly settling it can be frightening. This
-package may help them do the first step!
+but know how to write a Rmd file. Understanding package infrastructure
+and correctly settling it can be frightening. This package may help them
+do the first step!
 
 {fusen} is also addressed to more advanced developers who are fed up
 with switching between R files, tests files, vignettes. In particular,
@@ -185,9 +185,9 @@ nice box appear.
 
 <img src="man/figures/fusen_seb_crop_small.jpg" width="25%" />
 
-Similarly, the {fusen} package uses one page of RMarkdown, that you fill
-in a specific way so that at the end, you can magically `inflate()` it
-to let a nice package appear.
+Similarly, the {fusen} package uses one page of Rmd, that you fill in a
+specific way so that at the end, you can magically `inflate()` it to let
+a nice package appear.
 
 ## Acknowledgments
 
@@ -205,3 +205,10 @@ Please note that the {fusen} project is released with a [Contributor
 Code of
 Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.
+
+<details>
+<summary>
+Click here to fold your {fusen}…
+</summary>
+<img src="man/figures/fusen-fold-origami.gif" />
+</details>

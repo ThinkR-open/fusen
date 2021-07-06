@@ -1,3 +1,7 @@
+# v0.2.1
+
+* Fix documentation issues for CRAN
+
 # v0.2.0
 
 * Prepare for CRAN
