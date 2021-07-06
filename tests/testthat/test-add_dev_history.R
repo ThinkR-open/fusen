@@ -1,7 +1,6 @@
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
-# unlink(dummypackage, recursive = TRUE)
 dir.create(dummypackage)
 
 # Add ----
@@ -29,7 +28,6 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
 # Test with .Rproj and no .here, it works ----
 # Create a new project
 dummypackage2 <- file.path(tmpdir, "dummypackage2")
-# unlink(dummypackage, recursive = TRUE)
 dir.create(dummypackage2)
 cat("", file = file.path(dummypackage2, 'dummy.Rproj'))
 
@@ -65,11 +63,6 @@ test_that("add_dev_history fails", {
 # with the correct here()
 
 # Create a new project
-# tmpdir_r <- tempfile()
-# dir.create(tmpdir_r)
-# tmpdir_r
-# library(fusen)
-
 dummypackage4 <- file.path(tmpdir, "dummypackage4")
 dir.create(dummypackage4, recursive = TRUE)
 # Add
@@ -81,30 +74,15 @@ lines_template[grepl("<my_package_name>", lines_template)] <-
        lines_template[grepl("<my_package_name>", lines_template)])
 cat(enc2utf8(lines_template), file = dev_path, sep = "\n")
 
-# old_here <- here::here(getwd())
-# usethis::proj_set(old_here, force = TRUE)
-# old <- setwd(dummypackage)
 withr::with_dir(dummypackage4, {
-  # browser()
-  # withr::temp
-  # old_proj <- usethis::proj_get()
-  # if (normalizePath(old_proj) != normalizePath(dummypackage)) {
   usethis::proj_set(dummypackage4)
-  # }
   here:::do_refresh_here(dummypackage4)
 
   rmarkdown::render(
     input = file.path(dummypackage4, "dev/dev_history.Rmd"),
     output_file = file.path(dummypackage4, 'dev/dev_history.html'),
     envir = new.env(), quiet = TRUE)
-
-  #
-  # if (normalizePath(old_proj) != normalizePath(dummypackage4)) {
-  #   usethis::proj_set(old_proj)
-  # }
 })
-# here:::do_refresh_here(old_here)
-# usethis::proj_set(old_here, force = TRUE)
 
 test_that("dev-template-tests run as markdown", {
 
@@ -114,9 +92,6 @@ test_that("dev-template-tests run as markdown", {
   expect_true(file.exists(file.path(dummypackage4, "dev/dev_history.html")))
 
 })
-
-# For debug in check()
-# file.copy(dummypackage, to = "~/Bureau/", recursive = TRUE)
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
