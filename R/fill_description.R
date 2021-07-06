@@ -19,7 +19,7 @@
 #' fill_description(
 #'   pkg = dummypackage,
 #'   fields = list(
-#'     Title = "Build A Package From RMarkdown file",
+#'     Title = "Build A Package From Rmd file",
 #'     Description = paste("Use Rmd First method to build your package.",
 #'                         "Start your package with documentation.",
 #'                         "Everything can be set from a Rmd file in your project."),

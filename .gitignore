@@ -8,3 +8,5 @@ pkgdown
 rstudio_dotrstudio
 rstudio_dotconfig
 check
+/doc/
+/Meta/

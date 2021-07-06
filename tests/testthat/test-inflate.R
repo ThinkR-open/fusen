@@ -207,20 +207,6 @@ usethis::with_project(dummypackage, {
 })
 
 # Test no errors - clean name for vignette ----
-# name <- "# y  _ p n@ é ! 1"
-#   name <- "# y  _ p n@ \u00E9 ! 1"
-# stringi::stri_trans_general("é", "hex")
-# # name <- "exploration"
-# cleaned_name <- gsub("^-|-$", "",
-#                      gsub("-+", "-",
-#                           gsub("-_|_-", "-",
-#                           gsub("[^([:alnum:]*_*-*)*]", "-", name))))
-# grepl("^[[:alpha:]][[:alnum:]_-]*$", cleaned_name)
-# # asciify from {usethis} usethis:::asciify()
-# cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name)
-# usethis::use_vignette(name = cleaned_name, title = name)
-
-
 usethis::with_project(dummypackage, {
   inflate(pkg = dummypackage, rmd = dev_file, name = "# y  _ p n@ \u00E9 ! 1", check = FALSE)
   # Vignette name is also cleaned by {usethis} for special characters
@@ -251,8 +237,6 @@ dir.create(dummypackage)
 dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 
 usethis::with_project(dummypackage, {
-  #  unlink(file.path(dummypackage, "DESCRIPTION"), recursive = TRUE)
-
   test_that("stop when no DESCRIPTION file", {
     expect_error(inflate(pkg = dummypackage, rmd = dev_file, check = FALSE), "DESCRIPTION file")
   })
