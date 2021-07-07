@@ -3,7 +3,7 @@
 #' @param pkg Path where to save file
 #' @param overwrite Whether to overwrite existing dev_history.Rmd file
 #' @param open Logical. Whether to open file after creation
-#' @param dev_dir Name of directory for development Rmd files. Default to "dev".
+#' @param dev_dir Name of directory for development Rmarkdown files. Default to "dev".
 #' @param name Name of the template file. See details.
 #'
 #' @details

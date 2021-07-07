@@ -13,10 +13,10 @@ coverage](https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg)
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
 <!-- badges: end -->
 
-{fusen} inflates a Rmd file to magically create a package.
+{fusen} inflates a Rmarkdown file to magically create a package.
 
-> If you know how to create a Rmd file, then you know how to build a
-> package.
+> If you know how to create a Rmarkdown file, then you know how to build
+> a package.
 
 Indeed, this {fusen} package is a real-world example of {fusen} use as
 it was itself created from the `"dev_history.Rmd"` templates available
@@ -157,19 +157,19 @@ There is a dedicated vignette to answer this:
 
 ## Who is {fusen} for?
 
-When you write a Rmd file (or a vignette), you create a documentation
-for your analysis (or package). Inside, you write some functions, you
-test your functions with examples and you maybe write some unit tests to
-verify the outputs. This is even more true if you follow this guide :
-[‘Rmd first’: When development starts with
+When you write a Rmarkdown file (or a vignette), you create a
+documentation for your analysis (or package). Inside, you write some
+functions, you test your functions with examples and you maybe write
+some unit tests to verify the outputs. This is even more true if you
+follow this guide : [‘Rmd first’: When development starts with
 documentation](https://rtask.thinkr.fr/when-development-starts-with-documentation/)
 After that, you need to move your functions and scripts in the correct
 place. Let {fusen} do that for you!
 
 {fusen} is first addressed to people who never wrote a package before
-but know how to write a Rmd file. Understanding package infrastructure
-and correctly settling it can be frightening. This package may help them
-do the first step!
+but know how to write a Rmarkdown file. Understanding package
+infrastructure and correctly settling it can be frightening. This
+package may help them do the first step!
 
 {fusen} is also addressed to more advanced developers who are fed up
 with switching between R files, tests files, vignettes. In particular,

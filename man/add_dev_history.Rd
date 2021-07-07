@@ -19,7 +19,7 @@ add_dev_history(
 
 \item{open}{Logical. Whether to open file after creation}
 
-\item{dev_dir}{Name of directory for development Rmd files. Default to "dev".}
+\item{dev_dir}{Name of directory for development Rmarkdown files. Default to "dev".}
 
 \item{name}{Name of the template file. See details.}
 }

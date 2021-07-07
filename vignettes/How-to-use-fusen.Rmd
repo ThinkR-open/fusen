@@ -40,7 +40,7 @@ library(fusen)
 - One title / one chunk is for one function
 - `examples` and `tests` chunks need to be placed after the associated `function` chunk
 - You can add sub-functions in the `function` chunk to store them in the same R file, but they won't have `@examples`. Only the first function of the chunk will be able to get examples.
-- As for any Rmd file, chunk names need to be unique. Thus, you can use `examples-1`, `examples-2`, ...
+- As for any Rmarkdown file, chunk names need to be unique. Thus, you can use `examples-1`, `examples-2`, ...
 - _Do not forget to regularly clear your Workspace to avoid functions hidden by global environment_
 
 <!--
@@ -77,10 +77,10 @@ dir.create(dummypackage)
 fill_description(
   pkg = dummypackage,
   fields = list(
-    Title = "Build A Package From Rmd file",
-    Description = paste("Use Rmd First method to build your package.", 
+    Title = "Build A Package From Rmarkdown file",
+    Description = paste("Use Rmarkdown First method to build your package.", 
                         "Start your package with documentation.", 
-                        "Everything can be set from a Rmd file in your project."),
+                        "Everything can be set from a Rmarkdown file in your project."),
     `Authors@R` = c(
       person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", 
              role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
