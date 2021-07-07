@@ -162,7 +162,7 @@
 <li>
 <code>examples</code> and <code>tests</code> chunks need to be placed after the associated <code>function</code> chunk</li>
 <li>You can add sub-functions in the <code>function</code> chunk to store them in the same R file, but they won’t have <code>@examples</code>. Only the first function of the chunk will be able to get examples.</li>
-<li>As for any Rmd file, chunk names need to be unique. Thus, you can use <code>examples-1</code>, <code>examples-2</code>, …</li>
+<li>As for any Rmarkdown file, chunk names need to be unique. Thus, you can use <code>examples-1</code>, <code>examples-2</code>, …</li>
 <li><em>Do not forget to regularly clear your Workspace to avoid functions hidden by global environment</em></li>
 </ul>
 <!--
@@ -184,8 +184,8 @@ This will fill the description of your package.
 
 <span class="co"># Add</span>
 <span class="fu"><a href="../reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span>
-<span class="co">#&gt; Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmp23yECn/dummypackage . Please start a new R session in the new project directory.</span>
-<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmp23yECn/dummypackage/dev/dev_history.Rmd"</span>
+<span class="co">#&gt; Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpW5UAxs/dummypackage . Please start a new R session in the new project directory.</span>
+<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpW5UAxs/dummypackage/dev/dev_history.Rmd"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -202,10 +202,10 @@ This will fill the description of your package.
 <span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span>
   pkg <span class="op">=</span> <span class="va">dummypackage</span>,
   fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>
-    Title <span class="op">=</span> <span class="st">"Build A Package From Rmd file"</span>,
-    Description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Use Rmd First method to build your package."</span>, 
+    Title <span class="op">=</span> <span class="st">"Build A Package From Rmarkdown file"</span>,
+    Description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html">paste</a></span><span class="op">(</span><span class="st">"Use Rmarkdown First method to build your package."</span>, 
                         <span class="st">"Start your package with documentation."</span>, 
-                        <span class="st">"Everything can be set from a Rmd file in your project."</span><span class="op">)</span>,
+                        <span class="st">"Everything can be set from a Rmarkdown file in your project."</span><span class="op">)</span>,
     `Authors@R` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>
       <span class="fu"><a href="https://rdrr.io/r/utils/person.html">person</a></span><span class="op">(</span><span class="st">"Sebastien"</span>, <span class="st">"Rochette"</span>, email <span class="op">=</span> <span class="st">"sebastien@thinkr.fr"</span>, 
              role <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"aut"</span>, <span class="st">"cre"</span><span class="op">)</span>, comment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span>ORCID <span class="op">=</span> <span class="st">"0000-0002-1565-9313"</span><span class="op">)</span><span class="op">)</span>,
@@ -213,7 +213,7 @@ This will fill the description of your package.
     <span class="op">)</span>
   <span class="op">)</span>
 <span class="op">)</span>
-<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmp23yECn/dummypackage/DESCRIPTION"</span>
+<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpW5UAxs/dummypackage/DESCRIPTION"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>

@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Build a Package from Rmd File • fusen</title>
+<title>Build a Package from Rmarkdown File • fusen</title>
 <!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
 <link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
@@ -18,13 +18,13 @@
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/all.min.css" integrity="sha256-nAmazAk6vS34Xqo0BSrTb+abbtFlgsFK7NKSi6o7Y78=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
-<script src="pkgdown.js"></script><meta property="og:title" content="Build a Package from Rmd File">
-<meta property="og:description" content="Use Rmd First method to build your package. Start your
+<script src="pkgdown.js"></script><meta property="og:title" content="Build a Package from Rmarkdown File">
+<meta property="og:description" content="Use Rmarkdown First method to build your package. Start your
     package with documentation, functions, examples and tests in the same
-    unique file. Everything can be set from the Rmd template file provided
-    in your project, then inflated as a package. Inflating the template
-    copies the relevant chunks and sections in the appropriate files
-    required for package development.">
+    unique file. Everything can be set from the Rmarkdown template file
+    provided in your project, then inflated as a package. Inflating the
+    template copies the relevant chunks and sections in the appropriate
+    files required for package development.">
 <meta property="og:image" content="https://thinkr-open.github.io/fusen/logo.png">
 <meta name="twitter:card" content="summary">
 <!-- mathjax
@@ -128,9 +128,9 @@
 </h1></div>
 <!-- badges: start -->
 
-<p>{fusen} inflates a Rmd file to magically create a package.</p>
+<p>{fusen} inflates a Rmarkdown file to magically create a package.</p>
 <blockquote>
-<p>If you know how to create a Rmd file, then you know how to build a package.</p>
+<p>If you know how to create a Rmarkdown file, then you know how to build a package.</p>
 </blockquote>
 <p>Indeed, this {fusen} package is a real-world example of {fusen} use as it was itself created from the <code>"dev_history.Rmd"</code> templates available in <code>"dev/"</code> folder in its GitHub repository.</p>
 <div id="installation" class="section level2">
@@ -272,8 +272,8 @@
 <div id="who-is-fusen-for" class="section level2">
 <h2 class="hasAnchor">
 <a href="#who-is-fusen-for" class="anchor"></a>Who is {fusen} for?</h2>
-<p>When you write a Rmd file (or a vignette), you create a documentation for your analysis (or package). Inside, you write some functions, you test your functions with examples and you maybe write some unit tests to verify the outputs. This is even more true if you follow this guide : <a href="https://rtask.thinkr.fr/when-development-starts-with-documentation/">‘Rmd first’: When development starts with documentation</a> After that, you need to move your functions and scripts in the correct place. Let {fusen} do that for you!</p>
-<p>{fusen} is first addressed to people who never wrote a package before but know how to write a Rmd file. Understanding package infrastructure and correctly settling it can be frightening. This package may help them do the first step!</p>
+<p>When you write a Rmarkdown file (or a vignette), you create a documentation for your analysis (or package). Inside, you write some functions, you test your functions with examples and you maybe write some unit tests to verify the outputs. This is even more true if you follow this guide : <a href="https://rtask.thinkr.fr/when-development-starts-with-documentation/">‘Rmd first’: When development starts with documentation</a> After that, you need to move your functions and scripts in the correct place. Let {fusen} do that for you!</p>
+<p>{fusen} is first addressed to people who never wrote a package before but know how to write a Rmarkdown file. Understanding package infrastructure and correctly settling it can be frightening. This package may help them do the first step!</p>
 <p>{fusen} is also addressed to more advanced developers who are fed up with switching between R files, tests files, vignettes. In particular, when changing arguments of a function, we need to change examples, unit tests in multiple places. Here, you can do it in one place. No risk to forget one.</p>
 </div>
 <div id="why-is-this-package-named-fusen-" class="section level2">
