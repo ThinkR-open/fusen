@@ -2,7 +2,7 @@
 #'
 #' @param pkg Path to package
 #' @param name Name of the resulting vignette
-#' @param rmd Path to Rmd file to inflate
+#' @param rmd Path to Rmarkdown file to inflate
 #' @param check Logical. Whether to check package after Rmd inflating
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
 #'
@@ -84,7 +84,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
   if (!is.null(fun_code)) {
     create_functions_all(parsed_tbl, fun_code, pkg)
   } else {
-    message("No chunks named 'function-xx' were found in the Rmd file: ", rmd)
+    message("No chunks named 'function-xx' were found in the Rmarkdown file: ", rmd)
   }
 
   create_vignette(parsed_tbl, pkg, name)

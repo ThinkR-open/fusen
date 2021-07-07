@@ -15,7 +15,7 @@ inflate(
 \arguments{
 \item{pkg}{Path to package}
 
-\item{rmd}{Path to Rmd file to inflate}
+\item{rmd}{Path to Rmarkdown file to inflate}
 
 \item{name}{Name of the resulting vignette}
 

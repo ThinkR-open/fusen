@@ -29,8 +29,8 @@ Fill and run the content of this chunk, before anything else.
 fusen::fill_description(
   pkg = here::here(),
   fields = list(
-    Title = "Learn how to build A Package From Rmd file",
-    Description = "A Set of tools to understand packages structure. Use Rmd First method to build a package from a defined template. Start your package with documentation. Everything can be set from a Rmd file in your project.",
+    Title = "Learn how to build A Package From Rmarkdown file",
+    Description = "A Set of tools to understand packages structure. Use Rmarkdown First method to build a package from a defined template. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
     `Authors@R` = c(
       person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre")),
       person(given = "ThinkR", role = "cph")

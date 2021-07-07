@@ -9,12 +9,12 @@ output: html_document
 library(testthat)
 ```
 
-# Parse and split a Rmd file, and transform as tibble
+# Parse and split a Rmarkdown file, and transform as tibble
 
 ```{r function}
-#' Split Rmd file 
+#' Split Rmarkdown file 
 #'
-#' @param file Path to Rmd file
+#' @param file Path to Rmarkdown file
 #' @importFrom utils head tail
 #'
 #' @export
@@ -69,9 +69,9 @@ split_rmd <- function(file) {
   parsed
 }
 
-#' Groupe parts of Rmd file
+#' Groupe parts of Rmarkdown file
 #'
-#' @param file path to Rmd file
+#' @param file path to Rmarkdown file
 #'
 #' @importFrom utils head tail
 #' @export
