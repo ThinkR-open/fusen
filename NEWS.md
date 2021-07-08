@@ -1,6 +1,9 @@
 # v0.2.1
 
 * Fix documentation issues for CRAN
+* Add templates for "dev_history.Rmd" file
+* Add more informative messages to users
+* New vignette to explain how to maintain a {fusen} package
 
 # v0.2.0
 

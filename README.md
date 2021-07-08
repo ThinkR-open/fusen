@@ -5,12 +5,13 @@
 
 <!-- badges: start -->
 
+[![CRAN
+status](https://www.r-pkg.org/badges/version/fusen)](https://CRAN.R-project.org/package=fusen)
 [![R build
 status](https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg)](https://github.com/ThinkR-open/fusen/actions)
 [![Codecov test
 coverage](https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg)](https://codecov.io/gh/ThinkR-open/fusen?branch=master)
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html)
+<!-- [![](https://cranlogs.r-pkg.org/badges/fusen)](https://cran.r-project.org/package=fusen) -->
 <!-- badges: end -->
 
 {fusen} inflates a Rmarkdown file to magically create a package.
@@ -23,6 +24,12 @@ it was itself created from the `"dev_history.Rmd"` templates available
 in `"dev/"` folder in its GitHub repository.
 
 ## Installation
+
+You can install the released CRAN version:
+
+``` r
+install.packages("fusen")
+```
 
 You can install the development version of {fusen} from GitHub:
 
@@ -141,6 +148,11 @@ usethis::use_mit_license("Sébastien Rochette")
 fusen::inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
 ```
 
+> You can also have a look at
+> [{squirrels.fusen}](https://github.com/statnmap/squirrels.fusen) that
+> has been built to present the method. Follow the commits:
+> <https://github.com/statnmap/squirrels.fusen/commits/main>
+
 ## How to maintain a {fusen}? Can I use {fusen} with old-way packages?
 
 There is a dedicated vignette to answer this:
@@ -189,6 +201,13 @@ Similarly, the {fusen} package uses one page of Rmd, that you fill in a
 specific way so that at the end, you can magically `inflate()` it to let
 a nice package appear.
 
+<details>
+<summary>
+Click here to fold your {fusen}…
+</summary>
+<img src="man/figures/fusen-fold-origami.gif" />
+</details>
+
 ## Acknowledgments
 
 -   Thanks to Deemah who asked me to go further ‘Rmd first’ after my
@@ -205,10 +224,3 @@ Please note that the {fusen} project is released with a [Contributor
 Code of
 Conduct](https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html).
 By contributing to this project, you agree to abide by its terms.
-
-<details>
-<summary>
-Click here to fold your {fusen}…
-</summary>
-<img src="man/figures/fusen-fold-origami.gif" />
-</details>
