@@ -4,7 +4,7 @@ pkgdown_sha: ~
 articles:
   How-to-use-fusen: How-to-use-fusen.html
   Maintain-packages-with-fusen: Maintain-packages-with-fusen.html
-last_built: 2021-07-07T09:04Z
+last_built: 2021-07-08T07:52Z
 urls:
   reference: https://thinkr-open.github.io/fusen//reference
   article: https://thinkr-open.github.io/fusen//articles
