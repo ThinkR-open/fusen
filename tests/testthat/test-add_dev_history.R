@@ -78,19 +78,21 @@ withr::with_dir(dummypackage4, {
   usethis::proj_set(dummypackage4)
   here:::do_refresh_here(dummypackage4)
 
-  rmarkdown::render(
-    input = file.path(dummypackage4, "dev/dev_history.Rmd"),
-    output_file = file.path(dummypackage4, 'dev/dev_history.html'),
-    envir = new.env(), quiet = TRUE)
+  if (rmarkdown::pandoc_available("1.12.3")) {
+    rmarkdown::render(
+      input = file.path(dummypackage4, "dev/dev_history.Rmd"),
+      output_file = file.path(dummypackage4, 'dev/dev_history.html'),
+      envir = new.env(), quiet = TRUE)
+  }
 })
 
 test_that("dev-template-tests run as markdown", {
-
-  expect_true(file.exists(file.path(dummypackage4, "DESCRIPTION")))
-  expect_true(file.exists(file.path(dummypackage4, "LICENSE")))
-  expect_true(file.exists(file.path(dummypackage4, "inst/nyc_squirrels_sample.csv")))
-  expect_true(file.exists(file.path(dummypackage4, "dev/dev_history.html")))
-
+  if (rmarkdown::pandoc_available("1.12.3")) {
+    expect_true(file.exists(file.path(dummypackage4, "DESCRIPTION")))
+    expect_true(file.exists(file.path(dummypackage4, "LICENSE")))
+    expect_true(file.exists(file.path(dummypackage4, "inst/nyc_squirrels_sample.csv")))
+    expect_true(file.exists(file.path(dummypackage4, "dev/dev_history.html")))
+  }
 })
 
 # Delete dummy package

@@ -1,3 +1,7 @@
+# v0.2.2
+
+* Protect tests from older Pandoc versions
+
 # v0.2.1
 
 * Fix documentation issues for CRAN
