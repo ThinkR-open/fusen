@@ -18,6 +18,7 @@ Description: Use Rmarkdown First method to build your package. Start your
 License: MIT + file LICENSE
 URL: https://thinkr-open.github.io/fusen/,
     https://github.com/Thinkr-open/fusen
+Depends: R (>= 3.5.0)
 Imports: 
     attachment,
     cli,
