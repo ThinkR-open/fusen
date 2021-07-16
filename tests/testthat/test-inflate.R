@@ -102,8 +102,8 @@ usethis::with_project(dummypackage, {
   unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 })
 
-# Test no problem with special character in YAML
-# if (packageVersion("parsermd") > "0.1.2") {
+# Test no problem with special character in YAML ----
+if (packageVersion("parsermd") > "0.1.2") {
   dummypackage.special <- file.path(tmpdir, "dummypackage.special")
   dir.create(dummypackage.special)
 
@@ -128,7 +128,7 @@ usethis::with_project(dummypackage, {
       expect_true(file.exists(my_median_file))
     })
   })
-  # }
+}
 
 # Test no attachment and no check when asked ----
 unlink(file.path(dummypackage, "DESCRIPTION"), recursive = TRUE)
