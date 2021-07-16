@@ -316,7 +316,7 @@ unlink(dummypackage4, recursive = TRUE)
 #'  personalized defaults using package options
 #'
 #' @return
-#' FIll DESCRIPTION file with fields. Return path to file.
+#' Fill DESCRIPTION file with fields. Return path to file.
 #' @export
 #'
 #' @examples

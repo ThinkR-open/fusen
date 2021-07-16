@@ -7,7 +7,7 @@
 #'  personalized defaults using package options
 #'
 #' @return
-#' FIll DESCRIPTION file with fields. Return path to file.
+#' Fill DESCRIPTION file with fields. Return path to file.
 #' @export
 #'
 #' @examples
@@ -40,6 +40,10 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
   path <- normalizePath(pkg)
 
   desc_file <- file.path(path, "DESCRIPTION")
+
+  if (!is.null(fields[["Description"]]) && !grepl("[.]$", fields[["Description"]])) {
+    stop("Description field is a sentence and should finish with a dot.")
+  }
 
   if (file.exists(desc_file) & !isTRUE(overwrite)) {
     stop("DESCRIPTION already exists. Set overwrite = TRUE to overwrite.")

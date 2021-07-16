@@ -16,7 +16,7 @@ personalized defaults using package options}
 \item{overwrite}{Whether to overwrite existing DESCRIPTION}
 }
 \value{
-FIll DESCRIPTION file with fields. Return path to file.
+Fill DESCRIPTION file with fields. Return path to file.
 }
 \description{
 Fill DESCRIPTION file of the package
