@@ -1,6 +1,6 @@
 ---
 title: "dev_history.Rmd for working package"
-author: "Sebastien Rochette"
+author: "Sébastien Rochette"
 date: "23/01/2021"
 output: html_document
 editor_options: 
@@ -15,10 +15,10 @@ library(testthat)
 # Description of your package
 
 This will fill the description of your package.
---> 
+-->
 
-```{r description, eval=FALSE}
-# Describe your package
+```{r description}
+# --> for parse tests
 fusen::fill_description(
   pkg = here::here(),
   fields = list(
@@ -34,27 +34,6 @@ fusen::fill_description(
 usethis::use_mit_license("Sébastien Rochette")
 ```
 
-# Read data
-
-<!-- Store your dataset in a directory named "inst/" at the root of your project -->
-<!-- Use it for your tests in this Rmd thanks to `load_all()` to make it available
-and `system.file()` to read it in your examples 
--->
-
-```{r development-2}
-# Run all in the console directly
-# Create "inst/" directory
-dir.create(here::here("inst"))
-# Example dataset
-# file.copy(system.file("nyc_squirrels_sample.csv", package = "fusen"), here::here("inst"))
-# Make your dataset file available to the current Rmd
-pkgload::load_all(path = here::here(), export_all = FALSE)
-# You will be able to read your example data file in each of your function examples and tests as follows
-# datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
-# nyc_squirrels <- read.csv(datafile)
-```
-
-
 # Calculate the median of a vector
 
 ```{r function}
@@ -68,6 +47,7 @@ pkgload::load_all(path = here::here(), export_all = FALSE)
 #' @export
 #'
 #' @examples
+#' my_median(2:20)
 my_median <- function(x, na.rm = TRUE) {
   if (!is.numeric(x)) {stop("x should be numeric")}
   stats::median(x, na.rm = na.rm)
@@ -85,44 +65,6 @@ test_that("my_median works properly and show error if needed", {
 })
 ```
 
-# Calculate the mean of a vector
-## Use sub-functions in the same chunk
-
-```{r function-1}
-#' My Other median
-#'
-#' @param x Vector of Numeric values
-#' @inheritParams stats::median
-#'
-#' @return
-#' Median of vector x
-#' @export
-#'
-#' @examples
-my_other_median <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
-  sub_median(x, na.rm =na.rm)
-}
-
-#' Core of the median not exported
-#' @param x Vector of Numeric values
-#' @inheritParams stats::median
-sub_median <- function(x, na.rm = TRUE) {
-  stats::median(x, na.rm)
-}
-```
-
-```{r examples-1}
-my_other_median(1:12)
-```
-
-```{r tests-1}
-test_that("my_median works properly and show error if needed", {
-  expect_true(my_other_median(1:12) == 6.5)
-  expect_error(my_other_median("text"))
-})
-```
-
 # There can be development actions
 
 These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
@@ -135,6 +77,15 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")
 
 
 # Inflate your package
+
+```{r}
+# duplicate empty name
+```
+
+```{r}
+# duplicate empty name
+```
+
 
 You're one inflate from paper to box.
 Build your package from this very Rmd using `fusen::inflate()`

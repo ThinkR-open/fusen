@@ -1,6 +1,6 @@
 ---
 title: "dev_history.Rmd for working package"
-author: "Sébastien Rochette"
+author: "Sebastien Rochette"
 date: "23/01/2021"
 output: html_document
 editor_options: 

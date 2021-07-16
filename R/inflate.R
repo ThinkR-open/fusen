@@ -162,7 +162,7 @@ get_functions <- function(parsed_tbl) {
       # find function name
       fun_name <- stringr::str_extract(
         code[grep("function(\\s*)\\(", code)],
-        "\\w*(?=(\\s*)(<-|=)(\\s*)function)"
+        "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)function)"
       ) %>%
         gsub(" ", "", .) # remove spaces
 
@@ -397,14 +397,28 @@ create_vignette <- function(parsed_tbl, pkg, name) {
   ]
 
   # Make chunk names unique
-  # vignette_tbl[["label"]] <- ifelse(
+  # vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])] <-
+  #   gsub("unnamed-", "parsermd-", vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])])
   #   is.na(vignette_tbl[["label"]]) & vignette_tbl[["type"]] == "rmd_chunk",
   #                                   gsub("[.]+", "-", make.names(name)),
   #                                   vignette_tbl[["label"]])
   #
   # vignette_tbl[["label"]] <- make.unique(vignette_tbl[["label"]], sep = "-")
-  # # Not re-used in as_document()
+  # # /!\ Not re-used in as_document(), this must be in ast
 
+  # ast <- vignette_tbl[["ast"]][[21]]
+
+  # To correct for {parsermd} unnamed attribution
+  fix_unnamed_chunks <- function(ast) {
+    if (inherits(ast, "rmd_chunk") && grepl("unnamed-chunk-", ast[["name"]])) {
+      ast[["name"]] <- gsub("unnamed-", "parsermd-", ast[["name"]])
+    }
+    ast
+  }
+
+  ast_class <- class(vignette_tbl[["ast"]])
+  vignette_tbl[["ast"]] <- lapply(vignette_tbl[["ast"]], fix_unnamed_chunks)
+  class(vignette_tbl[["ast"]]) <- ast_class
 
   cleaned_name <- asciify_name(name)
 

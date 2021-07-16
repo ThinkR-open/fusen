@@ -1,6 +1,6 @@
 Package: fusen
 Title: Build a Package from Rmarkdown File
-Version: 0.2.2
+Version: 0.2.3
 Authors@R: 
     c(person(given = "Sebastien",
              family = "Rochette",
@@ -42,6 +42,8 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
+Remotes:
+    rundel/parsermd
 Encoding: UTF-8
 Language: en-US
 LazyData: true

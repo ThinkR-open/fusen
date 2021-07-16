@@ -1,3 +1,7 @@
+# v0.2.3
+
+* Update unit tests
+
 # v0.2.2
 
 * Protect tests from older Pandoc versions
