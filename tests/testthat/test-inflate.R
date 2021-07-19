@@ -288,6 +288,8 @@ usethis::with_project(dummypackage, {
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
-unlink(dummypackage.special, recursive = TRUE)
+if (exists("dummypackage.special")) {
+  unlink(dummypackage.special, recursive = TRUE)
+}
 
 # Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...
