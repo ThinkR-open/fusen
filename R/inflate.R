@@ -5,8 +5,10 @@
 #' @param rmd Path to Rmarkdown file to inflate
 #' @param check Logical. Whether to check package after Rmd inflating
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
+#' @param overwrite Logical. Whether to overwrite vignette and functions if already exists.
 #'
 #' @importFrom parsermd parse_rmd as_tibble
+#' @importFrom utils getFromNamespace
 #' @return
 #' Package structure. Return path to current package.
 #' @export
@@ -31,7 +33,9 @@
 #' # usethis::use_git_ignore("docs")
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
-inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name = "exploration", check = TRUE, document = TRUE) {
+inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
+                    name = "exploration", check = TRUE, document = TRUE,
+                    overwrite = c("ask", "yes", "no")) {
   old <- setwd(pkg)
   on.exit(setwd(old))
 
@@ -69,6 +73,24 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
     stop(rmd, " does not exists, please use fusen::add_dev_history() to create it.")
   }
 
+  # Are you sure ?
+  overwrite <- match.arg(overwrite)
+  cleaned_name <- asciify_name(name)
+  vignette_path <- file.path(pkg, "vignettes", paste0(cleaned_name, ".Rmd"))
+  if (file.exists(vignette_path)) {
+    if (overwrite == "ask") {
+      rm_exist_vignette <- getFromNamespace("can_overwrite", "usethis")(vignette_path)
+    } else {
+      rm_exist_vignette <- ifelse(overwrite == "yes", TRUE, FALSE)
+    }
+    if (rm_exist_vignette) {
+      file.remove(vignette_path)
+    } else {
+      stop("Vignette already exists, anwser 'yes' to the previous question",
+           " or set inflate(..., overwrite = 'yes') to always overwrite.")
+    }
+  }
+
   # Create NAMESPACE
   namespace_file <- file.path(pkg, "NAMESPACE")
   if (!file.exists(namespace_file)) {
@@ -102,6 +124,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
 
   pkg
 }
+
 
 #' Create function code, doc and tests ----
 #' @param parsed_tbl tibble of a parsed Rmd

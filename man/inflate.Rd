@@ -9,7 +9,8 @@ inflate(
   rmd = file.path("dev", "dev_history.Rmd"),
   name = "exploration",
   check = TRUE,
-  document = TRUE
+  document = TRUE,
+  overwrite = c("ask", "yes", "no")
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ inflate(
 \item{check}{Logical. Whether to check package after Rmd inflating}
 
 \item{document}{Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}}
+
+\item{overwrite}{Logical. Whether to overwrite vignette and functions if already exists.}
 }
 \value{
 Package structure. Return path to current package.

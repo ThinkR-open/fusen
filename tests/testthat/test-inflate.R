@@ -155,7 +155,7 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
   inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
-  test_that("inflate() output error", {
+  test_that("inflate() output no error", {
     expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
     expect_true(file.exists(file.path(dummypackage, "R", "my_median.R")))
     expect_true(!file.exists(file.path(dummypackage, "tests", "testthat", "test-my_median.R")))
@@ -173,9 +173,36 @@ usethis::with_project(dummypackage, {
     dev_file,
     overwrite = TRUE
   )
-  test_that("inflate() output error", {
+  test_that("inflate() output message", {
     expect_message(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE))
   })
+  # Clean R, tests and vignettes
+  unlink(file.path(dummypackage, "R"), recursive = TRUE)
+  unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
+  unlink(file.path(dummypackage, "tests"), recursive = TRUE)
+})
+
+# Tests errors - vignette already exists ----
+usethis::with_project(dummypackage, {
+
+  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration",
+          check = FALSE, overwrite = "yes")
+
+  test_that("inflate() output error when second time (not interactive)", {
+    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration",
+                         check = FALSE))
+    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration",
+                         check = FALSE, overwrite = 'no'))
+  })
+
+  # No error with overwrite = 'yes'
+  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration",
+          check = FALSE, overwrite = "yes")
+
+  test_that("inflate() output no error", {
+    expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+  })
+
   # Clean R, tests and vignettes
   unlink(file.path(dummypackage, "R"), recursive = TRUE)
   unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
@@ -270,6 +297,24 @@ usethis::with_project(dummypackage, {
   unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 })
 
+usethis::with_project(dummypackage, {
+  inflate(pkg = dummypackage, rmd = dev_file, name = "# y  _ p n@ \u00E9 ! 1", check = FALSE)
+  # Vignette name is also cleaned by {usethis} for special characters
+  vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
+
+  test_that("vignette is created with clean name", {
+    expect_true(file.exists(vignette_path))
+    # usethis::use_vignette writes in UTF-8
+    vig_lines <- readLines(vignette_path, encoding = "UTF-8")
+    expect_true(sum(grepl("# y  _ p n@ \u00E9 ! 1", vig_lines, fixed = TRUE)) == 2)
+    expect_true(sum(grepl("y-p-n---1", vig_lines, fixed = TRUE)) == 0)
+  })
+
+  # Clean R, tests and vignettes
+  unlink(file.path(dummypackage, "R"), recursive = TRUE)
+  unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
+  unlink(file.path(dummypackage, "tests"), recursive = TRUE)
+})
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 

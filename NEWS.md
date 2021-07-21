@@ -1,6 +1,8 @@
 # v0.2.3
 
 * Update unit tests
+* Show check outputs in console
+* Ask before overwriting everything
 
 # v0.2.2
 
