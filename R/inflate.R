@@ -96,7 +96,8 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name =
 
   # Check
   if (isTRUE(check)) {
-    rcmdcheck::rcmdcheck(pkg)
+    res <- rcmdcheck::rcmdcheck(pkg)
+    print(res)
   }
 
   pkg
