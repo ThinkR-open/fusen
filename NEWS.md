@@ -3,6 +3,7 @@
 * Update unit tests
 * Show check outputs in console
 * Ask before overwriting everything
+* Check Description Title and description fields
 
 # v0.2.2
 

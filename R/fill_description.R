@@ -41,6 +41,11 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
 
   desc_file <- file.path(path, "DESCRIPTION")
 
+  if (capwords(fields[["Title"]]) != fields[["Title"]]) {
+    fields[["Title"]] <- capwords(fields[["Title"]])
+    cli::cli_alert_warning(paste("Title was modified to Title Case:", fields[["Title"]]))
+  }
+
   if (!is.null(fields[["Description"]]) && !grepl("[.]$", fields[["Description"]])) {
     stop("Description field is a sentence and should finish with a dot.")
   }
@@ -59,4 +64,16 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
 
   desc$write(file = desc_file)
   desc_file
+}
+
+
+#' To Title Case
+#'
+#' Example from base::tolower()
+#' @noRd
+capwords <- function(s, strict = FALSE) {
+  cap <- function(s) paste(toupper(substring(s, 1, 1)),
+                           {s <- substring(s, 2); if(strict) tolower(s) else s},
+                           sep = "", collapse = " " )
+  sapply(strsplit(s, split = " "), cap, USE.NAMES = !is.null(names(s)))
 }
