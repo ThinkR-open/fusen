@@ -57,7 +57,7 @@ Your first `inflate()` may not directly work as expected. In this case, you can 
  
 
 
-## What about packages already built the old way ?
+# What about packages already built the old way ?
 
 The "dev_history.Rmd" template only modifies files related to functions presented inside the template. 
 This does not remove or modify previous functions, tests or vignettes, provided that names are different.
@@ -67,6 +67,52 @@ This does not remove or modify previous functions, tests or vignettes, provided 
 - If you want to add new functionnalities, correctly documented and tested, you can use {fusen}. This will not delete previous work. 
 - Use the "Option 2" above to continue after the development of your functionnality
 
+## Let's try to convince package developers with an example
+
+- Install {fusen} : `install.packages("fusen")`
+- Open a project for **one of your already existing package**
+  + Commit your previous state if you are afraid of {fusen}
+  + If you are not sure enough to do it on an existing package, then follow the guide in ["How to use fusen"](https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html)
+- Run in the Console : `fusen::add_dev_history(name = "additional")`
+  + A Rmd file appears in "dev/dev_history.Rmd". Open it.
+- Add a new function in the `function` chunk. For instance:  
+```{r, eval=FALSE}
+#' My median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+my_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+- Add a corresponding example in the `example` chunk. For instance:  
+```{r, eval=FALSE}
+my_median(1:12)
+```
+- Add a corresponding unit test in the `test` chunk. For instance:
+```{r, eval=FALSE}
+test_that("my_median works properly and show error if needed", {
+  expect_true(my_median(1:12) == 6.5)
+  expect_error(my_median("text"))
+})
+```
+- Run command of the last chunk: `fusen::inflate(rmd = "dev/dev_history.Rmd")`
+  + This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use `fusen::inflate(rmd = "dev/dev_history.Rmd", document = FALSE)` to avoid that.
+  + This will also run `devtools::check()`. Use `fusen::inflate(rmd = "dev/dev_history.Rmd", check = FALSE)` to avoid that.
+
+**That's it!**  
+You added a new function in your package, along with example, test and a new vignette:
+
+- R/my_median.R
+- tests/testthat/test-my_median.R
+- vignettes/exploration.Rmd
 
 
 
