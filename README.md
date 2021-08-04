@@ -92,8 +92,8 @@ remotes::install_local()
 my.package::my_median(1:12)
 ```
 
--   Test the correct documentation of the package with its dedicated
-    website
+-   Test the correct documentation of the package by building its
+    dedicated website
 
 ``` r
 # Build {pkgdown} to test it

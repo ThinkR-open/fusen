@@ -1,3 +1,7 @@
+# v0.2.4
+
+* Update vignette and tests
+
 # v0.2.3
 
 * Update unit tests
