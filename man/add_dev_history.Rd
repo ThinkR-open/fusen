@@ -38,6 +38,9 @@ Choose \code{name} among the different templates available:
 \item "teaching": Template with a reproducible package, simpler than "full", but everything to
 teach the minimal structure of a package.
 }
+
+Abbreviated names can also be used for the different templates. For example "add"
+instead of additional.
 }
 \examples{
 # Create a new project

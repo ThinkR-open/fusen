@@ -15,6 +15,9 @@
 #' - "teaching": Template with a reproducible package, simpler than "full", but everything to
 #'  teach the minimal structure of a package.
 #'
+#' Abbreviated names can also be used for the different templates. For example "add"
+#' instead of additional.
+#'
 #' @return
 #' Create a dev_history.Rmd file and return its path
 #' @export
