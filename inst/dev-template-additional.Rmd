@@ -1,7 +1,5 @@
 ---
 title: "dev_history.Rmd empty"
-author: "Sebastien Rochette"
-date: "23/01/2021"
 output: html_document
 editor_options: 
   chunk_output_type: console
