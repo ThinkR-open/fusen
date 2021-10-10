@@ -19,3 +19,4 @@ rstudio\_dotrstudio
 ^CRAN-RELEASE$
 ^doc$
 ^Meta$
+^CONTRIBUTING\.md$
