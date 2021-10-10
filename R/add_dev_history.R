@@ -136,5 +136,5 @@ asciify_name <- function(name, to_pkg = FALSE) {
     # asciify from {usethis} usethis:::asciify()
     cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name)
   }
-  cleaned_name
+  tolower(cleaned_name)
 }
