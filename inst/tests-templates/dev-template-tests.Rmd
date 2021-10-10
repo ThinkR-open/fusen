@@ -250,7 +250,11 @@ MyUppercaseFunction <- function() {
 }
 ```
 
-
+```{r tests-7}
+test_that("MyUppercaseFunction works properly and show error if needed", {
+  expect_message(MyUppercaseFunction() == "hello")
+})
+```
 # There can be development actions
 
 These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
