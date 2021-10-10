@@ -141,7 +141,7 @@ Maintaining such a package requires a choice:</p>
 <li>
 <strong>Option 2</strong>: Modifications are realized in the package files directly, and the “dev_history.Rmd” file must be protected from any use.</li>
 </ul>
-<p>Your first <code><a href="../reference/inflate.html">inflate()</a></code> may not directly work as expected. In this case, you can continue to implement your functionnality using <strong>Option 1</strong>.</p>
+<p>Your first <code><a href="../reference/inflate.html">inflate()</a></code> may not directly work as expected. In this case, you can continue to implement your functionality using <strong>Option 1</strong>.</p>
 <blockquote>
 <p>Advice 1 : Use Option 1 until you find it too complicated to be used ! I assure you, you will find the moment when you say : ok this is not possible anymore…</p>
 </blockquote>
@@ -166,7 +166,7 @@ Maintaining such a package requires a choice:</p>
 <li>(+) You can use dedicated checking and debugging tools as is, in particular in RStudio. There are built to direct you as quickly as possible to the source of the problem</li>
 <li>(+) This allows collaboration with more advanced developers who are used to debug in the package structure directly</li>
 <li>(-) This requires to understand the structure and files of a package and how they interact each other, and be able to jump from one file to the other, in the correct folder. This may drives you lazy to continue documenting and testing your modifications</li>
-<li>This requires to protect the dev_history file, so that you never use it again. <code>&lt;!-- Do not edit by hand--&gt;</code> is the minimum. Then you can add <code>&lt;!-- File used to start new functionnalities, do not use anymore, go directly to appropriate files in the package --&gt;</code>
+<li>This requires to protect the dev_history file, so that you never use it again. <code>&lt;!-- Do not edit by hand--&gt;</code> is the minimum. Then you can add <code>&lt;!-- File used to start new functionalities, do not use anymore, go directly to appropriate files in the package --&gt;</code>
 </li>
 </ul>
 <p>=&gt; This is the way I add new functionalities in packages that started in the old way, or which I build in collaboration with other devs.</p>
@@ -179,8 +179,8 @@ Maintaining such a package requires a choice:</p>
 <ul>
 <li>{fusen} itself was started in the classical way before having enough functions to be able to build a package from itself. This does not prevent me at all to use {fusen} to build himself now !</li>
 <li>If you want to modify existing functionalities, you will need to continue maintain your already-built package in the classical way</li>
-<li>If you want to add new functionnalities, correctly documented and tested, you can use {fusen}. This will not delete previous work.</li>
-<li>Use the “Option 2” above to continue after the development of your functionnality</li>
+<li>If you want to add new functionalities, correctly documented and tested, you can use {fusen}. This will not delete previous work.</li>
+<li>Use the “Option 2” above to continue after the development of your functionality</li>
 </ul>
 <div id="lets-try-to-convince-package-developers-with-an-example" class="section level2">
 <h2 class="hasAnchor">

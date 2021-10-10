@@ -156,7 +156,7 @@
 </li>
 <li>Run the following code directly in the console to <strong>add the template Rmd</strong> in the project and open it:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>open <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>In the Rmd template, run the first chunks asking to describe your package and license it
@@ -165,11 +165,11 @@
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="reference/fill_description.html">fill_description</a></span><span class="op">(</span>fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"My Awesome Package"</span><span class="op">)</span><span class="op">)</span>
 <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html">use_mit_license</a></span><span class="op">(</span><span class="st">"Sébastien Rochette"</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>Write your analysis and functionnalities following the Rmd template
+<li>Write your analysis and functionalities following the Rmd template
 <ul>
 <li>You probably develop them with a few examples and tests</li>
 <li><em>For the first time, you can let the code as is, this is already the content for a working package</em></li>
@@ -181,14 +181,14 @@
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/inflate.html">inflate</a></span><span class="op">(</span>rmd <span class="op">=</span> <span class="va">dev_file</span>, name <span class="op">=</span> <span class="st">"my-functionnality"</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<!-- end list --><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/inflate.html">inflate</a></span><span class="op">(</span>rmd <span class="op">=</span> <span class="va">dev_file</span>, name <span class="op">=</span> <span class="st">"my-functionality"</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 <p><strong>That’s it! You built a package!</strong></p>
 <p>Let’s test it now:</p>
 <ul>
 <li>Install your package locally</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_local.html">install_local</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>Restart your R session to clean environment
@@ -198,12 +198,12 @@
 </li>
 <li>Test functions of your package</li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">my.package</span><span class="fu">::</span><span class="fu">my_median</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>Test the correct documentation of the package by building its dedicated website</li>
 </ul>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Build {pkgdown} to test it</span>
 <span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co"># &gt; See references and articles</span>
@@ -242,7 +242,7 @@
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<!-- end list --><div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create a new project</span>
 <span class="va">tmpdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">tmpdir</span>, <span class="st">"dummypackage"</span><span class="op">)</span>
@@ -288,7 +288,8 @@
 <p>A fusen is an origami. It is a piece of paper that you fold in a specific way so that at the end, you can magically inflate it to let a nice box appear.</p>
 <p><img src="reference/figures/fusen_seb_crop_small.jpg" width="25%"></p>
 <p>Similarly, the {fusen} package uses one page of Rmd, that you fill in a specific way so that at the end, you can magically <code><a href="reference/inflate.html">inflate()</a></code> it to let a nice package appear.</p>
-<details><summary> Click here to fold your {fusen}… </summary><img src="reference/figures/fusen-fold-origami.gif"></details>
+<details><p><summary> Click here to fold your {fusen}…</summary><img src="reference/figures/fusen-fold-origami.gif"></p>
+</details>
 </div>
 <div id="acknowledgments" class="section level2">
 <h2 class="hasAnchor">
