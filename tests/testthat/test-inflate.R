@@ -27,7 +27,7 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(my_other_median_file))
     my_third_median_file <- file.path(dummypackage, "R", "my_third_median.R")
     expect_true(file.exists(my_third_median_file))
-    my_sixth_median_file <- file.path(dummypackage, "R", "my.sixth.median_function.R")
+    my_sixth_median_file <- file.path(dummypackage, "R", "my-sixth-median_function.R")
     expect_true(file.exists(my_sixth_median_file))
     myuppercasefunctionfile <- file.path(dummypackage, "R", "myuppercasefunction.R")
     expect_true(file.exists(myuppercasefunctionfile))
@@ -62,7 +62,7 @@ usethis::with_project(dummypackage, {
       file.path(dummypackage, "tests", "testthat", "test-my_other_median.R")
     ))
     expect_true(file.exists(
-      file.path(dummypackage, "tests", "testthat", "test-my.sixth.median_function.R")
+      file.path(dummypackage, "tests", "testthat", "test-my-sixth-median_function.R")
     ))
     expect_true(file.exists(
       file.path(dummypackage, "tests", "testthat", "test-myuppercasefunction.R")
