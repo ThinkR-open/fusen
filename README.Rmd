@@ -60,13 +60,13 @@ dev_file <- fusen::add_dev_history(open = TRUE)
 fill_description(fields = list(Title = "My Awesome Package"))
 usethis::use_mit_license("Sébastien Rochette")
 ```
-- Write your analysis and functionnalities following the Rmd template
+- Write your analysis and functionalities following the Rmd template
   + You probably develop them with a few examples and tests
   + *For the first time, you can let the code as is, this is already the content for a working package*
 - Run the following code to **transform the template Rmd as a package**
   + This will open the vignette created
 ```{r, eval=FALSE}
-fusen::inflate(rmd = dev_file, name = "my-functionnality", check = TRUE)
+fusen::inflate(rmd = dev_file, name = "my-functionality", check = TRUE)
 ```
 
 **That's it! You built a package!**

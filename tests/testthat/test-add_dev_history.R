@@ -95,6 +95,16 @@ test_that("dev-template-tests run as markdown", {
   }
 })
 
+# Test asciify_name ----
+test_that("asciify_name works correctly", {
+  expect_equal(asciify_name("123AZ"), "123az")
+  expect_equal(asciify_name("123AZ", to_pkg = TRUE), "AZ")
+  expect_equal(asciify_name("12A.AZ"), "12a-az")
+  expect_equal(asciify_name("12A.AZ", to_pkg = TRUE), "A.AZ")
+  expect_equal(asciify_name("12A_A-Za"), "12a_a-za")
+  expect_equal(asciify_name("12A_A-Za", to_pkg = TRUE), "A.A.Za")
+})
+
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 unlink(dummypackage2, recursive = TRUE)

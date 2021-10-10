@@ -26,7 +26,7 @@ Maintaining such a package requires a choice:
 - **Option 1**: Modifications are only added to the "dev_history.Rmd" file, which then is inflated to update all packages files
 - **Option 2**: Modifications are realized in the package files directly, and the "dev_history.Rmd" file must be protected from any use.
 
-Your first `inflate()` may not directly work as expected. In this case, you can continue to implement your functionnality using **Option 1**. 
+Your first `inflate()` may not directly work as expected. In this case, you can continue to implement your functionality using **Option 1**. 
 
 > Advice 1 : Use Option 1 until you find it too complicated to be used ! I assure you, you will find the moment when you say : ok this is not possible anymore...
 
@@ -50,7 +50,7 @@ Your first `inflate()` may not directly work as expected. In this case, you can 
 - (+) You can use dedicated checking and debugging tools as is, in particular in RStudio. There are built to direct you as quickly as possible to the source of the problem
 - (+) This allows collaboration with more advanced developers who are used to debug in the package structure directly
 - (-) This requires to understand the structure and files of a package and how they interact each other, and be able to jump from one file to the other, in the correct folder. This may drives you lazy to continue documenting and testing your modifications
-- This requires to protect the dev_history file, so that you never use it again. `<!-- Do not edit by hand-->` is the minimum. Then you can add `<!-- File used to start new functionnalities, do not use anymore, go directly to appropriate files in the package -->`
+- This requires to protect the dev_history file, so that you never use it again. `<!-- Do not edit by hand-->` is the minimum. Then you can add `<!-- File used to start new functionalities, do not use anymore, go directly to appropriate files in the package -->`
 
 
 => This is the way I add new functionalities in packages that started in the old way, or which I build in collaboration with other devs. 
@@ -64,8 +64,8 @@ This does not remove or modify previous functions, tests or vignettes, provided 
 
 - {fusen} itself was started in the classical way before having enough functions to be able to build a package from itself. This does not prevent me at all to use {fusen} to build himself now ! 
 - If you want to modify existing functionalities, you will need to continue maintain your already-built package in the classical way
-- If you want to add new functionnalities, correctly documented and tested, you can use {fusen}. This will not delete previous work. 
-- Use the "Option 2" above to continue after the development of your functionnality
+- If you want to add new functionalities, correctly documented and tested, you can use {fusen}. This will not delete previous work. 
+- Use the "Option 2" above to continue after the development of your functionality
 
 ## Let's try to convince package developers with an example
 
