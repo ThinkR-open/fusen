@@ -117,7 +117,7 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
   dev_path
 }
 
-#' Clean names for vignettes and package
+#' Clean names for any file and package
 #' @param name Character to clean
 #' @param to_pkg Transform all non authorized characters to dots for packages, instead of dash
 #' @noRd
@@ -134,7 +134,9 @@ asciify_name <- function(name, to_pkg = FALSE) {
                          gsub("^[0-9]+", "", cleaned_name))
   } else {
     # asciify from {usethis} usethis:::asciify()
-    cleaned_name <- gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name)
+    cleaned_name <- tolower(
+        gsub("[^a-zA-Z0-9_-]+", "-", cleaned_name)
+    )
   }
-  tolower(cleaned_name)
+  cleaned_name
 }

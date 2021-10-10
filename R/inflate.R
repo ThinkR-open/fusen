@@ -332,8 +332,7 @@ create_r_files <- function(fun_code, pkg) {
 
   r_files <- lapply(seq_len(nrow(fun_code)), function(x) {
     fun_name <- fun_code[x, ][["fun_name"]]
-    cleaned_fun_name <- asciify_name(fun_name)
-    r_file <- file.path(pkg, "R", paste0(cleaned_fun_name, ".R"))
+    r_file <- file.path(pkg, "R", paste0(asciify_name(fun_name), ".R"))
     if (file.exists(r_file)) {
       cli::cli_alert_warning(paste(basename(r_file), "has been overwritten"))
     }
