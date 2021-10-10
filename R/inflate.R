@@ -332,7 +332,8 @@ create_r_files <- function(fun_code, pkg) {
 
   r_files <- lapply(seq_len(nrow(fun_code)), function(x) {
     fun_name <- fun_code[x, ][["fun_name"]]
-    r_file <- file.path(pkg, "R", paste0(fun_name, ".R"))
+    cleaned_fun_name <- asciify_name(fun_name)
+    r_file <- file.path(pkg, "R", paste0(cleaned_fun_name, ".R"))
     if (file.exists(r_file)) {
       cli::cli_alert_warning(paste(basename(r_file), "has been overwritten"))
     }
@@ -381,7 +382,7 @@ create_tests_files <- function(parsed_tbl, pkg) {
         stop("No function found associated to chunk ", x[["label"]])
       }
 
-      test_file <- file.path(pkg, "tests", "testthat", paste0("test-", fun_name, ".R"))
+      test_file <- file.path(pkg, "tests", "testthat", paste0("test-", asciify_name(fun_name), ".R"))
       if (file.exists(test_file)) {
         cli::cli_alert_warning(paste(basename(test_file), "has been overwritten"))
       }

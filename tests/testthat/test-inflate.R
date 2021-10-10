@@ -29,6 +29,8 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(my_third_median_file))
     my_sixth_median_file <- file.path(dummypackage, "R", "my.sixth.median_function.R")
     expect_true(file.exists(my_sixth_median_file))
+    myuppercasefunctionfile <- file.path(dummypackage, "R", "myuppercasefunction.R")
+    expect_true(file.exists(myuppercasefunctionfile))
 
     # examples in R files
     my_median_lines <- readLines(my_median_file)
@@ -62,7 +64,9 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(
       file.path(dummypackage, "tests", "testthat", "test-my.sixth.median_function.R")
     ))
-
+    expect_true(file.exists(
+      file.path(dummypackage, "tests", "testthat", "test-myuppercasefunction.R")
+    ))
     # Namespace
     expect_true(file.exists(file.path(dummypackage, "NAMESPACE")))
   })
