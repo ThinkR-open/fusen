@@ -184,8 +184,8 @@ This will fill the description of your package.
 
 <span class="co"># Add</span>
 <span class="fu"><a href="../reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span>
-<span class="co">#&gt; Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmp6Br1Tj/dummypackage . Please start a new R session in the new project directory.</span>
-<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmp6Br1Tj/dummypackage/dev/dev_history.Rmd"</span>
+<span class="co">#&gt; Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpHCbmgs/dummypackage . Please start a new R session in the new project directory.</span>
+<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpHCbmgs/dummypackage/dev/dev_history.Rmd"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -214,7 +214,7 @@ This will fill the description of your package.
   <span class="op">)</span>
 <span class="op">)</span>
 <span class="co">#&gt; ! Title was modified to Title Case: Build A Package From Rmarkdown File</span>
-<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmp6Br1Tj/dummypackage/DESCRIPTION"</span>
+<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpHCbmgs/dummypackage/DESCRIPTION"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -224,7 +224,7 @@ This will fill the description of your package.
 <a href="#there-can-be-development-actions" class="anchor"></a>There can be development actions</h1>
 <p>These will be included in the <code>dev/dev_history.R</code> file of your package, but won’t be direct part of it.</p>
 <p>Name the following chunk with <code>{r development-1, eval=FALSE}</code></p>
-<pre><code><a href="https://rdrr.io/pkg/usethis/man/licenses.html">
+<pre><code><a href="https://usethis.r-lib.org/reference/licenses.html">
 # Run but keep eval=FALSE to avoid infinite loop
 
 usethis::use_mit_license("Sébastien Rochette")
