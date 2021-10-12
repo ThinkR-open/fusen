@@ -30,11 +30,13 @@ Imports:
     parsermd,
     rcmdcheck,
     roxygen2,
+    rstudioapi,
     stats,
     stringr,
     tibble,
     tidyr,
-    usethis (>= 1.5.0)
+    usethis (>= 1.5.0),
+    utils
 Suggests: 
     knitr,
     pkgload,
