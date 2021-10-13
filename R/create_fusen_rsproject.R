@@ -3,19 +3,20 @@
 #' Create a new fusen project
 #'
 #' @param path path where to create the new fusen project.
-#' @inheritParams add_dev_history
+#' @param name name of the template to be used among "full", "minimal" and "teaching".
 #' @param open logical, should the newly created Rstudio project be opened.
 #'
 #' @details
 #' See \code{\link{function}} for details about the different options for `name`.
-#'
+#' Template "additional" is not available here as it is meant to be used with an already
+#' existing fusen.
 #'
 #' @importFrom cli cli_alert_warning cli_alert_danger cat_rule cli_alert_success
 #' @importFrom rstudioapi isAvailable initializeProject openProject
 #' @noRd
 create_fusen <- function(
   path,
-  name = c("full", "minimal", "additional", "teaching"),
+  name = c("full", "minimal", "teaching"),
   open = TRUE
 ) {
 
