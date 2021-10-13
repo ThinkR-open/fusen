@@ -7,12 +7,11 @@
 #' @param open logical, should the newly created Rstudio project be opened.
 #'
 #' @details
-#' See \code{\link{function}} for details about the different options for `name`.
+#' See \code{\link{add_dev_history}} for details about the different options for `name`.
 #' Template "additional" is not available here as it is meant to be used with an already
 #' existing fusen.
 #'
 #' @importFrom cli cli_alert_warning cli_alert_danger cat_rule cli_alert_success
-#' @importFrom rstudioapi isAvailable initializeProject openProject
 #' @noRd
 create_fusen <- function(
   path,
