@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Fill DESCRIPTION file of the package — fill_description • fusen</title>
+<title>Create a new fusen project — create_fusen • fusen</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,8 +42,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
 
-<meta property="og:title" content="Fill DESCRIPTION file of the package — fill_description" />
-<meta property="og:description" content="Fill DESCRIPTION file of the package" />
+<meta property="og:title" content="Create a new fusen project — create_fusen" />
+<meta property="og:description" content="Create a new fusen project" />
 <meta property="og:image" content="https://thinkr-open.github.io/fusen/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -154,64 +154,53 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Fill DESCRIPTION file of the package</h1>
-    <small class="dont-index">Source: <a href='https://github.com/Thinkr-open/fusen/blob/master/R/fill_description.R'><code>R/fill_description.R</code></a></small>
-    <div class="hidden name"><code>fill_description.Rd</code></div>
+    <h1>Create a new fusen project</h1>
+    <small class="dont-index">Source: <a href='https://github.com/Thinkr-open/fusen/blob/master/R/create_fusen_rsproject.R'><code>R/create_fusen_rsproject.R</code></a></small>
+    <div class="hidden name"><code>create_fusen.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Fill DESCRIPTION file of the package</p>
+    <p>Create a new fusen project</p>
     </div>
 
-    <pre class="usage"><span class='fu'>fill_description</span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='st'>"."</span>, <span class='va'>fields</span>, overwrite <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></pre>
+    <pre class="usage"><span class='fu'>create_fusen</span><span class='op'>(</span>
+  <span class='va'>path</span>,
+  name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"full"</span>, <span class='st'>"minimal"</span>, <span class='st'>"teaching"</span><span class='op'>)</span>,
+  open <span class='op'>=</span> <span class='cn'>TRUE</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>
+<span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>pkg</th>
-      <td><p>Path to package</p></td>
+      <th>path</th>
+      <td><p>path where to create the new fusen project.</p></td>
     </tr>
     <tr>
-      <th>fields</th>
-      <td><p>A named list of fields to add to DESCRIPTION, potentially
-overriding default values. See <code><a href='https://usethis.r-lib.org/reference/use_description.html'>use_description</a></code> for how you can set
-personalized defaults using package options</p></td>
+      <th>name</th>
+      <td><p>name of the template to be used among "full", "minimal" and "teaching".</p></td>
+    </tr>
+    <tr>
+      <th>open</th>
+      <td><p>logical, should the newly created project be opened.</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>Whether to overwrite existing DESCRIPTION</p></td>
+      <td><p>Logical. Allow to overwrite 'dev/' files if path exists.</p></td>
     </tr>
     </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
 
-    <p>Fill DESCRIPTION file with fields. Return path to file.</p>
+    <p>See <code><a href='add_dev_history.html'>add_dev_history</a></code> for details about the different options for <code>name</code>.
+Template "additional" is not available here as it is meant to be used with an already
+existing fusen.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Create a new project</span>
-<span class='va'>tmpdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>dummypackage</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>tmpdir</span>, <span class='st'>"dummypackage"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='va'>dummypackage</span><span class='op'>)</span>
-
-<span class='fu'>fill_description</span><span class='op'>(</span>
-  pkg <span class='op'>=</span> <span class='va'>dummypackage</span>,
-  fields <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    Title <span class='op'>=</span> <span class='st'>"Build A Package From Rmarkdown file"</span>,
-    Description <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Use Rmd First method to build your package."</span>,
-                        <span class='st'>"Start your package with documentation."</span>,
-                        <span class='st'>"Everything can be set from a Rmarkdown file in your project."</span><span class='op'>)</span>,
-    `Authors@R` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-      <span class='fu'><a href='https://rdrr.io/r/utils/person.html'>person</a></span><span class='op'>(</span><span class='st'>"Sebastien"</span>, <span class='st'>"Rochette"</span>, email <span class='op'>=</span> <span class='st'>"sebastien@thinkr.fr"</span>,
-             role <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"aut"</span>, <span class='st'>"cre"</span><span class='op'>)</span>, comment <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>ORCID <span class='op'>=</span> <span class='st'>"0000-0002-1565-9313"</span><span class='op'>)</span><span class='op'>)</span>,
-      <span class='fu'><a href='https://rdrr.io/r/utils/person.html'>person</a></span><span class='op'>(</span>given <span class='op'>=</span> <span class='st'>"ThinkR"</span>, role <span class='op'>=</span> <span class='st'>"cph"</span><span class='op'>)</span>
-    <span class='op'>)</span>
-  <span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #BBBB00;'>!</span> Title was modified to Title Case: Build A Package From Rmarkdown File</span></div><div class='output co'>#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpNln8OB/dummypackage/DESCRIPTION"</div><div class='input'>
-<span class='co'># Delete dummy package</span>
-<span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>dummypackage</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div></pre>
+    <pre class="examples"><div class='input'><span class='va'>my_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='st'>"mypkg"</span><span class='op'>)</span>
+<span class='fu'>create_fusen</span><span class='op'>(</span>path <span class='op'>=</span> <span class='va'>my_path</span>, name <span class='op'>=</span> <span class='st'>"full"</span>, open <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span>
+</div><div class='output co'>#&gt; ── Creating new directory: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtm</div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Creating <span style='color: #0000BB;'>'/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpNln8OB/mypkgfa765a20242/'</span></span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Setting active project to <span style='color: #0000BB;'>'/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpNln8OB/mypkgfa765a20242'</span></span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Creating <span style='color: #0000BB;'>'R/'</span></span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Writing a sentinel file <span style='color: #0000BB;'>'.here'</span></span></div><div class='output co'>#&gt; <span class='message'><span style='color: #BB0000;'>•</span> Build robust paths within your project via <span style='color: #555555;'>`here::here()`</span></span></div><div class='output co'>#&gt; <span class='message'><span style='color: #BB0000;'>•</span> Learn more at &lt;https://here.r-lib.org&gt;</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Setting active project to <span style='color: #0000BB;'>'&lt;no active project&gt;'</span></span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> New directory created: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpNln8OB/mypkgfa765a20242</span></div><div class='output co'>#&gt; ── Adding dev/dev_history.Rmd ──────────────────────────────────────────────────</div><div class='output co'>#&gt; <span class='message'>File .here already exists in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpNln8OB/mypkgfa765a20242</span></div><div class='output co'>#&gt; <span class='message'><span style='color: #00BB00;'>✔</span> Added dev/dev_history.Rmd</span></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
