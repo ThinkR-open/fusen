@@ -23,6 +23,8 @@ create_fusen <- function(
 ) {
 
   path <- normalizePath(path, mustWork = FALSE)
+  name <- match.arg(name)
+
   if (dir.exists(path)){
     cli::cli_alert_warning(
       paste(

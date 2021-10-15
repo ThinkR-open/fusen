@@ -150,3 +150,27 @@ inflate(pkg = dummypackage, rmd = dev_file, name = "Exploration of my Data", che
 unlink(dummypackage, recursive = TRUE)
 ```
 
+# Create a new package from command line directly, using a pre-defined template
+
+- Build a package from Rmd template in a temporary directory
+  + _This is for testing purposes_
+
+```{r, eval=FALSE}
+# Create a new project
+dummypackage <- tempfile(pattern = "dummy")
+
+# {fusen} steps
+create_fusen(dummypackage, open = FALSE)
+# Description
+fusen::fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+# From inside the package
+usethis::with_project(dummypackage, {
+  # Define License with use_*_license()
+  usethis::use_mit_license("Sébastien Rochette")
+  
+  # You may need to execute inflate() in the console directly
+  fusen::inflate(pkg = dummypackage, rmd = file.path(dummypackage, "dev", "dev_history.Rmd"),
+                 name = "exploration")
+})
+```
