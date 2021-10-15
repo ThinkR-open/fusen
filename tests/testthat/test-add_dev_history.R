@@ -1,7 +1,7 @@
 # Create a new project
-tmpdir <- tempdir()
-dummypackage <- file.path(tmpdir, "dummypackage")
+dummypackage <- tempfile(pattern = "dummy")
 dir.create(dummypackage)
+pkg_name <- basename(dummypackage)
 
 # Add ----
 dev_path <- add_dev_history(pkg = dummypackage, open = FALSE)
@@ -17,17 +17,20 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
 
   dev_lines <- readLines(dev_path)
-  expect_true(length(grep("dummypackage", dev_lines)) == 1)
+  expect_true(length(grep(pkg_name, dev_lines)) == 1)
 
-  # Second time error
+  # Second time message and new file
   expect_message(add_dev_history(pkg = dummypackage))
   expect_true(file.exists(file.path(dummypackage, "dev", "dev_history_2.Rmd")))
+  # _New file has path changed in title and inflate
+  lines_2 <- readLines(file.path(dummypackage, "dev", "dev_history_2.Rmd"))
+  expect_length(grep(x = lines_2, pattern = "dev_history_2[.]Rmd"), 2)
 })
 
 
 # Test with .Rproj and no .here, it works ----
 # Create a new project
-dummypackage2 <- file.path(tmpdir, "dummypackage2")
+dummypackage2 <- tempfile(pattern = "dummy2")
 dir.create(dummypackage2)
 cat("", file = file.path(dummypackage2, 'dummy.Rproj'))
 
@@ -47,13 +50,13 @@ test_that("add_dev_history works with .Rproj and no .here", {
 
 # Add failed with malformed package name ----
 # Create a new project
-dummypackage3 <- file.path(tmpdir, "dummy_package3")
+dummypackage3 <- tempfile(pattern = "dummy_3")
 dir.create(dummypackage3)
 cat("", file = file.path(dummypackage3, 'dummy.Rproj'))
 
 # Add
 test_that("add_dev_history fails", {
-  expect_error(add_dev_history(pkg = dummypackage3, open = FALSE))
+  expect_error(add_dev_history(pkg = dummypackage3, open = FALSE), "package name")
 })
 
 # More complicated example for tests
@@ -63,8 +66,8 @@ test_that("add_dev_history fails", {
 # with the correct here()
 
 # Create a new project
-dummypackage4 <- file.path(tmpdir, "dummypackage4")
-dir.create(dummypackage4, recursive = TRUE)
+dummypackage4 <- tempfile(pattern = "dummy4")
+dir.create(dummypackage4)
 # Add
 dev_path <- add_dev_history(pkg = dummypackage4, open = FALSE)
 # Change lines asking for pkg name
