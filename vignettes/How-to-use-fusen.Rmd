@@ -20,8 +20,10 @@ library(fusen)
 
 # How to use {fusen}
 
-- Create a new directory / new project
-- Add the Rmd template with `fusen::add_dev_history()`
+- Create a new directory / new project with
+  - RStudio template: File > New Project > New directory > Package using {fusen}
+  - Command line: `create_fusen("path/to/new/project")`
+- Open the "dev/dev_history.Rmd" template
 - Run the content of the first `development` chunk with `library(testthat)` inside
 - Modify and run the content of the chunk named `description`
 - Follow the `"dev/dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
@@ -59,8 +61,8 @@ tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
 dir.create(dummypackage)
 
-# Add
-add_dev_history(pkg = dummypackage)
+# Add an additional dev template
+add_dev_history(pkg = dummypackage, name = "add")
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)

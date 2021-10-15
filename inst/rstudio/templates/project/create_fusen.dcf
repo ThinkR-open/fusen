@@ -1,4 +1,4 @@
-Binding: create_fusen
+Binding: create_fusen_gui
 Title: Package using {fusen}
 OpenFiles: dev/dev_history.Rmd
 Icon: fusen.png

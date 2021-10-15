@@ -73,7 +73,7 @@ This does not remove or modify previous functions, tests or vignettes, provided 
 - Open a project for **one of your already existing package**
   + Commit your previous state if you are afraid of {fusen}
   + If you are not sure enough to do it on an existing package, then follow the guide in ["How to use fusen"](https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html)
-- Run in the Console : `fusen::add_dev_history(name = "additional")`
+- Run in the Console : `fusen::add_dev_history(name = "add")`
   + A Rmd file appears in "dev/dev_history.Rmd". Open it.
 - Add a new function in the `function` chunk. For instance:  
 ```{r, eval=FALSE}

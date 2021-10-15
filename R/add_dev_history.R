@@ -83,9 +83,9 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
   # .Rbuildignore
   # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
-    lines <- c(paste0("^", dev_dir, "$"), "^\\.here$")
+    lines <- c(paste0("^", basename(dev_dir), "/$"), "^\\.here$")
   } else {
-    lines <- c(paste0("^", dev_dir, "$"))
+    lines <- c(paste0("^", basename(dev_dir), "/$"))
   }
 
   buildfile <- normalizePath(file.path(pkg, ".Rbuildignore"), mustWork = FALSE)
