@@ -2,8 +2,13 @@
 
 export("%>%")
 export(add_dev_history)
+export(create_fusen)
 export(fill_description)
 export(inflate)
+importFrom(cli,cat_rule)
+importFrom(cli,cli_alert_danger)
+importFrom(cli,cli_alert_success)
+importFrom(cli,cli_alert_warning)
 importFrom(magrittr,"%>%")
 importFrom(parsermd,as_tibble)
 importFrom(parsermd,parse_rmd)
