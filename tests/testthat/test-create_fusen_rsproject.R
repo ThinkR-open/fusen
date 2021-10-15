@@ -25,5 +25,4 @@ withr::with_dir(dummypackage, {
   })
 })
 
-unlink(tmpdir, recursive = TRUE)
 unlink(dummypackage, recursive = TRUE)
