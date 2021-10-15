@@ -1,14 +1,11 @@
 Package: fusen
 Title: Build a Package from Rmarkdown File
 Version: 0.2.4
-Authors@R: 
-    c(person(given = "Sebastien",
-             family = "Rochette",
-             role = c("aut", "cre"),
-             email = "sebastien@thinkr.fr",
-             comment = c(ORCID = "0000-0002-1565-9313")),
-      person(given = "ThinkR",
-             role = "cph"))
+Authors@R: c(
+    person("Sebastien", "Rochette", , "sebastien@thinkr.fr", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-1565-9313")),
+    person("ThinkR", role = "cph")
+  )
 Description: Use Rmarkdown First method to build your package. Start your
     package with documentation, functions, examples and tests in the same
     unique file. Everything can be set from the Rmarkdown template file
@@ -30,7 +27,6 @@ Imports:
     parsermd,
     rcmdcheck,
     roxygen2,
-    rstudioapi,
     stats,
     stringr,
     tibble,
@@ -41,6 +37,7 @@ Suggests:
     knitr,
     pkgload,
     rmarkdown,
+    rstudioapi,
     spelling,
     testthat,
     withr

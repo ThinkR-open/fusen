@@ -19,6 +19,7 @@ create_fusen <- function(
   open = TRUE
 ) {
 
+  name <- match.arg(name)
   # If the function is triggered by Rstudio project wizard
   # - The path in "Create project as subdirectory of:" is set to working directory
   # - The value of "Directory name:" is passed as the path argument of create_fusen()
@@ -39,7 +40,7 @@ create_fusen <- function(
   if (dir.exists(path)){
     cli::cli_alert_warning(
       paste(
-        "The path", path, "already exists.\n",
+        "The path ", path, " already exists.\n",
         "Continuing will overwrite dev/dev_history.Rmd.\n",
         "Are you sure you want to continue ?"
       )
@@ -52,6 +53,7 @@ create_fusen <- function(
   }
 
   ## Initialize Rstudio project or create directory
+  # if (!requireNamespace("rstudioapi")) {}
   if ( rstudioapi::isAvailable() ) {
     cli::cat_rule("Rstudio project initialisation")
     rstudioapi::initializeProject(path = path)
