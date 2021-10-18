@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Add dev_history.Rmd file that drives package development — add_dev_history • fusen</title>
+<title>fusen: Build a Package from Rmarkdown File — fusen-package • fusen</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,8 +42,9 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
 
-<meta property="og:title" content="Add dev_history.Rmd file that drives package development — add_dev_history" />
-<meta property="og:description" content="Add dev_history.Rmd file that drives package development" />
+<meta property="og:title" content="fusen: Build a Package from Rmarkdown File — fusen-package" />
+<meta property="og:description" content="
+Use Rmarkdown First method to build your package. Start your package with documentation, functions, examples and tests in the same unique file. Everything can be set from the Rmarkdown template file provided in your project, then inflated as a package. Inflating the template copies the relevant chunks and sections in the appropriate files required for package development." />
 <meta property="og:image" content="https://thinkr-open.github.io/fusen/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -154,76 +155,35 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Add dev_history.Rmd file that drives package development</h1>
-    <small class="dont-index">Source: <a href='https://github.com/Thinkr-open/fusen/blob/master/R/add_dev_history.R'><code>R/add_dev_history.R</code></a></small>
-    <div class="hidden name"><code>add_dev_history.Rd</code></div>
+    <h1>fusen: Build a Package from Rmarkdown File</h1>
+    <small class="dont-index">Source: <a href='https://github.com/Thinkr-open/fusen/blob/master/R/fusen-package.R'><code>R/fusen-package.R</code></a></small>
+    <div class="hidden name"><code>fusen-package.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Add dev_history.Rmd file that drives package development</p>
+    <p><img src='figures/logo.png' align='right' alt='logo' width='120' /></p>
+<p>Use Rmarkdown First method to build your package. Start your package with documentation, functions, examples and tests in the same unique file. Everything can be set from the Rmarkdown template file provided in your project, then inflated as a package. Inflating the template copies the relevant chunks and sections in the appropriate files required for package development.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>add_dev_history</span><span class='op'>(</span>
-  pkg <span class='op'>=</span> <span class='st'>"."</span>,
-  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  open <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  dev_dir <span class='op'>=</span> <span class='st'>"dev"</span>,
-  name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"full"</span>, <span class='st'>"minimal"</span>, <span class='st'>"additional"</span>, <span class='st'>"teaching"</span><span class='op'>)</span>
-<span class='op'>)</span></pre>
 
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>pkg</th>
-      <td><p>Path where to save file</p></td>
-    </tr>
-    <tr>
-      <th>overwrite</th>
-      <td><p>Whether to overwrite existing dev_history.Rmd file</p></td>
-    </tr>
-    <tr>
-      <th>open</th>
-      <td><p>Logical. Whether to open file after creation</p></td>
-    </tr>
-    <tr>
-      <th>dev_dir</th>
-      <td><p>Name of directory for development Rmarkdown files. Default to "dev".</p></td>
-    </tr>
-    <tr>
-      <th>name</th>
-      <td><p>Name of the template file. See details.</p></td>
-    </tr>
-    </table>
 
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+    <h2 class="hasAnchor" id="see-also"><a class="anchor" href="#see-also"></a>See also</h2>
 
-    <p>Create a dev_history.Rmd file and return its path</p>
-    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
-
-    <p>Choose <code>name</code> among the different templates available:</p><ul>
-<li><p>"full": the full template with a reproducible package to inflate directly. Default.</p></li>
-<li><p>"minimal": Minimal template to start a new package when you already know fusen.</p></li>
-<li><p>"additional": Template for an additional vignette, thus additional functions.</p></li>
-<li><p>"teaching": Template with a reproducible package, simpler than "full", but everything to
-teach the minimal structure of a package.</p></li>
+    <div class='dont-index'><p>Useful links:</p><ul>
+<li><p><a href='https://thinkr-open.github.io/fusen/'>https://thinkr-open.github.io/fusen/</a></p></li>
+<li><p><a href='https://github.com/Thinkr-open/fusen'>https://github.com/Thinkr-open/fusen</a></p></li>
 </ul>
 
-<p>Abbreviated names can also be used for the different templates. For example "add"
-instead of additional.</p>
+</div>
+    <h2 class="hasAnchor" id="author"><a class="anchor" href="#author"></a>Author</h2>
 
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Create a new project</span>
-<span class='va'>tmpdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>dummypackage</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>tmpdir</span>, <span class='st'>"dummypackage"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='va'>dummypackage</span><span class='op'>)</span>
+    <p><strong>Maintainer</strong>: Sebastien Rochette <a href='mailto:sebastien@thinkr.fr'>sebastien@thinkr.fr</a> (<a href='https://orcid.org/0000-0002-1565-9313'>ORCID</a>)</p>
+<p>Other contributors:</p><ul>
+<li><p>ThinkR [copyright holder]</p></li>
+</ul>
 
-<span class='co'># Add</span>
-<span class='fu'>add_dev_history</span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'>Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpIyEg3k/dummypackage . Please start a new R session in the new project directory.</span></div><div class='output co'>#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpIyEg3k/dummypackage/dev/dev_history.Rmd"</div><div class='input'>
-<span class='co'># Delete dummy package</span>
-<span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>dummypackage</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div></pre>
+
+
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
