@@ -7,3 +7,9 @@ Parameter: name
 Widget: SelectInput
 Label: Choose a {fusen} template
 Fields: full, minimal, teaching
+
+Parameter: with_git
+Widget: CheckboxInput
+Label: Create a git repository
+Default: Off
+Position: left

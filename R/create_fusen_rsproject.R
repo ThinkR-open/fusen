@@ -1,9 +1,10 @@
 #' Create a new fusen project
 #'
-#' @param path path where to create the new fusen project.
-#' @param name name of the template to be used among "full", "minimal" and "teaching".
-#' @param open logical, should the newly created project be opened.
+#' @param path Character. Path where to create the new fusen project.
+#' @param name Character. Name of the template to be used among "full", "minimal" and "teaching".
+#' @param open Logical. Should the newly created project be opened ?
 #' @param overwrite Logical. Allow to overwrite 'dev/' files if path exists.
+#' @param with_git Logical. Should git be initialised in the newly created project ?
 #'
 #' @details
 #' See \code{\link{add_dev_history}} for details about the different options for `name`.
@@ -19,7 +20,8 @@ create_fusen <- function(
   path,
   name = c("full", "minimal", "teaching"),
   open = TRUE,
-  overwrite = FALSE
+  overwrite = FALSE,
+  with_git = FALSE
 ) {
 
   path <- normalizePath(path, mustWork = FALSE)
@@ -54,6 +56,21 @@ create_fusen <- function(
     cli::cli_alert_success(paste0("New directory created: ", path))
   }
 
+  ## Eventually initialise git
+  if (with_git) {
+    cat_rule("Initializing git repository")
+    git_output <- system(
+      command = paste("git init", path),
+      ignore.stdout = TRUE,
+      ignore.stderr = TRUE
+    )
+    if (git_output) {
+      cli::cli_alert_warning("Error initializing git repository")
+    } else {
+      cli::cli_alert_success("Initialized git repository")
+    }
+  }
+
   ## Add dev/dev_history.Rmd in newly created project
   cli::cat_rule("Adding dev/dev_history.Rmd")
   add_dev_history(
@@ -84,9 +101,15 @@ create_fusen <- function(
 #' @noRd
 create_fusen_gui <- function(
   path,
-  name
+  name,
+  with_git
 ) {
 
-  create_fusen(path = file.path(getwd(), path), name = name, open = FALSE)
+  create_fusen(
+    path = file.path(getwd(), path),
+    name = name,
+    open = FALSE, # Project opening is done spontaneously by Rstudio Project Wizard
+    with_git = with_git
+  )
 
 }
