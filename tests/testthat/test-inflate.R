@@ -66,11 +66,13 @@ usethis::with_project(dummypackage, {
     expect_true(all(my_norox_lines == c(
       "#' @noRd", "my_norox <- function(x) {", "  x + 10", "}"
     )))
+
     # _no roxygen but examples
     my_norox2_lines <- readLines(my_norox2functionfile)
     expect_true(all(my_norox2_lines == c(
-      "#' @export", "#' @examples",
-      "#' my_norox2(10)", "my_norox2 <- function(x) {", "  x + 10", "}"
+      "#' @noRd", "#' @examples", "#' \\dontrun{",
+      "#' my_norox2(10)", "#' }",
+      "my_norox2 <- function(x) {", "  x + 10", "}"
     )))
     # _extra empty line and examples
     my_space_lines <- readLines(my_spacefunctionfile)
@@ -379,11 +381,16 @@ if (exists("dummypackage.special")) {
 }
 
 # Deal with noRd, examples and dontrun ----
+#' stop() if @noRd but there is an example...
+#' Or suggests \dontrun{}, but need to be taken into account in vignette
+
 dummypackage <- tempfile("nordpackage")
 dir.create(dummypackage)
 dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 
 usethis::with_project(dummypackage, {
+  browser()
   file.copy(
     system.file("tests-templates/dev-template-nord-but-example.Rmd", package = "fusen"),
     dev_file,
@@ -394,7 +401,11 @@ usethis::with_project(dummypackage, {
     # No error
     expect_error(inflate(pkg = dummypackage, rmd = dev_file, check = FALSE), regexp = NA)
     # Check error
-    # TRY the check
+    skip_on_os(os = c("windows", "solaris"))
+
+    # Could not find function "my_norox2"
+    expect_error(rcmdcheck::rcmdcheck(dummypackage, quiet = TRUE,
+                                      args = c("--no-manual")))
   })
 })
 
@@ -403,9 +414,4 @@ unlink(dummypackage, recursive = TRUE)
 
 # Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...
 
-#' stop() if @noRd but there is an example...
-#' Or suggests \dontrun{}, but need to be taken into account in vignette
-# E> Quitting from lines 89-90 (exploration.Rmd)
-# E> Error: processing vignette 'exploration.Rmd' failed with diagnostics:
-#   E> impossible de trouver la fonction "my_norox2"
-# E> --- failed re-building ‘exploration.Rmd’
+

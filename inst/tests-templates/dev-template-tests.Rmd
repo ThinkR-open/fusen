@@ -266,14 +266,15 @@ my_norox <- function(x) {
 # No roxygen with example and chunk named `fun-`
 
 ```{r fun-norox2}
-#' @export
 my_norox2 <- function(x) {
   x + 10
 }
 ```
 
 ```{r examples-norox2}
-my_norox2(10)
+#' \dontrun{
+#' my_norox2(10)
+#' }
 ```
 
 # space with function, chunk named `fun_` and extra or no space before `@`

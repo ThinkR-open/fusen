@@ -364,7 +364,12 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
     ))
   })
 
-  fun_code
+  # Clean double #' due to dontrun
+  fun_code[["code_example"]] <- lapply(fun_code[["code_example"]], function(example) {
+    gsub("#' #' ", "#' ", example)
+  })
+
+  return(fun_code)
 }
 
 #' create R file with code content and fun name
