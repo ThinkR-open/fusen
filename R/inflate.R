@@ -2,12 +2,14 @@
 regex_functions_vec <- c("^function", "^fun$", "^fun-", "^fun_",
                         "^funs$", "^funs-", "^funs_")
 regex_functions <- paste(regex_functions_vec, collapse = "|")
-regex_tests_vec <- "^test"
+regex_tests_vec <- c("^test")
 regex_tests <- paste(regex_tests_vec, collapse = "|")
 regex_development_vec <- c("^development", "^dev$", "^dev-", "^dev_")
 regex_development <- paste(regex_development_vec, collapse = "|")
 regex_desc_vec <- c("^description", "^desc")
 regex_desc <- paste(regex_desc_vec, collapse = "|")
+regex_example_vec <- c("^example", "^ex$", "^ex-", "^ex_")
+regex_example <- paste(regex_example_vec, collapse = "|")
 
 #' Inflate Rmd to package
 #'
@@ -299,7 +301,7 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 
   # Example in separate chunk
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
-    grepl("example", parsed_tbl$label))
+    grepl(regex_example, parsed_tbl$label))
   rmd_ex <- parsed_tbl[which_parsed_ex, ]
   rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]),]
 

@@ -1,5 +1,6 @@
 # v0.2.4
 
+* Allow short names for chunks: dev, fun, ex, test
 * Update vignette and tests
 * `create_fusen()` to create a {fusen} project from command line or with RStudio new project (@ALanguillaume)
 

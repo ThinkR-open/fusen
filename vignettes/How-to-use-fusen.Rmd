@@ -45,12 +45,33 @@ library(fusen)
 - As for any Rmarkdown file, chunk names need to be unique. Thus, you can use `examples-1`, `examples-2`, ...
 - _Do not forget to regularly clear your Workspace to avoid functions hidden by global environment_
 
-<!--
+## Short names
 
-# A chunk for package description
+- Chunk short names are possible:
+  - `function` can be named `fun-` or `fun_` or `fun-my_function_name`
+  - `example` can be named `ex-` or `ex_` or `ex-my_function_name`
+  - `tests` can be named `test-` or `test-my_function_name`
+  - `development` can be named `dev-` or `dev_` or `dev-my_function_name`
 
-This will fill the description of your package.
--->
+- Short "dev_history" templates names are possible thanks to fuzzy match
+
+## Use `\dontrun{}`
+
+You can use `\dontrun{}` in an example chunk as follows:
+
+```{r example-dontrun, echo=TRUE, eval=FALSE}
+#' \dontrun{
+an_example <- 1 + 1
+an_example
+#' }
+
+#' OR
+
+#' \dontrun{
+#' an_example <- 1 + 1
+#' an_example
+#' }
+```
 
 
 # Add a new dev_history.Rmd template in "dev" directory

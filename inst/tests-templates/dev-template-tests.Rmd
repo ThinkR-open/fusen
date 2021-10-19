@@ -263,7 +263,7 @@ my_norox <- function(x) {
 }
 ```
 
-# No roxygen with example and chunk named `fun-`
+# No roxygen with example, chunk named `fun-` and chunk named `ex-`
 
 ```{r fun-norox2}
 my_norox2 <- function(x) {
@@ -271,13 +271,13 @@ my_norox2 <- function(x) {
 }
 ```
 
-```{r examples-norox2}
+```{r ex-norox2}
 #' \dontrun{
 #' my_norox2(10)
 #' }
 ```
 
-# space with function, chunk named `fun_` and extra or no space before `@`
+# space with function, chunk named `fun_`, chunk named `ex_` and extra or no space before `@`
 
 ```{r fun_space}
 #' My space function
@@ -293,7 +293,7 @@ my_space <- function(x) {
 }
 ```
 
-```{r examples-space}
+```{r ex_space}
 my_space(10)
 ```
 
