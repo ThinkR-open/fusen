@@ -1,6 +1,6 @@
 Package: fusen
 Title: Build a Package from Rmarkdown File
-Version: 0.2.4
+Version: 0.2.4.9000
 Authors@R: 
     c(person(given = "Sebastien",
              family = "Rochette",
@@ -30,17 +30,18 @@ Imports:
     parsermd,
     rcmdcheck,
     roxygen2,
+    rstudioapi,
     stats,
     stringr,
+    testthat,
     tibble,
     tidyr,
-    usethis (>= 1.5.0)
+    usethis (>= 1.5.0),
+    utils
 Suggests: 
     knitr,
-    pkgload,
     rmarkdown,
     spelling,
-    testthat,
     withr
 VignetteBuilder: 
     knitr

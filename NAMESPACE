@@ -2,6 +2,7 @@
 
 export("%>%")
 export(add_dev_history)
+export(add_fusen_chunks)
 export(fill_description)
 export(inflate)
 importFrom(magrittr,"%>%")

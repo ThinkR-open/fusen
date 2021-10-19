@@ -1,0 +1,5 @@
+Name: Add `{fusen}` chunks 
+Description: Create `{fusen}` chunks inside your Rmd
+Binding: add_fusen_chunks
+Interactive: false
+
