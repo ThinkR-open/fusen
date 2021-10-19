@@ -34,8 +34,8 @@
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
 fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
-  old <- setwd(pkg)
-  on.exit(setwd(old))
+  # old <- setwd(pkg)
+  # on.exit(setwd(old))
 
   path <- normalizePath(pkg)
 
@@ -60,9 +60,11 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
     roxygen = TRUE,
     fields = fields
   )
+
   desc <- desc::desc(text = glue::glue("{names(fields_new)}: {fields_new}"))
 
   desc$write(file = desc_file)
+
   desc_file
 }
 

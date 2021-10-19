@@ -48,12 +48,10 @@ remotes::install_github("ThinkR-open/fusen")
 
 *{fusen} is all about correctly separating and naming chunks.*  
 
-- Create and open a new directory or a new RStudio project
-  + Choose your directory/package name like `my.package` for instance
-- Run the following code directly in the console to **add the template Rmd** in the project and open it:
-```{r, eval=FALSE}
-dev_file <- fusen::add_dev_history(open = TRUE)
-```
+- Create a new directory / new project with
+  - RStudio template: File > New Project > New directory > Package using {fusen}
+  - Command line: `create_fusen("path/to/new/project")`
+- Open the "dev/dev_history.Rmd" template
 - In the Rmd template, run the first chunks asking to describe your package and license it
   + They look like these lines of code:
 ```{r, eval=FALSE}
@@ -108,27 +106,6 @@ As I said earlier, this is all about using the correct split and name for your c
 
 _Note that the `"dev_history.Rmd"` template is indeed a working example._  
 
-## A reproducible example
-
-- Build a package from Rmd template in a temporary directory
-  + _This is for testing purposes_
-
-```{r, eval=FALSE}
-# Create a new project
-tmpdir <- tempdir()
-dummypackage <- file.path(tmpdir, "dummypackage")
-dir.create(dummypackage)
-
-# {fusen} steps
-# Add the template in your package
-dev_file <- fusen::add_dev_history(pkg = dummypackage, overwrite = TRUE)
-# Description
-fusen::fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-# Define License with use_*_license()
-usethis::use_mit_license("Sébastien Rochette")
-# You may need to execute inflate() in the console directly
-fusen::inflate(pkg = dummypackage, rmd = dev_file, name = "exploration")
-```
 
 > You can also have a look at [{squirrels.fusen}](https://github.com/statnmap/squirrels.fusen) that has been built to present the method. Follow the commits: https://github.com/statnmap/squirrels.fusen/commits/main
 

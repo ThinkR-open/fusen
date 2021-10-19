@@ -94,8 +94,8 @@ usethis::use_build_ignore("_pkgdown.yml")
 # devtools::install_github("ThinkR-open/attachment")
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
-  pkg_ignore = c("testthat", "dummypackage"),
-  extra.suggests = c("testthat", "pkgload")
+  pkg_ignore = c("testthat", "dummypackage", "rstudioapi"),
+  extra.suggests = c("testthat", "pkgload", "rstudioapi")
 )
 # attachment::create_dependencies_file()
 

@@ -41,6 +41,7 @@ Imports:
 Suggests: 
     knitr,
     rmarkdown,
+    rstudioapi,
     spelling,
     withr
 VignetteBuilder: 

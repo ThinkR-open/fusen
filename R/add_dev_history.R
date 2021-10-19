@@ -43,26 +43,28 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
          " as a package name should only contain letters, numbers and dots.")
   }
 
-  old <- setwd(pkg)
-  on.exit(setwd(old))
+  # old <- setwd(pkg)
+  # on.exit(setwd(old))
 
   name <- match.arg(name)
   # Which template
   template <- system.file(paste0("dev-template-", name, ".Rmd"), package = "fusen")
 
   pkg <- normalizePath(pkg)
+  dev_dir <- file.path(pkg, dev_dir)
   if (!dir.exists(dev_dir)) {dir.create(dev_dir)}
-  dev_path <- file.path(pkg, dev_dir, "dev_history.Rmd")
+  dev_path <- file.path(dev_dir, "dev_history.Rmd")
 
   if (file.exists(dev_path) & overwrite == FALSE) {
     n <- length(list.files(dev_dir, pattern = "^dev_history.*[.]Rmd"))
-    dev_path <- file.path(pkg, dev_dir, paste0("dev_history_", n + 1, ".Rmd"))
+    dev_path <- file.path(dev_dir, paste0("dev_history_", n + 1, ".Rmd"))
     message(
       "dev_history.Rmd already exists. New dev file is renamed '",
       basename(dev_path), "'. Use overwrite = TRUE, if you want to ",
       "overwrite the existing dev_history.Rmd file, or rename it."
     )
   }
+  dev_name <- basename(dev_path)
 
   # Change lines asking for pkg name
   lines_template <- readLines(template)
@@ -71,14 +73,19 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     gsub("<my_package_name>", basename(pkg),
          lines_template[grepl("<my_package_name>", lines_template)])
 
+  # Change dev_history file name
+  lines_template[grepl("dev_history.Rmd", lines_template)] <-
+    gsub("dev_history.Rmd", dev_name,
+         lines_template[grepl("dev_history.Rmd", lines_template)])
+
   cat(enc2utf8(lines_template), file = dev_path, sep = "\n")
 
   # .Rbuildignore
   # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
-    lines <- c(paste0("^", dev_dir, "$"), "^\\.here$")
+    lines <- c(paste0("^", basename(dev_dir), "/$"), "^\\.here$")
   } else {
-    lines <- c(paste0("^", dev_dir, "$"))
+    lines <- c(paste0("^", basename(dev_dir), "/$"))
   }
 
   buildfile <- normalizePath(file.path(pkg, ".Rbuildignore"), mustWork = FALSE)
