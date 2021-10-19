@@ -1,7 +1,12 @@
+# v0.2.4.9000
+
+* Deal with `\dontrun{}` in example chunks
+* Allow short names for chunks: dev, fun, ex, test
+* `create_fusen()` to create a {fusen} project from command line or with RStudio new project (@ALanguillaume)
+
 # v0.2.4
 
 * Update vignette and tests
-* `create_fusen()` to create a {fusen} project from command line or with RStudio new project (@ALanguillaume)
 
 # v0.2.3
 

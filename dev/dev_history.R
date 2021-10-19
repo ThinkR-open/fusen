@@ -118,7 +118,7 @@ stringi::stri_trans_general("é", "hex")
 # Review PR ----
 usethis::pr_fetch(41)
 usethis::pr_push()
-
+usethis::pr_finish(41)
 # Clean names for vignettes
 # name <- "# y  _ p n@ é ! 1"
 #   name <- "# y  _ p n@ \u00E9 ! 1"
