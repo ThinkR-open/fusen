@@ -119,7 +119,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
   if (!is.null(fun_code)) {
     create_functions_all(parsed_tbl, fun_code, pkg)
   } else {
-    message("No chunks named 'function-xx' of 'fun-xx' were found in the Rmarkdown file: ", rmd)
+    message("No chunks named 'function-xx' or 'fun-xx' were found in the Rmarkdown file: ", rmd)
   }
 
   create_vignette(parsed_tbl, pkg, name)
