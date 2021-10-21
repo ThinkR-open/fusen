@@ -15,7 +15,6 @@ usethis::with_project(dummypackage, {
     dev_file,
     overwrite = TRUE
   )
-# browser()
   inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
 
   test_that("inflate() worked correctly", {
@@ -114,7 +113,6 @@ usethis::with_project(dummypackage, {
 
 # Test package no check errors ----
 usethis::with_project(dummypackage, {
-# browser()
   test_that("inflate() output error", {
     # Do not check inside check if on CRAN
     skip_on_os(os = c("windows", "solaris"))
@@ -267,7 +265,6 @@ usethis::with_project(dummypackage, {
   unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
   unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
-  # browser()
   # Tests errors - duplicate chunk names
   file.copy(
     system.file("tests-templates/dev-template-stop-duplicate-label.Rmd", package = "fusen"),
@@ -390,7 +387,6 @@ dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 
 usethis::with_project(dummypackage, {
-  browser()
   file.copy(
     system.file("tests-templates/dev-template-nord-but-example.Rmd", package = "fusen"),
     dev_file,

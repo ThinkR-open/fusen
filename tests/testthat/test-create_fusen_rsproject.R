@@ -6,7 +6,6 @@ raw_rmd_template <- readLines(system.file("dev-template-full.Rmd", package = "fu
 expected_rmd_template_with_fusen_name <- gsub("<my_package_name>", "foosen", raw_rmd_template)
 
 withr::with_dir(dummypackage, {
- # browser()
   test_that("Create fusen", {
     path_foosen <- file.path(dummypackage, "foosen")
     path_dev_history <- file.path(path_foosen, "dev", "dev_history.Rmd")
