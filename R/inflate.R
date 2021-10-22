@@ -1,3 +1,16 @@
+# The regex to identify chunk names
+regex_functions_vec <- c("^function", "^fun$", "^fun-", "^fun_",
+                        "^funs$", "^funs-", "^funs_")
+regex_functions <- paste(regex_functions_vec, collapse = "|")
+regex_tests_vec <- c("^test")
+regex_tests <- paste(regex_tests_vec, collapse = "|")
+regex_development_vec <- c("^development", "^dev$", "^dev-", "^dev_")
+regex_development <- paste(regex_development_vec, collapse = "|")
+regex_desc_vec <- c("^description", "^desc")
+regex_desc <- paste(regex_desc_vec, collapse = "|")
+regex_example_vec <- c("^example", "^ex$", "^ex-", "^ex_")
+regex_example <- paste(regex_example_vec, collapse = "|")
+
 #' Inflate Rmd to package
 #'
 #' @param pkg Path to package
@@ -116,7 +129,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
   if (!is.null(fun_code)) {
     create_functions_all(parsed_tbl, fun_code, pkg)
   } else {
-    message("No chunks named 'function-xx' were found in the Rmarkdown file: ", rmd)
+    message("No chunks named 'function-xx' or 'fun-xx' were found in the Rmarkdown file: ", rmd)
   }
 
   create_vignette(parsed_tbl, pkg, name)
@@ -152,7 +165,10 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg) {
   parsed_tbl <- add_fun_to_parsed(parsed_tbl, fun_names)
 
   # Verify labels are unique
-  dev_labels_noex <- c("development", "description", "function", "test")
+  dev_labels_noex <- c(regex_development_vec,
+                       regex_desc_vec,
+                       regex_functions_vec,
+                       regex_tests_vec)
   dev_labels_noex_regex <- paste(dev_labels_noex, collapse = "|")
   labels_in_vignette <- na.omit(parsed_tbl[["label"]][
     !grepl(dev_labels_noex_regex, parsed_tbl[["label"]])])
@@ -180,42 +196,72 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg) {
   create_tests_files(parsed_tbl, pkg)
 }
 
+#' Parse function code as tibble and get positions
+#' @param x One row out of function parsed tibble
+#' @noRd
+parse_fun <- function(x) { # x <- rmd_fun[3,]
+
+  code <- rmd_get_chunk(x)$code
+  # find function name
+  fun_name <- stringr::str_extract(
+    code[grep("function(\\s*)\\(", code)],
+    "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)function)"
+  ) %>%
+    gsub(" ", "", .) # remove spaces
+
+  # Clean extra space between #' and @
+  code <- gsub(pattern = "#'\\s*@", "#' @", code)
+
+  # Find start of function
+  first_function_start <- grep("function(\\s*)\\(", code)[1]
+  # Get all #'
+  all_hastags <- grep("^#'", code)
+  if (length(all_hastags) != 0) {
+    last_hastags_above_first_fun <- max(all_hastags[all_hastags < first_function_start])
+  } else {
+    last_hastags_above_first_fun <- NA
+  }
+
+  # Add @noRd if no roxygen doc or no @export before function
+  if (!any(grepl("@export|@noRd", code))) {
+    if (!is.na(last_hastags_above_first_fun)) {
+      code <- c(
+        code[1:last_hastags_above_first_fun],
+        "#' @noRd",
+        code[(last_hastags_above_first_fun + 1):length(code)]
+      )
+    } else {
+      code <- c("#' @noRd", code)
+    }
+  }
+
+  all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
+  example_pos_start <- grep("^#'\\s*@example", code)[1]
+
+  example_pos_end <- all_arobase[all_arobase > example_pos_start][1] - 1
+  example_pos_end <- ifelse(is.na(example_pos_end),
+                            grep("function(\\s*)\\(", code) - 1,
+                            example_pos_end
+  )
+
+  tibble::tibble(
+    fun_name = fun_name[1],
+    code = list(code),
+    example_pos_start = example_pos_start,
+    example_pos_end = example_pos_end
+  )
+}
+
 #' Get function names ----
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @importFrom parsermd rmd_get_chunk
 #' @noRd
 get_functions <- function(parsed_tbl) {
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-    grepl("function", parsed_tbl$label))
+    grepl(regex_functions, parsed_tbl$label))
   rmd_fun <- parsed_tbl[which_parsed_fun, ]
 
   if (nrow(rmd_fun) != 0) {
-    parse_fun <- function(x) { # x <- rmd_fun[3,]
-
-      code <- rmd_get_chunk(x)$code
-      # find function name
-      fun_name <- stringr::str_extract(
-        code[grep("function(\\s*)\\(", code)],
-        "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)function)"
-      ) %>%
-        gsub(" ", "", .) # remove spaces
-
-      all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
-      example_pos_start <- grep("^#'\\s*@example", code)[1]
-
-      example_pos_end <- all_arobase[all_arobase > example_pos_start][1] - 1
-      example_pos_end <- ifelse(is.na(example_pos_end),
-        grep("function(\\s*)\\(", code) - 1,
-        example_pos_end
-      )
-
-      tibble::tibble(
-        fun_name = fun_name[1],
-        code = list(code),
-        example_pos_start = example_pos_start,
-        example_pos_end = example_pos_end
-      )
-    }
     fun_code <- lapply(seq_len(nrow(rmd_fun)), function(x) parse_fun(rmd_fun[x, ]))
     fun_code <- do.call("rbind", fun_code)
     fun_code
@@ -229,7 +275,7 @@ get_functions <- function(parsed_tbl) {
 #' @noRd
 add_fun_to_parsed <- function(parsed_tbl, fun_names) {
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-    grepl("function", parsed_tbl$label))
+    grepl(regex_functions, parsed_tbl$label))
 
   parsed_tbl$order <- 1:nrow(parsed_tbl)
   parsed_tbl$sec_title <- paste(parsed_tbl[["sec_h1"]], parsed_tbl[["sec_h2"]], sep = "-")
@@ -265,7 +311,7 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 
   # Example in separate chunk
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
-    grepl("example", parsed_tbl$label))
+    grepl(regex_example, parsed_tbl$label))
   rmd_ex <- parsed_tbl[which_parsed_ex, ]
   rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]),]
 
@@ -330,7 +376,12 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
     ))
   })
 
-  fun_code
+  # Clean double #' due to dontrun
+  fun_code[["code_example"]] <- lapply(fun_code[["code_example"]], function(example) {
+    gsub("#' #' ", "#' ", example)
+  })
+
+  return(fun_code)
 }
 
 #' create R file with code content and fun name
@@ -361,7 +412,7 @@ create_r_files <- function(fun_code, pkg) {
 #' @noRd
 create_tests_files <- function(parsed_tbl, pkg) {
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
-    grepl("test", parsed_tbl$label), ]
+    grepl(regex_tests, parsed_tbl$label), ]
 
   rmd_test <- rmd_test[!is.na(rmd_test[["fun_name"]]),]
 
@@ -425,8 +476,13 @@ create_vignette <- function(parsed_tbl, pkg, name) {
 
   # _remove dev, description, function and tests.
   # Keep examples and unnamed
+  not_in_vignette <-
+    paste(c(regex_desc,
+           regex_tests,
+           regex_development,
+           regex_functions), collapse = "|")
   vignette_tbl <- parsed_tbl[
-    !(grepl("description|function|test|development", parsed_tbl[["label"]]) |
+    !(grepl(not_in_vignette, parsed_tbl[["label"]]) |
       grepl("rmd_yaml_list", parsed_tbl[["type"]])),
   ]
 

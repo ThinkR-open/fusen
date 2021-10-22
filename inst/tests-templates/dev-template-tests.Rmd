@@ -86,7 +86,6 @@ my_median(1:12)
 
 ```{r tests}
 test_that("my_median works properly and show error if needed", {
-  expect_true(my_median(1:12) == 6.5)
   expect_error(my_median("text"))
 })
 ```
@@ -255,9 +254,71 @@ test_that("MyUppercaseFunction works properly and show error if needed", {
   expect_message(MyUppercaseFunction() == "hello")
 })
 ```
+
+# No roxygen and chunk named `fun` only
+
+```{r fun}
+my_norox <- function(x) {
+  x + 10
+}
+```
+
+# No roxygen with example, chunk named `fun-` and chunk named `ex-`
+
+```{r fun-norox2}
+my_norox2 <- function(x) {
+  x + 10
+}
+```
+
+```{r ex-norox2}
+#' \dontrun{
+#' my_norox2(10)
+#' }
+```
+
+# space with function, chunk named `fun_`, chunk named `ex_` and extra or no space before `@`
+
+```{r fun_space}
+#' My space function
+#'
+#'   @param x Vector of Numeric values
+#'
+#'@return Median of vector x
+#' @examples
+#' @export
+
+my_space <- function(x) {
+  x + 10
+}
+```
+
+```{r ex_space}
+my_space(10)
+```
+
+# space with no export, chunk named `fun_`
+
+```{r fun_space2}
+#' My space 2 function
+#'
+#' @param x Vector of Numeric values
+#'
+#' @return Median of vector x
+#' @examples
+
+my_space2 <- function(x) {
+  x + 10
+}
+```
+
 # There can be development actions
 
 These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
+
+```{r dev}
+# Short chunk dev name not in vignette
+```
 
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
