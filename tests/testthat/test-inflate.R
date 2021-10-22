@@ -408,6 +408,34 @@ usethis::with_project(dummypackage, {
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
+# Test checks ----
+# Create a new project
+checkpkg <- tempfile("checkpkg")
+dir.create(checkpkg)
+
+# {fusen} steps
+path_foosen <- file.path(checkpkg, "foosen")
+create_fusen(path_foosen, name = "full", open = FALSE)
+dev_file <- file.path(path_foosen, "dev", "dev_history.Rmd")
+
+usethis::with_project(path_foosen, {
+  # Do not check inside check if on CRAN
+  skip_on_os(os = c("windows", "solaris"))
+
+  fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
+  usethis::use_gpl_license()
+  expect_error(
+    inflate(pkg = path_foosen, rmd = dev_file, name = "exploration", check = TRUE),
+    regexp = NA)
+
+  expect_error(
+    inflate(pkg = path_foosen, rmd = dev_file, name = "exploration",
+            check = TRUE, quiet = TRUE, overwrite = TRUE),
+    regexp = NA)
+
+})
+
+# Delete dummy package
+unlink(checkpkg, recursive = TRUE)
+
 # Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...
-
-

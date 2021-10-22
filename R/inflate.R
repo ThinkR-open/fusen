@@ -1,6 +1,8 @@
 # The regex to identify chunk names
-regex_functions_vec <- c("^function", "^fun$", "^fun-", "^fun_",
-                        "^funs$", "^funs-", "^funs_")
+regex_functions_vec <- c(
+  "^function", "^fun$", "^fun-", "^fun_",
+  "^funs$", "^funs-", "^funs_"
+)
 regex_functions <- paste(regex_functions_vec, collapse = "|")
 regex_tests_vec <- c("^test")
 regex_tests <- paste(regex_tests_vec, collapse = "|")
@@ -18,7 +20,10 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @param rmd Path to Rmarkdown file to inflate
 #' @param check Logical. Whether to check package after Rmd inflating
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
-#' @param overwrite Logical. Whether to overwrite vignette and functions if already exists.
+#' @param overwrite Logical (TRUE, FALSE) or character ("ask", "yes", "no). Whether to overwrite vignette and functions if already exists.
+#' @param ... Arguments passed to `rcmdcheck::rcmdcheck()`.
+#'     For example, you can do `inflate(check = TRUE, quiet = TRUE)`, where `quiet` is
+#'     passed to `rcmdcheck::rcmdcheck()`.
 #'
 #' @importFrom parsermd parse_rmd as_tibble
 #' @importFrom utils getFromNamespace
@@ -48,7 +53,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' unlink(dummypackage, recursive = TRUE)
 inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
                     name = "exploration", check = TRUE, document = TRUE,
-                    overwrite = c("ask", "yes", "no")) {
+                    overwrite = "ask", ...) {
 
   # Save all open files
   if (
@@ -72,8 +77,10 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
   rmd <- normalizePath(rmd, mustWork = FALSE)
 
   if (!file.exists(file.path(normalizePath(pkg), "DESCRIPTION"))) {
-    stop("DESCRIPTION file does not exist in your directory:", normalizePath(pkg), ".\n",
-         "Have you run the content of the 'description' chunk of your {fusen} template?")
+    stop(
+      "DESCRIPTION file does not exist in your directory:", normalizePath(pkg), ".\n",
+      "Have you run the content of the 'description' chunk of your {fusen} template?"
+    )
   }
 
   if (length(list.files(pkg, pattern = ".Rproj")) > 0) {
@@ -97,7 +104,10 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
   }
 
   # Are you sure ?
-  overwrite <- match.arg(overwrite)
+  if (is.logical(overwrite)) {
+    overwrite <- ifelse(isTRUE(overwrite), "yes", "no")
+  }
+  overwrite <- match.arg(overwrite, choices = c("ask", "yes", "no"))
   cleaned_name <- asciify_name(name)
   vignette_path <- file.path(pkg, "vignettes", paste0(cleaned_name, ".Rmd"))
   if (file.exists(vignette_path)) {
@@ -109,8 +119,10 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
     if (rm_exist_vignette) {
       file.remove(vignette_path)
     } else {
-      stop("Vignette already exists, anwser 'yes' to the previous question",
-           " or set inflate(..., overwrite = 'yes') to always overwrite.")
+      stop(
+        "Vignette already exists, anwser 'yes' to the previous question",
+        " or set inflate(..., overwrite = 'yes') to always overwrite."
+      )
     }
   }
 
@@ -141,7 +153,11 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
 
   # Check
   if (isTRUE(check)) {
-    res <- rcmdcheck::rcmdcheck(pkg)
+    cli::cat_rule("Launching rcmdcheck()")
+    res <- rcmdcheck::rcmdcheck(
+      pkg,
+      ...
+    )
     print(res)
   }
 
@@ -165,21 +181,27 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg) {
   parsed_tbl <- add_fun_to_parsed(parsed_tbl, fun_names)
 
   # Verify labels are unique
-  dev_labels_noex <- c(regex_development_vec,
-                       regex_desc_vec,
-                       regex_functions_vec,
-                       regex_tests_vec)
+  dev_labels_noex <- c(
+    regex_development_vec,
+    regex_desc_vec,
+    regex_functions_vec,
+    regex_tests_vec
+  )
   dev_labels_noex_regex <- paste(dev_labels_noex, collapse = "|")
   labels_in_vignette <- na.omit(parsed_tbl[["label"]][
-    !grepl(dev_labels_noex_regex, parsed_tbl[["label"]])])
+    !grepl(dev_labels_noex_regex, parsed_tbl[["label"]])
+  ])
   labels_in_vignette <- labels_in_vignette[!grepl("", labels_in_vignette)]
 
   if (any(duplicated(labels_in_vignette))) {
-    stop("There are duplicated chunk names, ",
-         "please rename chunks with 'name-01' for instance.\n",
-         "Duplicates: ",
-         paste(labels_in_vignette[duplicated(labels_in_vignette)],
-               collapse = ", "))
+    stop(
+      "There are duplicated chunk names, ",
+      "please rename chunks with 'name-01' for instance.\n",
+      "Duplicates: ",
+      paste(labels_in_vignette[duplicated(labels_in_vignette)],
+        collapse = ", "
+      )
+    )
   }
 
   # _Get examples
@@ -240,8 +262,8 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
 
   example_pos_end <- all_arobase[all_arobase > example_pos_start][1] - 1
   example_pos_end <- ifelse(is.na(example_pos_end),
-                            grep("function(\\s*)\\(", code) - 1,
-                            example_pos_end
+    grep("function(\\s*)\\(", code) - 1,
+    example_pos_end
   )
 
   tibble::tibble(
@@ -297,11 +319,9 @@ add_fun_to_parsed <- function(parsed_tbl, fun_names) {
 #' @param fun_code R code of functions in Rmd as character
 #' @noRd
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
-
-  fun_code <- fun_code[!is.na(fun_code[["fun_name"]]),]
+  fun_code <- fun_code[!is.na(fun_code[["fun_name"]]), ]
   #  Example already in skeleton
   fun_code$example_in <- apply(fun_code, 1, function(x) {
-
     if (!is.na(x[["example_pos_start"]]) && length(x[["example_pos_start"]]) == 1) {
       list(x[["code"]][x[["example_pos_start"]]:x[["example_pos_end"]]])
     } else {
@@ -313,7 +333,7 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
     grepl(regex_example, parsed_tbl$label))
   rmd_ex <- parsed_tbl[which_parsed_ex, ]
-  rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]),]
+  rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]), ]
 
 
   if (nrow(rmd_ex) != 0) {
@@ -357,16 +377,20 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   fun_code[["code_example"]] <- lapply(seq_len(nrow(fun_code)), function(x) {
     # x <- 5
     fun_code_x <- fun_code[x, ]
-    if (is.na(fun_code_x[["fun_name"]])) { return(NA_character_) }
+    if (is.na(fun_code_x[["fun_name"]])) {
+      return(NA_character_)
+    }
 
     end_skeleton <- ifelse(is.na(fun_code_x[["example_pos_start"]]),
-                  fun_code_x[["example_pos_end"]],
-                  fun_code_x[["example_pos_start"]] - 1
+      fun_code_x[["example_pos_end"]],
+      fun_code_x[["example_pos_start"]] - 1
     )
 
     all_fun_code <- stats::na.omit(c(
       # begin
-      if (!is.na(end_skeleton)) {unlist(fun_code_x[["code"]])[1:end_skeleton]},
+      if (!is.na(end_skeleton)) {
+        unlist(fun_code_x[["code"]])[1:end_skeleton]
+      },
       # examples
       unlist(fun_code_x[["example"]]),
       # end
@@ -389,7 +413,7 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 #' @param pkg Path to package
 #' @noRd
 create_r_files <- function(fun_code, pkg) {
-  fun_code <- fun_code[!is.na(fun_code[["fun_name"]]),]
+  fun_code <- fun_code[!is.na(fun_code[["fun_name"]]), ]
 
   r_files <- lapply(seq_len(nrow(fun_code)), function(x) {
     fun_name <- fun_code[x, ][["fun_name"]]
@@ -414,7 +438,7 @@ create_tests_files <- function(parsed_tbl, pkg) {
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
     grepl(regex_tests, parsed_tbl$label), ]
 
-  rmd_test <- rmd_test[!is.na(rmd_test[["fun_name"]]),]
+  rmd_test <- rmd_test[!is.na(rmd_test[["fun_name"]]), ]
 
   if (nrow(rmd_test) != 0) {
     requireNamespace("testthat")
@@ -423,13 +447,14 @@ create_tests_files <- function(parsed_tbl, pkg) {
     if (!dir.exists(test_dir)) {
       dir.create(test_dir)
       dir.create(file.path(test_dir, "testthat"))
-      cat(enc2utf8(c("library(testthat)",
+      cat(enc2utf8(c(
+        "library(testthat)",
         paste0("library(", basename(pkg), ")"),
         "",
         paste0('test_check("', basename(pkg), '")')
-        )),
-        sep = "\n",
-        file = file.path(test_dir, "testthat.R")
+      )),
+      sep = "\n",
+      file = file.path(test_dir, "testthat.R")
       )
     }
 
@@ -477,10 +502,12 @@ create_vignette <- function(parsed_tbl, pkg, name) {
   # _remove dev, description, function and tests.
   # Keep examples and unnamed
   not_in_vignette <-
-    paste(c(regex_desc,
-           regex_tests,
-           regex_development,
-           regex_functions), collapse = "|")
+    paste(c(
+      regex_desc,
+      regex_tests,
+      regex_development,
+      regex_functions
+    ), collapse = "|")
   vignette_tbl <- parsed_tbl[
     !(grepl(not_in_vignette, parsed_tbl[["label"]]) |
       grepl("rmd_yaml_list", parsed_tbl[["type"]])),
@@ -524,15 +551,14 @@ create_vignette <- function(parsed_tbl, pkg, name) {
   # Write vignette
   if (nrow(vignette_tbl) == 0) {
     cat("",
-        sep = "\n", append = TRUE,
-        file = vignette_file
+      sep = "\n", append = TRUE,
+      file = vignette_file
     )
   } else {
     cat("",
-        enc2utf8(parsermd::as_document(vignette_tbl)),
-        sep = "\n", append = TRUE,
-        file = vignette_file
+      enc2utf8(parsermd::as_document(vignette_tbl)),
+      sep = "\n", append = TRUE,
+      file = vignette_file
     )
   }
 }
-
