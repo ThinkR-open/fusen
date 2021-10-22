@@ -54,6 +54,16 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
                     name = "exploration", check = TRUE, document = TRUE,
                     overwrite = "ask", ...) {
+
+  # Save all open files
+  if (
+    requireNamespace("rstudioapi") &&
+    rstudioapi::isAvailable() &&
+    rstudioapi::hasFun("documentSaveAll")
+  ) {
+    rstudioapi::documentSaveAll()
+  }
+
   old <- setwd(pkg)
   on.exit(setwd(old))
 

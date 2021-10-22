@@ -8,17 +8,20 @@ create_fusen(
   path,
   name = c("full", "minimal", "teaching"),
   open = TRUE,
-  overwrite = FALSE
+  overwrite = FALSE,
+  with_git = FALSE
 )
 }
 \arguments{
-\item{path}{path where to create the new fusen project.}
+\item{path}{Character. Path where to create the new fusen project.}
 
-\item{name}{name of the template to be used among "full", "minimal" and "teaching".}
+\item{name}{Character. Name of the template to be used among "full", "minimal" and "teaching".}
 
-\item{open}{logical, should the newly created project be opened.}
+\item{open}{Logical. Should the newly created project be opened ?}
 
 \item{overwrite}{Logical. Allow to overwrite 'dev/' files if path exists.}
+
+\item{with_git}{Logical. Should git be initialised in the newly created project ?}
 }
 \description{
 Create a new fusen project

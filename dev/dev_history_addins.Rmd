@@ -1,0 +1,279 @@
+---
+title: "addins"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-1}
+# Load already included functions
+pkgload::load_all(export_all = FALSE)
+```
+
+# Add fusen chunk
+
+```{r function}
+#' Add `{fusen}` chunks
+#' 
+#' Create `{fusen}` chunks inside your Rmd
+#'
+#' @param function_name Name of the function to create. 
+#'     If NULL (the  default), the user will be prompted to enter it.
+#' @param export Should the function be exported? 
+#'     Default is `getOption("fusen.export.functions")`. If NULL, the 
+#'     user will be prompted to enter it. 
+#'
+#' @export
+#'
+#' @return A list with the context and the content, invisibly.
+#' 
+#' @examples
+#' add_fusen_chunks("this")
+add_fusen_chunks <- function(
+  function_name = NULL, 
+  export = getOption("fusen.export.functions")
+) {
+  if (
+    requireNamespace("rstudioapi") &&
+    rstudioapi::isAvailable() &&
+    rstudioapi::hasFun("getSourceEditorContext") &&
+    rstudioapi::hasFun("insertText")
+  ) {
+    # This will allow to interactively have the function name
+    if (is.null(function_name)) {
+      if (rstudioapi::hasFun("showPrompt")) {
+        function_name <- rstudioapi::showPrompt("{fusen}", "Enter the function name")
+      } else {
+        function_name <- readline("Enter the function name: ")
+      }
+    }
+    
+    if (is.null(export)) {
+      if (rstudioapi::hasFun("showQuestion")) {
+        export <- rstudioapi::showQuestion("{fusen}", "Should the function be exported?", ok = "yes", cancel = "no")
+      } else {
+        export <- readline("Should the function be exported? (y/n) ") == "y"
+      }
+    }
+    
+    curr_editor <- rstudioapi::getSourceEditorContext()
+    if (!grepl("\\.Rmd$", curr_editor$path)) {
+      stop("fusen chunks can only be added inside a Rmd file.")
+    }
+    
+    s <- curr_editor$selection
+    
+    # What happens if the user has selected something in the Rmd?
+    # Throw an error
+    if (nchar(s[[1L]]$text) != 0L){
+      stop("fusen chunks can't be inserted on top of selected text.")
+    }
+    
+    chunks <- build_fusen_chunks(
+      function_name, 
+      export
+    )
+    
+    rstudioapi::insertText(
+      location = s[[1L]]$range$start, 
+      text = build_fusen_chunks(function_name)
+    )
+    
+    return(
+      invisible(
+        list(
+          context = curr_editor, 
+          chunk_text = chunks
+        )
+      )
+    )
+  }
+}
+
+```
+
+```{r tests}
+# No tests for addins
+```
+
+```{r function-2}
+#' Build fusen chunks
+#' 
+#' Internal tool to build the chunk text
+#'
+#' @param function_name Name of the function to build the chunk text with
+#'
+#' @noRd
+build_fusen_chunks <- function(function_name, export = TRUE){
+  paste(
+    sep = "\n",
+    sprintf("## %s", function_name),
+    "    ",
+    sprintf("```{r function-%s}", function_name),
+    "#' Title",
+    "#' ",
+    "#' Description",
+    "#' ",
+    "#' @return",
+    "#' ",
+    {
+      if (export){
+        "#' @export"
+      } else {
+        "#' @noRd"
+      }
+    },
+    sprintf("%s <- function(){", function_name),
+    "    ",
+    "}",
+    "```",
+    "  ",
+    sprintf("```{r example-%s}", function_name),
+    sprintf("%s()", function_name),
+    "```",
+    "  ",
+    sprintf("```{r tests-%s}", function_name),
+    sprintf("test_that(\"%s works\", {", function_name),
+    sprintf("  expect_true(inherits(%s, \"function\")) ", function_name),
+    "})",
+    "```",
+    "  "
+  )
+}
+```
+
+```{r example-2}
+cat(build_fusen_chunks("pouet"))
+```
+
+```{r test-2}
+test_that("build_fusen_chunks works properly", {
+  res <- build_fusen_chunks("pouet")
+  expect_true(
+    grepl("pouet", res)
+  )
+  expect_true(
+    grepl("function-pouet", res)
+  )
+  expect_true(
+    grepl("example-pouet", res)
+  )
+  expect_true(
+    grepl("function-pouet", res)
+  )
+  expect_true(
+    grepl("tests-pouet", res)
+  )
+  expect_true(
+    grepl("Title", res)
+  )
+  expect_true(
+    grepl("Description", res)
+  )
+  expect_true(
+    grepl("@return", res)
+  )
+  expect_true(
+    grepl("@export", res)
+  )
+  res <- build_fusen_chunks("pouet", FALSE)
+  expect_true(
+    grepl("@noRd", res)
+  )
+})
+
+# Create a new package, add set of chunks and check
+dummydir <- tempfile(pattern = "dummy")
+dir.create(dummydir)
+path_foosen <- file.path(dummydir, "foosen")
+
+test_that("build_fusen_chunks add lines as expected", {
+  withr::with_dir(dummydir, {
+    create_fusen(path_foosen, name = "minimal", open = FALSE)
+    fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
+    path_dev_history <- file.path(path_foosen, "dev", "dev_history.Rmd")
+    dev_lines_orig <- readLines(path_dev_history)
+
+    # If interactive in RStudio
+    if (
+      requireNamespace("rstudioapi") &&
+      rstudioapi::isAvailable() &&
+      rstudioapi::hasFun("navigateToFile") &&
+      rstudioapi::hasFun("documentSave") #&&
+      # rstudioapi::hasFun("documentClose")
+    ) {
+      print("Test with RStudio")
+      # current position
+      curr_editor <- rstudioapi::getSourceEditorContext()
+      curr_position <- curr_editor$selection[[1L]]$range$start
+      # Change file
+      rstudioapi::navigateToFile(path_dev_history, line = 33)
+      Sys.sleep(1)
+      open_editor <- rstudioapi::getSourceEditorContext()
+      id <- open_editor$id
+      # the_open_path <- rstudioapi::documentPath(id)
+      # if (basename(the_open_path) != basename(path_dev_history)) {
+      #   stop("Open the file was short to get the correct Id of the opened file")
+      # }
+        # add chunks
+        add_fusen_chunks(function_name = "zaza", export = TRUE)
+        rstudioapi::documentSave(id)
+        if (rstudioapi::hasFun("documentClose")) {
+          rstudioapi::documentClose(id)
+        }
+        # # Back to current position
+        rstudioapi::navigateToFile(curr_editor$path, line = curr_position[1])
+    } else {
+      print("test without interactive")
+      dev_lines <- readLines(path_dev_history)
+      dev_lines[33] <- build_fusen_chunks("zaza")
+      cat(dev_lines, sep = "\n", file = path_dev_history)
+    }
+
+    dev_lines_new <- readLines(path_dev_history)
+    expect_equal(length(dev_lines_new), length(dev_lines_orig) + 24)
+
+    unlink(path_foosen, recursive = TRUE)
+  })
+})
+```
+
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  rmd = "dev/dev_history_addins.Rmd", 
+  name = "addins", 
+  check = FALSE
+)
+unlink(
+  here::here(
+    "vignettes", 
+    "addins.Rmd"
+  ),
+  force = TRUE
+)
+unlink(
+  here::here(
+    "tests", "testthat", 
+    "test-add_fusen_chunks.R"
+  ),
+  force = TRUE
+)
+devtools::check()
+```
+
+<!-- # Inflate your package -->
+
+<!-- You're one inflate from paper to box. -->
+<!-- Build your package from this very Rmd using `fusen::inflate()` -->
+
+<!-- - Verify your `"DESCRIPTION"` file has been updated -->
+<!-- - Verify your function is in `"R/"` directory -->
+<!-- - Verify your test is in `"tests/testthat/"` directory -->
+<!-- - Verify this Rmd appears in `"vignettes/"` directory -->
