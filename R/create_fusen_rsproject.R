@@ -68,7 +68,9 @@ create_fusen <- function(
   ## Open new project if function is called from Rstudio console
   ## Rstudio project wizard will spontaneously open the new project
   if (isTRUE(open) && #!rstudio_project_wizard_context &&
-      requireNamespace("rstudioapi") && rstudioapi::isAvailable()) {
+      requireNamespace("rstudioapi") &&
+      rstudioapi::isAvailable() &&
+      rstudioapi::hasFun("openProject")) {
     cli::cat_rule("Opening new fusen project")
     rstudioapi::openProject(path = path)
     cli::cli_alert_success("Opened new fusen project")
@@ -90,3 +92,4 @@ create_fusen_gui <- function(
   create_fusen(path = file.path(getwd(), path), name = name, open = FALSE)
 
 }
+
