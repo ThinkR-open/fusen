@@ -23,3 +23,6 @@ A list with the context and the content, invisibly.
 \description{
 Create \code{{fusen}} chunks inside your Rmd
 }
+\examples{
+add_fusen_chunks("this")
+}

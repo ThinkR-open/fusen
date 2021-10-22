@@ -2,7 +2,7 @@
 title: "How to use fusen"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{How to use fusen}
+  %\VignetteIndexEntry{a-How to use fusen}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

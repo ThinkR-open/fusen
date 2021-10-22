@@ -1,7 +1,11 @@
+# v0.2.4.9000
+
+* Add Rstudio Addin to insert chunks for new function (@ColinFay)
+* `create_fusen()` to create a {fusen} project from command line or with RStudio new project (@ALanguillaume)
+
 # v0.2.4
 
 * Update vignette and tests
-* `create_fusen()` to create a {fusen} project from command line or with RStudio new project (@ALanguillaume)
 
 # v0.2.3
 
