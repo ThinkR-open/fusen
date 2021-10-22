@@ -57,12 +57,14 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
 
   if (file.exists(dev_path) & overwrite == FALSE) {
     n <- length(list.files(dev_dir, pattern = "^dev_history.*[.]Rmd"))
-    dev_path <- file.path(dev_dir, paste0("dev_history_", n + 1, ".Rmd"))
+    number <- n + 1
+    dev_path <- file.path(dev_dir, paste0("dev_history_", number, ".Rmd"))
     message(
       "dev_history.Rmd already exists. New dev file is renamed '",
       basename(dev_path), "'. Use overwrite = TRUE, if you want to ",
       "overwrite the existing dev_history.Rmd file, or rename it."
     )
+    name_vignette <- paste0("exploration_", number)
   }
   dev_name <- basename(dev_path)
 
@@ -74,9 +76,17 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
          lines_template[grepl("<my_package_name>", lines_template)])
 
   # Change dev_history file name
-  lines_template[grepl("dev_history.Rmd", lines_template)] <-
-    gsub("dev_history.Rmd", dev_name,
-         lines_template[grepl("dev_history.Rmd", lines_template)])
+
+    lines_template[grepl("dev_history.Rmd", lines_template)] <-
+      gsub("dev_history.Rmd", dev_name,
+           lines_template[grepl("dev_history.Rmd", lines_template)])
+
+    # Add name of vignette if exists
+    if(exists("name_vignette")){
+      line_to_replace <- which(grepl("fusen::inflate", lines_template) & grepl("dev_history", lines_template))
+      dev_name_vignette <- paste0("fusen::inflate(rmd = \"dev/", dev_name,"\", name = \"",name_vignette,"\")")
+      lines_template[line_to_replace] <- dev_name_vignette
+    }
 
   cat(enc2utf8(lines_template), file = dev_path, sep = "\n")
 
