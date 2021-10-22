@@ -10,7 +10,7 @@ inflate(
   name = "exploration",
   check = TRUE,
   document = TRUE,
-  overwrite = c("ask", "yes", "no"),
+  overwrite = "ask",
   ...
 )
 }
@@ -25,7 +25,7 @@ inflate(
 
 \item{document}{Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}}
 
-\item{overwrite}{Logical. Whether to overwrite vignette and functions if already exists.}
+\item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no). Whether to overwrite vignette and functions if already exists.}
 
 \item{...}{Arguments passed to \code{rcmdcheck::rcmdcheck()}.
 For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is

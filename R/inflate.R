@@ -20,7 +20,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @param rmd Path to Rmarkdown file to inflate
 #' @param check Logical. Whether to check package after Rmd inflating
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
-#' @param overwrite Logical. Whether to overwrite vignette and functions if already exists.
+#' @param overwrite Logical (TRUE, FALSE) or character ("ask", "yes", "no). Whether to overwrite vignette and functions if already exists.
 #' @param ... Arguments passed to `rcmdcheck::rcmdcheck()`.
 #'     For example, you can do `inflate(check = TRUE, quiet = TRUE)`, where `quiet` is
 #'     passed to `rcmdcheck::rcmdcheck()`.
@@ -53,7 +53,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' unlink(dummypackage, recursive = TRUE)
 inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
                     name = "exploration", check = TRUE, document = TRUE,
-                    overwrite = c("ask", "yes", "no"), ...) {
+                    overwrite = "ask", ...) {
   old <- setwd(pkg)
   on.exit(setwd(old))
 
@@ -94,7 +94,10 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
   }
 
   # Are you sure ?
-  overwrite <- match.arg(overwrite)
+  if (is.logical(overwrite)) {
+    overwrite <- ifelse(isTRUE(overwrite), "yes", "no")
+  }
+  overwrite <- match.arg(overwrite, choices = c("ask", "yes", "no"))
   cleaned_name <- asciify_name(name)
   vignette_path <- file.path(pkg, "vignettes", paste0(cleaned_name, ".Rmd"))
   if (file.exists(vignette_path)) {
