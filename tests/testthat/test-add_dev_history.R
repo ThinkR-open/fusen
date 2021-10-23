@@ -25,7 +25,7 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
   # _New file has path changed in title and inflate
   lines_2 <- readLines(file.path(dummypackage, "dev", "dev_history_2.Rmd"))
   expect_length(grep(x = lines_2, pattern = "dev_history_2[.]Rmd"), 2)
-  detect_line <- which(grepl("fusen::inflate", lines_2) & grepl("dev_history", lines_2) & grepl("exploration", lines_2))
+  detect_line <- which(grepl("fusen::inflate", lines_2) & grepl("dev_history_2", lines_2) & grepl("exploration_2", lines_2))
   expect_length(detect_line, 1)
 })
 
