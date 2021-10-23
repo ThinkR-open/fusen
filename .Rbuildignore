@@ -20,3 +20,4 @@ rstudio\_dotrstudio
 ^doc$
 ^Meta$
 ^CONTRIBUTING\.md$
+^dev/$

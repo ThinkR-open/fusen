@@ -7,7 +7,7 @@
 inflate(
   pkg = ".",
   rmd = file.path("dev", "dev_history.Rmd"),
-  name = "exploration",
+  name = "Get started",
   check = TRUE,
   document = TRUE,
   overwrite = "ask",

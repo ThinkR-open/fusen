@@ -447,7 +447,7 @@ After that, you can:
 #' @export
 #'
 #' @examples
-inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name = "exploration", check = TRUE, document = TRUE) {
+inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"), name = "Get started", check = TRUE, document = TRUE) {
   old <- setwd(pkg)
   on.exit(setwd(old))
   
@@ -883,7 +883,7 @@ usethis::with_project(dummypackage, {
     dev_file,
     overwrite = TRUE
   )
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE)
   
   test_that("inflate() worked correctly", {
     # R files
@@ -908,7 +908,7 @@ usethis::with_project(dummypackage, {
     expect_true(all(!grepl("#' @examples", my_third_median_lines)))
     
     # vignette
-    expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+    expect_true(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
     
     # tests
     expect_true(file.exists(
@@ -952,7 +952,7 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 
 usethis::with_project(dummypackage, {
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE, document = FALSE)
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE, document = FALSE)
   desc_lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
   expect_false("Imports:" %in% desc_lines)
   
@@ -970,9 +970,9 @@ usethis::with_project(dummypackage, {
     dev_file,
     overwrite = TRUE
   )
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE)
   test_that("inflate() output error", {
-    expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+    expect_true(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
     expect_true(file.exists(file.path(dummypackage, "R", "my_median.R")))
     expect_true(!file.exists(file.path(dummypackage, "tests", "testthat", "test-my_median.R")))
   })
@@ -990,7 +990,7 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
   test_that("inflate() output error", {
-    expect_message(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE))
+    expect_message(inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE))
   })
   # Clean R, tests and vignettes
   unlink(file.path(dummypackage, "R"), recursive = TRUE)
@@ -1006,7 +1006,7 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
   test_that("inflate() output error duplicate functions", {
-    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE))
+    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE))
   })
   # Clean R, tests and vignettes
   unlink(file.path(dummypackage, "R"), recursive = TRUE)
@@ -1020,7 +1020,7 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
   test_that("inflate() output error duplicate label names for vignette", {
-    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE))
+    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE))
   })
   # Clean R, tests and vignettes
   unlink(file.path(dummypackage, "R"), recursive = TRUE)
@@ -1037,7 +1037,7 @@ usethis::with_project(dummypackage, {
   # Add
   # {fusen} steps
   dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE)
   
   test_that("add_dev_history inflates with .Rproj and no .here", {
     expect_true(file.exists(dev_file))
@@ -1053,7 +1053,7 @@ usethis::with_project(dummypackage, {
     my_median_file <- file.path(dummypackage, "R", "my_median.R")
     expect_true(file.exists(my_median_file))
     # vignette
-    expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+    expect_true(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
     # tests
     expect_true(file.exists(
       file.path(dummypackage, "tests", "testthat", "test-my_median.R")
@@ -1070,7 +1070,7 @@ usethis::with_project(dummypackage, {
 # name <- "# y  _ p n@ é ! 1"
 #   name <- "# y  _ p n@ \u00E9 ! 1"
 # stringi::stri_trans_general("é", "hex")
-# # name <- "exploration"
+# # name <- "get-started"
 # cleaned_name <- gsub("^-|-$", "",
 #                      gsub("-+", "-",
 #                           gsub("-_|_-", "-",

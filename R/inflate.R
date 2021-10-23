@@ -52,7 +52,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
 inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
-                    name = "exploration", check = TRUE, document = TRUE,
+                    name = "Get started", check = TRUE, document = TRUE,
                     overwrite = "ask", ...) {
 
   # Save all open files

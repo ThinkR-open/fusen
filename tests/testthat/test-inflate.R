@@ -15,7 +15,7 @@ usethis::with_project(dummypackage, {
     dev_file,
     overwrite = TRUE
   )
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE)
 
   test_that("inflate() worked correctly", {
     # R files
@@ -85,7 +85,7 @@ usethis::with_project(dummypackage, {
     )))
 
     # vignette
-    the_vignette <- file.path(dummypackage, "vignettes", "exploration.Rmd")
+    the_vignette <- file.path(dummypackage, "vignettes", "get-started.Rmd")
     expect_true(file.exists(the_vignette))
     vignette_lines <- readLines(the_vignette)
     # No dev chunks in the vignette
@@ -161,7 +161,7 @@ if (packageVersion("parsermd") > "0.1.2") {
       overwrite = TRUE
     )
 
-    inflate(pkg = dummypackage.special, rmd = dev_file, name = "exploration", check = FALSE)
+    inflate(pkg = dummypackage.special, rmd = dev_file, name = "Get started", check = FALSE)
 
     test_that("inflate with special yaml worked correctly", {
       # R files
@@ -177,7 +177,7 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 
 usethis::with_project(dummypackage, {
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE, document = FALSE)
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE, document = FALSE)
   desc_lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
   expect_false("Imports:" %in% desc_lines)
 
@@ -195,9 +195,9 @@ usethis::with_project(dummypackage, {
     dev_file,
     overwrite = TRUE
   )
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE)
   test_that("inflate() output no error", {
-    expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+    expect_true(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
     expect_true(file.exists(file.path(dummypackage, "R", "my_median.R")))
     expect_true(!file.exists(file.path(dummypackage, "tests", "testthat", "test-my_median.R")))
   })
@@ -215,7 +215,7 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
   test_that("inflate() output message", {
-    expect_message(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE))
+    expect_message(inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE))
   })
   # Clean R, tests and vignettes
   unlink(file.path(dummypackage, "R"), recursive = TRUE)
@@ -226,22 +226,22 @@ usethis::with_project(dummypackage, {
 # Tests errors - vignette already exists ----
 usethis::with_project(dummypackage, {
 
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration",
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started",
           check = FALSE, overwrite = "yes")
 
   test_that("inflate() output error when second time (not interactive)", {
-    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration",
+    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "Get started",
                          check = FALSE))
-    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration",
+    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "Get started",
                          check = FALSE, overwrite = 'no'))
   })
 
   # No error with overwrite = 'yes'
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration",
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started",
           check = FALSE, overwrite = "yes")
 
   test_that("inflate() output no error", {
-    expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+    expect_true(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
   })
 
   # Clean R, tests and vignettes
@@ -258,7 +258,7 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
   test_that("inflate() output error duplicate functions", {
-    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE))
+    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE))
   })
   # Clean R, tests and vignettes
   unlink(file.path(dummypackage, "R"), recursive = TRUE)
@@ -272,7 +272,7 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
   test_that("inflate() output error duplicate label names for vignette", {
-    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE))
+    expect_error(inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE))
   })
   # Clean R, tests and vignettes
   unlink(file.path(dummypackage, "R"), recursive = TRUE)
@@ -289,7 +289,7 @@ usethis::with_project(dummypackage, {
   # Add
   # {fusen} steps
   dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE, open = FALSE)
-  inflate(pkg = dummypackage, rmd = dev_file, name = "exploration", check = FALSE)
+  inflate(pkg = dummypackage, rmd = dev_file, name = "Get started", check = FALSE)
 
   test_that("add_dev_history inflates with .Rproj and no .here", {
     expect_true(file.exists(dev_file))
@@ -305,7 +305,7 @@ usethis::with_project(dummypackage, {
     my_median_file <- file.path(dummypackage, "R", "my_median.R")
     expect_true(file.exists(my_median_file))
     # vignette
-    expect_true(file.exists(file.path(dummypackage, "vignettes", "exploration.Rmd")))
+    expect_true(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
     # tests
     expect_true(file.exists(
       file.path(dummypackage, "tests", "testthat", "test-my_median.R")

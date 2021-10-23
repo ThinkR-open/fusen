@@ -192,6 +192,6 @@ usethis::with_project(dummypackage, {
   
   # You may need to execute inflate() in the console directly
   fusen::inflate(pkg = dummypackage, rmd = file.path(dummypackage, "dev", "dev_history.Rmd"),
-                 name = "exploration")
+                 name = "Get started")
 })
 ```
