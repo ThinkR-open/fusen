@@ -1,8 +1,15 @@
 # v0.2.4.9000
 
+**Major changes**
+
 * Deal with `\dontrun{}` in example chunks
 * Allow short names for chunks: dev, fun, ex, test
 * `create_fusen()` to create a {fusen} project from command line or with RStudio new project (@ALanguillaume)
+
+**Minor changes**
+
+* Fix filename to inflate in templates with new calls of `add_dev_history()` (@Cervangirard)
+* Default vignette name is now "Get started" creating "vignettes/get-started.Rmd"
 
 # v0.2.4
 

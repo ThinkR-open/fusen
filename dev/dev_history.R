@@ -67,7 +67,7 @@ usethis::use_readme_rmd()
 # _News
 usethis::use_news_md()
 # _Vignette
-thinkridentity::create_vignette_thinkr("aa-data-exploration")
+thinkridentity::create_vignette_thinkr("aa-data-get-started")
 usethis::use_vignette("ab-model")
 devtools::build_vignettes()
 fusen::add_dev_history(open = TRUE)
@@ -123,7 +123,7 @@ usethis::pr_finish(41)
 # name <- "# y  _ p n@ é ! 1"
 #   name <- "# y  _ p n@ \u00E9 ! 1"
 # stringi::stri_trans_general("é", "hex")
-# # name <- "exploration"
+# # name <- "get-started"
 # cleaned_name <- gsub("^-|-$", "",
 #                      gsub("-+", "-",
 #                           gsub("-_|_-", "-",

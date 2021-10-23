@@ -112,7 +112,7 @@ You added a new function in your package, along with example, test and a new vig
 
 - R/my_median.R
 - tests/testthat/test-my_median.R
-- vignettes/exploration.Rmd
+- vignettes/get-started.Rmd
 
 
 

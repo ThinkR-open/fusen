@@ -64,7 +64,7 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
       basename(dev_path), "'. Use overwrite = TRUE, if you want to ",
       "overwrite the existing dev_history.Rmd file, or rename it."
     )
-    name_vignette <- paste0("exploration_", number)
+    name_vignette <- paste0("get-started_", number)
   }
   dev_name <- basename(dev_path)
 
