@@ -105,6 +105,13 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(
       file.path(dummypackage, "tests", "testthat", "test-myuppercasefunction.R")
     ))
+    # no test
+    expect_false(file.exists(
+      file.path(dummypackage, "tests", "testthat", "test-my_norox.R")
+    ))
+    expect_false(file.exists(
+      file.path(dummypackage, "tests", "testthat", "test-my_space2.R")
+    ))
     # Namespace
     expect_true(file.exists(file.path(dummypackage, "NAMESPACE")))
   })
