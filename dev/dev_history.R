@@ -95,7 +95,7 @@ usethis::use_build_ignore("_pkgdown.yml")
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi"),
-  extra.suggests = c("testthat", "pkgload", "rstudioapi", "MASS")
+  extra.suggests = c("testthat", "pkgload", "rstudioapi") #, "MASS", "lattice")
 )
 # attachment::create_dependencies_file()
 
@@ -135,6 +135,9 @@ usethis::pr_finish(41)
 
 
 # Prepare for CRAN ----
+# _Check in interactive test-inflate for templates
+pkgload::load_all()
+testthat::test_file("tests/testthat/test-inflate.R")
 # Test no output generated in the user files
 # pkgload::load_all(export_all = FALSE)
 # remotes::install_github("ropensci-review-tools/autotest")

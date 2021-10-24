@@ -35,7 +35,6 @@ Imports:
     utils
 Suggests: 
     knitr,
-    MASS,
     pkgload,
     rmarkdown,
     rstudioapi,

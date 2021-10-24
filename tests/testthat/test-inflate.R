@@ -428,7 +428,7 @@ for (pkgname in c("full", "teaching")) {
   dev_file <- file.path(path_foosen, "dev", "dev_history.Rmd")
 
   usethis::with_project(path_foosen, {
-    withr::with_package("MASS", {
+    # withr::with_package("MASS", {
 
       # Do not check inside check if on CRAN
       skip_on_os(os = c("windows", "solaris"))
@@ -437,11 +437,22 @@ for (pkgname in c("full", "teaching")) {
       usethis::use_gpl_license()
 
       test_that(paste("Check returns OK for template", pkgname), {
+        # No redirection of stdout/stderr when non-interactive
+        expect_error(
+          inflate(pkg = path_foosen, rmd = dev_file, name = "exploration",
+                  check = TRUE, quiet = TRUE, args = c("--no-manual"),
+                  overwrite = TRUE),
+          regexp = NA)
+
+        skip_if_not(interactive())
+        # Needs MASS, lattice, Matrix installed
         # quiet and checkdir
         checkdir <- file.path(alltemp, paste0("checkout", pkgname))
         expect_error(
           inflate(pkg = path_foosen, rmd = dev_file, name = "exploration",
-                  check = TRUE, check_dir = checkdir, quiet = TRUE, overwrite = TRUE),
+                  check = TRUE, check_dir = checkdir, quiet = TRUE,
+                  args = c("--no-manual"),
+                  overwrite = TRUE),
           regexp = NA)
 
         # Should not be any errors with templates
@@ -449,7 +460,7 @@ for (pkgname in c("full", "teaching")) {
         expect_equal(check_lines[length(check_lines)], "Status: OK")
         unlink(checkdir, recursive = TRUE)
       })
-    })
+    # })
   })
 
 } # end of template loop
