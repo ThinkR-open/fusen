@@ -135,9 +135,9 @@ usethis::pr_finish(41)
 
 
 # Prepare for CRAN ----
-# _Check in interactive test-inflate for templates
+# _Check in interactive test-inflate for templates and Addins
 pkgload::load_all()
-testthat::test_file("tests/testthat/test-inflate.R")
+testthat::test_dir("tests/testthat/")
 # Test no output generated in the user files
 # pkgload::load_all(export_all = FALSE)
 # remotes::install_github("ropensci-review-tools/autotest")
