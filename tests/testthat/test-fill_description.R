@@ -17,7 +17,7 @@ test_that("fill_description adds DESCRIPTION", {
         )
       )
     ),
-    "Title was modified to Title Case"
+    "Title was modified to 'Title Case'"
   )
 
   expect_true(file.exists(file.path(dummypackage, "DESCRIPTION")))
@@ -38,10 +38,10 @@ test_that("fill_description adds DESCRIPTION", {
   expect_equal(lines[3], "Title: Build A Package From Rmarkdown File")
 })
 
-# Fill description stops if malformed
+# Fill description message and corrected if malformed, and set overwrite
 # _not dot
 test_that("no dot description fails", {
-  expect_error(
+  expect_message(
     fill_description(
       pkg = dummypackage,
       fields = list(
@@ -54,9 +54,40 @@ test_that("no dot description fails", {
                  role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
           person(given = "ThinkR", role = "cph")
         )
-      )
+      ), overwrite = TRUE
     ),
-    "finish with a dot.")
+    "A dot was added.")
+
+  lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
+  # Description with dot
+  expect_equal(
+    lines[4],
+    paste("Description: Use Rmd First method to build your package.",
+          "Start your package with documentation.",
+          "Everything can be set from a Rmarkdown file in your project.")
+  )
+})
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+
+# Verify curly bracket in title works
+dummypackage <- tempfile(pattern = "dummy")
+dir.create(dummypackage)
+
+test_that("curly bracket in title and description works", {
+# Works with {} in text although not allowed by CRAN
+expect_message(fill_description(
+  pkg = dummypackage,
+  fields = list(
+    Title = "Build a package with {fusen}",
+    Description = "Use Rmarkdown First method to build your package with {fusen}.",
+    `Authors@R` = c(
+      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+      person(given = "ThinkR", role = "cph")
+    )
+  )
+), "Title Case")
 })
 
 # Delete dummy package

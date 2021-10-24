@@ -415,7 +415,7 @@ usethis::with_project(dummypackage, {
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
-# Test checks ----
+# Test checks with ... ----
 # Create a new project
 checkpkg <- tempfile("checkpkg")
 dir.create(checkpkg)
@@ -431,10 +431,8 @@ usethis::with_project(path_foosen, {
 
   fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
   usethis::use_gpl_license()
-  expect_error(
-    inflate(pkg = path_foosen, rmd = dev_file, name = "exploration", check = TRUE),
-    regexp = NA)
 
+  checkdir <- tempfile("checkout")
   expect_error(
     inflate(pkg = path_foosen, rmd = dev_file, name = "exploration",
             check = TRUE, quiet = TRUE, overwrite = TRUE),

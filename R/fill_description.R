@@ -43,11 +43,12 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
 
   if (capwords(fields[["Title"]]) != fields[["Title"]]) {
     fields[["Title"]] <- capwords(fields[["Title"]])
-    cli::cli_alert_warning(paste("Title was modified to Title Case:", fields[["Title"]]))
+    cli::cli_alert_warning(paste("Title was modified to 'Title Case'."))
   }
 
   if (!is.null(fields[["Description"]]) && !grepl("[.]$", fields[["Description"]])) {
-    stop("Description field is a sentence and should finish with a dot.")
+    fields[["Description"]] <- paste0(fields[["Description"]], ".")
+    cli::cli_alert_warning(paste("Description field should be a sentence. A dot was added at the end."))
   }
 
   if (file.exists(desc_file) & !isTRUE(overwrite)) {
