@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//index.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//reference/add_dev_history.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//reference/add_fusen_chunks.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//reference/create_fusen.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//reference/fill_description.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//reference/fusen-package.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//reference/inflate.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//articles/How-to-use-fusen.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen//articles/Maintain-packages-with-fusen.html</loc>
+  </url>
+</urlset>
