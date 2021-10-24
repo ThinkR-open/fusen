@@ -95,7 +95,7 @@ usethis::use_build_ignore("_pkgdown.yml")
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi"),
-  extra.suggests = c("testthat", "pkgload", "rstudioapi")
+  extra.suggests = c("testthat", "pkgload", "rstudioapi", "MASS")
 )
 # attachment::create_dependencies_file()
 
