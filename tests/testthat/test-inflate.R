@@ -415,32 +415,45 @@ usethis::with_project(dummypackage, {
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
-# Test checks with ... ----
-# Create a new project
-checkpkg <- tempfile("checkpkg")
-dir.create(checkpkg)
+# Test checks all templates with inflate dots (...) ----
+alltemp <- tempfile("all_templates")
+dir.create(alltemp)
 
-# {fusen} steps
-path_foosen <- file.path(checkpkg, "foosen")
-create_fusen(path_foosen, name = "full", open = FALSE)
-dev_file <- file.path(path_foosen, "dev", "dev_history.Rmd")
+for (pkgname in c("full", "teaching")) {
+  # TODO: "minimal" can inflate ? Empty dev_history does not work.
+  # No "additional" with create_fusen
+  # {fusen} steps
+  path_foosen <- file.path(alltemp, pkgname)
+  create_fusen(path_foosen, name = pkgname, open = FALSE)
+  dev_file <- file.path(path_foosen, "dev", "dev_history.Rmd")
 
-usethis::with_project(path_foosen, {
-  # Do not check inside check if on CRAN
-  skip_on_os(os = c("windows", "solaris"))
+  usethis::with_project(path_foosen, {
+    withr::with_package("MASS", {
 
-  fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
-  usethis::use_gpl_license()
+      # Do not check inside check if on CRAN
+      skip_on_os(os = c("windows", "solaris"))
 
-  checkdir <- tempfile("checkout")
-  expect_error(
-    inflate(pkg = path_foosen, rmd = dev_file, name = "exploration",
-            check = TRUE, quiet = TRUE, overwrite = TRUE),
-    regexp = NA)
+      fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
+      usethis::use_gpl_license()
 
-})
+      test_that(paste("Check returns OK for template", pkgname), {
+        # quiet and checkdir
+        checkdir <- file.path(alltemp, paste0("checkout", pkgname))
+        expect_error(
+          inflate(pkg = path_foosen, rmd = dev_file, name = "exploration",
+                  check = TRUE, check_dir = checkdir, quiet = TRUE, overwrite = TRUE),
+          regexp = NA)
 
+        # Should not be any errors with templates
+        check_lines <- readLines(file.path(checkdir, paste0(basename(path_foosen), ".Rcheck"), "00check.log"))
+        expect_equal(check_lines[length(check_lines)], "Status: OK")
+        unlink(checkdir, recursive = TRUE)
+      })
+    })
+  })
+
+} # end of template loop
 # Delete dummy package
-unlink(checkpkg, recursive = TRUE)
+unlink(alltemp, recursive = TRUE)
 
 # Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...
