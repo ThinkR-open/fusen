@@ -13,7 +13,7 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
   rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
-  expect_true(any(grepl("^dev/$", rbuildignore_lines, fixed = TRUE)))
+  expect_true(any(grepl("^dev$", rbuildignore_lines, fixed = TRUE)))
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
 
   dev_lines <- readLines(dev_path)
