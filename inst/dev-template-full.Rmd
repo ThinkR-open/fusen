@@ -135,7 +135,7 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")
 # Inflate your package
 
 You're one inflate from paper to box.
-Build your package from this very Rmd using `fusen::inflate()`
+Build your package from this very Rmd using `fusen::inflate()` in the `development` chunk above.
 
 - Verify your `"DESCRIPTION"` file has been updated
 - Verify your function is in `"R/"` directory
