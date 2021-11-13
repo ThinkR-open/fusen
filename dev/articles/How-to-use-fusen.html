@@ -138,7 +138,7 @@
 <li>Create a new directory / new project with
 <ul>
 <li>RStudio template: File &gt; New Project &gt; New directory &gt; Package using {fusen}</li>
-<li>Command line: <code><a href="../reference/create_fusen.html">create_fusen("path/to/new/project")</a></code>
+<li>Command line: <code>create_fusen("path/to/new/project")</code>
 </li>
 </ul>
 </li>
@@ -225,8 +225,8 @@
 
 <span class="co"># Add an additional dev template</span>
 <span class="fu"><a href="../reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, name <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span>
-<span class="co">#&gt; Created file .here in /tmp/RtmpJpbXky/dummypackage . Please start a new R session in the new project directory.</span>
-<span class="co">#&gt; [1] "/tmp/RtmpJpbXky/dummypackage/dev/dev_history.Rmd"</span>
+<span class="co">#&gt; Created file .here in /tmp/RtmpL6jvH9/dummypackage . Please start a new R session in the new project directory.</span>
+<span class="co">#&gt; [1] "/tmp/RtmpL6jvH9/dummypackage/dev/dev_history.Rmd"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -255,7 +255,7 @@
   <span class="op">)</span>
 <span class="op">)</span>
 <span class="co">#&gt; ! Title was modified to 'Title Case'.</span>
-<span class="co">#&gt; [1] "/tmp/RtmpJpbXky/dummypackage/DESCRIPTION"</span>
+<span class="co">#&gt; [1] "/tmp/RtmpL6jvH9/dummypackage/DESCRIPTION"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -265,14 +265,14 @@
 <a href="#there-can-be-development-actions" class="anchor"></a>There can be development actions</h1>
 <p>These will be included in the <code>dev/dev_history.R</code> file of your package, but won’t be direct part of it.</p>
 <p>Name the following chunk with <code>{r development-1, eval=FALSE}</code></p>
-<pre><code><a href="https://usethis.r-lib.org/reference/licenses.html">
+<pre><code>
 # Run but keep eval=FALSE to avoid infinite loop
 
 usethis::use_mit_license("Sébastien Rochette")
 
 # Execute in the console directly
 
-fusen::inflate(rmd = "dev/dev_history.Rmd")</a></code></pre>
+fusen::inflate(rmd = "dev/dev_history.Rmd")</code></pre>
 </div>
 <div id="inflate-your-package-from-dev-rmd-template" class="section level1">
 <h1 class="hasAnchor">
