@@ -37,6 +37,8 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
                             open = TRUE, dev_dir = "dev",
                             name = c("full", "minimal", "additional", "teaching")) {
 
+  .Deprecated('add_flat_template', package = 'fusen', old = 'add_dev_history')
+
   project_name <- basename(normalizePath(pkg))
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
     stop("Please rename your project/directory with: ", asciify_name(project_name, to_pkg = TRUE),

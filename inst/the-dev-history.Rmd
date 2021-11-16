@@ -1,0 +1,86 @@
+---
+title: "Development actions history"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+All commands that you use to use when developing packages...
+
+# First time just after creating the package
+
+```{r description, eval=FALSE}
+# Describe your package
+fusen::fill_description(
+  pkg = here::here(),
+  fields = list(
+    Title = "Build A Package From Rmarkdown file",
+    Description = "Use Rmarkdown First method to build your package. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
+    `Authors@R` = c(
+      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+      person(given = "ThinkR", role = "cph")
+    )
+  )
+)
+# Define License with use_*_license()
+usethis::use_mit_license("Sébastien Rochette")
+```
+
+# Start using git
+
+```{r}
+usethis::use_git()
+# Deal classical files to ignore
+usethis::git_vaccinate()
+```
+
+# Set extra sources of documentation
+
+```{r}
+# README
+usethis::use_readme_rmd()
+# Code of Conduct
+usethis::use_code_of_conduct()
+# NEWS
+usethis::use_news_md()
+```
+
+> From now, you will need to "inflate" your package at least once to be able to use the following commands. Let's go to your flat template, and come back here later if/when needed.
+
+# Package development tools
+
+```{r}
+# Simulate package installation
+pkgload::load_all()
+
+# Pipe
+usethis::use_pipe()
+
+# package-level documentation
+usethis::use_package_doc()
+
+# Set CI
+# _GitHub
+usethis::use_github_action_check_standard()
+usethis::use_github_action("pkgdown")
+usethis::use_github_action("test-coverage")
+# _GitLab
+gitlabr::use_gitlab_ci(type = "check-coverage-pkgdown")
+
+# Generate documentation and deal with dependencies
+attachment::att_amend_desc()
+
+# Check the package
+devtools::check()
+```
+
+# Share the package
+
+```{r}
+# set and try pkgdown
+
+
+# build the tar.gz to share with others
+devtools::build()
+```
+
