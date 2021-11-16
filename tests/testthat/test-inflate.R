@@ -70,6 +70,12 @@ usethis::with_project(dummypackage, {
     my_norox2_lines <- readLines(my_norox2functionfile)
     expect_true(all(my_norox2_lines == c(
       "#' @noRd", "#' @examples", "#' \\dontrun{",
+      "#' # comment",
+      "#' my_norox2(10)", "#' }",
+      "my_norox2 <- function(x) {", "  x + 10", "}",
+      "#' ",
+      "#' \\dontrun{",
+      "#' # comment",
       "#' my_norox2(10)", "#' }",
       "my_norox2 <- function(x) {", "  x + 10", "}"
     )))

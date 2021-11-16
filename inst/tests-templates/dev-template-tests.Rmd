@@ -271,9 +271,15 @@ my_norox2 <- function(x) {
 }
 ```
 
-```{r ex-norox2}
+```{r ex-norox2, eval=FALSE}
 #' \dontrun{
+#' # comment
 #' my_norox2(10)
+#' }
+#' 
+#' \dontrun{
+# comment
+my_norox2(12)
 #' }
 ```
 
