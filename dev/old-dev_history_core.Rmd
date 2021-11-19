@@ -1,4 +1,5 @@
-<!-- Do not edit by hand -->
+<!-- do not edit by hand, everything is modified in R and tests files now -->
+
 ---
 title: "dev_history.Rmd"
 author: "Sébastien Rochette"

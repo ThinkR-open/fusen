@@ -27,12 +27,12 @@ Use the Addin "Add {fusen} chunks"
 + Name the chunks using function name planned to be created
 + Decide if this function is exported to the user or not
 
-## Create a new dev_history template
+## Create a new flat Rmd template
 
-To add a new family of functions, create a new dev_history template
+To add a new family of functions, create a new flat Rmd template
 
 ```{r, eval=FALSE}
-add_dev_history(name = "add")
+add_flat_template(template = "add")
 ```
 
 

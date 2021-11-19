@@ -1,3 +1,5 @@
+# do not edit by hand
+
 #' Add flat Rmd file that drives package development
 #'
 #' @param template Name of the template to use. See details.
@@ -22,7 +24,7 @@
 #' instead of additional.
 #'
 #' @return
-#' Create a flat Rmd file and return its path
+#' Create flat Rmd file(s) and return its (their) path
 #' @export
 #'
 #' @examples
@@ -37,7 +39,7 @@
 #' unlink(dummypackage, recursive = TRUE)
 #' 
 #' # For classical use in your package
-#' #' \dontrun{
+#' \dontrun{
 #' # first time ever using 'fusen'
 #' add_flat_template("full") 
 #' # first time in your new package
@@ -70,7 +72,7 @@ add_flat_template <- function(
   
   # Which template
   if (template == "dev_history") {
-    dev_file_path <- file.path(dev_dir, "0-dev_history.Rmd")
+    dev_file_path <- character(0)
   } else {
     template_file <- system.file(paste0("flat-template-", template, ".Rmd"), package = "fusen")
     
@@ -115,6 +117,7 @@ add_flat_template <- function(
       if (!copy) {
         stop("'0-dev_history.Rmd' could not be created in '", dev_dir, "'")
       }
+      dev_file_path <- c(dev_file_path, dev_file)
     }
     
   }

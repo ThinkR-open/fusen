@@ -70,7 +70,7 @@ usethis::use_news_md()
 thinkridentity::create_vignette_thinkr("aa-data-get-started")
 usethis::use_vignette("ab-model")
 devtools::build_vignettes()
-fusen::add_dev_history(open = TRUE)
+fusen::add_flat_template("add", open = TRUE)
 # contributing
 usethis::use_tidy_contributing()
 usethis::use_build_ignore("CONTRIBUTING.md")

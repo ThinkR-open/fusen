@@ -34,7 +34,7 @@ library(fusen)
 - Inflate the template to transform it as a package with functions, unit tests and the current Rmd transformed as a vignette. And check.
 - Build your {pkgdown} site to verify everything is at the right place
 
-> Create multiple `"dev_history_xxx.Rmd"` files with `fusen::add_dev_history()` if needed
+> Create multiple `"flat_xxx.Rmd"` files with `fusen::add_flat_template(template = "add")` if needed
 
 
 ## Limitations
@@ -74,7 +74,7 @@ an_example
 ```
 
 
-# Add a new dev_history.Rmd template in "dev" directory
+# Add a new flat_template.Rmd template in "dev" directory
 
 ```{r example}
 # Create a new project
@@ -83,7 +83,7 @@ dummypackage <- file.path(tmpdir, "dummypackage")
 dir.create(dummypackage)
 
 # Add an additional dev template
-add_dev_history(pkg = dummypackage, name = "add")
+add_flat_template(template = "add", pkg = dummypackage)
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -157,7 +157,7 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
+dev_file <- add_flat_template(pkg = dummypackage, overwrite = TRUE)
 inflate(pkg = dummypackage, rmd = dev_file, name = "Exploration of my Data", check = FALSE)
 
 # Explore directory of the package

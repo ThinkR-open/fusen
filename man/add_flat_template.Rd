@@ -27,7 +27,7 @@ add_flat_template(
 \item{open}{Logical. Whether to open file after creation}
 }
 \value{
-Create a flat Rmd file and return its path
+Create flat Rmd file(s) and return its (their) path
 }
 \description{
 Add flat Rmd file that drives package development
@@ -57,7 +57,7 @@ add_flat_template(pkg = dummypackage)
 unlink(dummypackage, recursive = TRUE)
 
 # For classical use in your package
-#' \dontrun{
+\dontrun{
 # first time ever using 'fusen'
 add_flat_template("full") 
 # first time in your new package

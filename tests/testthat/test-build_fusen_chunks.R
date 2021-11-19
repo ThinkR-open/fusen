@@ -1,3 +1,5 @@
+# do not edit by hand
+
 test_that("build_fusen_chunks works properly", {
   res <- build_fusen_chunks("pouet")
   expect_true(
@@ -40,9 +42,9 @@ path_foosen <- file.path(dummydir, "foosen")
 
 test_that("build_fusen_chunks add lines as expected", {
   withr::with_dir(dummydir, {
-    create_fusen(path_foosen, name = "minimal", open = FALSE)
+    dev_file <- create_fusen(path_foosen, template = "minimal", open = FALSE)
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
-    path_dev_history <- file.path(path_foosen, "dev", "dev_history.Rmd")
+    path_dev_history <- dev_file[grepl("flat", dev_file)]
     dev_lines_orig <- readLines(path_dev_history)
 
     # If interactive in RStudio

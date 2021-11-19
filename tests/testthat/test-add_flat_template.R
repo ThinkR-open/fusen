@@ -7,10 +7,12 @@ pkg_name <- basename(dummypackage)
 
 # add_flat_template ----
 test_that("add_flat_template adds dev_history.Rmd and co.", {
-  dev_file_path <- expect_error(add_flat_template(pkg = dummypackage, open = FALSE),
+  dev_file_path <- expect_error(add_flat_template(pkg = dummypackage, open = FALSE), 
                regexp = NA)
-  expect_true(file.exists(dev_file_path))
-  expect_true(file.exists(file.path(dirname(dev_file_path), "0-dev_history.Rmd")))
+  flat_file <- dev_file_path[grepl("flat", dev_file_path)]
+  
+  expect_true(all(file.exists(dev_file_path)))
+  expect_true(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
   expect_true(file.exists(file.path(dummypackage, ".here")))
 
   rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
@@ -19,7 +21,7 @@ test_that("add_flat_template adds dev_history.Rmd and co.", {
   expect_true(any(grepl("^dev/$", rbuildignore_lines, fixed = TRUE)))
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
 
-  dev_lines <- readLines(dev_file_path)
+  dev_lines <- readLines(flat_file)
   expect_true(length(grep(pkg_name, dev_lines)) == 1)
 
   # Second time message and new file
@@ -39,9 +41,10 @@ cat("", file = file.path(dummypackage2, 'dummy.Rproj'))
 
 # Add
 dev_file_path <- add_flat_template(pkg = dummypackage2, open = FALSE)
-
+flat_file <- dev_file_path[grepl("flat", dev_file_path)]
+  
 test_that("add_flat_template works with .Rproj and no .here", {
-  expect_true(file.exists(dev_file_path))
+  expect_true(all(file.exists(dev_file_path)))
   expect_false(file.exists(file.path(dummypackage2, ".here")))
 
   rbuildignore_file <- file.path(dummypackage2, ".Rbuildignore")
@@ -58,21 +61,21 @@ dir.create(dummypackage)
 # Add
 test_that("add dev_history template works", {
   withr::with_dir(dummypackage, {
-
+    
     dev_file_path <- expect_error(add_flat_template(pkg = dummypackage, template = "dev_history", open = FALSE), regexp = NA)
     expect_true(file.exists(dev_file_path))
-
+    
     usethis::with_project(dummypackage, {
       # Extract and test the description chunk
       dev_lines <- readLines(dev_file_path)
       # Change path of project
       dev_lines <- gsub("here::here()",
-                        paste0('"', dummypackage, '"'), dev_lines,
+                        paste0('"', dummypackage, '"'), dev_lines, 
                         fixed = TRUE)
       dev_parse <- parsermd::parse_rmd(dev_lines)
       desc_code <- tempfile("desc")
-      parsermd::rmd_select(dev_parse, "description")[[1]] %>%
-        parsermd::rmd_node_code() %>%
+      parsermd::rmd_select(dev_parse, "description")[[1]] %>% 
+        parsermd::rmd_node_code() %>% 
         cat(., sep = "\n", file = desc_code)
       # Execute code
       expect_error(source(desc_code), regexp = NA)
@@ -81,12 +84,12 @@ test_that("add dev_history template works", {
     expect_true(file.exists(file.path(dummypackage, "DESCRIPTION")))
     expect_true(file.exists(file.path(dummypackage, "LICENSE")))
     expect_true(file.exists(file.path(dummypackage, "LICENSE.md")))
-
+    
   })
 })
 
 unlink(dummypackage)
-
+  
 # Add failed with malformed package name ----
 # Create a new project
 dummypackage3 <- tempfile(pattern = "dummy_3")
@@ -113,17 +116,19 @@ for (template in all_templates) {
   dir.create(dummypackage4)
   # Add
   dev_file_path <- add_flat_template(pkg = dummypackage4, template = template, open = FALSE)
+  flat_file <- dev_file_path[grepl("flat", dev_file_path)]
+  
   # Change lines asking for pkg name
   lines_template <- readLines(system.file("tests-templates/dev-template-tests.Rmd", package = "fusen"))
   lines_template[grepl("<my_package_name>", lines_template)] <-
     gsub("<my_package_name>", basename(dummypackage4),
          lines_template[grepl("<my_package_name>", lines_template)])
-  cat(enc2utf8(lines_template), file = dev_file_path, sep = "\n")
-
+  cat(enc2utf8(lines_template), file = flat_file, sep = "\n")
+  
   withr::with_dir(dummypackage4, {
     usethis::proj_set(dummypackage4)
     here:::do_refresh_here(dummypackage4)
-
+    
     if (rmarkdown::pandoc_available("1.12.3")) {
       rmarkdown::render(
         input = file.path(dummypackage4, "dev", paste0("flat_", template, ".Rmd")),
@@ -131,13 +136,13 @@ for (template in all_templates) {
         envir = new.env(), quiet = TRUE)
     }
   })
-
+  
   test_that(paste0("template", template, "runs as markdown"), {
     expect_true(file.exists(file.path(dummypackage4, "dev", paste0("flat_", template, ".Rmd"))))
     if (template %in% c("full", "minimal")) {
-        expect_true(file.exists(file.path(dirname(dev_file_path), "0-dev_history.Rmd")))
+        expect_true(file.exists(file.path(dirname(flat_file), "0-dev_history.Rmd")))
     }
-
+    
     if (rmarkdown::pandoc_available("1.12.3")) {
       expect_true(file.exists(file.path(dummypackage4, "DESCRIPTION")))
       expect_true(file.exists(file.path(dummypackage4, "LICENSE")))
@@ -149,6 +154,7 @@ for (template in all_templates) {
   })
   unlink(dummypackage4, recursive = TRUE)
 } # end of loop on template knit
+
 
 # Test other names works ----
 dummypackage <- tempfile(pattern = "dummy")

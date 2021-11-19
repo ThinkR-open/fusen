@@ -1,3 +1,5 @@
+# do not edit by hand
+
 #' Add `{fusen}` chunks
 #' 
 #' Create `{fusen}` chunks inside your Rmd
