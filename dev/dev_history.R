@@ -13,8 +13,8 @@ usethis::use_build_ignore("docs")
 usethis::use_build_ignore("pkgdown")
 
 usethis::use_lifecycle_badge("Experimental")
-
 usethis::git_vaccinate()
+usethis::use_testthat(edition = 3)
 
 # description ----
 library(desc)

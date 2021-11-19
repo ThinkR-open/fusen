@@ -334,17 +334,17 @@ for (template in all_templates) {
 } # end of loop on template knit
 
 # Test other names works ----
-dummypackage5 <- tempfile(pattern = "dummy4")
-dir.create(dummypackage5)
+dummypackage <- tempfile(pattern = "dummy")
+dir.create(dummypackage)
 # Add
 test_that("Other flat_name works", {
   dev_file_path <- expect_error(
-    add_flat_template(pkg = dummypackage4, flat_name = "hello", open = FALSE),
+    add_flat_template(pkg = dummypackage, flat_name = "hello", open = FALSE),
     regexp = NA)
-  expect_true(file.exists(file.path(dummypackage4, "dev/flat_hello.Rmd")))
+  expect_true(file.exists(file.path(dummypackage, "dev/flat_hello.Rmd")))
 })
 # Delete dummy package
-unlink(dummypackage5, recursive = TRUE)
+unlink(dummypackage, recursive = TRUE)
 
 
 ```
@@ -353,6 +353,7 @@ unlink(dummypackage5, recursive = TRUE)
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(rmd = "dev/dev_history_flat.Rmd")
+fusen::inflate(rmd = "dev/dev_history_flat.Rmd", check = FALSE)
+unlink("vignettes/get-started.Rmd")
 ```
 

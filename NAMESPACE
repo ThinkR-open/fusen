@@ -2,6 +2,7 @@
 
 export("%>%")
 export(add_dev_history)
+export(add_flat_template)
 export(add_fusen_chunks)
 export(create_fusen)
 export(fill_description)
@@ -15,4 +16,5 @@ importFrom(parsermd,as_tibble)
 importFrom(parsermd,parse_rmd)
 importFrom(parsermd,rmd_get_chunk)
 importFrom(stats,na.omit)
+importFrom(tools,file_path_sans_ext)
 importFrom(utils,getFromNamespace)

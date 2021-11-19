@@ -31,6 +31,7 @@ Imports:
     stringr,
     tibble,
     tidyr,
+    tools,
     usethis (>= 1.5.0),
     utils
 Suggests: 
@@ -39,7 +40,7 @@ Suggests:
     rmarkdown,
     rstudioapi,
     spelling,
-    testthat,
+    testthat (>= 3.0.0),
     withr
 VignetteBuilder: 
     knitr
@@ -48,3 +49,4 @@ Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
+Config/testthat/edition: 3

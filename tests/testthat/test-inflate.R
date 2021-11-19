@@ -68,17 +68,16 @@ usethis::with_project(dummypackage, {
 
     # _no roxygen but examples
     my_norox2_lines <- readLines(my_norox2functionfile)
-    expect_true(all(my_norox2_lines == c(
-      "#' @noRd", "#' @examples", "#' \\dontrun{",
-      "#' # comment",
+    expect_equal(my_norox2_lines, c(
+      "#' @noRd", "#' @examples",
+      "#' \\dontrun{", "#' # comment",
       "#' my_norox2(10)", "#' }",
-      "my_norox2 <- function(x) {", "  x + 10", "}",
       "#' ",
       "#' \\dontrun{",
       "#' # comment",
-      "#' my_norox2(10)", "#' }",
+      "#' my_norox2(12)", "#' }",
       "my_norox2 <- function(x) {", "  x + 10", "}"
-    )))
+    ))
     # _extra empty line and examples
     my_space_lines <- readLines(my_spacefunctionfile)
     expect_true(all(my_space_lines[6:10] == c(

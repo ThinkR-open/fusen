@@ -4,7 +4,7 @@ dir.create(dummypackage)
 pkg_name <- basename(dummypackage)
 
 # Add ----
-dev_path <- add_dev_history(pkg = dummypackage, open = FALSE)
+dev_path <- suppressWarnings(add_dev_history(pkg = dummypackage, open = FALSE))
 
 test_that("add_dev_history adds dev_history.Rmd and co.", {
   expect_true(file.exists(dev_path))
@@ -20,7 +20,7 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
   expect_true(length(grep(pkg_name, dev_lines)) == 1)
 
   # Second time message and new file
-  expect_message(add_dev_history(pkg = dummypackage))
+  expect_message(suppressWarnings(add_dev_history(pkg = dummypackage)))
   expect_true(file.exists(file.path(dummypackage, "dev", "dev_history_2.Rmd")))
   # _New file has path changed in title and inflate
   lines_2 <- readLines(file.path(dummypackage, "dev", "dev_history_2.Rmd"))
@@ -29,7 +29,7 @@ test_that("add_dev_history adds dev_history.Rmd and co.", {
   expect_length(detect_line, 1)
 
   # Third time message and new file
-  expect_message(add_dev_history(pkg = dummypackage))
+  expect_message(suppressWarnings(add_dev_history(pkg = dummypackage)))
   expect_true(file.exists(file.path(dummypackage, "dev", "dev_history_3.Rmd")))
   # _New file has path changed in title and inflate
   lines_3 <- readLines(file.path(dummypackage, "dev", "dev_history_3.Rmd"))
@@ -46,7 +46,7 @@ dir.create(dummypackage2)
 cat("", file = file.path(dummypackage2, 'dummy.Rproj'))
 
 # Add
-dev_path <- add_dev_history(pkg = dummypackage2, open = FALSE)
+dev_path <- suppressWarnings(add_dev_history(pkg = dummypackage2, open = FALSE))
 
 test_that("add_dev_history works with .Rproj and no .here", {
   expect_true(file.exists(dev_path))
@@ -67,7 +67,7 @@ cat("", file = file.path(dummypackage3, 'dummy.Rproj'))
 
 # Add
 test_that("add_dev_history fails", {
-  expect_error(add_dev_history(pkg = dummypackage3, open = FALSE), "package name")
+  expect_error(suppressWarnings(add_dev_history(pkg = dummypackage3, open = FALSE)), "package name")
 })
 
 # More complicated example for tests
@@ -80,7 +80,7 @@ test_that("add_dev_history fails", {
 dummypackage4 <- tempfile(pattern = "dummy4")
 dir.create(dummypackage4)
 # Add
-dev_path <- add_dev_history(pkg = dummypackage4, open = FALSE)
+dev_path <- suppressWarnings(add_dev_history(pkg = dummypackage4, open = FALSE))
 # Change lines asking for pkg name
 lines_template <- readLines(system.file("tests-templates/dev-template-tests.Rmd", package = "fusen"))
 lines_template[grepl("<my_package_name>", lines_template)] <-

@@ -2,6 +2,7 @@
 
 ## Major changes
 
+* `add_flat_template()` superseeds `add_dev_history()` with a more advanced use
 * Add Rstudio Addin to insert chunks for new function (@ColinFay)
 * Deal with `\dontrun{}` in example chunks
 * Allow short names for chunks: dev, fun, ex, test
