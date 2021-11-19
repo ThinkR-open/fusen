@@ -2,7 +2,8 @@
 
 ## Breaking changes
 
-* `add_flat_template()` superseeds `add_dev_history()` with a more advanced use
+* `add_flat_template()` superseeds `add_dev_history()` with more advanced possibilities
+* `add_dev_history()` is deprecated
 
 ## Major changes
 

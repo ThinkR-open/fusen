@@ -166,7 +166,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
 
 #' Create function code, doc and tests ----
 #' @param parsed_tbl tibble of a parsed Rmd
-#' @param fun_code tibble as issued from \code{get_functions}
+#' @param fun_code tibble as issued from `get_functions`
 #' @param pkg Path to package
 #' @importFrom stats na.omit
 #' @noRd

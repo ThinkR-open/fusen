@@ -100,7 +100,7 @@ withr::with_dir(dummypackage, {
 
     expect_true(dir.exists(path_gigit))
     expect_true(all(file.exists(dev_path)))
-    # git is initialised
+    # git is initialized
     expect_true(dir.exists(file.path(path_gigit, ".git")))
   })
 })
@@ -116,7 +116,7 @@ withr::with_dir(dummygui$dirname, {
     )
     expect_true(dir.exists(dummygui$path))
     expect_true(file.exists(dev_file))
-    # git is initialised
+    # git is initialized
     expect_true(dir.exists(file.path(dummygui$path, ".git/")))
   })
 })

@@ -4,7 +4,7 @@
 #' @param template Character. Name of the template to be used among "full", "minimal" and "teaching".
 #' @param open Logical. Should the newly created project be opened ?
 #' @param overwrite Logical. Allow to overwrite 'dev/' files if path exists.
-#' @param with_git Logical. Should git be initialised in the newly created project ?
+#' @param with_git Logical. Should git be initialized in the newly created project ?
 #'
 #' @details
 #' See \code{\link{add_flat_template}} for details about the different options for `template`.

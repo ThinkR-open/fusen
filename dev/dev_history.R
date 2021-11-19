@@ -62,6 +62,8 @@ usethis::use_github()
 
 # Documentation ----
 usethis::use_data_raw()
+usethis::use_roxygen_md()
+roxygen2md::roxygen2md(scope = "simple")
 # _Readme
 usethis::use_readme_rmd()
 # _News

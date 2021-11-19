@@ -21,7 +21,7 @@ create_fusen(
 
 \item{overwrite}{Logical. Allow to overwrite 'dev/' files if path exists.}
 
-\item{with_git}{Logical. Should git be initialised in the newly created project ?}
+\item{with_git}{Logical. Should git be initialized in the newly created project ?}
 }
 \description{
 Create a new fusen project

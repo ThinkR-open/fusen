@@ -21,36 +21,30 @@ add_dev_history(
 
 \item{dev_dir}{Name of directory for development Rmarkdown files. Default to "dev".}
 
-\item{name}{Name of the template file. See details.}
+\item{name}{Name of the template file. See \code{\link[=add_flat_template]{add_flat_template()}}}
 }
 \value{
-Create a dev_history.Rmd file and return its path
+Create flat Rmd file(s) and return its (their) path
 }
 \description{
-Add dev_history.Rmd file that drives package development
-}
-\details{
-Choose \code{name} among the different templates available:
-\itemize{
-\item "full": the full template with a reproducible package to inflate directly. Default.
-\item "minimal": Minimal template to start a new package when you already know {fusen}.
-\item "additional": Template for an additional vignette, thus additional functions.
-\item "teaching": Template with a reproducible package, simpler than "full", but everything to
-teach the minimal structure of a package.
-}
+\code{add_dev_history()} is deprecated. We will soon be totally
+switching to \code{\link[=add_flat_template]{add_flat_template()}}, which is more consistent with development
+processes
 
-Abbreviated names can also be used for the different templates. For example "add"
-instead of additional.
+\code{add_dev_history(name = "teaching")} is equivalent to
+\code{add_flat_template(template = "teaching")}
 }
 \examples{
+\dontrun{
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
 dir.create(dummypackage)
 
 # Add
-add_dev_history(pkg = dummypackage)
+add_dev_history(pkg = dummypackage, name = "teaching")
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
+}
 }

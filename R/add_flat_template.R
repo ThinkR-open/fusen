@@ -34,7 +34,7 @@
 #' dir.create(dummypackage)
 #' 
 #' # Add
-#' add_flat_template(pkg = dummypackage)
+#' add_flat_template(template = "teaching", pkg = dummypackage)
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
 #' 
@@ -42,8 +42,10 @@
 #' \dontrun{
 #' # first time ever using 'fusen'
 #' add_flat_template("full") 
+#' 
 #' # first time in your new package
 #' add_flat_template("minimal")
+#' 
 #' # add new flat file for new functions
 #' add_flat_template("add")
 #' #'}

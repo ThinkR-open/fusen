@@ -1,38 +1,37 @@
 #' Add dev_history.Rmd file that drives package development
 #'
+#' @description
+#'
+#' `add_dev_history()` is deprecated. We will soon be totally
+#' switching to [add_flat_template()], which is more consistent with development
+#' processes
+#'
+#' `add_dev_history(name = "teaching")` is equivalent to
+#' `add_flat_template(template = "teaching")`
+#'
 #' @param pkg Path where to save file
 #' @param overwrite Whether to overwrite existing dev_history.Rmd file
 #' @param open Logical. Whether to open file after creation
 #' @param dev_dir Name of directory for development Rmarkdown files. Default to "dev".
-#' @param name Name of the template file. See details.
-#'
-#' @details
-#' Choose `name` among the different templates available:
-#'
-#' - "full": the full template with a reproducible package to inflate directly. Default.
-#' - "minimal": Minimal template to start a new package when you already know {fusen}.
-#' - "additional": Template for an additional vignette, thus additional functions.
-#' - "teaching": Template with a reproducible package, simpler than "full", but everything to
-#'  teach the minimal structure of a package.
-#'
-#' Abbreviated names can also be used for the different templates. For example "add"
-#' instead of additional.
+#' @param name Name of the template file. See [add_flat_template()]
 #'
 #' @return
-#' Create a dev_history.Rmd file and return its path
+#' Create flat Rmd file(s) and return its (their) path
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' # Create a new project
 #' tmpdir <- tempdir()
 #' dummypackage <- file.path(tmpdir, "dummypackage")
 #' dir.create(dummypackage)
 #'
 #' # Add
-#' add_dev_history(pkg = dummypackage)
+#' add_dev_history(pkg = dummypackage, name = "teaching")
 #'
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
+#' }
 add_dev_history <- function(pkg = ".", overwrite = FALSE,
                             open = TRUE, dev_dir = "dev",
                             name = c("full", "minimal", "additional", "teaching")) {
