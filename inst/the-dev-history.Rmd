@@ -14,7 +14,7 @@ All commands that you use to use when developing packages...
 fusen::fill_description(
   pkg = here::here(),
   fields = list(
-    Title = "Build A Package From Rmarkdown file",
+    Title = "Build A Package From Rmarkdown File",
     Description = "Use Rmarkdown First method to build your package. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
     `Authors@R` = c(
       person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
@@ -40,7 +40,7 @@ usethis::git_vaccinate()
 # README
 usethis::use_readme_rmd()
 # Code of Conduct
-usethis::use_code_of_conduct()
+usethis::use_code_of_conduct("contact@fake.com")
 # NEWS
 usethis::use_news_md()
 ```
@@ -48,11 +48,9 @@ usethis::use_news_md()
 > From now, you will need to "inflate" your package at least once to be able to use the following commands. Let's go to your flat template, and come back here later if/when needed.
 
 # Package development tools
+## Use once
 
 ```{r}
-# Simulate package installation
-pkgload::load_all()
-
 # Pipe
 usethis::use_pipe()
 
@@ -66,6 +64,13 @@ usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
 # _GitLab
 gitlabr::use_gitlab_ci(type = "check-coverage-pkgdown")
+```
+
+## Use everytime needed
+
+```{r}
+# Simulate package installation
+pkgload::load_all()
 
 # Generate documentation and deal with dependencies
 attachment::att_amend_desc()

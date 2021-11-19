@@ -24,7 +24,7 @@ Imports:
     glue,
     here (>= 1.0.0),
     magrittr,
-    parsermd,
+    parsermd (>= 0.1.0),
     rcmdcheck,
     roxygen2,
     stats,
