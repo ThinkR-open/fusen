@@ -320,7 +320,7 @@ my_space2 <- function(x) {
 
 # There can be development actions
 
-These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
+These are only included in the present flat template file, their content will not be part of the package anywhere else.
 
 ```{r dev}
 # Short chunk dev name not in vignette

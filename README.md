@@ -20,7 +20,7 @@ coverage](https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg?
 > a package.
 
 Indeed, this {fusen} package is a real-world example of {fusen} use as
-it was itself created from the `"dev_history.Rmd"` templates available
+it was itself created from the `"dev_history"` flat templates available
 in `"dev/"` folder in its GitHub repository.
 
 ## Installation
@@ -43,12 +43,15 @@ remotes::install_github("ThinkR-open/fusen")
 *{fusen} is all about correctly separating and naming chunks.*
 
 -   Create a new directory / new project with
-    -   RStudio template: File &gt; New Project &gt; New directory &gt;
+    -   RStudio template: File \> New Project \> New directory \>
         Package using {fusen}
-    -   Command line: `create_fusen("path/to/new/project")`
--   Open the “dev/dev\_history.Rmd” template
--   In the Rmd template, run the first chunks asking to describe your
-    package and license it
+    -   Choose the template `teaching` to start  
+        <img src="man/figures/create_fusen_rstudio.png" width="50%" />
+    -   *Or command line:
+        `create_fusen("path/to/new/project", template = "teaching")`*
+-   Open the “dev/flat_teaching” Rmd to start setting up the package
+-   In this flat Rmd template, run the first chunks named `description`
+    asking to describe your package and license it
     -   They look like these lines of code:
 
 ``` r
@@ -60,15 +63,15 @@ usethis::use_mit_license("Sébastien Rochette")
     -   You probably develop them with a few examples and tests
     -   *For the first time, you can let the code as is, this is already
         the content for a working package*
--   Run the following code to **transform the template Rmd as a
+-   Run the following code to **transform the flat Rmd as an inflated
     package**
     -   This will open the vignette created
 
 ``` r
-fusen::inflate(rmd = dev_file, name = "my-functionality", check = TRUE)
+fusen::inflate(rmd = "dev/flat_teaching.Rmd", name = "get-started", check = TRUE)
 ```
 
-**That’s it! You built a package!**
+**That’s it! You built a package! A documented and tested package!**
 
 Let’s test it now:
 
@@ -92,11 +95,9 @@ my.package::my_median(1:12)
 
 ``` r
 # Build {pkgdown} to test it
+usethis::use_pkgdown()
 pkgdown::build_site()
 # > See references and articles
-# Hide output from package and git
-usethis::use_build_ignore("docs")
-usethis::use_git_ignore("docs")
 ```
 
 ## Description of the Rmd template
@@ -104,22 +105,24 @@ usethis::use_git_ignore("docs")
 As I said earlier, this is all about using the correct split and name
 for your chunks.
 
--   Follow the `"dev/dev_history.Rmd"` template to write your
+-   Follow the `"dev/flat_template.Rmd"` template to write your
     documentation and build your functions and test your examples.
     -   Chunk named `function` gets the code of a function
     -   Chunk named `example` gets the code for examples of using the
         function. This will be used for function `@examples` and will be
         kept for the vignette.
         -   As chunk names should be unique in the future vignette, you
-            can add numbers like `example-1`, `example-2`, …
+            can add function names like `example-myfunction`,
+            `example-myotherfunction`, …
     -   Chunk named `tests` gets the code for unit testing
     -   Chunk named `development` gets the code for development
         purposes, usually only used once like {usethis} functions
--   Inflate the template to transform it as a package with functions,
-    unit tests and the current Rmd transformed as a vignette. And check.
+-   **Inflate** the flat Rmd template to transform it as a package with
+    functions, unit tests and the current Rmd transformed as a vignette.
+    And check.
 
-*Note that the `"dev_history.Rmd"` template is indeed a working
-example.*
+*Note that the `"flat*.Rmd"` files created with templates `full` and
+`teaching` are indeed working examples that can directly be inflated.*
 
 > You can also have a look at
 > [{squirrels.fusen}](https://github.com/statnmap/squirrels.fusen) that
@@ -131,11 +134,12 @@ example.*
 There is a dedicated vignette to answer this:
 <https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html>
 
--   **Option 1**: Modifications are only added to the “dev\_history.Rmd”
-    file, which then is inflated to update all packages files
+-   **Option 1**: Modifications are only added to the
+    “flat_template.Rmd” file, which then is inflated to update all
+    packages files
 -   **Option 2**: Modifications are realized in the package files
-    directly, and the “dev\_history.Rmd” file must be protected from any
-    use.
+    directly, and the “flat_template.Rmd” file must be protected from
+    any use.
 
 > Advice : Use git as soon as possible, this will avoid losing your work
 > if you made some modifications in the wrong place
@@ -160,19 +164,20 @@ package may help them do the first step!
 with switching between R files, tests files, vignettes. In particular,
 when changing arguments of a function, we need to change examples, unit
 tests in multiple places. Here, you can do it in one place. No risk to
-forget one.
+forget one. Think also about code review: everything related to one
+function is at the same place.
 
 ## Why is this package named {fusen} ?
 
-A fusen is an origami. It is a piece of paper that you fold in a
+A fusen is an origami. It is a flat piece of paper that you fold in a
 specific way so that at the end, you can magically inflate it to let a
 nice box appear.
 
 <img src="man/figures/fusen_seb_crop_small.jpg" width="25%" />
 
-Similarly, the {fusen} package uses one page of Rmd, that you fill in a
-specific way so that at the end, you can magically `inflate()` it to let
-a nice package appear.
+Similarly, the {fusen} package uses one flat Rmd template, that you fill
+in a specific way so that at the end, you can magically `inflate()` it
+to let a nice package appear.
 
 <details>
 <summary>
@@ -190,6 +195,8 @@ Click here to fold your {fusen}…
     (Video on Youtube: <https://youtu.be/cB1BCxFbhtk>).
 -   Thanks to @rundel and its package {parsermd} who helped me get back
     in this project with ease : <https://github.com/rundel/parsermd>
+-   Thanks to the [ThinkR team](https://rtask.thinkr.fr) who adopted
+    this package for its daily production.
 
 ## Code of Conduct
 

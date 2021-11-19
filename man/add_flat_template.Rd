@@ -22,7 +22,7 @@ add_flat_template(
 
 \item{flat_name}{Name of the file to write in dev.}
 
-\item{overwrite}{Whether to overwrite existing dev_history.Rmd file}
+\item{overwrite}{Whether to overwrite existing flat Rmd template file with same name}
 
 \item{open}{Logical. Whether to open file after creation}
 }

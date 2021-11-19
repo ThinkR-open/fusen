@@ -30,12 +30,9 @@ create_fusen <- function(
   if (dir.exists(path)){
     cli::cli_alert_warning(
       paste(
-        "The path:", path, "already exists."#,
-        # "Continuing will overwrite dev/dev_history.Rmd.\n",
-        # "Are you sure you want to continue ?"
+        "The path:", path, "already exists."
       )
     )
-    # overwrite <- utils::menu(c("Yes", "No")) == 1
     if (!isTRUE(overwrite)) {
       cli::cli_alert_danger(
         paste(
@@ -71,8 +68,8 @@ create_fusen <- function(
     }
   }
 
-  ## Add dev/dev_history.Rmd in newly created project
-  cli::cat_rule("Adding dev/dev_history.Rmd")
+  ## Add dev/flat_template.Rmd in newly created project
+  cli::cat_rule(glue::glue("Adding dev/flat_{template}.Rmd"))
   dev_file <- add_flat_template(
     template = template,
     pkg = path,

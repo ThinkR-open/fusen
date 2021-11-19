@@ -19,7 +19,7 @@ library(tools)
 #'
 #' @param template Name of the template to use. See details.
 #' @param pkg Path where to save file
-#' @param overwrite Whether to overwrite existing dev_history.Rmd file
+#' @param overwrite Whether to overwrite existing flat Rmd template file with same name
 #' @param open Logical. Whether to open file after creation
 #' @param dev_dir Name of directory for development Rmarkdown files. Default to "dev".
 #' @param flat_name Name of the file to write in dev.

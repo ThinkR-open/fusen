@@ -123,7 +123,7 @@ test_that("my_median works properly and show error if needed", {
 
 # There can be development actions
 
-These will be included in the `dev_history.R` file of your package, but won't be direct part of it.
+These are only included in the present flat template file, their content will not be part of the package anywhere else.
 
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
