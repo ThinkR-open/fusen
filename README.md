@@ -20,8 +20,8 @@ coverage](https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg?
 > a package.
 
 Indeed, this {fusen} package is a real-world example of {fusen} use as
-it was itself created from the `"dev_history"` flat templates available
-in `"dev/"` folder in its GitHub repository.
+it was itself created from the “dev_history” flat templates available in
+`"dev/"` folder in its GitHub repository.
 
 ## Installation
 
@@ -45,11 +45,14 @@ remotes::install_github("ThinkR-open/fusen")
 -   Create a new directory / new project with
     -   RStudio template: File \> New Project \> New directory \>
         Package using {fusen}
-    -   Choose the template `teaching` to start  
+    -   Choose the template `teaching` the first time to see how {fusen}
+        works,
+    -   Choose the template `full` the second time to answer most of
+        your questions  
         <img src="man/figures/create_fusen_rstudio.png" width="50%" />
     -   *Or command line:
         `create_fusen("path/to/new/project", template = "teaching")`*
--   Open the “dev/flat_teaching” Rmd to start setting up the package
+-   Open the “dev/flat_teaching.Rmd” to start setting up the package
 -   In this flat Rmd template, run the first chunks named `description`
     asking to describe your package and license it
     -   They look like these lines of code:
@@ -155,13 +158,13 @@ documentation](https://rtask.thinkr.fr/when-development-starts-with-documentatio
 After that, you need to move your functions and scripts in the correct
 place. Let {fusen} do that for you!
 
-{fusen} is first addressed to people who never wrote a package before
+*{fusen} is first addressed to people who never wrote a package before*
 but know how to write a Rmarkdown file. Understanding package
 infrastructure and correctly settling it can be frightening. This
 package may help them do the first step!
 
-{fusen} is also addressed to more advanced developers who are fed up
-with switching between R files, tests files, vignettes. In particular,
+*{fusen} is also addressed to more advanced developers who are fed up
+with switching* between R files, tests files, vignettes. In particular,
 when changing arguments of a function, we need to change examples, unit
 tests in multiple places. Here, you can do it in one place. No risk to
 forget one. Think also about code review: everything related to one
@@ -175,7 +178,7 @@ nice box appear.
 
 <img src="man/figures/fusen_seb_crop_small.jpg" width="25%" />
 
-Similarly, the {fusen} package uses one flat Rmd template, that you fill
+Similarly, the {fusen} package uses a flat Rmd template, that you fill
 in a specific way so that at the end, you can magically `inflate()` it
 to let a nice package appear.
 
