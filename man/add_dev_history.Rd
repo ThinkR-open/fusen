@@ -35,16 +35,14 @@ processes
 \code{add_flat_template(template = "teaching")}
 }
 \examples{
-\dontrun{
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
 dir.create(dummypackage)
 
-# Add
-add_dev_history(pkg = dummypackage, name = "teaching")
+# Add - Use `add_flat_template()` instead
+add_flat_template(template = "teaching", pkg = dummypackage)
 
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
-}
 }
