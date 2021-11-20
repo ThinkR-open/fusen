@@ -7,7 +7,9 @@ editor_options:
 
 All commands that you use to use when developing packages...
 
-# First time just after creating the package
+# First time just after creating the project
+
+- Fill the following chunk to create the DESCRIPTION of your package
 
 ```{r description, eval=FALSE}
 # Describe your package
@@ -30,7 +32,7 @@ usethis::use_mit_license("Sébastien Rochette")
 
 ```{r}
 usethis::use_git()
-# Deal classical files to ignore
+# Deal with classical files to ignore
 usethis::git_vaccinate()
 ```
 
@@ -45,7 +47,8 @@ usethis::use_code_of_conduct("contact@fake.com")
 usethis::use_news_md()
 ```
 
-> From now, you will need to "inflate" your package at least once to be able to use the following commands. Let's go to your flat template, and come back here later if/when needed.
+**From now, you will need to "inflate" your package at least once to be able to use the following commands. Let's go to your flat template, and come back here later if/when needed.**
+
 
 # Package development tools
 ## Use once

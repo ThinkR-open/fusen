@@ -4,11 +4,10 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
-
   # More complicated example for tests
   testfile <- "tests-templates/dev-template-tests.Rmd"
   file.copy(
@@ -16,8 +15,10 @@ usethis::with_project(dummypackage, {
     flat_file,
     overwrite = TRUE
   )
-  inflate(pkg = dummypackage, rmd = flat_file,
-          name = "Get started", check = FALSE)
+  suppressMessages(
+    inflate(pkg = dummypackage, rmd = flat_file,
+            name = "Get started", check = FALSE)
+  )
 
   test_that("inflate() worked correctly", {
     # R files

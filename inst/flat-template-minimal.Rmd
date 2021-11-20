@@ -1,5 +1,5 @@
 ---
-title: "dev_history.Rmd empty"
+title: "flat_template.Rmd empty"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -10,39 +10,29 @@ library(testthat)
 ```
 
 <!--
-# Description of your package
-
-This will fill the description of your package.
---> 
-
-```{r description, eval=FALSE}
-# Describe your package
-fusen::fill_description(
-  fields = list(
-    Title = "Build A Package From Rmarkdown file",
-    Description = "Use Rmarkdown First method to build your package. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
-    `Authors@R` = c(
-      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
-      person(given = "ThinkR", role = "cph")
-    )
-  )
-)
-# Define License with use_*_license()
-usethis::use_mit_license("Sébastien Rochette")
-```
+ You need to run the 'description' chunk in the '0-dev_history.Rmd' file before continuing your code there.
+-->
 
 # My function
 
-```{r function-1}
-
+```{r function-fun}
+#' Title
+#'
+#' @return 1
+#' @export
+#'
+#' @examples
+fun <- function() {
+  1
+}
 ```
 
-```{r examples-1}
-
+```{r examples-fun}
+fun()
 ```
 
-```{r tests-1}
-test_that("my_function works properly", {
+```{r tests-fun}
+test_that("fun works", {
 
 })
 ```
@@ -51,15 +41,5 @@ test_that("my_function works properly", {
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(rmd = "dev/dev_history.Rmd")
+fusen::inflate(rmd = "dev/flat_template.Rmd", name = "Go further")
 ```
-
-<!-- # Inflate your package -->
-
-<!-- You're one inflate from paper to box. -->
-<!-- Build your package from this very Rmd using `fusen::inflate()` -->
-
-<!-- - Verify your `"DESCRIPTION"` file has been updated -->
-<!-- - Verify your function is in `"R/"` directory -->
-<!-- - Verify your test is in `"tests/testthat/"` directory -->
-<!-- - Verify this Rmd appears in `"vignettes/"` directory -->

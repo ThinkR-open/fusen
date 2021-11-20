@@ -96,10 +96,10 @@ add_flat_template <- function(
       gsub("<my_package_name>", basename(pkg),
            lines_template[grepl("<my_package_name>", lines_template)])
     
-    # Change dev_history file name
-    lines_template[grepl("dev_history.Rmd", lines_template)] <-
-      gsub("dev_history.Rmd", dev_name,
-           lines_template[grepl("dev_history.Rmd", lines_template)])
+    # Change flat_template file name
+    lines_template[grepl("flat_template.Rmd", lines_template)] <-
+      gsub("flat_template.Rmd", dev_name,
+           lines_template[grepl("flat_template.Rmd", lines_template)])
     
     cat(enc2utf8(lines_template), file = dev_file_path, sep = "\n")
   }
@@ -127,9 +127,9 @@ add_flat_template <- function(
   # .Rbuildignore
   # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
-    lines <- c(paste0("^", basename(dev_dir), "/$"), "^\\.here$")
+    lines <- c(paste0("^", basename(dev_dir), "$"), "^\\.here$")
   } else {
-    lines <- c(paste0("^", basename(dev_dir), "/$"))
+    lines <- c(paste0("^", basename(dev_dir), "$"))
   }
   
   buildfile <- normalizePath(file.path(pkg, ".Rbuildignore"), mustWork = FALSE)
