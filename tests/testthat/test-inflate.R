@@ -1,5 +1,5 @@
 # Create a new project
-dummypackage <- tempfile("dummypackage")
+dummypackage <- tempfile("inflate.tests")
 dir.create(dummypackage)
 
 # {fusen} steps
@@ -481,7 +481,7 @@ usethis::with_project(dummypackage, {
 unlink(dummypackage, recursive = TRUE)
 
 # Test checks all templates with inflate dots (...) ----
-alltemp <- tempfile("all_templates")
+alltemp <- tempfile("all.templates.inflate")
 dir.create(alltemp)
 
 for (pkgname in c("full", "teaching")) {
@@ -493,7 +493,7 @@ for (pkgname in c("full", "teaching")) {
   flat_file <- dev_file[grepl("flat_", dev_file)]
 
   usethis::with_project(path_foosen, {
-
+# browser()
     # Do not check inside check if on CRAN
     skip_on_os(os = c("windows", "solaris"))
 

@@ -5,8 +5,8 @@ pkg_name <- basename(dummypackage)
 
 # Deprecated ----
 test_that("add_dev_history is deprecated but works correctly", {
-  dev_file_path <- expect_warning(
-    suppressMessages(
+  expect_warning(
+    dev_file_path <- suppressMessages(
       add_dev_history(pkg = dummypackage, open = FALSE)
     ),
     regexp = "Deprecated"

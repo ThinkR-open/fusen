@@ -190,7 +190,7 @@ add_flat_template("add")
 # do not edit by hand
 
 # Create a new project
-dummypackage <- tempfile(pattern = "dummy")
+dummypackage <- tempfile(pattern = "add.flat.template")
 dir.create(dummypackage)
 pkg_name <- basename(dummypackage)
 
@@ -198,7 +198,7 @@ pkg_name <- basename(dummypackage)
 test_that("add_flat_template adds flat_template.Rmd and co.", {
   dev_file_path <- expect_error(add_flat_template(pkg = dummypackage, open = FALSE), 
                regexp = NA)
-  flat_file <- dev_file_path[grepl("flat", dev_file_path)]
+  flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
   
   expect_true(all(file.exists(dev_file_path)))
   expect_true(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
@@ -224,7 +224,7 @@ unlink(dummypackage, recursive = TRUE)
 
 # Test with .Rproj and no .here, it works ----
 # Create a new project
-dummypackage2 <- tempfile(pattern = "dummy2")
+dummypackage2 <- tempfile(pattern = "rproj.nohere")
 dir.create(dummypackage2)
 cat("", file = file.path(dummypackage2, 'dummy.Rproj'))
 
@@ -245,7 +245,7 @@ test_that("add_flat_template works with .Rproj and no .here", {
 unlink(dummypackage2, recursive = TRUE)
 
 # Test "dev_history" template ----
-dummypackage <- tempfile(pattern = "dummy")
+dummypackage <- tempfile(pattern = "dev.history.template")
 dir.create(dummypackage)
 # Add
 test_that("add dev_history template works", {
@@ -281,7 +281,7 @@ unlink(dummypackage)
   
 # Add failed with malformed package name ----
 # Create a new project
-dummypackage3 <- tempfile(pattern = "dummy_3")
+dummypackage3 <- tempfile(pattern = "malformed_pkg")
 dir.create(dummypackage3)
 cat("", file = file.path(dummypackage3, 'dummy.Rproj'))
 
@@ -301,7 +301,7 @@ unlink(dummypackage3, recursive = TRUE)
 all_templates <- c("full", "minimal", "additional", "teaching") # "dev_history"
 
 for (template in all_templates) {
-  dummypackage4 <- tempfile(pattern = "dummy4")
+  dummypackage4 <- tempfile(pattern = "all.templates.knit")
   dir.create(dummypackage4)
   # Add
   dev_file_path <- add_flat_template(pkg = dummypackage4, template = template, open = FALSE)
@@ -346,7 +346,7 @@ for (template in all_templates) {
 
 
 # Test other names works ----
-dummypackage <- tempfile(pattern = "dummy")
+dummypackage <- tempfile(pattern = "other.names")
 dir.create(dummypackage)
 # Add
 test_that("Other flat_name works", {
