@@ -21,8 +21,7 @@
 #'
 #' @examples
 #' # Create a new project
-#' tmpdir <- tempdir()
-#' dummypackage <- file.path(tmpdir, "dummypackage")
+#' dummypackage <- tempfile("dummypackage")
 #' dir.create(dummypackage)
 #'
 #' # Add - Use `add_flat_template()` instead

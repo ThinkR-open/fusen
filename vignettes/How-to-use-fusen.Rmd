@@ -80,8 +80,7 @@ an_example
 
 ```{r example}
 # Create a new project
-tmpdir <- tempdir()
-dummypackage <- file.path(tmpdir, "dummypackage")
+dummypackage <- tempfile("dummypackage")
 dir.create(dummypackage)
 
 # Add an additional dev template
@@ -95,8 +94,7 @@ unlink(dummypackage, recursive = TRUE)
 
 ```{r example-2}
 # Create a new project
-tmpdir <- tempdir()
-dummypackage <- file.path(tmpdir, "dummypackage")
+dummypackage <- tempfile("dummypackage")
 dir.create(dummypackage)
 
 fill_description(
@@ -151,8 +149,7 @@ After that, you can:
 _This code creates a package in a temporary directory. You will most probably be inside your project when ready to inflate, hence there will be no need to specify the directory of the package. This code is here as a reproducible example for you to test._
 ```{r example-3, eval = FALSE}
 # Create a new project
-tmpdir <- tempdir()
-dummypackage <- file.path(tmpdir, "dummypackage")
+dummypackage <- tempfile("dummypackage")
 dir.create(dummypackage)
 
 # {fusen} steps

@@ -47,8 +47,7 @@ instead of additional.
 }
 \examples{
 # Create a new project
-tmpdir <- tempdir()
-dummypackage <- file.path(tmpdir, "dummypackage")
+dummypackage <- tempfile("dummypackage")
 dir.create(dummypackage)
 
 # Add

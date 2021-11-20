@@ -19,4 +19,4 @@ test_that("add_dev_history is deprecated but works correctly", {
   expect_true(file.exists(file.path(dummypackage, ".here")))
 
 })
-
+unlink(dummypackage, recursive = TRUE)
