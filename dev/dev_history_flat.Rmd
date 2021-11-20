@@ -258,9 +258,10 @@ test_that("add dev_history template works", {
       # Extract and test the description chunk
       dev_lines <- readLines(dev_file_path)
       # Change path of project
-      dev_lines <- gsub("here::here()",
-                        paste0('"', dummypackage, '"'), dev_lines, 
-                        fixed = TRUE)
+      dev_lines <- gsub(
+        "here::here()",
+        paste0('"', normalizePath(dummypackage), '"'), dev_lines, 
+        fixed = TRUE)
       dev_parse <- parsermd::parse_rmd(dev_lines)
       desc_code <- tempfile("desc")
       parsermd::rmd_select(dev_parse, "description")[[1]] %>% 
@@ -269,7 +270,6 @@ test_that("add dev_history template works", {
       # Execute code
       expect_error(source(desc_code), regexp = NA)
     })
-    # expect_error(source(desc_code), regexp = NA)
     expect_true(file.exists(file.path(dummypackage, "DESCRIPTION")))
     expect_true(file.exists(file.path(dummypackage, "LICENSE")))
     expect_true(file.exists(file.path(dummypackage, "LICENSE.md")))
