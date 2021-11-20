@@ -77,7 +77,7 @@ create_fusen <- function(
     open = FALSE,
     dev_dir = "dev"
   )
-  cli::cli_alert_success(paste("Added", dev_file))
+  cli::cli_alert_success(paste("Added", paste(dev_file, collapse = ", ")))
 
   ## Open new project if function is called from Rstudio console
   ## Rstudio project wizard will spontaneously open the new project

@@ -7,6 +7,7 @@
 
 ## Major changes
 
+* Improve documentation included in flat templates to reflect changes in using dev_history file
 * Add Rstudio Addin to insert chunks for new function (@ColinFay)
 * Deal with `\dontrun{}` in example chunks
 * Allow short names for chunks: dev, fun, ex, test
