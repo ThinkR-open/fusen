@@ -13,6 +13,8 @@
 #'
 #' @importFrom cli cli_alert_warning cli_alert_danger cat_rule cli_alert_success
 #' @export
+#' @return Path to dev and flat files. Side-effect: Create a new directory to build
+#' a package
 #' @examples
 #' my_path <- tempfile("mypkg")
 #' create_fusen(path = my_path, template = "full", open = FALSE)

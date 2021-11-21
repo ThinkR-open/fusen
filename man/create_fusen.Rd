@@ -23,6 +23,10 @@ create_fusen(
 
 \item{with_git}{Logical. Should git be initialized in the newly created project ?}
 }
+\value{
+Path to dev and flat files. Side-effect: Create a new directory to build
+a package
+}
 \description{
 Create a new fusen project
 }

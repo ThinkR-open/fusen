@@ -193,6 +193,7 @@ devtools::check_rhub()
 rhub::check_on_windows(check_args = "--force-multiarch")
 rhub::check_on_solaris()
 rhub::check(platform = "debian-clang-devel")
+rhub::check_for_cran(show_status = FALSE)
 
 # Run locally in Docker
 # docker pull rhub/debian-clang-devel
@@ -227,7 +228,7 @@ usethis::use_version(which = c("patch", "minor", "major", "dev")[1])
 # Verify you're ready for release, and release
 devtools::release()
 
-##############
+# TODO #############
 # - [x] Find which version of yaml fails the special character
 # - [x] Change for yaml.load or remove éè
 # - Add autosave all files when inflate (see golem)
