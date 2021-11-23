@@ -1,0 +1,45 @@
+---
+title: "flat_template.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+<!--
+ You need to run the 'description' chunk in the '0-dev_history.Rmd' file before continuing your code there.
+-->
+
+# My function
+
+```{r function-fun}
+#' Title
+#'
+#' @return 1
+#' @export
+#'
+#' @examples
+fun <- function() {
+  1
+}
+```
+
+```{r examples-fun}
+fun()
+```
+
+```{r tests-fun}
+test_that("fun works", {
+
+})
+```
+
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(rmd = "dev/flat_template.Rmd", name = "Go further")
+```

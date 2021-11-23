@@ -33,25 +33,24 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #'
 #' @examples
 #' # Create a new project
-#' tmpdir <- tempdir()
-#' dummypackage <- file.path(tmpdir, "dummypackage")
+#' dummypackage <- tempfile("dummypackage")
 #' dir.create(dummypackage)
 #'
 #' # {fusen} steps
+#' dev_file <- add_flat_template(template = "full", pkg = dummypackage, overwrite = TRUE)
+#' flat_file <- dev_file[grepl('flat', dev_file)]
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-#' dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
-#' inflate(pkg = dummypackage, rmd = dev_file, name = "Exploration of my Data", check = FALSE)
+#' inflate(pkg = dummypackage, rmd = flat_file, name = "Exploration of my Data", check = FALSE)
 #'
 #' # Explore directory of the package
 #' # browseURL(dummypackage)
 #'
 #' # Try pkgdown build
+#' # usethis::use_pkgdown()
 #' # pkgdown::build_site(dummypackage)
-#' # usethis::use_build_ignore("docs")
-#' # usethis::use_git_ignore("docs")
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
-inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
+inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
                     name = "Get started", check = TRUE, document = TRUE,
                     overwrite = "ask", ...) {
 
@@ -100,7 +99,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
   }
 
   if (!file.exists(rmd_path)) {
-    stop(rmd, " does not exists, please use fusen::add_dev_history() to create it.")
+    stop(rmd, " does not exists, please use fusen::add_flat_template() to create it.")
   }
 
   # Are you sure ?
@@ -167,7 +166,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "dev_history.Rmd"),
 
 #' Create function code, doc and tests ----
 #' @param parsed_tbl tibble of a parsed Rmd
-#' @param fun_code tibble as issued from \code{get_functions}
+#' @param fun_code tibble as issued from `get_functions`
 #' @param pkg Path to package
 #' @importFrom stats na.omit
 #' @noRd

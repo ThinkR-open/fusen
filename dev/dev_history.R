@@ -13,8 +13,8 @@ usethis::use_build_ignore("docs")
 usethis::use_build_ignore("pkgdown")
 
 usethis::use_lifecycle_badge("Experimental")
-
 usethis::git_vaccinate()
+usethis::use_testthat(edition = 3)
 
 # description ----
 library(desc)
@@ -62,6 +62,8 @@ usethis::use_github()
 
 # Documentation ----
 usethis::use_data_raw()
+usethis::use_roxygen_md()
+roxygen2md::roxygen2md(scope = "simple")
 # _Readme
 usethis::use_readme_rmd()
 # _News
@@ -70,7 +72,7 @@ usethis::use_news_md()
 thinkridentity::create_vignette_thinkr("aa-data-get-started")
 usethis::use_vignette("ab-model")
 devtools::build_vignettes()
-fusen::add_dev_history(open = TRUE)
+fusen::add_flat_template("add", open = TRUE)
 # contributing
 usethis::use_tidy_contributing()
 usethis::use_build_ignore("CONTRIBUTING.md")
@@ -191,6 +193,7 @@ devtools::check_rhub()
 rhub::check_on_windows(check_args = "--force-multiarch")
 rhub::check_on_solaris()
 rhub::check(platform = "debian-clang-devel")
+rhub::check_for_cran(show_status = FALSE)
 
 # Run locally in Docker
 # docker pull rhub/debian-clang-devel
@@ -225,7 +228,7 @@ usethis::use_version(which = c("patch", "minor", "major", "dev")[1])
 # Verify you're ready for release, and release
 devtools::release()
 
-##############
+# TODO #############
 # - [x] Find which version of yaml fails the special character
 # - [x] Change for yaml.load or remove éè
 # - Add autosave all files when inflate (see golem)

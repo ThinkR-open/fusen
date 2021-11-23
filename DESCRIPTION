@@ -24,13 +24,14 @@ Imports:
     glue,
     here (>= 1.0.0),
     magrittr,
-    parsermd,
+    parsermd (>= 0.1.0),
     rcmdcheck,
     roxygen2,
     stats,
     stringr,
     tibble,
     tidyr,
+    tools,
     usethis (>= 1.5.0),
     utils
 Suggests: 
@@ -39,10 +40,11 @@ Suggests:
     rmarkdown,
     rstudioapi,
     spelling,
-    testthat,
+    testthat (>= 3.0.0),
     withr
 VignetteBuilder: 
     knitr
+Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
 LazyData: true

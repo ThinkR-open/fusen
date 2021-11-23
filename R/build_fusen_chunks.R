@@ -1,3 +1,5 @@
+# do not edit by hand
+
 #' Build fusen chunks
 #' 
 #' Internal tool to build the chunk text

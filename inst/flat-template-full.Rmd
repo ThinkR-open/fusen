@@ -1,0 +1,189 @@
+---
+title: "flat_template.Rmd for working package"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+<!-- Run this 'development' chunk -->
+<!-- Store every call to library() that you need to explore your functions -->
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+<!--
+ You need to run the 'description' chunk in the '0-dev_history.Rmd' file before continuing your code there.
+
+If it is the first time you use {fusen}, after 'description', you can directly run the last chunk of the present file with inflate() inside.
+--> 
+
+# Include some data examples in your package
+
+<!-- 
+ Store your dataset in a directory named "inst/" at the root of your project.
+ Use it for your tests in this Rmd thanks to `pkgload::load_all()` to make it available
+and `system.file()` to read it in your examples.
+-->
+
+```{r development-2}
+# Run all this chunk in the console directly
+# Create "inst/" directory
+dir.create(here::here("inst"))
+
+# Example dataset
+file.copy(system.file("nyc_squirrels_sample.csv", package = "fusen"), here::here("inst"))
+# Make your dataset file available to the current Rmd
+pkgload::load_all(path = here::here(), export_all = FALSE)
+
+# You will be able to read your example data file in each of your function examples and tests as follows
+datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
+nyc_squirrels <- read.csv(datafile)
+
+nyc_squirrels
+```
+
+
+# The first function of the package: Calculate the median of a vector
+
+<!--
+Create a chunk for the core of the function
+
+- The chunk needs to be named `function` at least
+- It contains the code of a documented function
+- The chunk can also be named `function-my_median` to make it easily
+findable in your Rmd
+- Let the `@examples` part empty, and use the next `examples` chunk instead
+
+After inflating the template
+
+-  This function code will be added in a new file in the "R/" directory
+-->
+
+```{r function}
+#' My median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+my_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+<!--
+Create a chunk with an example of use for your function
+
+- The chunk needs to be named `examples` at least
+- It contains working examples of your function
+- The chunk is better be named `examples-my_median` to be handled
+correctly when inflated as a vignette
+
+After inflating the template
+
+-  This example will be added in the '@examples' part of our function above in the "R/" directory
+- This example will be added in the vignette created from this Rmd template
+-->
+
+```{r examples}
+my_median(1:12)
+```
+
+<!--
+Create a chunk with a test of use for your function
+
+- The chunk needs to be named `tests` at least
+- It contains working tests of your function
+- The chunk is better be named `tests-my_median` to be handled
+correctly when inflated as a vignette
+
+After inflating the template
+
+-  This test code will be added in the "tests/testthat/" directory
+-->
+
+```{r tests}
+test_that("my_median works properly and show error if needed", {
+  expect_true(my_median(1:12) == 6.5)
+  expect_error(my_median("text"))
+})
+```
+
+# Calculate the mean of a vector
+
+<!--
+There can be other functions, examples and tests in your flat template.
+Each of them will be inflated in a different file, provided that there is a level-1 or level-2 section title to separate from previous functions.
+-->
+
+## Use sub-functions in the same chunk
+
+```{r function-my_other_median}
+#' My Other median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+my_other_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  sub_median(x, na.rm =na.rm)
+}
+
+#' Core of the median not exported
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+sub_median <- function(x, na.rm = TRUE) {
+  stats::median(x, na.rm)
+}
+```
+
+```{r examples-my_other_median}
+my_other_median(1:12)
+```
+
+```{r tests-my_other_median}
+test_that("my_median works properly and show error if needed", {
+  expect_true(my_other_median(1:12) == 6.5)
+  expect_error(my_other_median("text"))
+})
+```
+
+<!--
+# There can be development actions
+
+Create a chunk with 'development' actions
+
+- The chunk needs to be named `development` or `dev`
+- It contains functions that are used for package development only
+- Note that you may want to store most of these functions in the 0-dev_history.Rmd file
+
+These are only included in the present flat template file, their content will not be part of the package anywhere else.
+-->
+
+```{r development-1, eval=FALSE}
+# Keep eval=FALSE to avoid infinite loop in case you hit the knit button
+# Execute in the console directly
+fusen::inflate(rmd = "dev/flat_template.Rmd", name = "Get started")
+```
+
+
+# Inflate your package
+
+You're one inflate from paper to box.
+Build your package from this very Rmd using `fusen::inflate()`
+
+- Verify your `"DESCRIPTION"` file has been updated
+- Verify your function is in `"R/"` directory
+- Verify your test is in `"tests/testthat/"` directory
+- Verify this Rmd appears in `"vignettes/"` directory

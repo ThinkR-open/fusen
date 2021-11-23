@@ -1,41 +1,40 @@
 #' Create a new fusen project
 #'
 #' @param path Character. Path where to create the new fusen project.
-#' @param name Character. Name of the template to be used among "full", "minimal" and "teaching".
+#' @param template Character. Name of the template to be used among "full", "minimal" and "teaching".
 #' @param open Logical. Should the newly created project be opened ?
 #' @param overwrite Logical. Allow to overwrite 'dev/' files if path exists.
-#' @param with_git Logical. Should git be initialised in the newly created project ?
+#' @param with_git Logical. Should git be initialized in the newly created project ?
 #'
 #' @details
-#' See \code{\link{add_dev_history}} for details about the different options for `name`.
+#' See \code{\link{add_flat_template}} for details about the different options for `template`.
 #' Template "additional" is not available here as it is meant to be used with an already
 #' existing fusen.
 #'
 #' @importFrom cli cli_alert_warning cli_alert_danger cat_rule cli_alert_success
 #' @export
+#' @return Path to dev and flat files. Side-effect: Create a new directory to build
+#' a package
 #' @examples
 #' my_path <- tempfile("mypkg")
-#' create_fusen(path = my_path, name = "full", open = FALSE)
+#' create_fusen(path = my_path, template = "full", open = FALSE)
 create_fusen <- function(
   path,
-  name = c("full", "minimal", "teaching"),
+  template = c("full", "minimal", "teaching"),
   open = TRUE,
   overwrite = FALSE,
   with_git = FALSE
 ) {
 
   path <- normalizePath(path, mustWork = FALSE)
-  name <- match.arg(name)
+  template <- match.arg(template)
 
   if (dir.exists(path)){
     cli::cli_alert_warning(
       paste(
-        "The path:", path, "already exists."#,
-        # "Continuing will overwrite dev/dev_history.Rmd.\n",
-        # "Are you sure you want to continue ?"
+        "The path:", path, "already exists."
       )
     )
-    # overwrite <- utils::menu(c("Yes", "No")) == 1
     if (!isTRUE(overwrite)) {
       cli::cli_alert_danger(
         paste(
@@ -71,16 +70,16 @@ create_fusen <- function(
     }
   }
 
-  ## Add dev/dev_history.Rmd in newly created project
-  cli::cat_rule("Adding dev/dev_history.Rmd")
-  add_dev_history(
+  ## Add dev/flat_template.Rmd in newly created project
+  cli::cat_rule(glue::glue("Adding dev/flat_{template}.Rmd"))
+  dev_file <- add_flat_template(
+    template = template,
     pkg = path,
     overwrite = TRUE,
     open = FALSE,
-    dev_dir = "dev",
-    name = name
+    dev_dir = "dev"
   )
-  cli::cli_alert_success("Added dev/dev_history.Rmd")
+  cli::cli_alert_success(paste("Added", paste(dev_file, collapse = ", ")))
 
   ## Open new project if function is called from Rstudio console
   ## Rstudio project wizard will spontaneously open the new project
@@ -95,7 +94,7 @@ create_fusen <- function(
     utils::browseURL(path)
   }
 
-  return(invisible(path))
+  return(invisible(dev_file))
 }
 
 
@@ -103,13 +102,13 @@ create_fusen <- function(
 #' @noRd
 create_fusen_gui <- function(
   path,
-  name,
+  template,
   with_git
 ) {
 
   create_fusen(
     path = file.path(getwd(), path),
-    name = name,
+    template = template,
     open = FALSE, # Project opening is done spontaneously by Rstudio Project Wizard
     with_git = with_git
   )

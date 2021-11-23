@@ -6,7 +6,7 @@
 \usage{
 inflate(
   pkg = ".",
-  rmd = file.path("dev", "dev_history.Rmd"),
+  rmd = file.path("dev", "flat_full.Rmd"),
   name = "Get started",
   check = TRUE,
   document = TRUE,
@@ -39,22 +39,21 @@ Inflate Rmd to package
 }
 \examples{
 # Create a new project
-tmpdir <- tempdir()
-dummypackage <- file.path(tmpdir, "dummypackage")
+dummypackage <- tempfile("dummypackage")
 dir.create(dummypackage)
 
 # {fusen} steps
+dev_file <- add_flat_template(template = "full", pkg = dummypackage, overwrite = TRUE)
+flat_file <- dev_file[grepl('flat', dev_file)]
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_dev_history(pkg = dummypackage, overwrite = TRUE)
-inflate(pkg = dummypackage, rmd = dev_file, name = "Exploration of my Data", check = FALSE)
+inflate(pkg = dummypackage, rmd = flat_file, name = "Exploration of my Data", check = FALSE)
 
 # Explore directory of the package
 # browseURL(dummypackage)
 
 # Try pkgdown build
+# usethis::use_pkgdown()
 # pkgdown::build_site(dummypackage)
-# usethis::use_build_ignore("docs")
-# usethis::use_git_ignore("docs")
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 }

@@ -1,9 +1,9 @@
 Binding: create_fusen_gui
 Title: Package using {fusen}
-OpenFiles: dev/dev_history.Rmd
+OpenFiles: dev/*
 Icon: fusen.png
 
-Parameter: name
+Parameter: template
 Widget: SelectInput
 Label: Choose a {fusen} template
 Fields: full, minimal, teaching
