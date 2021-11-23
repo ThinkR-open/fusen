@@ -133,7 +133,7 @@
 <blockquote>
 <p>If you know how to create a Rmarkdown file, then you know how to build a package.</p>
 </blockquote>
-<p>Indeed, this {fusen} package is a real-world example of {fusen} use as it was itself created from the <code>"dev_history.Rmd"</code> templates available in <code>"dev/"</code> folder in its GitHub repository.</p>
+<p>Indeed, this {fusen} package is a real-world example of {fusen} use as it was itself created from the “dev_history” flat templates available in <code>"dev/"</code> folder in its GitHub repository.</p>
 <div id="installation" class="section level2">
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
@@ -153,12 +153,14 @@
 <li>Create a new directory / new project with
 <ul>
 <li>RStudio template: File &gt; New Project &gt; New directory &gt; Package using {fusen}</li>
-<li>Command line: <code>create_fusen("path/to/new/project")</code>
+<li>Choose the template <code>teaching</code> the first time to see how {fusen} works,</li>
+<li>Choose the template <code>full</code> the second time to answer most of your questions<br><img src="reference/figures/create_fusen_rstudio.png" width="50%">
 </li>
+<li><em>Or command line: <code>create_fusen("path/to/new/project", template = "teaching")</code></em></li>
 </ul>
 </li>
-<li>Open the “dev/dev_history.Rmd” template</li>
-<li>In the Rmd template, run the first chunks asking to describe your package and license it
+<li>Open the “dev/flat_teaching.Rmd” to start setting up the package</li>
+<li>In this flat Rmd template, run the first chunks named <code>description</code> asking to describe your package and license it
 <ul>
 <li>They look like these lines of code:</li>
 </ul>
@@ -174,15 +176,15 @@
 <li><em>For the first time, you can let the code as is, this is already the content for a working package</em></li>
 </ul>
 </li>
-<li>Run the following code to <strong>transform the template Rmd as a package</strong>
+<li>Run the following code to <strong>transform the flat Rmd as an inflated package</strong>
 <ul>
 <li>This will open the vignette created</li>
 </ul>
 </li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/inflate.html">inflate</a></span><span class="op">(</span>rmd <span class="op">=</span> <span class="va">dev_file</span>, name <span class="op">=</span> <span class="st">"my-functionality"</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-<p><strong>That’s it! You built a package!</strong></p>
+<code class="sourceCode R"><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/inflate.html">inflate</a></span><span class="op">(</span>rmd <span class="op">=</span> <span class="st">"dev/flat_teaching.Rmd"</span>, name <span class="op">=</span> <span class="st">"get-started"</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<p><strong>That’s it! You built a package! A documented and tested package!</strong></p>
 <p>Let’s test it now:</p>
 <ul>
 <li>Install your package locally</li>
@@ -204,32 +206,31 @@
 </ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Build {pkgdown} to test it</span>
+<span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_pkgdown.html">use_pkgdown</a></span><span class="op">(</span><span class="op">)</span>
 <span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span><span class="op">(</span><span class="op">)</span>
-<span class="co"># &gt; See references and articles</span>
-<span class="co"># Hide output from package and git</span>
-<span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_build_ignore.html">use_build_ignore</a></span><span class="op">(</span><span class="st">"docs"</span><span class="op">)</span>
-<span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_git_ignore.html">use_git_ignore</a></span><span class="op">(</span><span class="st">"docs"</span><span class="op">)</span></code></pre></div>
+<span class="co"># &gt; See references and articles</span></code></pre></div>
 </div>
 <div id="description-of-the-rmd-template" class="section level2">
 <h2 class="hasAnchor">
 <a href="#description-of-the-rmd-template" class="anchor"></a>Description of the Rmd template</h2>
 <p>As I said earlier, this is all about using the correct split and name for your chunks.</p>
 <ul>
-<li>Follow the <code>"dev/dev_history.Rmd"</code> template to write your documentation and build your functions and test your examples.
+<li>Follow the <code>"dev/flat_template.Rmd"</code> template to write your documentation and build your functions and test your examples.
 <ul>
 <li>Chunk named <code>function</code> gets the code of a function</li>
 <li>Chunk named <code>example</code> gets the code for examples of using the function. This will be used for function <code>@examples</code> and will be kept for the vignette.
 <ul>
-<li>As chunk names should be unique in the future vignette, you can add numbers like <code>example-1</code>, <code>example-2</code>, …</li>
+<li>As chunk names should be unique in the future vignette, you can add function names like <code>example-myfunction</code>, <code>example-myotherfunction</code>, …</li>
 </ul>
 </li>
 <li>Chunk named <code>tests</code> gets the code for unit testing</li>
 <li>Chunk named <code>development</code> gets the code for development purposes, usually only used once like {usethis} functions</li>
 </ul>
 </li>
-<li>Inflate the template to transform it as a package with functions, unit tests and the current Rmd transformed as a vignette. And check.</li>
+<li>
+<strong>Inflate</strong> the flat Rmd template to transform it as a package with functions, unit tests and the current Rmd transformed as a vignette. And check.</li>
 </ul>
-<p><em>Note that the <code>"dev_history.Rmd"</code> template is indeed a working example.</em></p>
+<p><em>Note that the <code>"flat*.Rmd"</code> files created with templates <code>full</code> and <code>teaching</code> are indeed working examples that can directly be inflated.</em></p>
 <blockquote>
 <p>You can also have a look at <a href="https://github.com/statnmap/squirrels.fusen">{squirrels.fusen}</a> that has been built to present the method. Follow the commits: <a href="https://github.com/statnmap/squirrels.fusen/commits/main" class="uri">https://github.com/statnmap/squirrels.fusen/commits/main</a></p>
 </blockquote>
@@ -240,9 +241,9 @@
 <p>There is a dedicated vignette to answer this: <a href="https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html" class="uri">https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html</a></p>
 <ul>
 <li>
-<strong>Option 1</strong>: Modifications are only added to the “dev_history.Rmd” file, which then is inflated to update all packages files</li>
+<strong>Option 1</strong>: Modifications are only added to the “flat_template.Rmd” file, which then is inflated to update all packages files</li>
 <li>
-<strong>Option 2</strong>: Modifications are realized in the package files directly, and the “dev_history.Rmd” file must be protected from any use.</li>
+<strong>Option 2</strong>: Modifications are realized in the package files directly, and the “flat_template.Rmd” file must be protected from any use.</li>
 </ul>
 <blockquote>
 <p>Advice : Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place</p>
@@ -252,15 +253,15 @@
 <h2 class="hasAnchor">
 <a href="#who-is-fusen-for" class="anchor"></a>Who is {fusen} for?</h2>
 <p>When you write a Rmarkdown file (or a vignette), you create a documentation for your analysis (or package). Inside, you write some functions, you test your functions with examples and you maybe write some unit tests to verify the outputs. This is even more true if you follow this guide : <a href="https://rtask.thinkr.fr/when-development-starts-with-documentation/">‘Rmd first’: When development starts with documentation</a> After that, you need to move your functions and scripts in the correct place. Let {fusen} do that for you!</p>
-<p>{fusen} is first addressed to people who never wrote a package before but know how to write a Rmarkdown file. Understanding package infrastructure and correctly settling it can be frightening. This package may help them do the first step!</p>
-<p>{fusen} is also addressed to more advanced developers who are fed up with switching between R files, tests files, vignettes. In particular, when changing arguments of a function, we need to change examples, unit tests in multiple places. Here, you can do it in one place. No risk to forget one.</p>
+<p><em>{fusen} is first addressed to people who never wrote a package before</em> but know how to write a Rmarkdown file. Understanding package infrastructure and correctly settling it can be frightening. This package may help them do the first step!</p>
+<p><em>{fusen} is also addressed to more advanced developers who are fed up with switching</em> between R files, tests files, vignettes. In particular, when changing arguments of a function, we need to change examples, unit tests in multiple places. Here, you can do it in one place. No risk to forget one. Think also about code review: everything related to one function is at the same place.</p>
 </div>
 <div id="why-is-this-package-named-fusen-" class="section level2">
 <h2 class="hasAnchor">
 <a href="#why-is-this-package-named-fusen-" class="anchor"></a>Why is this package named {fusen} ?</h2>
-<p>A fusen is an origami. It is a piece of paper that you fold in a specific way so that at the end, you can magically inflate it to let a nice box appear.</p>
+<p>A fusen is an origami. It is a flat piece of paper that you fold in a specific way so that at the end, you can magically inflate it to let a nice box appear.</p>
 <p><img src="reference/figures/fusen_seb_crop_small.jpg" width="25%"></p>
-<p>Similarly, the {fusen} package uses one page of Rmd, that you fill in a specific way so that at the end, you can magically <code><a href="reference/inflate.html">inflate()</a></code> it to let a nice package appear.</p>
+<p>Similarly, the {fusen} package uses a flat Rmd template, that you fill in a specific way so that at the end, you can magically <code><a href="reference/inflate.html">inflate()</a></code> it to let a nice package appear.</p>
 <details><summary> Click here to fold your {fusen}… </summary><img src="reference/figures/fusen-fold-origami.gif"></details>
 </div>
 <div id="acknowledgments" class="section level2">
@@ -270,6 +271,7 @@
 <li>Thanks to Deemah who asked me to go further ‘Rmd first’ after my presentation at useR 2019 in Toulouse: <a href="https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf">‘The “Rmd first” method: when projects start with documentation’</a> (Video on Youtube: <a href="https://youtu.be/cB1BCxFbhtk" class="uri">https://youtu.be/cB1BCxFbhtk</a>).</li>
 <li>Thanks to @rundel and its package {parsermd} who helped me get back in this project with ease : <a href="https://github.com/rundel/parsermd" class="uri">https://github.com/rundel/parsermd</a>
 </li>
+<li>Thanks to the <a href="https://rtask.thinkr.fr">ThinkR team</a> who adopted this package for its daily production.</li>
 </ul>
 </div>
 <div id="code-of-conduct" class="section level2">
@@ -317,7 +319,7 @@
 <ul class="list-unstyled">
 <li><a href="https://CRAN.R-project.org/package=fusen"><img src="https://www.r-pkg.org/badges/version/fusen" alt="CRAN status"></a></li>
 <li><a href="https://github.com/ThinkR-open/fusen/actions"><img src="https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/gh/ThinkR-open/fusen"><img src="https://codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg?token=V0HOSAY8WW" alt="codecov test coverage"></a></li>
+<li><a href="https://app.codecov.io/gh/ThinkR-open/fusen"><img src="https://app.codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg?token=V0HOSAY8WW" alt="codecov test coverage"></a></li>
 </ul>
 </div>
 </div>

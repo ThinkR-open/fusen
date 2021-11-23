@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Function reference • fusen</title>
+<title>Add flat Rmd file that drives package development — add_flat_template • fusen</title>
 
 <!-- favicons -->
 <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
@@ -42,7 +42,8 @@
 <link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script>
 
-<meta property="og:title" content="Function reference" />
+<meta property="og:title" content="Add flat Rmd file that drives package development — add_flat_template" />
+<meta property="og:description" content="Add flat Rmd file that drives package development" />
 <meta property="og:image" content="https://thinkr-open.github.io/fusen/logo.png" />
 <meta name="twitter:card" content="summary" />
 
@@ -83,7 +84,7 @@
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-index">
+    <div class="container template-reference-topic">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -151,72 +152,74 @@
       </header>
 
 <div class="row">
-  <div class="contents col-md-9">
+  <div class="col-md-9 contents">
     <div class="page-header">
-      <h1>Reference</h1>
+    <h1>Add flat Rmd file that drives package development</h1>
+    <small class="dont-index">Source: <a href='https://github.com/Thinkr-open/fusen/blob/master/R/add_flat_template.R'><code>R/add_flat_template.R</code></a></small>
+    <div class="hidden name"><code>add_flat_template.Rd</code></div>
     </div>
 
-    <table class="ref-index">
+    <div class="ref-description">
+    <p>Add flat Rmd file that drives package development</p>
+    </div>
 
-    <colgroup>
-      
-      <col class="alias" />
-      <col class="title" />
-    </colgroup>
+    <pre class="usage"><span class='fu'>add_flat_template</span><span class='op'>(</span>
+  template <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"full"</span>, <span class='st'>"minimal"</span>, <span class='st'>"additional"</span>, <span class='st'>"teaching"</span>, <span class='st'>"dev_history"</span><span class='op'>)</span>,
+  pkg <span class='op'>=</span> <span class='st'>"."</span>,
+  dev_dir <span class='op'>=</span> <span class='st'>"dev"</span>,
+  flat_name <span class='op'>=</span> <span class='va'>template</span>,
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
+  open <span class='op'>=</span> <span class='cn'>TRUE</span>
+<span class='op'>)</span></pre>
 
-    <tbody>
-      <tr>
-        <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
-        </th>
-      </tr>
-      
-      
-    </tbody><tbody>
-      
-      
-      <tr>
-        
-        <td>
-          <p><code><a href="add_dev_history.html">add_dev_history()</a></code> </p>
-        </td>
-        <td><p>Add dev_history.Rmd file that drives package development</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="add_flat_template.html">add_flat_template()</a></code> </p>
-        </td>
-        <td><p>Add flat Rmd file that drives package development</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="add_fusen_chunks.html">add_fusen_chunks()</a></code> </p>
-        </td>
-        <td><p>Add <code>{fusen}</code> chunks</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="create_fusen.html">create_fusen()</a></code> </p>
-        </td>
-        <td><p>Create a new fusen project</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="fill_description.html">fill_description()</a></code> </p>
-        </td>
-        <td><p>Fill DESCRIPTION file of the package</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="inflate.html">inflate()</a></code> </p>
-        </td>
-        <td><p>Inflate Rmd to package</p></td>
-      </tr>
-    </tbody>
+    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
+    <table class="ref-arguments">
+    <colgroup><col class="name" /><col class="desc" /></colgroup>
+    <tr>
+      <th>template</th>
+      <td><p>Name of the template to use. See details.</p></td>
+    </tr>
+    <tr>
+      <th>pkg</th>
+      <td><p>Path where to save file</p></td>
+    </tr>
+    <tr>
+      <th>dev_dir</th>
+      <td><p>Name of directory for development Rmarkdown files. Default to "dev".</p></td>
+    </tr>
+    <tr>
+      <th>flat_name</th>
+      <td><p>Name of the file to write in dev.</p></td>
+    </tr>
+    <tr>
+      <th>overwrite</th>
+      <td><p>Whether to overwrite existing flat Rmd template file with same name</p></td>
+    </tr>
+    <tr>
+      <th>open</th>
+      <td><p>Logical. Whether to open file after creation</p></td>
+    </tr>
     </table>
-  </div>
 
+    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
+
+    <p>Create flat Rmd file(s) and return its (their) path</p>
+    <h2 class="hasAnchor" id="details"><a class="anchor" href="#details"></a>Details</h2>
+
+    <p>Choose <code>template</code> among the different templates available:</p><ul>
+<li><p>"full": the full template with a reproducible package to inflate directly. Default.</p></li>
+<li><p>"minimal": Minimal template to start a new package when you already know fusen.</p></li>
+<li><p>"additional": Template for an additional vignette, thus additional functions.</p></li>
+<li><p>"teaching": Template with a reproducible package, simpler than "full", but everything to
+teach the minimal structure of a package.</p></li>
+</ul>
+
+<p>Abbreviated names can also be used for the different templates. For example "add"
+instead of additional.</p>
+
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"></pre>
+  </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>

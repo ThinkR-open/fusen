@@ -143,39 +143,39 @@
 <li>Decide if this function is exported to the user or not</li>
 </ul>
 </div>
-<div id="create-a-new-dev_history-template" class="section level2">
+<div id="create-a-new-flat-rmd-template" class="section level2">
 <h2 class="hasAnchor">
-<a href="#create-a-new-dev_history-template" class="anchor"></a>Create a new dev_history template</h2>
-<p>To add a new family of functions, create a new dev_history template</p>
+<a href="#create-a-new-flat-rmd-template" class="anchor"></a>Create a new flat Rmd template</h2>
+<p>To add a new family of functions, create a new flat Rmd template</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
 <div id="how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages" class="section level1">
 <h1 class="hasAnchor">
 <a href="#how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages" class="anchor"></a>How to maintain a {fusen}? Can I use {fusen} with old-way packages ?</h1>
-<p>After you <code><a href="../reference/inflate.html">inflate()</a></code> the “dev_history.Rmd”, your code appears twice in the package. In the “dev_history.Rmd” itself and in the correct place for it to be a package.<br>
+<p>After you <code><a href="../reference/inflate.html">inflate()</a></code> the “flat_template.Rmd”, your code appears twice in the package. In the “flat_template.Rmd” itself and in the correct place for it to be a package. Take it as a documentation for the other developers.<br>
 Maintaining such a package requires a choice:</p>
 <ul>
 <li>
-<strong>Option 1</strong>: Modifications are only added to the “dev_history.Rmd” file, which then is inflated to update all packages files</li>
+<strong>Option 1</strong>: Modifications are only added to the “flat_template.Rmd” file, which then is inflated to update all packages files</li>
 <li>
-<strong>Option 2</strong>: Modifications are realized in the package files directly, and the “dev_history.Rmd” file must be protected from any use.</li>
+<strong>Option 2</strong>: Modifications are realized in the package files directly, and the “flat_template.Rmd” file must be protected from any use.</li>
 </ul>
-<p>Your first <code><a href="../reference/inflate.html">inflate()</a></code> may not directly work as expected. In this case, you can continue to implement your functionality using <strong>Option 1</strong>.</p>
+<p>Your first <code><a href="../reference/inflate.html">inflate()</a></code> may not directly work as expected as with any R code that you write. In this case, you can continue to implement your functionality using <strong>Option 1</strong>.</p>
 <blockquote>
 <p>Advice 1 : Use Option 1 until you find it too complicated to be used ! I assure you, you will find the moment when you say : ok this is not possible anymore…</p>
 </blockquote>
 <blockquote>
 <p>Advice 2 : Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place</p>
 </blockquote>
-<div id="option-1-continue-with-the-dev_history-rmd" class="section level2">
+<div id="option-1-continue-with-the-flat_template-rmd" class="section level2">
 <h2 class="hasAnchor">
-<a href="#option-1-continue-with-the-dev_history-rmd" class="anchor"></a>Option 1: Continue with the “dev_history.Rmd”</h2>
+<a href="#option-1-continue-with-the-flat_template-rmd" class="anchor"></a>Option 1: Continue with the “flat_template.Rmd”</h2>
 <ul>
 <li>(+) This does not require to fully understand the package structure and files to continue building your package, and you continue to develop in a unique file</li>
 <li>(+) You are encouraged to continue documenting and testing all parts of your package</li>
-<li>(-) You need to pay attention to checking and debugging tools that may direct you to the R file directly. This requires to pay attention and always be sure you are modifying code in the dev_history file, to be inflated.</li>
+<li>(-) You need to pay attention to checking and debugging tools that may direct you to the R file directly. This requires to pay attention and always be sure you are modifying code in the flat template file, to be inflated.</li>
 <li>(-) This may trouble co-developers who already built packages</li>
 </ul>
 <p>=&gt; {fusen} itself is built as is. Each modification is added to the dedicated dev_history file and then inflated</p>
@@ -187,16 +187,15 @@ Maintaining such a package requires a choice:</p>
 <li>(+) You can use dedicated checking and debugging tools as is, in particular in RStudio. There are built to direct you as quickly as possible to the source of the problem</li>
 <li>(+) This allows collaboration with more advanced developers who are used to debug in the package structure directly</li>
 <li>(-) This requires to understand the structure and files of a package and how they interact each other, and be able to jump from one file to the other, in the correct folder. This may drives you lazy to continue documenting and testing your modifications</li>
-<li>This requires to protect the dev_history file, so that you never use it again. <code>&lt;!-- Do not edit by hand--&gt;</code> is the minimum. Then you can add <code>&lt;!-- File used to start new functionalities, do not use anymore, go directly to appropriate files in the package --&gt;</code>
-</li>
+<li>This requires to protect the flat template file, so that you never use it again. <code>&lt;!-- Do not edit by hand--&gt;</code> is the minimum. Then you can add <code>&lt;!-- File used to start new functionalities, do not use anymore, go directly to appropriate files in the package --&gt;</code>, and you can rename the old template with “old-flat_template.Rmd” for instance.</li>
 </ul>
-<p>=&gt; This is the way I add new functionalities in packages that started in the old way, or which I build in collaboration with other devs.</p>
+<p>=&gt; This is the way I add new functionalities in packages that started in the old way, and in specific cases where inflating is now too complicated, like for function <code><a href="../reference/inflate.html">inflate()</a></code> and all its unit tests in this very {fusen} package.</p>
 </div>
 </div>
 <div id="what-about-packages-already-built-the-old-way" class="section level1">
 <h1 class="hasAnchor">
 <a href="#what-about-packages-already-built-the-old-way" class="anchor"></a>What about packages already built the old way ?</h1>
-<p>The “dev_history.Rmd” template only modifies files related to functions presented inside the template. This does not remove or modify previous functions, tests or vignettes, provided that names are different.</p>
+<p>The “flat_template.Rmd” template only modifies files related to functions presented inside the template. <strong>This does not remove or modify previous functions, tests or vignettes, provided that names are different.</strong></p>
 <ul>
 <li>{fusen} itself was started in the classical way before having enough functions to be able to build a package from itself. This does not prevent me at all to use {fusen} to build himself now !</li>
 <li>If you want to modify existing functionalities, you will need to continue maintain your already-built package in the classical way</li>
@@ -216,9 +215,9 @@ Maintaining such a package requires a choice:</p>
 </li>
 </ul>
 </li>
-<li>Run in the Console : <code>fusen::add_dev_history(name = "add")</code>
+<li>Run in the Console : <code>fusen::add_flat_template("add")</code>
 <ul>
-<li>A Rmd file appears in “dev/dev_history.Rmd”. Open it.</li>
+<li>A Rmd file appears in “dev/flat_additional.Rmd”. Open it.</li>
 </ul>
 </li>
 <li>Add a new function in the <code>function</code> chunk. For instance:</li>
@@ -252,10 +251,10 @@ Maintaining such a package requires a choice:</p>
   <span class="fu">expect_error</span><span class="op">(</span><span class="fu">my_median</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>Run command of the last chunk: <code>fusen::inflate(rmd = "dev/dev_history.Rmd")</code>
+<li>Run command of the last chunk: <code>fusen::inflate(rmd = "dev/flat_additional.Rmd")</code>
 <ul>
-<li>This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use <code>fusen::inflate(rmd = "dev/dev_history.Rmd", document = FALSE)</code> to avoid that.</li>
-<li>This will also run <code>devtools::check()</code>. Use <code>fusen::inflate(rmd = "dev/dev_history.Rmd", check = FALSE)</code> to avoid that.</li>
+<li>This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use <code>fusen::inflate(rmd = "dev/flat_additional.Rmd", document = FALSE)</code> to avoid that.</li>
+<li>This will also run <code>devtools::check()</code>. Use <code>fusen::inflate(rmd = "dev/flat_additional.Rmd", check = FALSE)</code> to avoid that.</li>
 </ul>
 </li>
 </ul>
