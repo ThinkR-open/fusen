@@ -35,8 +35,8 @@ test_that("build_fusen_chunks works properly", {
   )
 })
 
-# Create a new package, add set of chunks and check
-dummydir <- tempfile(pattern = "dummy")
+# Create a new package, add set of chunks with export and check ----
+dummydir <- tempfile(pattern = "chunk.export.")
 dir.create(dummydir)
 path_foosen <- file.path(dummydir, "foosen")
 
@@ -60,7 +60,7 @@ test_that("build_fusen_chunks add lines as expected", {
       curr_editor <- rstudioapi::getSourceEditorContext()
       curr_position <- curr_editor$selection[[1L]]$range$start
       # Change file
-      rstudioapi::navigateToFile(path_dev_history, line = 33)
+      rstudioapi::navigateToFile(path_dev_history, line = 40)
       Sys.sleep(1)
       open_editor <- rstudioapi::getSourceEditorContext()
       id <- open_editor$id
@@ -79,12 +79,79 @@ test_that("build_fusen_chunks add lines as expected", {
     } else {
       print("test without interactive")
       dev_lines <- readLines(path_dev_history)
-      dev_lines[33] <- build_fusen_chunks("zaza")
+      dev_lines[40] <- build_fusen_chunks("zaza", export = TRUE)
       cat(dev_lines, sep = "\n", file = path_dev_history)
     }
 
     dev_lines_new <- readLines(path_dev_history)
     expect_equal(length(dev_lines_new), length(dev_lines_orig) + 24)
+    expect_equal(dev_lines_new[40], "## zaza")
+    expect_equal(dev_lines_new[42], "```{r function-zaza}")
+    expect_equal(dev_lines_new[49], "#' @export")
+    expect_equal(dev_lines_new[55], "```{r example-zaza}")
+    expect_equal(dev_lines_new[56], "zaza()")
+    expect_equal(dev_lines_new[59], "```{r tests-zaza}")
+
+    unlink(path_foosen, recursive = TRUE)
+  })
+})
+
+# Create a new package, add set of chunks with noRd and check ----
+dummydir <- tempfile(pattern = "chunk.noRd.")
+dir.create(dummydir)
+path_foosen <- file.path(dummydir, "foosen")
+
+test_that("build_fusen_chunks add lines as expected", {
+  withr::with_dir(dummydir, {
+    dev_file <- create_fusen(path_foosen, template = "minimal", open = FALSE)
+    fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
+    path_dev_history <- dev_file[grepl("flat", dev_file)]
+    dev_lines_orig <- readLines(path_dev_history)
+
+    # If interactive in RStudio
+    if (
+      requireNamespace("rstudioapi") &&
+      rstudioapi::isAvailable() &&
+      rstudioapi::hasFun("navigateToFile") &&
+      rstudioapi::hasFun("documentSave") #&&
+      # rstudioapi::hasFun("documentClose")
+    ) {
+      print("Test with RStudio")
+      # current position
+      curr_editor <- rstudioapi::getSourceEditorContext()
+      curr_position <- curr_editor$selection[[1L]]$range$start
+      # Change file
+      rstudioapi::navigateToFile(path_dev_history, line = 40)
+      Sys.sleep(1)
+      open_editor <- rstudioapi::getSourceEditorContext()
+      id <- open_editor$id
+      # the_open_path <- rstudioapi::documentPath(id)
+      # if (basename(the_open_path) != basename(path_dev_history)) {
+      #   stop("Open the file was short to get the correct Id of the opened file")
+      # }
+      # add chunks
+      add_fusen_chunks(function_name = "zaza", export = FALSE)
+      rstudioapi::documentSave(id)
+      if (rstudioapi::hasFun("documentClose")) {
+        rstudioapi::documentClose(id)
+      }
+      # # Back to current position
+      rstudioapi::navigateToFile(curr_editor$path, line = curr_position[1])
+    } else {
+      print("test without interactive")
+      dev_lines <- readLines(path_dev_history)
+      dev_lines[40] <- build_fusen_chunks("zaza", export = FALSE)
+      cat(dev_lines, sep = "\n", file = path_dev_history)
+    }
+
+    dev_lines_new <- readLines(path_dev_history)
+    expect_equal(length(dev_lines_new), length(dev_lines_orig) + 24)
+    expect_equal(dev_lines_new[40], "## zaza")
+    expect_equal(dev_lines_new[42], "```{r function-zaza}")
+    expect_equal(dev_lines_new[49], "#' @noRd")
+    expect_equal(dev_lines_new[55], "```{r example-zaza}")
+    expect_equal(dev_lines_new[56], "zaza()")
+    expect_equal(dev_lines_new[59], "```{r tests-zaza}")
 
     unlink(path_foosen, recursive = TRUE)
   })

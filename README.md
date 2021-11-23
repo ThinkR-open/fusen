@@ -31,12 +31,18 @@ You can install the released CRAN version:
 install.packages("fusen")
 ```
 
+> *Full documentation for the CRAN version is here:
+> <https://thinkr-open.github.io/fusen/>*
+
 You can install the development version of {fusen} from GitHub:
 
 ``` r
 # install.packages("remotes")
 remotes::install_github("ThinkR-open/fusen")
 ```
+
+> *Full documentation for the development version is here:
+> <https://thinkr-open.github.io/fusen/dev/>*
 
 ## You are one Rmd away from building a package!
 

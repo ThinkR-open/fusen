@@ -140,6 +140,7 @@ usethis::pr_finish(41)
 # _Check in interactive test-inflate for templates and Addins
 pkgload::load_all()
 testthat::test_dir("tests/testthat/")
+# testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 # Test no output generated in the user files
 # pkgload::load_all(export_all = FALSE)
 # remotes::install_github("ropensci-review-tools/autotest")
