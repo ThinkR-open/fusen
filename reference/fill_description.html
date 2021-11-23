@@ -189,29 +189,31 @@ personalized defaults using package options</p></td>
     <p>Fill DESCRIPTION file with fields. Return path to file.</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='co'># Create a new project</span>
-<span class='va'>tmpdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span>
-<span class='va'>dummypackage</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>tmpdir</span>, <span class='st'>"dummypackage"</span><span class='op'>)</span>
-<span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='va'>dummypackage</span><span class='op'>)</span>
-
-<span class='fu'>fill_description</span><span class='op'>(</span>
-  pkg <span class='op'>=</span> <span class='va'>dummypackage</span>,
-  fields <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>
-    Title <span class='op'>=</span> <span class='st'>"Build A Package From Rmarkdown file"</span>,
-    Description <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Use Rmd First method to build your package."</span>,
-                        <span class='st'>"Start your package with documentation."</span>,
-                        <span class='st'>"Everything can be set from a Rmarkdown file in your project."</span><span class='op'>)</span>,
-    `Authors@R` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>
-      <span class='fu'><a href='https://rdrr.io/r/utils/person.html'>person</a></span><span class='op'>(</span><span class='st'>"Sebastien"</span>, <span class='st'>"Rochette"</span>, email <span class='op'>=</span> <span class='st'>"sebastien@thinkr.fr"</span>,
-             role <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"aut"</span>, <span class='st'>"cre"</span><span class='op'>)</span>, comment <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>ORCID <span class='op'>=</span> <span class='st'>"0000-0002-1565-9313"</span><span class='op'>)</span><span class='op'>)</span>,
-      <span class='fu'><a href='https://rdrr.io/r/utils/person.html'>person</a></span><span class='op'>(</span>given <span class='op'>=</span> <span class='st'>"ThinkR"</span>, role <span class='op'>=</span> <span class='st'>"cph"</span><span class='op'>)</span>
-    <span class='op'>)</span>
-  <span class='op'>)</span>
-<span class='op'>)</span>
-</div><div class='output co'>#&gt; <span class='message'><span style='color: #BBBB00;'>!</span> Title was modified to Title Case: Build A Package From Rmarkdown File</span></div><div class='output co'>#&gt; [1] "/tmp/RtmpWIxuv1/dummypackage/DESCRIPTION"</div><div class='input'>
-<span class='co'># Delete dummy package</span>
-<span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>dummypackage</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span>
-</div></pre>
+    <pre class="examples"><span class='r-in'><span class='co'># Create a new project</span></span>
+<span class='r-in'><span class='va'>tmpdir</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempdir</a></span><span class='op'>(</span><span class='op'>)</span></span>
+<span class='r-in'><span class='va'>dummypackage</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='va'>tmpdir</span>, <span class='st'>"dummypackage"</span><span class='op'>)</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/files2.html'>dir.create</a></span><span class='op'>(</span><span class='va'>dummypackage</span><span class='op'>)</span></span>
+<span class='r-in'></span>
+<span class='r-in'><span class='fu'>fill_description</span><span class='op'>(</span></span>
+<span class='r-in'>  pkg <span class='op'>=</span> <span class='va'>dummypackage</span>,</span>
+<span class='r-in'>  fields <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span></span>
+<span class='r-in'>    Title <span class='op'>=</span> <span class='st'>"Build A Package From Rmarkdown file"</span>,</span>
+<span class='r-in'>    Description <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/paste.html'>paste</a></span><span class='op'>(</span><span class='st'>"Use Rmd First method to build your package."</span>,</span>
+<span class='r-in'>                        <span class='st'>"Start your package with documentation."</span>,</span>
+<span class='r-in'>                        <span class='st'>"Everything can be set from a Rmarkdown file in your project."</span><span class='op'>)</span>,</span>
+<span class='r-in'>    `Authors@R` <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span></span>
+<span class='r-in'>      <span class='fu'><a href='https://rdrr.io/r/utils/person.html'>person</a></span><span class='op'>(</span><span class='st'>"Sebastien"</span>, <span class='st'>"Rochette"</span>, email <span class='op'>=</span> <span class='st'>"sebastien@thinkr.fr"</span>,</span>
+<span class='r-in'>             role <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"aut"</span>, <span class='st'>"cre"</span><span class='op'>)</span>, comment <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span>ORCID <span class='op'>=</span> <span class='st'>"0000-0002-1565-9313"</span><span class='op'>)</span><span class='op'>)</span>,</span>
+<span class='r-in'>      <span class='fu'><a href='https://rdrr.io/r/utils/person.html'>person</a></span><span class='op'>(</span>given <span class='op'>=</span> <span class='st'>"ThinkR"</span>, role <span class='op'>=</span> <span class='st'>"cph"</span><span class='op'>)</span></span>
+<span class='r-in'>    <span class='op'>)</span></span>
+<span class='r-in'>  <span class='op'>)</span></span>
+<span class='r-in'><span class='op'>)</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #BBBB00;'>!</span> Title was modified to Title Case: Build A Package From Rmarkdown File</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpCOeNdX/dummypackage/DESCRIPTION"</span>
+<span class='r-in'></span>
+<span class='r-in'><span class='co'># Delete dummy package</span></span>
+<span class='r-in'><span class='fu'><a href='https://rdrr.io/r/base/unlink.html'>unlink</a></span><span class='op'>(</span><span class='va'>dummypackage</span>, recursive <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
+</pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
