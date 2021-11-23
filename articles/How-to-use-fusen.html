@@ -56,7 +56,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4</span>
       </span>
     </div>
 
@@ -170,53 +170,18 @@
 <li>As for any Rmarkdown file, chunk names need to be unique. Thus, you can use <code>examples-1</code>, <code>examples-2</code>, …</li>
 <li><em>Do not forget to regularly clear your Workspace to avoid functions hidden by global environment</em></li>
 </ul>
-</div>
-<div id="short-names" class="section level2">
-<h2 class="hasAnchor">
-<a href="#short-names" class="anchor"></a>Short names</h2>
-<ul>
-<li>Chunk short names are possible:
-<ul>
-<li>
-<code>function</code> can be named <code>fun-</code> or <code>fun_</code> or <code>fun-my_function_name</code>
-</li>
-<li>
-<code>example</code> can be named <code>ex-</code> or <code>ex_</code> or <code>ex-my_function_name</code>
-</li>
-<li>
-<code>tests</code> can be named <code>test-</code> or <code>test-my_function_name</code>
-</li>
-<li>
-<code>development</code> can be named <code>dev-</code> or <code>dev_</code> or <code>dev-my_function_name</code>
-</li>
-</ul>
-</li>
-<li>Short “dev_history” templates names are possible thanks to fuzzy match</li>
-</ul>
-</div>
-<div id="use-dontrun" class="section level2">
-<h2 class="hasAnchor">
-<a href="#use-dontrun" class="anchor"></a>Use <code>\dontrun{}</code>
-</h2>
-<p>You can use <code>\dontrun{}</code> in an example chunk as follows:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#' \dontrun{</span>
-<span class="va">an_example</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="fl">1</span>
-<span class="va">an_example</span>
-<span class="co">#' }</span>
+<!--
 
-<span class="co">#' OR</span>
+# A chunk for package description
 
-<span class="co">#' \dontrun{</span>
-<span class="co">#' an_example &lt;- 1 + 1</span>
-<span class="co">#' an_example</span>
-<span class="co">#' }</span></code></pre></div>
+This will fill the description of your package.
+-->
 </div>
 </div>
 <div id="add-a-new-dev_history-rmd-template-in-dev-directory" class="section level1">
 <h1 class="hasAnchor">
 <a href="#add-a-new-dev_history-rmd-template-in-dev-directory" class="anchor"></a>Add a new dev_history.Rmd template in “dev” directory</h1>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create a new project</span>
 <span class="va">tmpdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">tmpdir</span>, <span class="st">"dummypackage"</span><span class="op">)</span>
@@ -224,8 +189,8 @@
 
 <span class="co"># Add an additional dev template</span>
 <span class="fu"><a href="../reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, name <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span>
-<span class="co">#&gt; Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpFUwe1n/dummypackage . Please start a new R session in the new project directory.</span>
-<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpFUwe1n/dummypackage/dev/dev_history.Rmd"</span>
+<span class="co">#&gt; Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpve4BKv/dummypackage . Please start a new R session in the new project directory.</span>
+<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpve4BKv/dummypackage/dev/dev_history.Rmd"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -233,7 +198,7 @@
 <div id="fill-your-package-description" class="section level1">
 <h1 class="hasAnchor">
 <a href="#fill-your-package-description" class="anchor"></a>Fill your package Description</h1>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create a new project</span>
 <span class="va">tmpdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">tmpdir</span>, <span class="st">"dummypackage"</span><span class="op">)</span>
@@ -254,7 +219,7 @@
   <span class="op">)</span>
 <span class="op">)</span>
 <span class="co">#&gt; ! Title was modified to Title Case: Build A Package From Rmarkdown File</span>
-<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpFUwe1n/dummypackage/DESCRIPTION"</span>
+<span class="co">#&gt; [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpve4BKv/dummypackage/DESCRIPTION"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -285,7 +250,7 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")</code></pre>
 <li>Verify this Rmd appears in <code>"vignettes/"</code> directory</li>
 <li>Build your documentation using <code>pkgdown::build()</code> for vignette and examples checks</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create a new project</span>
 <span class="va">tmpdir</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempdir</a></span><span class="op">(</span><span class="op">)</span>
 <span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">tmpdir</span>, <span class="st">"dummypackage"</span><span class="op">)</span>
@@ -316,7 +281,7 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")</code></pre>
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create a new project</span>
 <span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"dummy"</span><span class="op">)</span>
 
@@ -332,7 +297,7 @@ fusen::inflate(rmd = "dev/dev_history.Rmd")</code></pre>
   
   <span class="co"># You may need to execute inflate() in the console directly</span>
   <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, rmd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html">file.path</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="st">"dev"</span>, <span class="st">"dev_history.Rmd"</span><span class="op">)</span>,
-                 name <span class="op">=</span> <span class="st">"Get started"</span><span class="op">)</span>
+                 name <span class="op">=</span> <span class="st">"exploration"</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
 </div>
   </div>

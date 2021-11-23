@@ -56,7 +56,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4</span>
       </span>
     </div>
 
@@ -130,26 +130,6 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://thinkr-open.github.io/fusen/">fusen</a></span><span class="op">)</span></code></pre></div>
-<div id="daily-use-of-fusen" class="section level1">
-<h1 class="hasAnchor">
-<a href="#daily-use-of-fusen" class="anchor"></a>Daily use of {fusen}</h1>
-<div id="add-a-new-set-of-chunks-in-the-current-rmd" class="section level2">
-<h2 class="hasAnchor">
-<a href="#add-a-new-set-of-chunks-in-the-current-rmd" class="anchor"></a>Add a new set of chunks in the current Rmd</h2>
-<p>Use the Addin “Add {fusen} chunks”</p>
-<ul>
-<li>Name the chunks using function name planned to be created</li>
-<li>Decide if this function is exported to the user or not</li>
-</ul>
-</div>
-<div id="create-a-new-dev_history-template" class="section level2">
-<h2 class="hasAnchor">
-<a href="#create-a-new-dev_history-template" class="anchor"></a>Create a new dev_history template</h2>
-<p>To add a new family of functions, create a new dev_history template</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/add_dev_history.html">add_dev_history</a></span><span class="op">(</span>name <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></code></pre></div>
-</div>
-</div>
 <div id="how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages" class="section level1">
 <h1 class="hasAnchor">
 <a href="#how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages" class="anchor"></a>How to maintain a {fusen}? Can I use {fusen} with old-way packages ?</h1>
@@ -222,7 +202,7 @@ Maintaining such a package requires a choice:</p>
 </li>
 <li>Add a new function in the <code>function</code> chunk. For instance:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co">#' My median</span>
 <span class="co">#'</span>
 <span class="co">#' @param x Vector of Numeric values</span>
@@ -240,12 +220,12 @@ Maintaining such a package requires a choice:</p>
 <ul>
 <li>Add a corresponding example in the <code>example</code> chunk. For instance:</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">my_median</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>Add a corresponding unit test in the <code>test</code> chunk. For instance:</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">test_that</span><span class="op">(</span><span class="st">"my_median works properly and show error if needed"</span>, <span class="op">{</span>
   <span class="fu">expect_true</span><span class="op">(</span><span class="fu">my_median</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span> <span class="op">==</span> <span class="fl">6.5</span><span class="op">)</span>
   <span class="fu">expect_error</span><span class="op">(</span><span class="fu">my_median</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span><span class="op">)</span>
@@ -263,7 +243,7 @@ You added a new function in your package, along with example, test and a new vig
 <ul>
 <li>R/my_median.R</li>
 <li>tests/testthat/test-my_median.R</li>
-<li>vignettes/get-started.Rmd</li>
+<li>vignettes/exploration.Rmd</li>
 </ul>
 </div>
 </div>

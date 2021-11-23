@@ -97,7 +97,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4</span>
       </span>
     </div>
 
@@ -167,8 +167,7 @@
   <span class='va'>path</span>,
   name <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"full"</span>, <span class='st'>"minimal"</span>, <span class='st'>"teaching"</span><span class='op'>)</span>,
   open <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>,
-  with_git <span class='op'>=</span> <span class='cn'>FALSE</span>
+  overwrite <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -176,23 +175,19 @@
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>path</th>
-      <td><p>Character. Path where to create the new fusen project.</p></td>
+      <td><p>path where to create the new fusen project.</p></td>
     </tr>
     <tr>
       <th>name</th>
-      <td><p>Character. Name of the template to be used among "full", "minimal" and "teaching".</p></td>
+      <td><p>name of the template to be used among "full", "minimal" and "teaching".</p></td>
     </tr>
     <tr>
       <th>open</th>
-      <td><p>Logical. Should the newly created project be opened ?</p></td>
+      <td><p>logical, should the newly created project be opened.</p></td>
     </tr>
     <tr>
       <th>overwrite</th>
       <td><p>Logical. Allow to overwrite 'dev/' files if path exists.</p></td>
-    </tr>
-    <tr>
-      <th>with_git</th>
-      <td><p>Logical. Should git be initialised in the newly created project ?</p></td>
     </tr>
     </table>
 
@@ -206,16 +201,16 @@ existing fusen.</p>
     <pre class="examples"><span class='r-in'><span class='va'>my_path</span> <span class='op'>&lt;-</span> <span class='fu'><a href='https://rdrr.io/r/base/tempfile.html'>tempfile</a></span><span class='op'>(</span><span class='st'>"mypkg"</span><span class='op'>)</span></span>
 <span class='r-in'><span class='fu'>create_fusen</span><span class='op'>(</span>path <span class='op'>=</span> <span class='va'>my_path</span>, name <span class='op'>=</span> <span class='st'>"full"</span>, open <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ── Creating new directory: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtm</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Creating <span style='color: #0000BB;'>'/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpCOeNdX/mypkg10973b51de05/'</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Setting active project to <span style='color: #0000BB;'>'/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpCOeNdX/mypkg10973b51de05'</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Creating <span style='color: #0000BB;'>'/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpajk33i/mypkgcf931eb4973/'</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Setting active project to <span style='color: #0000BB;'>'/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpajk33i/mypkgcf931eb4973'</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Creating <span style='color: #0000BB;'>'R/'</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Writing a sentinel file <span style='color: #0000BB;'>'.here'</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #BB0000;'>•</span> Build robust paths within your project via <span style='color: #555555;'>`here::here()`</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #BB0000;'>•</span> Learn more at &lt;https://here.r-lib.org&gt;</span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Setting active project to <span style='color: #0000BB;'>'&lt;no active project&gt;'</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> New directory created: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//RtmpCOeNdX/mypkg10973b51de05</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> New directory created: /var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T//Rtmpajk33i/mypkgcf931eb4973</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> ── Adding dev/dev_history.Rmd ──────────────────────────────────────────────────</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> File .here already exists in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpCOeNdX/mypkg10973b51de05</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> File .here already exists in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpajk33i/mypkgcf931eb4973</span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Added dev/dev_history.Rmd</span>
 </pre>
   </div>

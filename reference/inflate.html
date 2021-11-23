@@ -97,7 +97,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4.9000</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.2.4</span>
       </span>
     </div>
 
@@ -166,11 +166,10 @@
     <pre class="usage"><span class='fu'>inflate</span><span class='op'>(</span>
   pkg <span class='op'>=</span> <span class='st'>"."</span>,
   rmd <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/file.path.html'>file.path</a></span><span class='op'>(</span><span class='st'>"dev"</span>, <span class='st'>"dev_history.Rmd"</span><span class='op'>)</span>,
-  name <span class='op'>=</span> <span class='st'>"Get started"</span>,
+  name <span class='op'>=</span> <span class='st'>"exploration"</span>,
   check <span class='op'>=</span> <span class='cn'>TRUE</span>,
   document <span class='op'>=</span> <span class='cn'>TRUE</span>,
-  overwrite <span class='op'>=</span> <span class='st'>"ask"</span>,
-  <span class='va'>...</span>
+  overwrite <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='st'>"ask"</span>, <span class='st'>"yes"</span>, <span class='st'>"no"</span><span class='op'>)</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -198,13 +197,7 @@
     </tr>
     <tr>
       <th>overwrite</th>
-      <td><p>Logical (TRUE, FALSE) or character ("ask", "yes", "no). Whether to overwrite vignette and functions if already exists.</p></td>
-    </tr>
-    <tr>
-      <th>...</th>
-      <td><p>Arguments passed to <code><a href='http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.html'>rcmdcheck::rcmdcheck()</a></code>.
-For example, you can do <code>inflate(check = TRUE, quiet = TRUE)</code>, where <code>quiet</code> is
-passed to <code><a href='http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.html'>rcmdcheck::rcmdcheck()</a></code>.</p></td>
+      <td><p>Logical. Whether to overwrite vignette and functions if already exists.</p></td>
     </tr>
     </table>
 
@@ -220,11 +213,11 @@ passed to <code><a href='http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># {fusen} steps</span></span>
 <span class='r-in'><span class='fu'><a href='fill_description.html'>fill_description</a></span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, fields <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>Title <span class='op'>=</span> <span class='st'>"Dummy Package"</span><span class='op'>)</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpCOeNdX/dummypackage/DESCRIPTION"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpajk33i/dummypackage/DESCRIPTION"</span>
 <span class='r-in'><span class='va'>dev_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='add_dev_history.html'>add_dev_history</a></span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpCOeNdX/dummypackage . Please start a new R session in the new project directory.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Created file .here in /private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpajk33i/dummypackage . Please start a new R session in the new project directory.</span>
 <span class='r-in'><span class='fu'>inflate</span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, rmd <span class='op'>=</span> <span class='va'>dev_file</span>, name <span class='op'>=</span> <span class='st'>"Exploration of my Data"</span>, check <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Setting active project to <span style='color: #0000BB;'>'/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpCOeNdX/dummypackage'</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Setting active project to <span style='color: #0000BB;'>'/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpajk33i/dummypackage'</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> First time using roxygen2. Upgrading automatically...</span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Loading <span style='color: #0000BB;'>dummypackage</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Writing NAMESPACE</span>
@@ -242,7 +235,7 @@ passed to <code><a href='http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Writing my_other_median.Rd</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Writing sub_median.Rd</span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> [+] 2 package(s) added: stats, testthat.</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/RtmpCOeNdX/dummypackage"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/private/var/folders/24/8k48jl6d249_n_qfxwsl6xvm0000gn/T/Rtmpajk33i/dummypackage"</span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Explore directory of the package</span></span>
 <span class='r-in'><span class='co'># browseURL(dummypackage)</span></span>
