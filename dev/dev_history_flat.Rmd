@@ -13,8 +13,6 @@ library(tools)
 # My function
 
 ```{r function-1}
-# do not edit by hand
-
 #' Add flat Rmd file that drives package development
 #'
 #' @param template Name of the template to use. See details.
@@ -187,8 +185,6 @@ add_flat_template("add")
 ```
 
 ```{r tests-1}
-# do not edit by hand
-
 # Create a new project
 dummypackage <- tempfile(pattern = "add.flat.template")
 dir.create(dummypackage)
