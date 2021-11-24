@@ -219,14 +219,14 @@ passed to <code><a href='http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># {fusen} steps</span></span>
 <span class='r-in'><span class='va'>dev_file</span> <span class='op'>&lt;-</span> <span class='fu'><a href='add_flat_template.html'>add_flat_template</a></span><span class='op'>(</span>template <span class='op'>=</span> <span class='st'>"full"</span>, pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, overwrite <span class='op'>=</span> <span class='cn'>TRUE</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> Created file .here in /tmp/RtmpA12OLe/dummypackage32373345a3fd . Please start a new R session in the new project directory.</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Created file .here in /tmp/RtmpmBwnYm/dummypackage31b532870fa . Please start a new R session in the new project directory.</span>
 <span class='r-in'><span class='va'>flat_file</span> <span class='op'>&lt;-</span> <span class='va'>dev_file</span><span class='op'>[</span><span class='fu'><a href='https://rdrr.io/r/base/grep.html'>grepl</a></span><span class='op'>(</span><span class='st'>'flat'</span>, <span class='va'>dev_file</span><span class='op'>)</span><span class='op'>]</span></span>
 <span class='r-in'><span class='fu'><a href='fill_description.html'>fill_description</a></span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, fields <span class='op'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/list.html'>list</a></span><span class='op'>(</span>Title <span class='op'>=</span> <span class='st'>"Dummy Package"</span><span class='op'>)</span><span class='op'>)</span></span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpA12OLe/dummypackage32373345a3fd/DESCRIPTION"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpmBwnYm/dummypackage31b532870fa/DESCRIPTION"</span>
 <span class='r-in'><span class='fu'>inflate</span><span class='op'>(</span>pkg <span class='op'>=</span> <span class='va'>dummypackage</span>, rmd <span class='op'>=</span> <span class='va'>flat_file</span>, name <span class='op'>=</span> <span class='st'>"Exploration of my Data"</span>, check <span class='op'>=</span> <span class='cn'>FALSE</span><span class='op'>)</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Setting active project to <span style='color: #0000BB;'>'/tmp/RtmpA12OLe/dummypackage32373345a3fd'</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Setting active project to <span style='color: #0000BB;'>'/tmp/RtmpmBwnYm/dummypackage31b532870fa'</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> First time using roxygen2. Upgrading automatically...</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Loading <span style='color: #0000BB;'>dummypackage32373345a3fd</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Loading <span style='color: #0000BB;'>dummypackage31b532870fa</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Writing NAMESPACE</span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Adding <span style='color: #0000BB;'>'knitr'</span> to <span style='color: #00BB00;'>Suggests</span> field in DESCRIPTION</span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Setting <span style='color: #00BB00;'>VignetteBuilder</span> field in DESCRIPTION to <span style='color: #0000BB;'>'knitr'</span></span>
@@ -235,14 +235,14 @@ passed to <code><a href='http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Adding <span style='color: #0000BB;'>'rmarkdown'</span> to <span style='color: #00BB00;'>Suggests</span> field in DESCRIPTION</span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BB00;'>✔</span> Writing <span style='color: #0000BB;'>'vignettes/exploration-of-my-data.Rmd'</span></span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #BB0000;'>•</span> Edit <span style='color: #0000BB;'>'vignettes/exploration-of-my-data.Rmd'</span></span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> Updating dummypackage32373345a3fd documentation</span>
-<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Loading <span style='color: #0000BB;'>dummypackage32373345a3fd</span></span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> Updating dummypackage31b532870fa documentation</span>
+<span class='r-msg co'><span class='r-pr'>#&gt;</span> <span style='color: #00BBBB;'>ℹ</span> Loading <span style='color: #0000BB;'>dummypackage31b532870fa</span></span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Writing NAMESPACE</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Writing my_median.Rd</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Writing my_other_median.Rd</span>
 <span class='r-out co'><span class='r-pr'>#&gt;</span> Writing sub_median.Rd</span>
 <span class='r-msg co'><span class='r-pr'>#&gt;</span> [+] 2 package(s) added: stats, testthat.</span>
-<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpA12OLe/dummypackage32373345a3fd"</span>
+<span class='r-out co'><span class='r-pr'>#&gt;</span> [1] "/tmp/RtmpmBwnYm/dummypackage31b532870fa"</span>
 <span class='r-in'></span>
 <span class='r-in'><span class='co'># Explore directory of the package</span></span>
 <span class='r-in'><span class='co'># browseURL(dummypackage)</span></span>
