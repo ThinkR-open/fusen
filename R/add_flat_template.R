@@ -145,8 +145,8 @@ add_flat_template <- function(
   
   # Add a gitignore file in dev_dir
   # Files to ignore
-  lines <- c("*.html", "*.R")
-  
+  lines <- c("*.html")
+
   gitfile <- normalizePath(file.path(dev_dir, ".gitignore"), mustWork = FALSE)
   if (!file.exists(gitfile)) {
     existing_lines <- ""
