@@ -1,0 +1,61 @@
+---
+title: "dev_history.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+# My function
+
+```{r function-1}
+
+```
+
+```{r examples-1}
+
+```
+
+```{r tests-1}
+
+```
+
+# My data doc
+
+```{r function-doc}
+#' actphys_sedent
+#'
+#' Data inca3.
+#'
+#' @format A data frame with 4725 rows and 93 variables:
+#' \describe{
+#'   \item{ POPULATION }{  character }
+#'   \item{ NOIND }{  numeric }
+#'   \item{ transport_personnel }{  logical }
+#' }
+#' @source Inca3
+"actphys_sedent"
+```
+
+# My pkg doc
+
+```{r function-pkgdoc}
+#' @keywords internal
+"_PACKAGE"
+
+# The following block is used by usethis to automatically manage
+# roxygen namespace tags. Modify with care!
+## usethis namespace: start
+## usethis namespace: end
+NULL
+```
+
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(rmd = "dev/dev_history.Rmd")
+```

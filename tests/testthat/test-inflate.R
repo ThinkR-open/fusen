@@ -504,8 +504,7 @@ unlink(dummypackage, recursive = TRUE)
 alltemp <- tempfile("all.templates.inflate")
 dir.create(alltemp)
 
-for (pkgname in c("full", "teaching")) {
-  # TODO: "minimal" can inflate ? Empty dev_history does not work.
+for (pkgname in c("full", "teaching", "minimal")) {
   # No "additional" with create_fusen
   # {fusen} steps
   path_foosen <- file.path(alltemp, pkgname)
@@ -554,5 +553,33 @@ for (pkgname in c("full", "teaching")) {
 } # end of template loop
 # Delete dummy package
 unlink(alltemp, recursive = TRUE)
+
+# Tests empty chunks ----
+# TODO - Finish with empty
+# TODO - Add test for total empty
+dummypackage <- tempfile("empty.chunks")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  file.copy(
+    system.file("tests-templates/dev-template-empty.Rmd", package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+  test_that("inflate() output no error", {
+    expect_error(
+      suppressMessages(
+        inflate(pkg = dummypackage, rmd = flat_file,
+                name = "Get started", check = FALSE)),
+      regexp = NA
+    )
+  })
+})
+unlink(dummypackage, recursive = TRUE)
 
 # Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...
