@@ -19,8 +19,14 @@ coverage](https://app.codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.
 > If you know how to create a Rmarkdown file, then you know how to build
 > a package.
 
-Indeed, this {fusen} package is a real-world example of {fusen} use as
-it was itself created from the “dev_history” flat templates available in
+<img src="man/figures/fusen_inflate_functions.png" width="65%" style="display: block; margin: auto;" />
+
+*Fill the flat Rmd template with everything in one place and {fusen}
+will inflate the identified parts in the correct package files and
+directories.*
+
+This {fusen} package is a real-world example of {fusen} use as it was
+itself created from the “dev_history” flat templates available in
 `"dev/"` folder in its GitHub repository.
 
 ## Installation
