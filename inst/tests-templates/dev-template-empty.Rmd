@@ -26,18 +26,17 @@ library(testthat)
 # My data doc
 
 ```{r function-doc}
-#' actphys_sedent
+#' cars
 #'
-#' Data inca3.
+#' data in 'datasets'.
 #'
-#' @format A data frame with 4725 rows and 93 variables:
+#' @format A data frame with 50 rows and 2 variables:
 #' \describe{
-#'   \item{ POPULATION }{  character }
-#'   \item{ NOIND }{  numeric }
-#'   \item{ transport_personnel }{  logical }
+#'   \item{ speed }{  numeric }
+#'   \item{ dist }{  numeric }
 #' }
-#' @source Inca3
-"actphys_sedent"
+#' @source Ezekiel, M. (1930) Methods of Correlation Analysis. Wiley.
+"cars"
 ```
 
 # My pkg doc

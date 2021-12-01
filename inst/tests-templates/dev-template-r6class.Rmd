@@ -9,6 +9,17 @@ editor_options:
 library(testthat)
 ```
 
+# R6 Class
+
+```{r function-r6}
+Simple <- R6Class("Simple",
+  public = list(
+    x = 1,
+    getx = function() self$x
+  )
+)
+```
+
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly

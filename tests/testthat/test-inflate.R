@@ -555,8 +555,6 @@ for (pkgname in c("full", "teaching", "minimal")) {
 unlink(alltemp, recursive = TRUE)
 
 # Tests empty chunks ----
-# TODO - Finish with empty
-# TODO - Add test for total empty
 dummypackage <- tempfile("empty.chunks")
 dir.create(dummypackage)
 
@@ -571,6 +569,10 @@ usethis::with_project(dummypackage, {
     flat_file,
     overwrite = TRUE
   )
+  usethis::use_gpl_license()
+  # Add cars data
+  usethis::use_data(cars)
+
   test_that("inflate() output no error", {
     expect_error(
       suppressMessages(
@@ -578,8 +580,45 @@ usethis::with_project(dummypackage, {
                 name = "Get started", check = FALSE)),
       regexp = NA
     )
+
+    # R files with chunk content - Name after title as function name is NA
+    pkgdoc <- file.path(dummypackage, "R", "my-pkg-doc.R")
+    expect_true(file.exists(pkgdoc))
+    pkgdoc_lines <- readLines(pkgdoc)
+    expect_equal(length(pkgdoc_lines), 10)
+    expect_equal(pkgdoc_lines[4], "\"_PACKAGE\"")
+
+    datadoc <- file.path(dummypackage, "R", "my-data-doc.R")
+    expect_true(file.exists(datadoc))
+    datadoc_lines <- readLines(datadoc)
+    expect_equal(length(datadoc_lines), 13)
+    expect_equal(datadoc_lines[13], "\"cars\"")
+
+    skip_if_not(interactive())
+    # Needs MASS, lattice, Matrix installed
+
+    checkdir <- tempfile("dircheck")
+    # Disable checking for future file timestamps
+    withr::with_envvar(
+      new = c(`_R_CHECK_SYSTEM_CLOCK_` = 0),
+      {
+        expect_error(
+          suppressMessages(
+            inflate(pkg = dummypackage, rmd = flat_file,
+                    name = "Get started", check = TRUE,
+                    check_dir = checkdir, quiet = TRUE)),
+          regexp = NA
+        )
+      })
+    # Should not be any errors with templates
+    check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
+    expect_equal(check_lines[length(check_lines)], "Status: OK")
+    unlink(checkdir, recursive = TRUE)
   })
 })
 unlink(dummypackage, recursive = TRUE)
+
+# TODO - Add test for dev-template-two-fun-same-title.Rmd
+# TODO - Add test for dev-template-r6class.Rmd (dont check)
 
 # Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...
