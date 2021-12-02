@@ -594,23 +594,14 @@ usethis::with_project(dummypackage, {
     expect_equal(length(datadoc_lines), 13)
     expect_equal(datadoc_lines[13], "\"cars\"")
 
-    # skip_if_not(interactive())
+    skip_if_not(interactive())
     # Needs MASS, lattice, Matrix installed
-    skip_if_not(requireNamespace("MASS") &
-        requireNamespace("lattice") &
-        requireNamespace("Matrix")
-    )
 
     checkdir <- tempfile("dircheck")
     # Disable checking for future file timestamps
     withr::with_envvar(
       new = c(`_R_CHECK_SYSTEM_CLOCK_` = 0),
       {
-
-        withr::local_package("MASS")
-        withr::local_package("lattice")
-        withr::local_package("Matrix")
-
         expect_error(
           suppressMessages(
             inflate(pkg = dummypackage, rmd = flat_file,
