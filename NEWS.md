@@ -12,10 +12,13 @@
 * Deal with `\dontrun{}` in example chunks
 * Allow short names for chunks: dev, fun, ex, test
 * `create_fusen()` to create a {fusen} project from command line or with RStudio new project (@ALanguillaume)
+* Add "do not edit by hand" in files generated
+* Group functions in same R file if under same (level 1 + level 2) titles in the Rmd
 
 ## Minor changes
 
-* Add "do not edit by hand" in files generated
+* Fix inflate function chunks with data or package documentation only
+* Fix inflate with empty functions chunks
 * Fix filename to inflate in templates with new calls of `add_dev_history()` (@Cervangirard)
 * Default vignette name is now "Get started" creating "vignettes/get-started.Rmd"
 * All open files are saved when using `inflate()` where {rstudioapi} works

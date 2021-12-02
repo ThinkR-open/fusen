@@ -26,7 +26,14 @@ knitr::opts_chunk$set(
 
 > If you know how to create a Rmarkdown file, then you know how to build a package.
 
-Indeed, this {fusen} package is a real-world example of {fusen} use as it was itself created from the "dev_history" flat templates available in `"dev/"` folder in its GitHub repository.
+
+```{r echo=FALSE, out.width="65%", fig.align='center'}
+knitr::include_graphics("man/figures/fusen_inflate_functions.png")
+```
+
+_Fill the flat Rmd template with everything in one place and {fusen} will inflate the identified parts in the correct package files and directories._
+
+This {fusen} package is a real-world example of {fusen} use as it was itself created from the "dev_history" flat templates available in `"dev/"` folder in its GitHub repository.
 
 ## Installation
 

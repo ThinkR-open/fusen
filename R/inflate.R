@@ -134,6 +134,17 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
   parsed_rmd <- parse_rmd(rmd)
   parsed_tbl <- as_tibble(parsed_rmd)
 
+  parsed_tbl$order <- 1:nrow(parsed_tbl)
+  sec_title <- paste(parsed_tbl[["sec_h1"]],
+                                parsed_tbl[["sec_h2"]],
+                                sep = "-")
+
+  if (length(sec_title) != 0) {
+    parsed_tbl$sec_title <- sec_title
+  } else {
+    parsed_tbl$sec_title <- "fake-title"
+  }
+
   # Check if there are functions ----
   fun_code <- get_functions(parsed_tbl)
   # Get functions and create files ----
@@ -143,6 +154,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
     message("No chunks named 'function-xx' or 'fun-xx' were found in the Rmarkdown file: ", rmd)
   }
 
+  # Create vignette ----
   create_vignette(parsed_tbl, pkg, name)
 
   # Run attachment
@@ -173,7 +185,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
 create_functions_all <- function(parsed_tbl, fun_code, pkg) {
   fun_names <- fun_code[["fun_name"]]
 
-  if (length(unique(fun_names)) != length(fun_names)) {
+  if (length(unique(na.omit(fun_names))) != length(na.omit(fun_names))) {
     stop("Some functions names are not unique: ", paste(sort(fun_names), collapse = ", "))
   }
 
@@ -190,12 +202,12 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg) {
   labels_in_vignette <- na.omit(parsed_tbl[["label"]][
     !grepl(dev_labels_noex_regex, parsed_tbl[["label"]])
   ])
-  labels_in_vignette <- labels_in_vignette[!grepl("", labels_in_vignette)]
+  labels_in_vignette <- labels_in_vignette[!grepl("^$", labels_in_vignette)]
 
   if (any(duplicated(labels_in_vignette))) {
     stop(
       "There are duplicated chunk names, ",
-      "please rename chunks with 'name-01' for instance.\n",
+      "please rename chunks with 'examples-fun_name' for instance.\n",
       "Duplicates: ",
       paste(labels_in_vignette[duplicated(labels_in_vignette)],
         collapse = ", "
@@ -251,9 +263,14 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
         "#' @noRd",
         code[(last_hastags_above_first_fun + 1):length(code)]
       )
-    } else {
+    } else if (all(grepl("^\\s*$", code))) {
+      # If all empty
+      code <- character(0)
+    } else if (!is.na(first_function_start)) {
+      # If there is a function inside
       code <- c("#' @noRd", code)
     }
+    # otherwise code stays code
   }
 
   all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
@@ -278,6 +295,7 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
 #' @importFrom parsermd rmd_get_chunk
 #' @noRd
 get_functions <- function(parsed_tbl) {
+
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
     grepl(regex_functions, parsed_tbl$label))
   rmd_fun <- parsed_tbl[which_parsed_fun, ]
@@ -285,7 +303,11 @@ get_functions <- function(parsed_tbl) {
   if (nrow(rmd_fun) != 0) {
     fun_code <- lapply(seq_len(nrow(rmd_fun)), function(x) parse_fun(rmd_fun[x, ]))
     fun_code <- do.call("rbind", fun_code)
-    fun_code
+    fun_code$sec_h1 <- rmd_fun[["sec_h1"]]
+    fun_code$sec_title <- rmd_fun[["sec_title"]]
+    return(fun_code)
+  } else {
+    return(NULL)
   }
 }
 
@@ -298,8 +320,6 @@ add_fun_to_parsed <- function(parsed_tbl, fun_names) {
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
     grepl(regex_functions, parsed_tbl$label))
 
-  parsed_tbl$order <- 1:nrow(parsed_tbl)
-  parsed_tbl$sec_title <- paste(parsed_tbl[["sec_h1"]], parsed_tbl[["sec_h2"]], sep = "-")
   parsed_tbl$fun_name <- NA_character_
   # Function name
   parsed_tbl[["fun_name"]][which_parsed_fun] <- fun_names
@@ -318,10 +338,12 @@ add_fun_to_parsed <- function(parsed_tbl, fun_names) {
 #' @param fun_code R code of functions in Rmd as character
 #' @noRd
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
-  fun_code <- fun_code[!is.na(fun_code[["fun_name"]]), ]
+  # fun_code <- fun_code[!is.na(fun_code[["fun_name"]]), ]
   #  Example already in skeleton
   fun_code$example_in <- apply(fun_code, 1, function(x) {
-    if (!is.na(x[["example_pos_start"]]) && length(x[["example_pos_start"]]) == 1) {
+    if (is.na(x[["fun_name"]])) {
+      list(character(0))
+    } else if (!is.na(x[["example_pos_start"]]) && length(x[["example_pos_start"]]) == 1) {
       list(x[["code"]][x[["example_pos_start"]]:x[["example_pos_end"]]])
     } else {
       list("#' @examples")
@@ -332,6 +354,7 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
     grepl(regex_example, parsed_tbl$label))
   rmd_ex <- parsed_tbl[which_parsed_ex, ]
+  # No function, no example to add
   rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]), ]
 
 
@@ -361,7 +384,9 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   # Remove if example is empty
   fun_code[["example"]] <- lapply(fun_code[["example"]], function(example) {
     # example <- fun_code[["example"]][[1]]
-    if (length(example) == 1 && is.na(example)) {
+    if (length(example) == 0) {
+      return(NA)
+    } else if (length(example) == 1 && is.na(example)) {
       return(NA)
     } else if (length(example) == 1 && example == "#' @examples") {
       return(NA)
@@ -374,10 +399,11 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 
   # Add to function code
   fun_code[["code_example"]] <- lapply(seq_len(nrow(fun_code)), function(x) {
-    # x <- 5
+
     fun_code_x <- fun_code[x, ]
     if (is.na(fun_code_x[["fun_name"]])) {
-      return(NA_character_)
+      return(
+        unlist(fun_code_x[["code"]]))
     }
 
     end_skeleton <- ifelse(is.na(fun_code_x[["example_pos_start"]]),
@@ -412,10 +438,31 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 #' @param pkg Path to package
 #' @noRd
 create_r_files <- function(fun_code, pkg) {
-  fun_code <- fun_code[!is.na(fun_code[["fun_name"]]), ]
+  fun_code <- fun_code[(lengths(fun_code[["code"]]) != 0), ]
+
+  # Combine code with same sec_title to be set in same R file
+  # fun_code$sec_title <- fun_code$sec_title[1] # for tests
+  fun_code <-
+    lapply(unique(fun_code[["sec_title"]]), #sec_title
+           function(x) {
+             group <- fun_code[fun_code[["sec_title"]] == x,] # sec_title
+             group_combined <- group[1, ]
+             group_combined[["fun_name"]] <- group[["fun_name"]][1]
+             comb_ex <- unlist(
+               lapply(group[["code_example"]], function(y) c(y, ""))
+             )
+             # Remove last extra empty line
+             comb_ex <- comb_ex[-length(comb_ex)]
+             group_combined[["code_example"]] <- list(comb_ex)
+             group_combined
+           }) %>%
+    do.call("rbind", .)
+
 
   r_files <- lapply(seq_len(nrow(fun_code)), function(x) {
     fun_name <- fun_code[x, ][["fun_name"]]
+    fun_name <- ifelse(is.na(fun_name),
+                       fun_code[x, ][["sec_title"]], fun_name)
     r_file <- file.path(pkg, "R", paste0(asciify_name(fun_name), ".R"))
     if (file.exists(r_file)) {
       cli::cli_alert_warning(paste(basename(r_file), "has been overwritten"))
@@ -477,7 +524,26 @@ create_tests_files <- function(parsed_tbl, pkg) {
 
       fun_name
     }
-    out <- unlist(lapply(seq_len(nrow(rmd_test)), function(x) parse_test(rmd_test[x, ])))
+
+    # TODO - Combine code with same sec_title to be set in same R file
+    # fun_code$sec_title <- fun_code$sec_title[1] # for tests
+    # fun_code <-
+    #   lapply(unique(fun_code[["sec_title"]]), #sec_title
+    #          function(x) {
+    #            group <- fun_code[fun_code[["sec_title"]] == x,] # sec_title
+    #            group_combined <- group[1, ]
+    #            group_combined[["fun_name"]] <- group[["fun_name"]][1]
+    #            group_combined[["code_example"]] <- list(
+    #              unlist(
+    #                lapply(group[["code_example"]], function(y) c(y, "")))
+    #            )
+    #            group_combined
+    #          }) %>%
+    #   do.call("rbind", .)
+    #
+
+    out <- unlist(lapply(seq_len(nrow(rmd_test)),
+                         function(x) parse_test(rmd_test[x, ])))
   }
 }
 
