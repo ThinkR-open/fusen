@@ -50,6 +50,8 @@
 -->
 </head>
 <body data-spy="scroll" data-target="#toc">
+    
+
     <div class="container template-home">
       <header><div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -68,12 +70,6 @@
 
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
-<li>
-  <a href="index.html">
-    <span class="fas fa-home fa-lg"></span>
-     
-  </a>
-</li>
 <li>
   <a href="reference/index.html">Reference</a>
 </li>
@@ -106,7 +102,7 @@
 </div>
         </li>
         <li>
-  <a href="https://github.com/Thinkr-open/fusen/">
+  <a href="https://github.com/Thinkr-open/fusen/" class="external-link">
     <span class="fab fa-github fa-lg"></span>
      
   </a>
@@ -123,9 +119,8 @@
 
       </header><div class="row">
   <div class="contents col-md-9">
-<div id="fusen-" class="section level1">
-<div class="page-header"><h1 class="hasAnchor">
-<a href="#fusen-" class="anchor"></a>fusen <img src="reference/figures/logo.png" align="right" alt="" width="120">
+<div class="section level1">
+<div class="page-header"><h1 id="fusen-">fusen <img src="reference/figures/logo.png" align="right" alt="" width="120"><a class="anchor" aria-label="anchor" href="#fusen-"></a>
 </h1></div>
 <!-- badges: start -->
 
@@ -133,27 +128,29 @@
 <blockquote>
 <p>If you know how to create a Rmarkdown file, then you know how to build a package.</p>
 </blockquote>
-<p>Indeed, this {fusen} package is a real-world example of {fusen} use as it was itself created from the “dev_history” flat templates available in <code>"dev/"</code> folder in its GitHub repository.</p>
-<div id="installation" class="section level2">
-<h2 class="hasAnchor">
-<a href="#installation" class="anchor"></a>Installation</h2>
+<p><img src="reference/figures/fusen_inflate_functions.png" width="65%" style="display: block; margin: auto;"></p>
+<p><em>Fill the flat Rmd template with everything in one place and {fusen} will inflate the identified parts in the correct package files and directories.</em></p>
+<p>This {fusen} package is a real-world example of {fusen} use as it was itself created from the “dev_history” flat templates available in <code>"dev/"</code> folder in its GitHub repository.</p>
+<div class="section level2">
+<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+</h2>
 <p>You can install the released CRAN version:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html">install.packages</a></span><span class="op">(</span><span class="st">"fusen"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"fusen"</span><span class="op">)</span></code></pre></div>
 <blockquote>
 <p><em>Full documentation for the CRAN version is here: <a href="https://thinkr-open.github.io/fusen/" class="uri">https://thinkr-open.github.io/fusen/</a></em></p>
 </blockquote>
 <p>You can install the development version of {fusen} from GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
-<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html">install_github</a></span><span class="op">(</span><span class="st">"ThinkR-open/fusen"</span><span class="op">)</span></code></pre></div>
+<span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ThinkR-open/fusen"</span><span class="op">)</span></code></pre></div>
 <blockquote>
 <p><em>Full documentation for the development version is here: <a href="https://thinkr-open.github.io/fusen/dev/" class="uri">https://thinkr-open.github.io/fusen/dev/</a></em></p>
 </blockquote>
 </div>
-<div id="you-are-one-rmd-away-from-building-a-package" class="section level2">
-<h2 class="hasAnchor">
-<a href="#you-are-one-rmd-away-from-building-a-package" class="anchor"></a>You are one Rmd away from building a package!</h2>
+<div class="section level2">
+<h2 id="you-are-one-rmd-away-from-building-a-package">You are one Rmd away from building a package!<a class="anchor" aria-label="anchor" href="#you-are-one-rmd-away-from-building-a-package"></a>
+</h2>
 <p><em>{fusen} is all about correctly separating and naming chunks.</em></p>
 <ul>
 <li>Create a new directory / new project with
@@ -173,8 +170,8 @@
 </li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="reference/fill_description.html">fill_description</a></span><span class="op">(</span>fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"My Awesome Package"</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html">use_mit_license</a></span><span class="op">(</span><span class="st">"Sébastien Rochette"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu"><a href="reference/fill_description.html">fill_description</a></span><span class="op">(</span>fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"My Awesome Package"</span><span class="op">)</span><span class="op">)</span>
+<span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html" class="external-link">use_mit_license</a></span><span class="op">(</span><span class="st">"Sébastien Rochette"</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>Write your analysis and functionalities following the Rmd template
 <ul>
@@ -196,7 +193,7 @@
 <li>Install your package locally</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_local.html">install_local</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_local.html" class="external-link">install_local</a></span><span class="op">(</span><span class="op">)</span></code></pre></div>
 <ul>
 <li>Restart your R session to clean environment
 <ul>
@@ -212,13 +209,13 @@
 </ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Build {pkgdown} to test it</span>
-<span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_pkgdown.html">use_pkgdown</a></span><span class="op">(</span><span class="op">)</span>
-<span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html">build_site</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_pkgdown.html" class="external-link">use_pkgdown</a></span><span class="op">(</span><span class="op">)</span>
+<span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">build_site</a></span><span class="op">(</span><span class="op">)</span>
 <span class="co"># &gt; See references and articles</span></code></pre></div>
 </div>
-<div id="description-of-the-rmd-template" class="section level2">
-<h2 class="hasAnchor">
-<a href="#description-of-the-rmd-template" class="anchor"></a>Description of the Rmd template</h2>
+<div class="section level2">
+<h2 id="description-of-the-rmd-template">Description of the Rmd template<a class="anchor" aria-label="anchor" href="#description-of-the-rmd-template"></a>
+</h2>
 <p>As I said earlier, this is all about using the correct split and name for your chunks.</p>
 <ul>
 <li>Follow the <code>"dev/flat_template.Rmd"</code> template to write your documentation and build your functions and test your examples.
@@ -238,12 +235,12 @@
 </ul>
 <p><em>Note that the <code>"flat*.Rmd"</code> files created with templates <code>full</code> and <code>teaching</code> are indeed working examples that can directly be inflated.</em></p>
 <blockquote>
-<p>You can also have a look at <a href="https://github.com/statnmap/squirrels.fusen">{squirrels.fusen}</a> that has been built to present the method. Follow the commits: <a href="https://github.com/statnmap/squirrels.fusen/commits/main" class="uri">https://github.com/statnmap/squirrels.fusen/commits/main</a></p>
+<p>You can also have a look at <a href="https://github.com/statnmap/squirrels.fusen" class="external-link">{squirrels.fusen}</a> that has been built to present the method. Follow the commits: <a href="https://github.com/statnmap/squirrels.fusen/commits/main" class="external-link uri">https://github.com/statnmap/squirrels.fusen/commits/main</a></p>
 </blockquote>
 </div>
-<div id="how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages" class="section level2">
-<h2 class="hasAnchor">
-<a href="#how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages" class="anchor"></a>How to maintain a {fusen}? Can I use {fusen} with old-way packages?</h2>
+<div class="section level2">
+<h2 id="how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages">How to maintain a {fusen}? Can I use {fusen} with old-way packages?<a class="anchor" aria-label="anchor" href="#how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages"></a>
+</h2>
 <p>There is a dedicated vignette to answer this: <a href="https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html" class="uri">https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html</a></p>
 <ul>
 <li>
@@ -255,91 +252,101 @@
 <p>Advice : Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place</p>
 </blockquote>
 </div>
-<div id="who-is-fusen-for" class="section level2">
-<h2 class="hasAnchor">
-<a href="#who-is-fusen-for" class="anchor"></a>Who is {fusen} for?</h2>
-<p>When you write a Rmarkdown file (or a vignette), you create a documentation for your analysis (or package). Inside, you write some functions, you test your functions with examples and you maybe write some unit tests to verify the outputs. This is even more true if you follow this guide : <a href="https://rtask.thinkr.fr/when-development-starts-with-documentation/">‘Rmd first’: When development starts with documentation</a> After that, you need to move your functions and scripts in the correct place. Let {fusen} do that for you!</p>
+<div class="section level2">
+<h2 id="who-is-fusen-for">Who is {fusen} for?<a class="anchor" aria-label="anchor" href="#who-is-fusen-for"></a>
+</h2>
+<p>When you write a Rmarkdown file (or a vignette), you create a documentation for your analysis (or package). Inside, you write some functions, you test your functions with examples and you maybe write some unit tests to verify the outputs. This is even more true if you follow this guide : <a href="https://rtask.thinkr.fr/when-development-starts-with-documentation/" class="external-link">‘Rmd first’: When development starts with documentation</a> After that, you need to move your functions and scripts in the correct place. Let {fusen} do that for you!</p>
 <p><em>{fusen} is first addressed to people who never wrote a package before</em> but know how to write a Rmarkdown file. Understanding package infrastructure and correctly settling it can be frightening. This package may help them do the first step!</p>
 <p><em>{fusen} is also addressed to more advanced developers who are fed up with switching</em> between R files, tests files, vignettes. In particular, when changing arguments of a function, we need to change examples, unit tests in multiple places. Here, you can do it in one place. No risk to forget one. Think also about code review: everything related to one function is at the same place.</p>
 </div>
-<div id="why-is-this-package-named-fusen-" class="section level2">
-<h2 class="hasAnchor">
-<a href="#why-is-this-package-named-fusen-" class="anchor"></a>Why is this package named {fusen} ?</h2>
+<div class="section level2">
+<h2 id="why-is-this-package-named-fusen-">Why is this package named {fusen} ?<a class="anchor" aria-label="anchor" href="#why-is-this-package-named-fusen-"></a>
+</h2>
 <p>A fusen is an origami. It is a flat piece of paper that you fold in a specific way so that at the end, you can magically inflate it to let a nice box appear.</p>
 <p><img src="reference/figures/fusen_seb_crop_small.jpg" width="25%"></p>
 <p>Similarly, the {fusen} package uses a flat Rmd template, that you fill in a specific way so that at the end, you can magically <code><a href="reference/inflate.html">inflate()</a></code> it to let a nice package appear.</p>
 <details><summary> Click here to fold your {fusen}… </summary><img src="reference/figures/fusen-fold-origami.gif"></details>
 </div>
-<div id="acknowledgments" class="section level2">
-<h2 class="hasAnchor">
-<a href="#acknowledgments" class="anchor"></a>Acknowledgments</h2>
+<div class="section level2">
+<h2 id="acknowledgments">Acknowledgments<a class="anchor" aria-label="anchor" href="#acknowledgments"></a>
+</h2>
 <ul>
-<li>Thanks to Deemah who asked me to go further ‘Rmd first’ after my presentation at useR 2019 in Toulouse: <a href="https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf">‘The “Rmd first” method: when projects start with documentation’</a> (Video on Youtube: <a href="https://youtu.be/cB1BCxFbhtk" class="uri">https://youtu.be/cB1BCxFbhtk</a>).</li>
-<li>Thanks to @rundel and its package {parsermd} who helped me get back in this project with ease : <a href="https://github.com/rundel/parsermd" class="uri">https://github.com/rundel/parsermd</a>
+<li>Thanks to Deemah who asked me to go further ‘Rmd first’ after my presentation at useR 2019 in Toulouse: <a href="https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf" class="external-link">‘The “Rmd first” method: when projects start with documentation’</a> (Video on Youtube: <a href="https://youtu.be/cB1BCxFbhtk" class="external-link uri">https://youtu.be/cB1BCxFbhtk</a>).</li>
+<li>Thanks to @rundel and its package {parsermd} who helped me get back in this project with ease : <a href="https://github.com/rundel/parsermd" class="external-link uri">https://github.com/rundel/parsermd</a>
 </li>
-<li>Thanks to the <a href="https://rtask.thinkr.fr">ThinkR team</a> who adopted this package for its daily production.</li>
+<li>Thanks to the <a href="https://rtask.thinkr.fr" class="external-link">ThinkR team</a> who adopted this package for its daily production.</li>
 </ul>
 </div>
-<div id="code-of-conduct" class="section level2">
-<h2 class="hasAnchor">
-<a href="#code-of-conduct" class="anchor"></a>Code of Conduct</h2>
-<p>Please note that the {fusen} project is released with a <a href="https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
+<div class="section level2">
+<h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a>
+</h2>
+<p>Please note that the {fusen} project is released with a <a href="https://contributor-covenant.org/version/2/0/CODE_OF_CONDUCT.html" class="external-link">Contributor Code of Conduct</a>. By contributing to this project, you agree to abide by its terms.</p>
 </div>
 </div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <div class="links">
-<h2>Links</h2>
+<h2 data-toc-skip>Links</h2>
 <ul class="list-unstyled">
-<li>Download from CRAN at <br><a href="https://cloud.r-project.org/package=fusen">https://​cloud.r-project.org/​package=fusen</a>
-</li>
-<li>Browse source code at <br><a href="https://github.com/Thinkr-open/fusen/">https://​github.com/​Thinkr-open/​fusen/​</a>
-</li>
+<li><a href="https://cloud.r-project.org/package=fusen" class="external-link">View on CRAN</a></li>
+<li><a href="https://github.com/Thinkr-open/fusen/" class="external-link">Browse source code</a></li>
 </ul>
 </div>
+
 <div class="license">
-<h2>License</h2>
+<h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
-<li><small><a href="https://opensource.org/licenses/mit-license.php">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
+<li><small><a href="https://opensource.org/licenses/mit-license.php" class="external-link">MIT</a> + file <a href="LICENSE-text.html">LICENSE</a></small></li>
 </ul>
 </div>
+
 <div class="community">
-<h2>Community</h2>
+<h2 data-toc-skip>Community</h2>
 <ul class="list-unstyled">
 <li><a href="CONTRIBUTING.html">Contributing guide</a></li>
 <li><a href="CODE_OF_CONDUCT.html">Code of conduct</a></li>
 </ul>
 </div>
-<div class="developers">
-<h2>Developers</h2>
+
+<div class="citation">
+<h2 data-toc-skip>Citation</h2>
 <ul class="list-unstyled">
-<li>Sebastien Rochette <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-1565-9313" target="orcid.widget" aria-label="ORCID"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
-<li><a href="authors.html">All authors...</a></li>
+<li><a href="authors.html#citation">Citing fusen</a></li>
 </ul>
 </div>
 
-  <div class="dev-status">
-<h2>Dev status</h2>
+<div class="developers">
+<h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li><a href="https://CRAN.R-project.org/package=fusen"><img src="https://www.r-pkg.org/badges/version/fusen" alt="CRAN status"></a></li>
-<li><a href="https://github.com/ThinkR-open/fusen/actions"><img src="https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://app.codecov.io/gh/ThinkR-open/fusen"><img src="https://app.codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg?token=V0HOSAY8WW" alt="codecov test coverage"></a></li>
+<li>Sebastien Rochette <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-1565-9313" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
+
+<div class="dev-status">
+<h2 data-toc-skip>Dev status</h2>
+<ul class="list-unstyled">
+<li><a href="https://CRAN.R-project.org/package=fusen" class="external-link"><img src="https://www.r-pkg.org/badges/version/fusen" alt="CRAN status"></a></li>
+<li><a href="https://github.com/ThinkR-open/fusen/actions" class="external-link"><img src="https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
+<li><a href="https://app.codecov.io/gh/ThinkR-open/fusen" class="external-link"><img src="https://app.codecov.io/gh/ThinkR-open/fusen/branch/master/graph/badge.svg?token=V0HOSAY8WW" alt="codecov test coverage"></a></li>
+</ul>
 </div>
+
+  </div>
 </div>
 
 
       <footer><div class="thinkr">
-  <p>fusen is a  <strong>ThinkR</strong> package. Learn more at <a href="https://rtask.thinkr.fr">rtask.thinkr.fr</a>.</p>
+  <p></p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
 </div>
 
 <div class="author">
   <p>
-    Developed by Sebastien Rochette.
-    Site built by <a href="https://pkgdown.r-lib.org">pkgdown</a>.
+    Developed by .
+    Site built by <a href="https://pkgdown.r-lib.org" class="external-link">pkgdown</a>.
   </p>
 </div>
 
@@ -348,6 +355,8 @@
 
   
 
+
+  
 
   </body>
 </html>
