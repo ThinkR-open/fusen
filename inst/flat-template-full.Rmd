@@ -171,7 +171,7 @@ Create a chunk with 'development' actions
 These are only included in the present flat template file, their content will not be part of the package anywhere else.
 -->
 
-```{r development-1, eval=FALSE}
+```{r development-inflate, eval=FALSE}
 # Keep eval=FALSE to avoid infinite loop in case you hit the knit button
 # Execute in the console directly
 fusen::inflate(rmd = "dev/flat_template.Rmd", name = "Get started")

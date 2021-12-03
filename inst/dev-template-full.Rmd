@@ -125,7 +125,7 @@ test_that("my_median works properly and show error if needed", {
 
 These are only included in the present flat template file, their content will not be part of the package anywhere else.
 
-```{r development-1, eval=FALSE}
+```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(rmd = "dev/dev_history.Rmd")

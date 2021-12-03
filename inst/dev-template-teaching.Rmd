@@ -144,7 +144,7 @@ That's it ! This the end of the documented story of our package. All components 
 <!-- You're one inflate from paper to box. -->
 <!-- Build your package from this very Rmd using `fusen::inflate()` in the `development` chunk below. -->
 
-```{r development-1, eval=FALSE}
+```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(rmd = "dev/dev_history.Rmd")
