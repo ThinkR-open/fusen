@@ -16,11 +16,13 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' Inflate Rmd to package
 #'
 #' @param pkg Path to package
-#' @param name Name of the resulting vignette
-#' @param rmd Path to Rmarkdown file to inflate
+#' @param flat_file Path to Rmarkdown file to inflate
+#' @param vignette_name Name of the resulting vignette
+#' @param open_vignette Logical. Whether to open vignette file at the end of the process
 #' @param check Logical. Whether to check package after Rmd inflating
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
-#' @param overwrite Logical (TRUE, FALSE) or character ("ask", "yes", "no). Whether to overwrite vignette and functions if already exists.
+#' @param overwrite Logical (TRUE, FALSE) or character ("ask", "yes", "no).
+#' Whether to overwrite vignette and functions if already exists.
 #' @param ... Arguments passed to `rcmdcheck::rcmdcheck()`.
 #'     For example, you can do `inflate(check = TRUE, quiet = TRUE)`, where `quiet` is
 #'     passed to `rcmdcheck::rcmdcheck()`.
@@ -40,7 +42,8 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' dev_file <- add_flat_template(template = "full", pkg = dummypackage, overwrite = TRUE)
 #' flat_file <- dev_file[grepl('flat', dev_file)]
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-#' inflate(pkg = dummypackage, rmd = flat_file, name = "Exploration of my Data", check = FALSE)
+#' inflate(pkg = dummypackage, flat_file = flat_file,
+#'   vignette_name = "Exploration of my Data", check = FALSE)
 #'
 #' # Explore directory of the package
 #' # browseURL(dummypackage)
@@ -50,9 +53,24 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' # pkgdown::build_site(dummypackage)
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
-inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
-                    name = "Get started", check = TRUE, document = TRUE,
+inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
+                    vignette_name = "Get started",
+                    open_vignette = TRUE,
+                    check = TRUE, document = TRUE,
                     overwrite = "ask", ...) {
+
+  if (!is.null(list(...)[["name"]])) {
+    warning(paste0("The `name` argument to `inflate()` is deprecated since {fusen} version 0.2.5,",
+    " and will be removed in a future version.",
+    "\nPlease use `vignette_name = '", list(...)[["name"]],"'` instead.\n"))
+    vignette_name <- list(...)[["name"]]
+  }
+  if (!is.null(list(...)[["rmd"]])) {
+    warning(paste0("The `rmd` argument to `inflate()` is deprecated since {fusen} version 0.2.5,",
+                   " and will be removed in a future version.",
+                   "\nPlease use `flat_file = '", list(...)[["rmd"]],"'` instead.\n"))
+    flat_file <- list(...)[["rmd"]]
+  }
 
   # Save all open files
   if (
@@ -73,7 +91,7 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
   }
 
   pkg <- normalizePath(pkg)
-  rmd <- normalizePath(rmd, mustWork = FALSE)
+  flat_file <- normalizePath(flat_file, mustWork = FALSE)
 
   if (!file.exists(file.path(normalizePath(pkg), "DESCRIPTION"))) {
     stop(
@@ -86,20 +104,20 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
     if (!file.exists(".Rbuildignore")) {
       file.create(".Rbuildignore")
     }
-    # usethis::use_build_ignore(basename(rmd))
+    # usethis::use_build_ignore(basename(flat_file))
     usethis::use_build_ignore(paste0(basename(pkg), ".Rproj"))
     usethis::use_build_ignore(".Rproj.user")
   }
 
-  if (grepl(pkg, rmd, fixed = TRUE)) {
+  if (grepl(pkg, flat_file, fixed = TRUE)) {
     # Rmd already contains pkgpath
-    rmd_path <- rmd
+    flat_file_path <- flat_file
   } else {
-    rmd_path <- file.path(pkg, rmd)
+    flat_file_path <- file.path(pkg, flat_file)
   }
 
-  if (!file.exists(rmd_path)) {
-    stop(rmd, " does not exists, please use fusen::add_flat_template() to create it.")
+  if (!file.exists(flat_file_path)) {
+    stop(flat_file, " does not exists, please use fusen::add_flat_template() to create it.")
   }
 
   # Are you sure ?
@@ -107,8 +125,8 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
     overwrite <- ifelse(isTRUE(overwrite), "yes", "no")
   }
   overwrite <- match.arg(overwrite, choices = c("ask", "yes", "no"))
-  cleaned_name <- asciify_name(name)
-  vignette_path <- file.path(pkg, "vignettes", paste0(cleaned_name, ".Rmd"))
+  cleaned_vignette_name <- asciify_name(vignette_name)
+  vignette_path <- file.path(pkg, "vignettes", paste0(cleaned_vignette_name, ".Rmd"))
   if (file.exists(vignette_path)) {
     if (overwrite == "ask") {
       rm_exist_vignette <- getFromNamespace("can_overwrite", "usethis")(vignette_path)
@@ -131,8 +149,8 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
     roxygen2::roxygenise(pkg)
   }
 
-  parsed_rmd <- parse_rmd(rmd)
-  parsed_tbl <- as_tibble(parsed_rmd)
+  parsed_flat_file <- parse_rmd(flat_file)
+  parsed_tbl <- as_tibble(parsed_flat_file)
 
   parsed_tbl$order <- 1:nrow(parsed_tbl)
   sec_title <- paste(parsed_tbl[["sec_h1"]],
@@ -151,11 +169,11 @@ inflate <- function(pkg = ".", rmd = file.path("dev", "flat_full.Rmd"),
   if (!is.null(fun_code)) {
     create_functions_all(parsed_tbl, fun_code, pkg)
   } else {
-    message("No chunks named 'function-xx' or 'fun-xx' were found in the Rmarkdown file: ", rmd)
+    message("No chunks named 'function-xx' or 'fun-xx' were found in the Rmarkdown file: ", flat_file)
   }
 
   # Create vignette ----
-  create_vignette(parsed_tbl, pkg, name)
+  create_vignette(parsed_tbl, pkg, vignette_name, open_vignette = open_vignette)
 
   # Run attachment
   if (isTRUE(document)) {
@@ -550,9 +568,10 @@ create_tests_files <- function(parsed_tbl, pkg) {
 #' Create vignette
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param pkg Path to package
-#' @param name Name of the resulting vignette
+#' @param vignette_name Name of the resulting vignette
+#' @param open_vignette Logical. Whether to open vignette file
 #' @noRd
-create_vignette <- function(parsed_tbl, pkg, name) {
+create_vignette <- function(parsed_tbl, pkg, vignette_name, open_vignette = TRUE) {
   old_proj <- usethis::proj_get()
 
   if (normalizePath(old_proj) != normalizePath(pkg)) {
@@ -585,7 +604,7 @@ create_vignette <- function(parsed_tbl, pkg, name) {
   # vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])] <-
   #   gsub("unnamed-", "parsermd-", vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])])
   #   is.na(vignette_tbl[["label"]]) & vignette_tbl[["type"]] == "rmd_chunk",
-  #                                   gsub("[.]+", "-", make.names(name)),
+  #                                   gsub("[.]+", "-", make.names(vignette_name)),
   #                                   vignette_tbl[["label"]])
   #
   # vignette_tbl[["label"]] <- make.unique(vignette_tbl[["label"]], sep = "-")
@@ -605,32 +624,79 @@ create_vignette <- function(parsed_tbl, pkg, name) {
   vignette_tbl[["ast"]] <- lapply(vignette_tbl[["ast"]], fix_unnamed_chunks)
   class(vignette_tbl[["ast"]]) <- ast_class
 
-  cleaned_name <- asciify_name(name)
+  # File to save
+  cleaned_vignette_name <- asciify_name(vignette_name)
+  vignette_file <- file.path("vignettes", paste0(cleaned_vignette_name, ".Rmd"))
 
-  usethis::use_vignette(name = cleaned_name, title = name)
-  vignette_file <- file.path("vignettes", paste0(cleaned_name, ".Rmd"))
-  if (!file.exists(vignette_file)) {
-    stop(
-      "Vignette could not be filled because of naming problem.",
-      "Have you used some special characters in `name`?"
-    )
-  }
+  # usethis::use_vignette(name = cleaned_vignette_name, title = vignette_name)
+  # if (!file.exists(vignette_file)) {
+  #   stop(
+  #     "Vignette could not be filled because of naming problem.",
+  #     "Have you used some special characters in `vignette_name`?"
+  #   )
+  # }
+
+  # Vignette head
+  head <- create_vignette_head(pkg = pkg, vignette_name = vignette_name)
 
   # Write vignette
   if (nrow(vignette_tbl) == 0) {
-    cat(
+    cat(head,
       "",
       "<!-- This vignette is generated by fusen: do not edit by hand -->\n",
-      sep = "\n", append = TRUE,
+      sep = "\n", #append = TRUE,
       file = vignette_file
     )
   } else {
     cat(
+      head,
       "",
       "<!-- This vignette is generated by fusen: do not edit by hand -->\n",
       enc2utf8(parsermd::as_document(vignette_tbl)),
-      sep = "\n", append = TRUE,
+      sep = "\n", #append = TRUE,
       file = vignette_file
     )
   }
+
+  if (isTRUE(open_vignette) & interactive()) {usethis::edit_file(vignette_file)}
+}
+
+#' Create vignette header
+#' @param pkg Path to package
+#' @param vignette_name Name of the resulting vignette
+#' @importFrom glue glue
+#' @importFrom utils getFromNamespace
+#' @noRd
+create_vignette_head <- function(pkg, vignette_name) {
+  pkgname <- basename(pkg)
+
+  # Copied from usethis::use_vignette() to allow to not open vignette created
+  # usethis:::use_dependency("knitr", "Suggests")
+  getFromNamespace("use_dependency", "usethis")("knitr", "Suggests")
+  getFromNamespace("use_description_field", "usethis")("VignetteBuilder", "knitr", overwrite = TRUE)
+  usethis::use_git_ignore("inst/doc")
+
+  glue(
+'---
+title: ".{vignette_name}."
+output: rmarkdown::html_vignette
+vignette: >
+  %\\VignetteIndexEntry{.{vignette_name}.}
+  %\\VignetteEngine{knitr::rmarkdown}
+  %\\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(.{pkgname}.)
+```
+    ',
+    .open = ".{", .close = "}."
+)
 }

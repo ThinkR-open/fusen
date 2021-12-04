@@ -23,6 +23,7 @@ Imports:
     desc,
     glue,
     here (>= 1.0.0),
+    knitr,
     magrittr,
     parsermd (>= 0.1.0),
     rcmdcheck,
@@ -35,7 +36,6 @@ Imports:
     usethis (>= 1.5.0),
     utils
 Suggests: 
-    knitr,
     pkgload,
     rmarkdown,
     rstudioapi,

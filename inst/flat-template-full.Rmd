@@ -174,7 +174,7 @@ These are only included in the present flat template file, their content will no
 ```{r development-inflate, eval=FALSE}
 # Keep eval=FALSE to avoid infinite loop in case you hit the knit button
 # Execute in the console directly
-fusen::inflate(rmd = "dev/flat_template.Rmd", name = "Get started")
+fusen::inflate(flat_file = "dev/flat_template.Rmd", vignette_name = "Get started")
 ```
 
 

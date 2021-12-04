@@ -47,7 +47,12 @@ install.packages("fusen")
 
 You can install the development version of {fusen} from GitHub:
 
-``` r
+```{r, eval=FALSE}
+# From r-universe.dev (No need for GITHUB_PAT)
+install.packages("fusen", 
+                 repos = c("thinkropen" = "https://thinkr-open.r-universe.dev"))
+
+# With {remotes} using GitHub API
 # install.packages("remotes")
 remotes::install_github("ThinkR-open/fusen")
 ```
@@ -58,7 +63,11 @@ remotes::install_github("ThinkR-open/fusen")
 *{fusen} is all about correctly separating and naming chunks.*  
 
 - Create a new directory / new project with
-  - RStudio template: File > New Project > New directory > Package using {fusen} 
+  - RStudio template: File > New Project > New directory > Package using {fusen}  
+```{r echo=FALSE, out.width="50%"}
+knitr::include_graphics("man/figures/fusen_rstudio_project.png")
+```
+- Choose the template
   - Choose the template `teaching` the first time to see how {fusen} works,
   - Choose the template `full` the second time to answer most of your questions  
 ```{r echo=FALSE, out.width="50%"}
@@ -78,7 +87,11 @@ usethis::use_mit_license("Sébastien Rochette")
 - Run the following code to **transform the flat Rmd as an inflated package**
   + This will open the vignette created
 ```{r, eval=FALSE}
-fusen::inflate(rmd = "dev/flat_teaching.Rmd", name = "get-started", check = TRUE)
+fusen::inflate(
+  flat_file = "dev/flat_teaching.Rmd",
+  vignette_name = "Get started",
+  check = TRUE
+)
 ```
 
 **That's it! You built a package! A documented and tested package!**

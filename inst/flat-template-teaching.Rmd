@@ -151,7 +151,7 @@ Build your package from this very Rmd using `fusen::inflate()`
 
 ```{r development-inflate, eval=FALSE}
 # Execute in the console directly
-fusen::inflate(rmd = "dev/flat_template.Rmd")
+fusen::inflate(flat_file = "dev/flat_template.Rmd")
 ```
 
 <!-- 

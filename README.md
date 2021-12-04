@@ -43,6 +43,11 @@ install.packages("fusen")
 You can install the development version of {fusen} from GitHub:
 
 ``` r
+# From r-universe.dev (No need for GITHUB_PAT)
+install.packages("fusen", 
+                 repos = c("thinkropen" = "https://thinkr-open.r-universe.dev"))
+
+# With {remotes} using GitHub API
 # install.packages("remotes")
 remotes::install_github("ThinkR-open/fusen")
 ```
@@ -56,7 +61,9 @@ remotes::install_github("ThinkR-open/fusen")
 
 -   Create a new directory / new project with
     -   RStudio template: File \> New Project \> New directory \>
-        Package using {fusen}
+        Package using {fusen}  
+        <img src="man/figures/fusen_rstudio_project.png" width="50%" />
+-   Choose the template
     -   Choose the template `teaching` the first time to see how {fusen}
         works,
     -   Choose the template `full` the second time to answer most of
@@ -83,7 +90,11 @@ usethis::use_mit_license("Sébastien Rochette")
     -   This will open the vignette created
 
 ``` r
-fusen::inflate(rmd = "dev/flat_teaching.Rmd", name = "get-started", check = TRUE)
+fusen::inflate(
+  flat_file = "dev/flat_teaching.Rmd",
+  vignette_name = "Get started",
+  check = TRUE
+)
 ```
 
 **That’s it! You built a package! A documented and tested package!**

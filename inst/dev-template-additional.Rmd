@@ -38,7 +38,7 @@ test_that("my_function works properly", {
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(rmd = "dev/dev_history.Rmd")
+fusen::inflate(flat_file = "dev/dev_history.Rmd", vignette_name = "Additional")
 ```
 
 <!-- - Verify your `"DESCRIPTION"` file has been updated -->

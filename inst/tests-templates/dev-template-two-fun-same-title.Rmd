@@ -70,5 +70,5 @@ test_that("my_median2 works properly and show error if needed", {
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(rmd = "dev/dev_history.Rmd")
+fusen::inflate(flat_file = "dev/dev_history.Rmd")
 ```

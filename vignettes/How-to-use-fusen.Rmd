@@ -129,7 +129,7 @@ usethis::use_mit_license("Sébastien Rochette")
 
 # Execute in the console directly
 
-fusen::inflate(rmd = "dev/dev_history.Rmd")
+fusen::inflate(flat_file = "dev/dev_history.Rmd")
 ```
 
 
@@ -156,7 +156,12 @@ dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- add_flat_template(template = "teaching",
                               pkg = dummypackage, overwrite = TRUE)
-inflate(pkg = dummypackage, rmd = dev_file, name = "Exploration of my Data", check = FALSE)
+inflate(
+  pkg = dummypackage, 
+  flat_file = dev_file, 
+  vignette_name = "Exploration of my Data",
+  check = FALSE
+)
 
 # Explore directory of the package
 browseURL(dummypackage)
@@ -185,7 +190,8 @@ usethis::with_project(dummypackage, {
   usethis::use_mit_license("Sébastien Rochette")
   
   # You may need to execute inflate() in the console directly
-  fusen::inflate(pkg = dummypackage, rmd = dev_file,
-                 name = "Get started")
+  fusen::inflate(pkg = dummypackage, 
+                 flat_file = dev_file,
+                 vignette_name = "Get started")
 })
 ```
