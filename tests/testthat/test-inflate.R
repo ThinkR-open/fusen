@@ -422,29 +422,7 @@ usethis::with_project(dummypackage, {
     # usethis::use_vignette writes in UTF-8
     vig_lines <- readLines(vignette_path, encoding = "UTF-8")
     expect_true(sum(grepl("# y  _ p n@ \u00E9 ! 1", vig_lines, fixed = TRUE)) == 2)
-    expect_true(sum(grepl("y-p-n---1", vig_lines, fixed = TRUE)) == 0)
-  })
-
-  # Clean R, tests and vignettes
-  unlink(file.path(dummypackage, "R"), recursive = TRUE)
-  unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
-  unlink(file.path(dummypackage, "tests"), recursive = TRUE)
-})
-
-usethis::with_project(dummypackage, {
-  suppressMessages(
-    inflate(pkg = dummypackage, flat_file = flat_file,
-            vignette_name = "# y  _ p n@ \u00E9 ! 1", check = FALSE,
-            open_vignette = FALSE)
-  )
-  # Vignette name is also cleaned by {usethis} for special characters
-  vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
-
-  test_that("vignette is created with clean vignette_name", {
-    expect_true(file.exists(vignette_path))
-    # usethis::use_vignette writes in UTF-8
-    vig_lines <- readLines(vignette_path, encoding = "UTF-8")
-    expect_true(sum(grepl("# y  _ p n@ \u00E9 ! 1", vig_lines, fixed = TRUE)) == 2)
+    expect_equal(vig_lines[2], 'title: "# y  _ p n@ \u00E9 ! 1"')
     expect_true(sum(grepl("y-p-n---1", vig_lines, fixed = TRUE)) == 0)
   })
 
