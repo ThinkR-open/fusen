@@ -33,7 +33,7 @@ Imports:
     tibble,
     tidyr,
     tools,
-    usethis (>= 1.5.0),
+    usethis (>= 2.0.0),
     utils
 Suggests: 
     pkgload,
