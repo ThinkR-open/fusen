@@ -285,7 +285,6 @@ dir.create(dummypackage)
 # Add
 test_that("add dev_history template works with windows \\users path", {
   withr::with_dir(dummypackage, {
-    # browser()
     dev_file_path <- expect_error(
       add_flat_template(pkg = dummypackage, template = "dev_history",
                         open = FALSE),

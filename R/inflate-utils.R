@@ -1,10 +1,21 @@
 
 #' Parse function code as tibble and get positions
 #' @param x One row out of function parsed tibble
+#' @importFrom parsermd rmd_node_code
 #' @noRd
 parse_fun <- function(x) { # x <- rmd_fun[3,]
 
-  code <- rmd_get_chunk(x)$code
+  # browser()
+  # code <- rmd_get_chunk(x)$code
+  # parsermd::rmd_node_content(x)
+  # parsermd::rmd_select(dev_parse, "description")[[1]] %>%
+  #   parsermd::rmd_node_code()
+
+  # parsermd::rmd_select(x, parsermd::has_type("ast"))[[1]] %>%
+  #   parsermd::rmd_node_code(x)
+  # parsermd::rmd_node_attr(x, "ast")
+
+  code <- unlist(rmd_node_code(x[["ast"]]))
   # find function name
   fun_name <- stringr::str_extract(
     code[grep("function(\\s*)\\(", code)],
@@ -87,6 +98,7 @@ add_fun_to_parsed <- function(parsed_tbl, fun_names) {
 #' Add examples in function code
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param fun_code R code of functions in Rmd as character
+#' @importFrom parsermd rmd_node_code
 #' @noRd
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
   # fun_code <- fun_code[!is.na(fun_code[["fun_name"]]), ]
@@ -115,7 +127,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
       function(x) {
         tibble::tibble(
           fun_name = rmd_ex[x, ][["fun_name"]],
-          example_chunk = list(paste("#'", rmd_get_chunk(rmd_ex[x, ])$code))
+          # example_chunk = list(paste("#'", rmd_get_chunk(rmd_ex[x, ])$code))
+          example_chunk = list(paste("#'", unlist(rmd_node_code(rmd_ex[x,][["ast"]]))))
         )
       }
     ) %>% do.call("rbind", .)

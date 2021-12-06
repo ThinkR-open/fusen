@@ -406,8 +406,19 @@ usethis::with_project(dummypackage, {
   unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
   unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 })
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
 
 # Test no errors - clean vignette_name for vignette ----
+# Create a new project
+dummypackage <- tempfile("clean.vignette")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
 usethis::with_project(dummypackage, {
   suppressMessages(
     inflate(pkg = dummypackage, flat_file = flat_file,
@@ -421,8 +432,8 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(vignette_path))
     # usethis::use_vignette writes in UTF-8
     vig_lines <- readLines(vignette_path, encoding = "UTF-8")
-    expect_true(sum(grepl("# y  _ p n@ \u00E9 ! 1", vig_lines, fixed = TRUE)) == 2)
-    expect_equal(vig_lines[2], 'title: "# y  _ p n@ \u00E9 ! 1"')
+    expect_true(sum(grepl(enc2utf8("# y  _ p n@ \u00E9 ! 1"), vig_lines, fixed = TRUE)) == 2)
+    expect_equal(vig_lines[2], enc2utf8('title: "# y  _ p n@ \u00E9 ! 1"'))
     expect_true(sum(grepl("y-p-n---1", vig_lines, fixed = TRUE)) == 0)
   })
 
