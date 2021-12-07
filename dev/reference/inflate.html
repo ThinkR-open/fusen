@@ -83,30 +83,36 @@
     <p>Inflate Rmd to package</p>
     </div>
 
-    <div id="ref-usage">Usage,<div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">inflate</span><span class="op">(</span>
+    <div id="ref-usage">
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">inflate</span><span class="op">(</span>
   pkg <span class="op">=</span> <span class="st">"."</span>,
-  rmd <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"dev"</span>, <span class="st">"flat_full.Rmd"</span><span class="op">)</span>,
-  name <span class="op">=</span> <span class="st">"Get started"</span>,
+  flat_file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"dev"</span>, <span class="st">"flat_full.Rmd"</span><span class="op">)</span>,
+  vignette_name <span class="op">=</span> <span class="st">"Get started"</span>,
+  open_vignette <span class="op">=</span> <span class="cn">TRUE</span>,
   check <span class="op">=</span> <span class="cn">TRUE</span>,
   document <span class="op">=</span> <span class="cn">TRUE</span>,
   overwrite <span class="op">=</span> <span class="st">"ask"</span>,
   <span class="va">...</span>
-<span class="op">)</span></code></pre></div></div>
+<span class="op">)</span></code></pre></div>
+    </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>pkg</dt>
 <dd><p>Path to package</p></dd>
-<dt>rmd</dt>
+<dt>flat_file</dt>
 <dd><p>Path to Rmarkdown file to inflate</p></dd>
-<dt>name</dt>
+<dt>vignette_name</dt>
 <dd><p>Name of the resulting vignette</p></dd>
+<dt>open_vignette</dt>
+<dd><p>Logical. Whether to open vignette file at the end of the process</p></dd>
 <dt>check</dt>
 <dd><p>Logical. Whether to check package after Rmd inflating</p></dd>
 <dt>document</dt>
 <dd><p>Logical. Whether to document your package using <code><a href="https://thinkr-open.github.io/attachment//reference/att_amend_desc.html" class="external-link">att_amend_desc</a></code></p></dd>
 <dt>overwrite</dt>
-<dd><p>Logical (TRUE, FALSE) or character ("ask", "yes", "no). Whether to overwrite vignette and functions if already exists.</p></dd>
+<dd><p>Logical (TRUE, FALSE) or character ("ask", "yes", "no).
+Whether to overwrite vignette and functions if already exists.</p></dd>
 <dt>...</dt>
 <dd><p>Arguments passed to <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.html" class="external-link">rcmdcheck::rcmdcheck()</a></code>.
 For example, you can do <code>inflate(check = TRUE, quiet = TRUE)</code>, where <code>quiet</code> is
@@ -125,30 +131,27 @@ passed to <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># {fusen} steps</span></span>
 <span class="r-in"><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"full"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/Rtmp4jXZfE/dummypackage32e834ed8ce0 . Please start a new R session in the new project directory.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpXHvME6/dummypackage32c72dc0b013 . Please start a new R session in the new project directory.</span>
 <span class="r-in"><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">dev_file</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">'flat'</span>, <span class="va">dev_file</span><span class="op">)</span><span class="op">]</span></span>
 <span class="r-in"><span class="fu"><a href="fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp4jXZfE/dummypackage32e834ed8ce0/DESCRIPTION"</span>
-<span class="r-in"><span class="fu">inflate</span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, rmd <span class="op">=</span> <span class="va">flat_file</span>, name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>, check <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmp4jXZfE/dummypackage32e834ed8ce0'</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpXHvME6/dummypackage32c72dc0b013/DESCRIPTION"</span>
+<span class="r-in"><span class="fu">inflate</span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, flat_file <span class="op">=</span> <span class="va">flat_file</span>,</span>
+<span class="r-in">  vignette_name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>, check <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpXHvME6/dummypackage32c72dc0b013'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> First time using roxygen2. Upgrading automatically...</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage32e834ed8ce0</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage32c72dc0b013</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Writing NAMESPACE</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'knitr'</span> to <span style="color: #00BB00;">Suggests</span> field in DESCRIPTION</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting <span style="color: #00BB00;">VignetteBuilder</span> field in DESCRIPTION to <span style="color: #0000BB;">'knitr'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'inst/doc'</span> to <span style="color: #0000BB;">'.gitignore'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'*.html'</span>, <span style="color: #0000BB;">'*.R'</span> to <span style="color: #0000BB;">'vignettes/.gitignore'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'rmarkdown'</span> to <span style="color: #00BB00;">Suggests</span> field in DESCRIPTION</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Writing <span style="color: #0000BB;">'vignettes/exploration-of-my-data.Rmd'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Edit <span style="color: #0000BB;">'vignettes/exploration-of-my-data.Rmd'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating dummypackage32e834ed8ce0 documentation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage32e834ed8ce0</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating dummypackage32c72dc0b013 documentation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage32c72dc0b013</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Writing NAMESPACE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Writing my_median.Rd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Writing my_other_median.Rd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> Writing sub_median.Rd</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> [+] 2 package(s) added: stats, testthat.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp4jXZfE/dummypackage32e834ed8ce0"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> [+] 3 package(s) added: stats, rmarkdown, testthat.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpXHvME6/dummypackage32c72dc0b013"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Explore directory of the package</span></span>
 <span class="r-in"><span class="co"># browseURL(dummypackage)</span></span>
@@ -168,7 +171,7 @@ passed to <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
 
 
       <footer><div class="thinkr">
-  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
 <div class="author">

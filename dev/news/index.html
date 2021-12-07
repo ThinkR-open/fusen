@@ -86,10 +86,16 @@
 <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> superseeds <code><a href="../reference/add_dev_history.html">add_dev_history()</a></code> with more advanced possibilities</li>
 <li>
 <code><a href="../reference/add_dev_history.html">add_dev_history()</a></code> is deprecated</li>
+<li>Vignette name to create is now set with <code>inflate(vignette_name = "Get started")</code> instead of <code>name</code>
+</li>
+<li>Flat name to inflate is now set with <code>inflate(flat_file = "dev/flat_full.Rmd")</code> instead of <code>rmd</code>
+</li>
 </ul></div>
 <div class="section level3">
 <h3 id="major-changes-0-2-4-9000">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-2-4-9000"></a></h3>
-<ul><li>Improve documentation included in flat templates to reflect changes in using dev_history file</li>
+<ul><li>Decide whether or not to open vignette when inflate with <code>inflate(open_vignette = FALSE)</code>
+</li>
+<li>Improve documentation included in flat templates to reflect changes in using dev_history file</li>
 <li>Add Rstudio Addin to insert chunks for new function (<a href="https://github.com/ColinFay" class="external-link">@ColinFay</a>)</li>
 <li>Deal with <code>\dontrun{}</code> in example chunks</li>
 <li>Allow short names for chunks: dev, fun, ex, test</li>
@@ -166,7 +172,7 @@
 
 
       <footer><div class="thinkr">
-  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
 <div class="author">

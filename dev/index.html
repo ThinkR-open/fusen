@@ -19,10 +19,10 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.7.1/css/v4-shims.min.css" integrity="sha256-6qHlizsOWFskGlwVOKuns+D1nB6ssZrHQrNj1wGplHc=" crossorigin="anonymous">
 <!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/1.7.1/clipboard.min.js" integrity="sha384-cV+rhyOuRHc9Ub/91rihWcGmMmCXDeksTtCihMupQHSsi8GIIRDG0ThDc3HGQFJ3" crossorigin="anonymous"></script><!-- sticky kit --><script src="https://cdnjs.cloudflare.com/ajax/libs/sticky-kit/1.1.3/sticky-kit.min.js" integrity="sha256-c4Rlo1ZozqTPE2RLuvbusY3+SU1pQaJC0TjuhygMipw=" crossorigin="anonymous"></script><!-- pkgdown --><link href="pkgdown.css" rel="stylesheet">
 <script src="pkgdown.js"></script><meta property="og:title" content="Build a Package from Rmarkdown File">
-<meta property="og:description" content="Use Rmarkdown First method to build your package. Start your
+<meta property="og:description" content="Use Rmarkdown First method to build your package.  Start your
     package with documentation, functions, examples and tests in the same
     unique file. Everything can be set from the Rmarkdown template file
-    provided in your project, then inflated as a package. Inflating the
+    provided in your project, then inflated as a package.  Inflating the
     template copies the relevant chunks and sections in the appropriate
     files required for package development.">
 <meta property="og:image" content="https://thinkr-open.github.io/fusen/logo.png">
@@ -142,7 +142,12 @@
 </blockquote>
 <p>You can install the development version of {fusen} from GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># install.packages("remotes")</span>
+<code class="sourceCode R"><span class="co"># From r-universe.dev (No need for GITHUB_PAT)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"fusen"</span>, 
+                 repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"thinkropen"</span> <span class="op">=</span> <span class="st">"https://thinkr-open.r-universe.dev"</span><span class="op">)</span><span class="op">)</span>
+
+<span class="co"># With {remotes} using GitHub API</span>
+<span class="co"># install.packages("remotes")</span>
 <span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ThinkR-open/fusen"</span><span class="op">)</span></code></pre></div>
 <blockquote>
 <p><em>Full documentation for the development version is here: <a href="https://thinkr-open.github.io/fusen/dev/" class="uri">https://thinkr-open.github.io/fusen/dev/</a></em></p>
@@ -155,7 +160,12 @@
 <ul>
 <li>Create a new directory / new project with
 <ul>
-<li>RStudio template: File &gt; New Project &gt; New directory &gt; Package using {fusen}</li>
+<li>RStudio template: File &gt; New Project &gt; New directory &gt; Package using {fusen}<br><img src="reference/figures/fusen_rstudio_project.png" width="50%">
+</li>
+</ul>
+</li>
+<li>Choose the template
+<ul>
 <li>Choose the template <code>teaching</code> the first time to see how {fusen} works,</li>
 <li>Choose the template <code>full</code> the second time to answer most of your questions<br><img src="reference/figures/create_fusen_rstudio.png" width="50%">
 </li>
@@ -186,7 +196,11 @@
 </li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/inflate.html">inflate</a></span><span class="op">(</span>rmd <span class="op">=</span> <span class="st">"dev/flat_teaching.Rmd"</span>, name <span class="op">=</span> <span class="st">"get-started"</span>, check <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/inflate.html">inflate</a></span><span class="op">(</span>
+  flat_file <span class="op">=</span> <span class="st">"dev/flat_teaching.Rmd"</span>,
+  vignette_name <span class="op">=</span> <span class="st">"Get started"</span>,
+  check <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
 <p><strong>That’s it! You built a package! A documented and tested package!</strong></p>
 <p>Let’s test it now:</p>
 <ul>
@@ -340,7 +354,7 @@
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
 <div class="author">

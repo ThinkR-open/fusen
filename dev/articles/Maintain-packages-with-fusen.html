@@ -247,10 +247,10 @@ Maintaining such a package requires a choice:</p>
   <span class="fu">expect_error</span><span class="op">(</span><span class="fu">my_median</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
 <ul>
-<li>Run command of the last chunk: <code>fusen::inflate(rmd = "dev/flat_additional.Rmd")</code>
+<li>Run command of the last chunk: <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd")</code>
 <ul>
-<li>This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use <code>fusen::inflate(rmd = "dev/flat_additional.Rmd", document = FALSE)</code> to avoid that.</li>
-<li>This will also run <code>devtools::check()</code>. Use <code>fusen::inflate(rmd = "dev/flat_additional.Rmd", check = FALSE)</code> to avoid that.</li>
+<li>This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", document = FALSE)</code> to avoid that.</li>
+<li>This will also run <code>devtools::check()</code>. Use <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", check = FALSE)</code> to avoid that.</li>
 </ul>
 </li>
 </ul>
@@ -277,7 +277,7 @@ You added a new function in your package, along with example, test and a new vig
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
 <div class="author">

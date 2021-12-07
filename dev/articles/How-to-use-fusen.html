@@ -224,8 +224,8 @@
 
 <span class="co"># Add an additional dev template</span>
 <span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"add"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span>
-<span class="co">#&gt; Created file .here in /tmp/RtmpA33Del/dummypackage340757fa8451 . Please start a new R session in the new project directory.</span>
-<span class="co">#&gt; [1] "/tmp/RtmpA33Del/dummypackage340757fa8451/dev/flat_additional.Rmd"</span>
+<span class="co">#&gt; Created file .here in /tmp/RtmpxxFMOV/dummypackage33e76344d051 . Please start a new R session in the new project directory.</span>
+<span class="co">#&gt; [1] "/tmp/RtmpxxFMOV/dummypackage33e76344d051/dev/flat_additional.Rmd"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -253,7 +253,7 @@
   <span class="op">)</span>
 <span class="op">)</span>
 <span class="co">#&gt; <span style="color: #BBBB00;">!</span> Title was modified to 'Title Case'.</span>
-<span class="co">#&gt; [1] "/tmp/RtmpA33Del/dummypackage340725186267/DESCRIPTION"</span>
+<span class="co">#&gt; [1] "/tmp/RtmpxxFMOV/dummypackage33e72f58e3a9/DESCRIPTION"</span>
 
 <span class="co"># Delete dummy package</span>
 <span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
@@ -269,7 +269,7 @@
 
 <span class="co"># Execute in the console directly</span>
 
-<span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>rmd <span class="op">=</span> <span class="st">"dev/dev_history.Rmd"</span><span class="op">)</span></code></pre>
+<span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>flat_file <span class="op">=</span> <span class="st">"dev/dev_history.Rmd"</span><span class="op">)</span></code></pre>
 </div>
 <div class="section level1">
 <h1 id="inflate-your-package-from-dev-rmd-template">Inflate your package from dev Rmd template<a class="anchor" aria-label="anchor" href="#inflate-your-package-from-dev-rmd-template"></a>
@@ -293,7 +293,12 @@
 <span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span>
 <span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"teaching"</span>,
                               pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, rmd <span class="op">=</span> <span class="va">dev_file</span>, name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>, check <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
+<span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>
+  pkg <span class="op">=</span> <span class="va">dummypackage</span>, 
+  flat_file <span class="op">=</span> <span class="va">dev_file</span>, 
+  vignette_name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>,
+  check <span class="op">=</span> <span class="cn">FALSE</span>
+<span class="op">)</span>
 
 <span class="co"># Explore directory of the package</span>
 <span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span>
@@ -326,8 +331,9 @@
   <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html" class="external-link">use_mit_license</a></span><span class="op">(</span><span class="st">"Sébastien Rochette"</span><span class="op">)</span>
   
   <span class="co"># You may need to execute inflate() in the console directly</span>
-  <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, rmd <span class="op">=</span> <span class="va">dev_file</span>,
-                 name <span class="op">=</span> <span class="st">"Get started"</span><span class="op">)</span>
+  <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, 
+                 flat_file <span class="op">=</span> <span class="va">dev_file</span>,
+                 vignette_name <span class="op">=</span> <span class="st">"Get started"</span><span class="op">)</span>
 <span class="op">}</span><span class="op">)</span></code></pre></div>
 </div>
   </div>
@@ -344,7 +350,7 @@
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.0.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
 </div>
 
 <div class="author">
