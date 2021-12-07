@@ -195,6 +195,6 @@ test_that("split_rmd works", {
 ```
 
 ```{r development-2, eval=FALSE}
-fusen::inflate(rmd = file.path("dev", "dev_history_parse.Rmd"), name = "parse_rmd", check = FALSE)
+fusen::inflate(flat_file = file.path("dev", "dev_history_parse.Rmd"), vignette_name = NA, check = FALSE)
 
 ```

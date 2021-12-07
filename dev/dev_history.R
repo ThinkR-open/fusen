@@ -92,12 +92,17 @@ usethis::use_github_action("test-coverage")
 usethis::use_coverage()
 usethis::use_build_ignore("_pkgdown.yml")
 
+# Inflates ----
+fusen::inflate(flat_file = "dev/dev_history_flat.Rmd", check = FALSE, vignette_name = NA)
+
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
-  pkg_ignore = c("testthat", "dummypackage", "rstudioapi"),
-  extra.suggests = c("testthat", "pkgload", "rstudioapi")#,
+  pkg_ignore = c("testthat", "dummypackage", "rstudioapi",
+                 "nknitr", "rmarkdown"),
+  extra.suggests = c("testthat", "pkgload", "rstudioapi",
+                     "rmarkdown")#,
   # "MASS", "lattice", "Matrix")
 )
 # attachment::create_dependencies_file()

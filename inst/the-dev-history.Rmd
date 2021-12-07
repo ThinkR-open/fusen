@@ -67,6 +67,9 @@ usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
 # _GitLab
 gitlabr::use_gitlab_ci(type = "check-coverage-pkgdown")
+
+# Add new flat template
+fusen::add_flat_template("add")
 ```
 
 ## Use everytime needed

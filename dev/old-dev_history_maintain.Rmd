@@ -56,7 +56,7 @@ This does not remove or modify previous functions, tests or vignettes, provided 
 
 
 ```{r development-2, eval=FALSE}
-fusen::inflate(rmd = file.path("dev", "dev_history_maintain.Rmd"), name = "Maintain packages with {fusen}", check = FALSE)
+fusen::inflate(flat_file = file.path("dev", "dev_history_maintain.Rmd"), name = "Maintain packages with {fusen}", check = FALSE)
 attachment::att_amend_desc(
   pkg_ignore = "testthat",
   extra.suggests = c("testthat", "pkgload")

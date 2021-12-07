@@ -6,8 +6,9 @@
 \usage{
 inflate(
   pkg = ".",
-  rmd = file.path("dev", "flat_full.Rmd"),
-  name = "Get started",
+  flat_file = file.path("dev", "flat_full.Rmd"),
+  vignette_name = "Get started",
+  open_vignette = TRUE,
   check = TRUE,
   document = TRUE,
   overwrite = "ask",
@@ -17,15 +18,18 @@ inflate(
 \arguments{
 \item{pkg}{Path to package}
 
-\item{rmd}{Path to Rmarkdown file to inflate}
+\item{flat_file}{Path to Rmarkdown file to inflate}
 
-\item{name}{Name of the resulting vignette}
+\item{vignette_name}{Name of the resulting vignette}
+
+\item{open_vignette}{Logical. Whether to open vignette file at the end of the process}
 
 \item{check}{Logical. Whether to check package after Rmd inflating}
 
 \item{document}{Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}}
 
-\item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no). Whether to overwrite vignette and functions if already exists.}
+\item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no).
+Whether to overwrite vignette and functions if already exists.}
 
 \item{...}{Arguments passed to \code{rcmdcheck::rcmdcheck()}.
 For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is
@@ -46,7 +50,8 @@ dir.create(dummypackage)
 dev_file <- add_flat_template(template = "full", pkg = dummypackage, overwrite = TRUE)
 flat_file <- dev_file[grepl('flat', dev_file)]
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-inflate(pkg = dummypackage, rmd = flat_file, name = "Exploration of my Data", check = FALSE)
+inflate(pkg = dummypackage, flat_file = flat_file,
+  vignette_name = "Exploration of my Data", check = FALSE)
 
 # Explore directory of the package
 # browseURL(dummypackage)

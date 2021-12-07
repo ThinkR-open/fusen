@@ -6,10 +6,10 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-1565-9313")),
     person("ThinkR", role = "cph")
   )
-Description: Use Rmarkdown First method to build your package. Start your
+Description: Use Rmarkdown First method to build your package.  Start your
     package with documentation, functions, examples and tests in the same
     unique file. Everything can be set from the Rmarkdown template file
-    provided in your project, then inflated as a package. Inflating the
+    provided in your project, then inflated as a package.  Inflating the
     template copies the relevant chunks and sections in the appropriate
     files required for package development.
 License: MIT + file LICENSE
@@ -23,6 +23,7 @@ Imports:
     desc,
     glue,
     here (>= 1.0.0),
+    knitr,
     magrittr,
     parsermd (>= 0.1.0),
     rcmdcheck,
@@ -32,10 +33,9 @@ Imports:
     tibble,
     tidyr,
     tools,
-    usethis (>= 1.5.0),
+    usethis (>= 2.0.0),
     utils
 Suggests: 
-    knitr,
     pkgload,
     rmarkdown,
     rstudioapi,

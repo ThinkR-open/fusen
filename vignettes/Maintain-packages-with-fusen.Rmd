@@ -122,9 +122,9 @@ test_that("my_median works properly and show error if needed", {
   expect_error(my_median("text"))
 })
 ```
-- Run command of the last chunk: `fusen::inflate(rmd = "dev/flat_additional.Rmd")`
-  + This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use `fusen::inflate(rmd = "dev/flat_additional.Rmd", document = FALSE)` to avoid that.
-  + This will also run `devtools::check()`. Use `fusen::inflate(rmd = "dev/flat_additional.Rmd", check = FALSE)` to avoid that.
+- Run command of the last chunk: `fusen::inflate(flat_file = "dev/flat_additional.Rmd")`
+  + This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use `fusen::inflate(flat_file = "dev/flat_additional.Rmd", document = FALSE)` to avoid that.
+  + This will also run `devtools::check()`. Use `fusen::inflate(flat_file = "dev/flat_additional.Rmd", check = FALSE)` to avoid that.
 
 **That's it!**  
 You added a new function in your package, along with example, test and a new vignette:

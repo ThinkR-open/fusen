@@ -16,8 +16,9 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
   suppressMessages(
-    inflate(pkg = dummypackage, rmd = flat_file,
-            name = "Get started", check = FALSE)
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "Get started", check = FALSE,
+            open_vignette = FALSE)
   )
 
   test_that("inflate() worked correctly", {
@@ -198,8 +199,9 @@ if (packageVersion("parsermd") > "0.1.2") {
     )
 
     suppressMessages(
-      inflate(pkg = dummypackage.special, rmd = flat_file,
-              name = "Get started", check = FALSE)
+      inflate(pkg = dummypackage.special, flat_file = flat_file,
+              vignette_name = "Get started", check = FALSE,
+              open_vignette = FALSE)
     )
 
     test_that("inflate with special yaml worked correctly", {
@@ -218,8 +220,8 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
   suppressMessages(
-    inflate(pkg = dummypackage, rmd = flat_file, name = "Get started",
-            check = FALSE, document = FALSE)
+    inflate(pkg = dummypackage, flat_file = flat_file, vignette_name = "Get started",
+            check = FALSE, document = FALSE, open_vignette = FALSE)
   )
   desc_lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
 
@@ -242,8 +244,9 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
   suppressMessages(
-    inflate(pkg = dummypackage, rmd = flat_file,
-            name = "Get started", check = FALSE)
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "Get started", check = FALSE,
+            open_vignette = FALSE)
   )
 
   test_that("inflate() output no error", {
@@ -267,8 +270,9 @@ usethis::with_project(dummypackage, {
   test_that("inflate() output message", {
     suppressMessages(
       expect_message(
-        inflate(pkg = dummypackage, rmd = flat_file,
-                name = "Get started", check = FALSE)
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "Get started", check = FALSE,
+                open_vignette = FALSE)
       )
     )
   })
@@ -281,30 +285,33 @@ usethis::with_project(dummypackage, {
 # Tests errors - vignette already exists ----
 usethis::with_project(dummypackage, {
   suppressMessages(
-    inflate(pkg = dummypackage, rmd = flat_file,
-            name = "Get started",
-            check = FALSE, overwrite = "yes")
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "Get started",
+            check = FALSE, overwrite = "yes",
+            open_vignette = FALSE)
   )
 
   test_that("inflate() output error when second time (not interactive)", {
     expect_error(
       suppressMessages(
-        inflate(pkg = dummypackage, rmd = flat_file,
-                name = "Get started",
-                check = FALSE))
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "Get started",
+                check = FALSE,
+                open_vignette = FALSE))
     )
     expect_error(
       suppressMessages(
-        inflate(pkg = dummypackage, rmd = flat_file,
-                name = "Get started",
-                check = FALSE, overwrite = 'no'))
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "Get started",
+                check = FALSE, overwrite = 'no',
+                open_vignette = FALSE))
     )
   })
 
   # No error with overwrite = 'yes'
   suppressMessages(
-    inflate(pkg = dummypackage, rmd = flat_file, name = "Get started",
-            check = FALSE, overwrite = "yes")
+    inflate(pkg = dummypackage, flat_file = flat_file, vignette_name = "Get started",
+            check = FALSE, overwrite = "yes", open_vignette = FALSE)
   )
 
   test_that("inflate() output no error", {
@@ -327,8 +334,9 @@ usethis::with_project(dummypackage, {
   test_that("inflate() output error duplicate functions", {
     expect_error(
       suppressMessages(
-        inflate(pkg = dummypackage, rmd = flat_file,
-                name = "Get started", check = FALSE))
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "Get started", check = FALSE,
+                open_vignette = FALSE))
     )
   })
   # Clean R, tests and vignettes
@@ -345,7 +353,9 @@ usethis::with_project(dummypackage, {
   test_that("inflate() output error duplicate label names for vignette", {
     expect_error(
       suppressMessages(
-        inflate(pkg = dummypackage, rmd = flat_file, name = "Get started", check = FALSE)
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "Get started", check = FALSE,
+                open_vignette = FALSE)
       )
     )
   })
@@ -365,8 +375,9 @@ usethis::with_project(dummypackage, {
   # {fusen} steps
   dev_file <- add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE)
   suppressMessages(
-    inflate(pkg = dummypackage, rmd = flat_file,
-            name = "Get started", check = FALSE)
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "Get started", check = FALSE,
+            open_vignette = FALSE)
   )
 
   test_that("add_flat_template inflates with .Rproj and no .here", {
@@ -395,41 +406,34 @@ usethis::with_project(dummypackage, {
   unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
   unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 })
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
 
-# Test no errors - clean name for vignette ----
+# Test no errors - clean vignette_name for vignette ----
+# Create a new project
+dummypackage <- tempfile("clean.vignette")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
 usethis::with_project(dummypackage, {
   suppressMessages(
-    inflate(pkg = dummypackage, rmd = flat_file, name = "# y  _ p n@ \u00E9 ! 1", check = FALSE)
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "# y  _ p n@ \u00E9 ! 1", check = FALSE,
+            open_vignette = FALSE)
   )
   # Vignette name is also cleaned by {usethis} for special characters
   vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
 
-  test_that("vignette is created with clean name", {
+  test_that("vignette is created with clean vignette_name", {
     expect_true(file.exists(vignette_path))
     # usethis::use_vignette writes in UTF-8
     vig_lines <- readLines(vignette_path, encoding = "UTF-8")
-    expect_true(sum(grepl("# y  _ p n@ \u00E9 ! 1", vig_lines, fixed = TRUE)) == 2)
-    expect_true(sum(grepl("y-p-n---1", vig_lines, fixed = TRUE)) == 0)
-  })
-
-  # Clean R, tests and vignettes
-  unlink(file.path(dummypackage, "R"), recursive = TRUE)
-  unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
-  unlink(file.path(dummypackage, "tests"), recursive = TRUE)
-})
-
-usethis::with_project(dummypackage, {
-  suppressMessages(
-    inflate(pkg = dummypackage, rmd = flat_file, name = "# y  _ p n@ \u00E9 ! 1", check = FALSE)
-  )
-  # Vignette name is also cleaned by {usethis} for special characters
-  vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
-
-  test_that("vignette is created with clean name", {
-    expect_true(file.exists(vignette_path))
-    # usethis::use_vignette writes in UTF-8
-    vig_lines <- readLines(vignette_path, encoding = "UTF-8")
-    expect_true(sum(grepl("# y  _ p n@ \u00E9 ! 1", vig_lines, fixed = TRUE)) == 2)
+    expect_true(sum(grepl(enc2utf8("# y  _ p n@ \u00E9 ! 1"), vig_lines, fixed = TRUE)) == 2)
+    expect_equal(vig_lines[2], enc2utf8('title: "# y  _ p n@ \u00E9 ! 1"'))
     expect_true(sum(grepl("y-p-n---1", vig_lines, fixed = TRUE)) == 0)
   })
 
@@ -452,7 +456,8 @@ usethis::with_project(dummypackage, {
   test_that("stop when no DESCRIPTION file", {
     expect_error(
       suppressMessages(
-        inflate(pkg = dummypackage, rmd = flat_file, check = FALSE)
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                check = FALSE, open_vignette = FALSE)
       ),
       "DESCRIPTION file")
   })
@@ -485,7 +490,8 @@ usethis::with_project(dummypackage, {
     # No error
     expect_error(
       suppressMessages(
-        inflate(pkg = dummypackage, rmd = flat_file, check = FALSE)
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                check = FALSE, open_vignette = FALSE)
       ),
       regexp = NA)
     # Check error
@@ -512,7 +518,6 @@ for (pkgname in c("full", "teaching", "minimal")) {
   flat_file <- dev_file[grepl("flat_", dev_file)]
 
   usethis::with_project(path_foosen, {
-# browser()
     # Do not check inside check if on CRAN
     skip_on_os(os = c("windows", "solaris"))
 
@@ -520,12 +525,26 @@ for (pkgname in c("full", "teaching", "minimal")) {
     usethis::use_gpl_license()
 
     test_that(paste("Check returns OK for template", pkgname), {
+      # extract the 'inflate' line in the flat file
+      # Add pkg, check, quiet, args, overwrite
+      # And inflate
+      flat_lines <- readLines(flat_file)
+      w.start <- grep("fusen::inflate\\(flat_file", flat_lines)
+      w.end <- grep("\\)", flat_lines)
+      w.end <- w.end[w.end >= w.start][1]
+      inflate_lines <- flat_lines[w.start:w.end]
+      # Modify with extra values
+      extra_params <- glue(
+        'fusen::inflate(pkg = "{path_foosen}",
+      check = TRUE, quiet = TRUE, args = c("--no-manual"),
+      overwrite = TRUE, open_vignette = FALSE, '
+      )
+      to_inflate <- gsub("fusen::inflate\\(", extra_params, inflate_lines)
+
       # No redirection of stdout/stderr when non-interactive
       expect_error(
         suppressMessages(
-          inflate(pkg = path_foosen, rmd = flat_file, name = "exploration",
-                  check = TRUE, quiet = TRUE, args = c("--no-manual"),
-                  overwrite = TRUE)
+          eval(parse(text = to_inflate))
         ),
         regexp = NA)
 
@@ -533,12 +552,17 @@ for (pkgname in c("full", "teaching", "minimal")) {
       # Needs MASS, lattice, Matrix installed
       # quiet and checkdir
       checkdir <- file.path(alltemp, paste0("checkout", pkgname))
+      extra_params <- glue(
+        'fusen::inflate(pkg = "{path_foosen}",
+      check = TRUE, check_dir = "{checkdir}",
+      quiet = TRUE, args = c("--no-manual"),
+      overwrite = TRUE, open_vignette = FALSE, '
+      )
+      to_inflate <- gsub("fusen::inflate\\(", extra_params, inflate_lines)
+
       expect_error(
         suppressMessages(
-          inflate(pkg = path_foosen, rmd = flat_file, name = "exploration",
-                  check = TRUE, check_dir = checkdir, quiet = TRUE,
-                  args = c("--no-manual"),
-                  overwrite = TRUE)
+          eval(parse(text = to_inflate))
         ),
         regexp = NA)
 
@@ -576,8 +600,9 @@ usethis::with_project(dummypackage, {
   test_that("inflate() output no error", {
     expect_error(
       suppressMessages(
-        inflate(pkg = dummypackage, rmd = flat_file,
-                name = "Get started", check = FALSE)),
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "Get started", check = FALSE,
+                open_vignette = FALSE)),
       regexp = NA
     )
 
@@ -604,10 +629,10 @@ usethis::with_project(dummypackage, {
       {
         expect_error(
           suppressMessages(
-            inflate(pkg = dummypackage, rmd = flat_file,
-                    name = "Get started", check = TRUE,
+            inflate(pkg = dummypackage, flat_file = flat_file,
+                    vignette_name = "Get started", check = TRUE,
                     check_dir = checkdir, quiet = TRUE,
-                    overwrite = TRUE)),
+                    overwrite = TRUE, open_vignette = FALSE)),
           regexp = NA
         )
       })
@@ -615,6 +640,59 @@ usethis::with_project(dummypackage, {
     check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
     expect_equal(check_lines[length(check_lines)], "Status: OK")
     unlink(checkdir, recursive = TRUE)
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+
+# Test create_vignette_head ----
+
+# Create a new project
+dummypackage <- tempfile("vignette.head")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+test_that("create_vignette_head works", {
+  usethis::with_project(dummypackage, {
+    head <- create_vignette_head(pkg = dummypackage, vignette_name = "My Super Vignette")
+    expect_true(grepl('title: "My Super Vignette"', head))
+    expect_true(grepl('  %\\VignetteIndexEntry{My Super Vignette}', head, fixed = TRUE))
+    expect_true(grepl(paste0('library(', basename(dummypackage) ,')'), head, fixed = TRUE))
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+
+# Depreaction of name and rmd ----
+# Create a new project
+dummypackage <- tempfile("inflate.deprecated")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+test_that("rmd and name are deprecated works", {
+  usethis::with_project(dummypackage, {
+    expect_warning(
+      inflate(pkg = ".",
+              # flat_file = flat_file,
+              rmd = flat_file,
+              vignette_name = "Get started",
+              check = FALSE, document = TRUE,
+              overwrite = TRUE, open_vignette = FALSE),
+      regexp = 'The `rmd` argument'
+    )
+    expect_warning(
+      inflate(pkg = ".",
+              flat_file = flat_file,
+              # vignette_name = "Get started",
+              name = "Get started",
+              check = FALSE, document = TRUE,
+              overwrite = TRUE, open_vignette = FALSE),
+      regexp = 'The `name` argument'
+    )
   })
 })
 unlink(dummypackage, recursive = TRUE)

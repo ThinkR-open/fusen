@@ -4,9 +4,12 @@
 
 * `add_flat_template()` superseeds `add_dev_history()` with more advanced possibilities
 * `add_dev_history()` is deprecated
+* Vignette name to create is now set with `inflate(vignette_name = "Get started")` instead of `name`
+* Flat name to inflate is now set with `inflate(flat_file = "dev/flat_full.Rmd")` instead of `rmd`
 
 ## Major changes
 
+* Decide whether or not to open vignette when inflate with `inflate(open_vignette = FALSE)`
 * Improve documentation included in flat templates to reflect changes in using dev_history file
 * Add Rstudio Addin to insert chunks for new function (@ColinFay)
 * Deal with `\dontrun{}` in example chunks
