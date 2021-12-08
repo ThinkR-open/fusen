@@ -20,7 +20,8 @@ inflate(
 
 \item{flat_file}{Path to Rmarkdown file to inflate}
 
-\item{vignette_name}{Name of the resulting vignette}
+\item{vignette_name}{Character. Title of the resulting vignette.
+Use \code{NA} if you do not want to create a vignette.}
 
 \item{open_vignette}{Logical. Whether to open vignette file at the end of the process}
 
