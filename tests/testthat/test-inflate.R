@@ -22,6 +22,7 @@ usethis::with_project(dummypackage, {
   )
 
   test_that("inflate() worked correctly", {
+    # browser()
     # R files
     my_median_file <- file.path(dummypackage, "R", "my_median.R")
     expect_true(file.exists(my_median_file))
@@ -618,6 +619,16 @@ usethis::with_project(dummypackage, {
     datadoc_lines <- readLines(datadoc)
     expect_equal(length(datadoc_lines), 13)
     expect_equal(datadoc_lines[13], "\"cars\"")
+
+    myonloadfile <- file.path(dummypackage, "R", "onload.R")
+    expect_true(file.exists(myonloadfile))
+    # No dot in name
+    myonload_lines <- readLines(myonloadfile)
+    expect_true(all(myonload_lines[6:8] == c(
+      ".onLoad <- function(libname, pkgname) {",
+      "        the_message()",
+      "}"
+    )))
 
     skip_if_not(interactive())
     # Needs MASS, lattice, Matrix installed

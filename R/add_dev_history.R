@@ -52,8 +52,8 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
 #' @param to_pkg Transform all non authorized characters to dots for packages, instead of dash
 #' @noRd
 asciify_name <- function(name, to_pkg = FALSE) {
-  # name <- "y  _ p n@ é ! 1"
-  cleaned_name <- gsub("^-|-$", "",
+  # name <- "@.-y  _ p n@ é ! 1"
+  cleaned_name <- gsub("^[.]*|^-|-$", "",
                        gsub("-+", "-",
                             gsub("-_|_-", "-",
                                  gsub("[^([:alnum:]*_*-*)*]", "-", name))))

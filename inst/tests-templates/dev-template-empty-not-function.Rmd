@@ -52,6 +52,20 @@ library(testthat)
 NULL
 ```
 
+# .onLoad function
+
+```{r fun-onload}
+# Lancement de message at start
+#' @noRd
+#'
+.onLoad <- function(libname, pkgname) {
+        the_message()
+}
+
+the_message <- function() {
+  packageStartupMessage("hello")
+}
+```
 
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
