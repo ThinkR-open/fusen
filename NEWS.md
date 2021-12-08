@@ -21,6 +21,8 @@
 
 ## Minor changes
 
+* Fix .onLoad functions file creation
+* Allow `R6Class()` in `function` chunks
 * Fix inflate function chunks with data or package documentation only
 * Fix inflate with empty functions chunks
 * Fix filename to inflate in templates with new calls of `add_dev_history()` (@Cervangirard)
