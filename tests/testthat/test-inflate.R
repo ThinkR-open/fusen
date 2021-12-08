@@ -589,7 +589,7 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
   file.copy(
-    system.file("tests-templates/dev-template-empty.Rmd", package = "fusen"),
+    system.file("tests-templates/dev-template-empty-not-function.Rmd", package = "fusen"),
     flat_file,
     overwrite = TRUE
   )
@@ -643,6 +643,53 @@ usethis::with_project(dummypackage, {
   })
 })
 unlink(dummypackage, recursive = TRUE)
+
+# Tests r6 chunks ----
+dummypackage <- tempfile("r6class")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  file.copy(
+    system.file("tests-templates/dev-template-r6class.Rmd", package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+  usethis::use_gpl_license()
+  # Add cars data
+  usethis::use_data(cars)
+
+  test_that("inflate() output no error with R6", {
+    browser()
+    expect_error(
+      suppressMessages(
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "Get started", check = FALSE,
+                open_vignette = FALSE,
+                # To avoid having {R6} in suggests
+                document = FALSE)),
+      regexp = NA
+    )
+
+    r6doc <- file.path(dummypackage, "R", "simple.R")
+    expect_true(file.exists(r6doc))
+    r6doc_lines <- readLines(r6doc)
+    expect_equal(length(r6doc_lines), 9)
+    expect_equal(r6doc_lines[4], "Simple <- R6::R6Class(\"Simple\",")
+
+    r6doc <- file.path(dummypackage, "R", "simple2.R")
+    expect_true(file.exists(r6doc))
+    r6doc_lines <- readLines(r6doc)
+    expect_equal(length(r6doc_lines), 9)
+    expect_equal(r6doc_lines[4], "Simple2 <- R6Class(\"Simple2\",")
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+
 
 # Test create_vignette_head ----
 

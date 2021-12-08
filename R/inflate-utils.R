@@ -16,10 +16,32 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   # parsermd::rmd_node_attr(x, "ast")
 
   code <- unlist(rmd_node_code(x[["ast"]]))
+  # There is a function (or R6Class)
+  regex_isfunction <- paste(
+    # function
+    "function(\\s*)\\(",
+    # R6Class
+    "R6Class(\\s*)\\(",
+    sep = "|")
+
+  regex_extract_fun_name <- paste(
+    # function
+    "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)function)",
+    # R6Class
+    "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)R6Class)",
+    # R6::R6Class
+    "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)R6::R6Class)",
+    sep = "|")
+
+  # stringr::str_extract(
+  #   c("zaza <- function()", "zozo <- R6Class()", "zuzu <- R6::R6Class()"),
+  #   regex_extract_fun_name
+  # )
+  #
   # find function name
   fun_name <- stringr::str_extract(
-    code[grep("function(\\s*)\\(", code)],
-    "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)function)"
+    code[grep(regex_isfunction, code)],
+    regex_extract_fun_name
   ) %>%
     gsub(" ", "", .) # remove spaces
 
@@ -27,7 +49,7 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   code <- gsub(pattern = "#'\\s*@", "#' @", code)
 
   # Find start of function
-  first_function_start <- grep("function(\\s*)\\(", code)[1]
+  first_function_start <- grep(regex_isfunction, code)[1]
   # Get all #'
   all_hastags <- grep("^#'", code)
   if (length(all_hastags) != 0) {

@@ -100,7 +100,7 @@ fusen::inflate(flat_file = "dev/dev_history_flat.Rmd", check = FALSE, vignette_n
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi",
-                 "nknitr", "rmarkdown"),
+                 "nknitr", "rmarkdown", "R6"),
   extra.suggests = c("testthat", "pkgload", "rstudioapi",
                      "rmarkdown")#,
   # "MASS", "lattice", "Matrix")

@@ -9,10 +9,21 @@ editor_options:
 library(testthat)
 ```
 
-# R6 Class
+# My R6 function
 
 ```{r function-r6}
-Simple <- R6Class("Simple",
+Simple <- R6::R6Class("Simple",
+  public = list(
+    x = 1,
+    getx = function() self$x
+  )
+)
+```
+
+# My other R6 function
+
+```{r function-r6}
+Simple2 <- R6Class("Simple2",
   public = list(
     x = 1,
     getx = function() self$x
