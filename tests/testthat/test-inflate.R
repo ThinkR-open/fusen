@@ -697,6 +697,55 @@ test_that("rmd and name are deprecated works", {
 })
 unlink(dummypackage, recursive = TRUE)
 
+# Test No vignette ----
+dummypackage <- tempfile("inflate.no.vignette")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+
+  test_that("inflate() worked correctly", {
+    expect_message(
+      inflate(pkg = dummypackage, flat_file = flat_file,
+              vignette_name = NA, check = FALSE,
+              open_vignette = FALSE),
+      regexp = "no vignette created"
+    )
+    expect_equal(length(list.files(file.path(dummypackage, "vignettes"))), 0)
+
+    expect_message(
+      inflate(pkg = dummypackage, flat_file = flat_file,
+              vignette_name = NULL, check = FALSE,
+              open_vignette = FALSE),
+      regexp = "no vignette created"
+    )
+    expect_equal(length(list.files(file.path(dummypackage, "vignettes"))), 0)
+
+    expect_message(
+      inflate(pkg = dummypackage, flat_file = flat_file,
+              vignette_name = "", check = FALSE,
+              open_vignette = FALSE),
+      regexp = "no vignette created"
+    )
+    expect_equal(length(list.files(file.path(dummypackage, "vignettes"))), 0)
+
+    expect_error(
+      suppressMessages(
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "It works then", check = FALSE,
+                open_vignette = FALSE)
+      ),
+      regexp = NA
+    )
+    expect_equal(list.files(file.path(dummypackage, "vignettes")), "it-works-then.Rmd")
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+
 # TODO - Add test for dev-template-two-fun-same-title.Rmd
 # TODO - Add test for dev-template-r6class.Rmd (dont check)
 

@@ -17,7 +17,8 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #'
 #' @param pkg Path to package
 #' @param flat_file Path to Rmarkdown file to inflate
-#' @param vignette_name Name of the resulting vignette
+#' @param vignette_name Character. Title of the resulting vignette.
+#' Use `NA` if you do not want to create a vignette.
 #' @param open_vignette Logical. Whether to open vignette file at the end of the process
 #' @param check Logical. Whether to check package after Rmd inflating
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
@@ -173,7 +174,11 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
   }
 
   # Create vignette ----
-  create_vignette(parsed_tbl, pkg, vignette_name, open_vignette = open_vignette)
+  if (!(is.null(vignette_name) || is.na(vignette_name) || vignette_name == "")) {
+    create_vignette(parsed_tbl, pkg, vignette_name, open_vignette = open_vignette)
+  } else {
+    message("`vignette_name` is empty: no vignette created")
+  }
 
   # Run attachment
   if (isTRUE(document)) {

@@ -9,6 +9,7 @@
 
 ## Major changes
 
+* Avoid creating vignette with `inflate(vignette_name = NA)`
 * Decide whether or not to open vignette when inflate with `inflate(open_vignette = FALSE)`
 * Improve documentation included in flat templates to reflect changes in using dev_history file
 * Add Rstudio Addin to insert chunks for new function (@ColinFay)
