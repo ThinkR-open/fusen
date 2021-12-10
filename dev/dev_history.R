@@ -238,5 +238,5 @@ devtools::release()
 # TODO #############
 # - [x] Find which version of yaml fails the special character
 # - [x] Change for yaml.load or remove éè
-# - Add autosave all files when inflate (see golem)
+# - [x] Add autosave all files when inflate (see golem)
 # - Add rdname grouping ?

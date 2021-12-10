@@ -805,6 +805,58 @@ usethis::with_project(dummypackage, {
 unlink(dummypackage, recursive = TRUE)
 
 # TODO - Add test for dev-template-two-fun-same-title.Rmd
-# TODO - Add test for dev-template-r6class.Rmd (dont check)
 
-# Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...
+# Create a new project
+dummypackage <- tempfile("inflate.twofuns")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-two-fun-same-title.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+  suppressMessages(
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "Get started", check = FALSE,
+            open_vignette = FALSE)
+  )
+
+  test_that("inflate() worked correctly", {
+    # browser()
+    # R files
+    my_median_file <- file.path(dummypackage, "R", "my_median.R")
+    expect_true(file.exists(my_median_file))
+    my_median2_file <- file.path(dummypackage, "R", "my_median2.R")
+    expect_false(file.exists(my_median2_file))
+
+    r_lines <- readLines(my_median_file)
+    expect_true(any(grepl("my_median <- function", r_lines)))
+    expect_true(any(grepl("my_median2 <- function", r_lines)))
+    # example at the right place
+    expect_equal(r_lines[12:14],
+      c("#' @examples", "#' my_median(2:20)" , "#' my_median(1:12)")
+    )
+    expect_equal(r_lines[29:31],
+                 c("#' @examples", "#' my_median2(2:20)" , "#' my_median2(1:12)")
+    )
+
+    # test files
+    my_median_file <- file.path(dummypackage, "tests", "testthat", "test-my_median.R")
+    expect_true(file.exists(my_median_file))
+    my_median2_file <- file.path(dummypackage, "tests", "testthat", "test-my_median2.R")
+    expect_false(file.exists(my_median2_file))
+
+    tests_lines <- readLines(my_median_file)
+    expect_true(any(grepl("my_median", tests_lines)))
+    expect_true(any(grepl("my_median2", tests_lines)))
+  })
+})
+unlink(dummypackage, recursive = TRUE)

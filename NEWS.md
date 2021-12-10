@@ -17,7 +17,7 @@
 * Allow short names for chunks: dev, fun, ex, test
 * `create_fusen()` to create a {fusen} project from command line or with RStudio new project (@ALanguillaume)
 * Add "do not edit by hand" in files generated
-* Group functions in same R file if under same (level 1 + level 2) titles in the Rmd
+* Group functions in same R file and test file if under same (level 1 + level 2) titles in the Rmd
 
 ## Minor changes
 

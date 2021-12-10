@@ -219,6 +219,30 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   return(fun_code)
 }
 
+#' Group df by column. One column to combine, all other, take the first.
+#'
+#' @param df dataframe to group
+#' @param group_col Character. Name of the column to group_by
+#' @param code_col Character. Name of column to combine
+#' @noRd
+group_code <- function(df, group_col, code_col) {
+  lapply(unique(df[[group_col]]), #sec_title
+         function(x) {
+           group <- df[df[[group_col]] == x,] # sec_title
+           # Take first content of everything
+           group_combined <- group[1, ]
+           # Combine code column in a vector of character
+           # from all code in the group
+           comb_ex <- unlist(
+             lapply(group[[code_col]], function(y) c(y, ""))
+           )
+           # Remove last extra empty line
+           comb_ex <- comb_ex[-length(comb_ex)]
+           group_combined[[code_col]] <- list(comb_ex)
+           group_combined
+         }) %>%
+    do.call("rbind", .)
+}
 
 #' Create vignette header
 #' @param pkg Path to package
