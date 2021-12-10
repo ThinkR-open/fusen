@@ -30,7 +30,7 @@ usethis::use_mit_license("Sébastien Rochette")
 
 # Start using git
 
-```{r}
+```{r, eval=FALSE}
 usethis::use_git()
 # Deal with classical files to ignore
 usethis::git_vaccinate()
@@ -38,7 +38,7 @@ usethis::git_vaccinate()
 
 # Set extra sources of documentation
 
-```{r}
+```{r, eval=FALSE}
 # README
 usethis::use_readme_rmd()
 # Code of Conduct
@@ -53,7 +53,7 @@ usethis::use_news_md()
 # Package development tools
 ## Use once
 
-```{r}
+```{r, eval=FALSE}
 # Pipe
 usethis::use_pipe()
 
@@ -88,8 +88,9 @@ devtools::check()
 # Share the package
 
 ```{r}
-# set and try pkgdown
-
+# set and try pkgdown documentation website
+usethis::use_pkgdown()
+pkgdown::build_site()
 
 # build the tar.gz to share with others
 devtools::build()
