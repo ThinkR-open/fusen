@@ -104,8 +104,15 @@
 <li>
 <code><a href="../reference/create_fusen.html">create_fusen()</a></code> to create a {fusen} project from command line or with RStudio new project (<a href="https://github.com/ALanguillaume" class="external-link">@ALanguillaume</a>)</li>
 <li>Add “do not edit by hand” in files generated</li>
-<li>Group functions in same R file if under same (level 1 + level 2) titles in the Rmd</li>
+</ul><div class="section level4">
+<h4 id="grouping-functions-under-the-same-file-0-2-4-9000">Grouping functions under the same file<a class="anchor" aria-label="anchor" href="#grouping-functions-under-the-same-file-0-2-4-9000"></a></h4>
+<ul><li>Group functions in same R file and test file if under same (level 1 + level 2) titles in the Rmd</li>
+<li>Group functions in same R file and test file if they have the same <code>@rdname</code> roxygen tag</li>
+<li>Group functions in same R file and test file if they have the same <code>@filename</code> roxygen tag (only recognized by ‘fusen’)</li>
+<li>Group functions in same R file and test file if the function chunk get chunk option <code>{r function-my_func, filename = "my_filename"}</code>
+</li>
 </ul></div>
+</div>
 <div class="section level3">
 <h3 id="minor-changes-0-2-4-9000">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-2-4-9000"></a></h3>
 <ul><li>Fix .onLoad functions file creation</li>
