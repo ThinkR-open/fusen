@@ -162,7 +162,7 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
     lapply(
       parsed_tbl[["options"]],
       function(x) ifelse(is.null(x[["filename"]]),
-                         NA, gsub('"', '', x[["filename"]])))
+                         NA_character_, gsub('"', '', x[["filename"]])))
   )
   # Define sec_title to group functions in same R file
   sec_title <- paste(parsed_tbl[["sec_h1"]],
