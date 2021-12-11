@@ -100,9 +100,9 @@ fusen::inflate(flat_file = "dev/dev_history_flat.Rmd", check = FALSE, vignette_n
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi",
-                 "nknitr", "rmarkdown", "R6"),
+                 "nknitr", "knitr", "rmarkdown", "R6"),
   extra.suggests = c("testthat", "pkgload", "rstudioapi",
-                     "rmarkdown")#,
+                     "rmarkdown", "knitr")#,
   # "MASS", "lattice", "Matrix")
 )
 # attachment::create_dependencies_file()
