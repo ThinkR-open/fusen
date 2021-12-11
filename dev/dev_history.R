@@ -222,6 +222,8 @@ rhub::check(platform = "windows-x86_64-devel")
 # _win devel
 devtools::check_win_devel()
 devtools::check_win_release()
+# remotes::install_github("r-lib/devtools")
+devtools::check_mac_release()
 
 # Update NEWS
 # Bump version manually and add list of changes
