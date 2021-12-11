@@ -129,7 +129,8 @@ add_fun_to_parsed <- function(parsed_tbl, fun_code) {
     # however, what happens when multiple groups under same title ?
     sec_fun_name <- sec_title_name[
       sec_title_name[["sec_title"]] == x, "sec_fun_name"]
-    parsed_tbl[group, "sec_fun_name"] <- ifelse(length(sec_fun_name) == 0, NA_character_, sec_fun_name)
+    parsed_tbl[group, "sec_fun_name"] <- ifelse(length(sec_fun_name) == 0,
+                                                NA_character_, as.character(sec_fun_name))
     parsed_tbl[group, ] <- tidyr::fill(
       parsed_tbl[group, ],
       fun_name, rox_filename, chunk_filename,
