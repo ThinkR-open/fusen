@@ -22,7 +22,6 @@ usethis::with_project(dummypackage, {
   )
 
   test_that("inflate() worked correctly", {
-    # browser()
     # R files
     my_median_file <- file.path(dummypackage, "R", "my_median.R")
     expect_true(file.exists(my_median_file))
@@ -608,6 +607,8 @@ usethis::with_project(dummypackage, {
     )
 
     # R files with chunk content - Name after title as function name is NA
+    expect_equal(list.files(file.path(dummypackage, "R")),
+                 c("my-data-doc.R", "my-pkg-doc.R", "onload.R"))
     pkgdoc <- file.path(dummypackage, "R", "my-pkg-doc.R")
     expect_true(file.exists(pkgdoc))
     pkgdoc_lines <- readLines(pkgdoc)
@@ -675,7 +676,6 @@ usethis::with_project(dummypackage, {
   usethis::use_data(cars)
 
   test_that("inflate() output no error with R6", {
-    browser()
     expect_error(
       suppressMessages(
         inflate(pkg = dummypackage, flat_file = flat_file,
@@ -804,7 +804,126 @@ usethis::with_project(dummypackage, {
 })
 unlink(dummypackage, recursive = TRUE)
 
-# TODO - Add test for dev-template-two-fun-same-title.Rmd
-# TODO - Add test for dev-template-r6class.Rmd (dont check)
+# Two funs same file - dev-template-two-fun-same-title.Rmd ----
 
-# Do not create a second package with {fusen} in the same session, as it will mess up with `setwd()` and {usethis} needs these `setwd()`...
+# Create a new project
+dummypackage <- tempfile("inflate.twofuns")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-two-fun-same-title.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+  suppressMessages(
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "Get started", check = FALSE,
+            open_vignette = FALSE)
+  )
+
+  test_that("inflate() worked correctly", {
+    # -- R files --
+    my_median_file <- file.path(dummypackage, "R", "my_median.R")
+    expect_true(file.exists(my_median_file))
+    my_median2_file <- file.path(dummypackage, "R", "my_median2.R")
+    expect_false(file.exists(my_median2_file))
+    # chunk name
+    my_chunk1_file <- file.path(dummypackage, "R", "fun_chunk1.R")
+    expect_true(file.exists(my_chunk1_file))
+    my_chunk1fun_file <- file.path(dummypackage, "R", "my_fun_chunk1.R")
+    expect_false(file.exists(my_chunk1fun_file))
+    my_chunk2fun_file <- file.path(dummypackage, "R", "my_fun_chunk2.R")
+    expect_false(file.exists(my_chunk2fun_file))
+    # same rdname
+    my_rdname1_file <- file.path(dummypackage, "R", "same_rdname.R")
+    expect_true(file.exists(my_rdname1_file))
+    my_rdname1fun_file <- file.path(dummypackage, "R", "my_fun_rdname1.R")
+    expect_false(file.exists(my_rdname1fun_file))
+    my_rdname2fun_file <- file.path(dummypackage, "R", "my_fun_rdname2.R")
+    expect_false(file.exists(my_rdname2fun_file))
+    # same @filename
+    my_filename1_file <- file.path(dummypackage, "R", "same_filename.R")
+    expect_true(file.exists(my_filename1_file))
+    my_filename1fun_file <- file.path(dummypackage, "R", "my_fun_filename1.R")
+    expect_false(file.exists(my_filename1fun_file))
+    my_filename2fun_file <- file.path(dummypackage, "R", "my_fun_filename2.R")
+    expect_false(file.exists(my_filename2fun_file))
+    # Same title
+    r_lines <- readLines(my_median_file)
+    expect_true(any(grepl("my_median <- function", r_lines)))
+    expect_true(any(grepl("my_median2 <- function", r_lines)))
+    # example at the right place
+    expect_equal(r_lines[12:14],
+      c("#' @examples", "#' my_median(2:20)" , "#' my_median(1:12)")
+    )
+    expect_equal(r_lines[29:31],
+                 c("#' @examples", "#' my_median2(2:20)" , "#' my_median2(1:12)")
+    )
+    # Same rdname
+    r_lines <- readLines(my_rdname1_file)
+    expect_true(any(grepl("my_fun_rdname1 <- function", r_lines)))
+    expect_true(any(grepl("my_fun_rdname2 <- function", r_lines)))
+    # Same chunk name
+    r_lines <- readLines(my_chunk1_file)
+    expect_true(any(grepl("my_fun_chunk1 <- function", r_lines)))
+    expect_true(any(grepl("my_fun_chunk2 <- function", r_lines)))
+    # Same @filename
+    r_lines <- readLines(my_filename1_file)
+    expect_true(any(grepl("my_fun_filename1 <- function", r_lines)))
+    expect_true(any(grepl("my_fun_filename2 <- function", r_lines)))
+    # @filename cleaned in R file
+    expect_false(any(grepl("@filename", r_lines)))
+
+    # -- test files --
+    my_median_file <- file.path(dummypackage, "tests", "testthat", "test-my_median.R")
+    expect_true(file.exists(my_median_file))
+    my_median2_file <- file.path(dummypackage, "tests", "testthat", "test-my_median2.R")
+    expect_false(file.exists(my_median2_file))
+    # chunk name
+    my_chunk1_file <- file.path(dummypackage, "tests", "testthat", "test-fun_chunk1.R")
+    expect_true(file.exists(my_chunk1_file))
+    my_chunk1fun_file <- file.path(dummypackage, "tests", "testthat", "test-my_fun_chunk1.R")
+    expect_false(file.exists(my_chunk1fun_file))
+    my_chunk2fun_file <- file.path(dummypackage, "tests", "testthat", "test-my_fun_chunk2.R")
+    expect_false(file.exists(my_chunk2fun_file))
+    # same rdname
+    my_rdname1_file <- file.path(dummypackage, "tests", "testthat", "test-same_rdname.R")
+    expect_true(file.exists(my_rdname1_file))
+    my_rdname1fun_file <- file.path(dummypackage, "tests", "testthat", "test-my_fun_rdname1.R")
+    expect_false(file.exists(my_rdname1fun_file))
+    my_rdname2fun_file <- file.path(dummypackage, "tests", "testthat", "test-my_fun_rdname2.R")
+    expect_false(file.exists(my_rdname2fun_file))
+    # same @filename
+    my_filename1_file <- file.path(dummypackage, "tests", "testthat", "test-same_filename.R")
+    expect_true(file.exists(my_filename1_file))
+    my_filename1fun_file <- file.path(dummypackage, "tests", "testthat", "test-my_fun_filename1.R")
+    expect_false(file.exists(my_filename1fun_file))
+    my_filename2fun_file <- file.path(dummypackage, "tests", "testthat", "test-my_fun_filename2.R")
+    expect_false(file.exists(my_filename2fun_file))
+
+    tests_lines <- readLines(my_median_file)
+    expect_true(any(grepl("my_median", tests_lines)))
+    expect_true(any(grepl("my_median2", tests_lines)))
+    # Same rdname
+    r_lines <- readLines(my_rdname1_file)
+    expect_true(any(grepl("my_fun_rdname1", r_lines)))
+    expect_true(any(grepl("my_fun_rdname2", r_lines)))
+    # Same chunk name
+    r_lines <- readLines(my_chunk1_file)
+    expect_true(any(grepl("my_fun_chunk1", r_lines)))
+    expect_true(any(grepl("my_fun_chunk2", r_lines)))
+    # Same @filename
+    r_lines <- readLines(my_filename1_file)
+    expect_true(any(grepl("my_fun_filename1", r_lines)))
+    expect_true(any(grepl("my_fun_filename2", r_lines)))
+  })
+})
+unlink(dummypackage, recursive = TRUE)

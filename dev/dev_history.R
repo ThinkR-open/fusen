@@ -100,9 +100,9 @@ fusen::inflate(flat_file = "dev/dev_history_flat.Rmd", check = FALSE, vignette_n
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi",
-                 "nknitr", "rmarkdown", "R6"),
+                 "nknitr", "knitr", "rmarkdown", "R6"),
   extra.suggests = c("testthat", "pkgload", "rstudioapi",
-                     "rmarkdown")#,
+                     "rmarkdown", "knitr")#,
   # "MASS", "lattice", "Matrix")
 )
 # attachment::create_dependencies_file()
@@ -222,6 +222,8 @@ rhub::check(platform = "windows-x86_64-devel")
 # _win devel
 devtools::check_win_devel()
 devtools::check_win_release()
+# remotes::install_github("r-lib/devtools")
+devtools::check_mac_release()
 
 # Update NEWS
 # Bump version manually and add list of changes
@@ -238,5 +240,5 @@ devtools::release()
 # TODO #############
 # - [x] Find which version of yaml fails the special character
 # - [x] Change for yaml.load or remove éè
-# - Add autosave all files when inflate (see golem)
+# - [x] Add autosave all files when inflate (see golem)
 # - Add rdname grouping ?
