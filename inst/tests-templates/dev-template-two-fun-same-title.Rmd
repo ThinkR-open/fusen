@@ -67,6 +67,193 @@ test_that("my_median2 works properly and show error if needed", {
 })
 ```
 
+# Two functions, same chunk param
+## fun_chunk1
+
+```{r function-fun_chunk1, filename = "fun_chunk1"}
+#' My fun_chunk1
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_chunk1(2:20)
+my_fun_chunk1 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+```{r examples-fun_chunk1}
+my_fun_chunk1(1:12)
+```
+
+```{r tests-fun_chunk1}
+test_that("my_fun_chunk1 works properly and show error if needed", {
+  expect_error(my_fun_chunk1("text"))
+})
+```
+
+## fun_chunk2
+
+```{r function-fun_chunk2, filename = "fun_chunk1"}
+#' My fun_chunk2
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_chunk2(2:20)
+my_fun_chunk2 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+```{r examples-fun_chunk2}
+my_fun_chunk2(1:12)
+```
+
+```{r tests-fun_chunk2}
+test_that("my_fun_chunk2 works properly and show error if needed", {
+  expect_error(my_fun_chunk2("text"))
+})
+```
+
+# Two functions, same `@rdname`
+## fun_rdname1
+
+```{r function-fun_rdname1}
+#' My fun_rdname1
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @rdname same_rdname
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_rdname1(2:20)
+my_fun_rdname1 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+```{r examples-fun_rdname1}
+my_fun_rdname1(1:12)
+```
+
+```{r tests-fun_rdname1}
+test_that("my_fun_rdname1 works properly and show error if needed", {
+  expect_error(my_fun_rdname1("text"))
+})
+```
+
+## fun_rdname2
+
+```{r function-fun_rdname2}
+#' My fun_rdname2
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @rdname same_rdname
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_rdname2(2:20)
+my_fun_rdname2 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+```{r examples-fun_rdname2}
+my_fun_rdname2(1:12)
+```
+
+```{r tests-fun_rdname2}
+test_that("my_fun_rdname2 works properly and show error if needed", {
+  expect_error(my_fun_rdname2("text"))
+})
+```
+
+# Two functions, same `@filename`
+## fun_filename1
+
+```{r function-fun_filename1}
+#' My fun_filename1
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @filename same_filename
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_filename1(2:20)
+my_fun_filename1 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+```{r examples-fun_filename1}
+my_fun_filename1(1:12)
+```
+
+```{r tests-fun_filename1}
+test_that("my_fun_filename1 works properly and show error if needed", {
+  expect_error(my_fun_filename1("text"))
+})
+```
+
+## fun_filename2
+
+```{r function-fun_filename2}
+#' My fun_filename2
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @filename same_filename
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_filename2(2:20)
+my_fun_filename2 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+```{r examples-fun_filename2}
+my_fun_filename2(1:12)
+```
+
+```{r tests-fun_filename2}
+test_that("my_fun_filename2 works properly and show error if needed", {
+  expect_error(my_fun_filename2("text"))
+})
+```
+
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly

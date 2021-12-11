@@ -5,16 +5,6 @@
 #' @noRd
 parse_fun <- function(x) { # x <- rmd_fun[3,]
 
-  # browser()
-  # code <- rmd_get_chunk(x)$code
-  # parsermd::rmd_node_content(x)
-  # parsermd::rmd_select(dev_parse, "description")[[1]] %>%
-  #   parsermd::rmd_node_code()
-
-  # parsermd::rmd_select(x, parsermd::has_type("ast"))[[1]] %>%
-  #   parsermd::rmd_node_code(x)
-  # parsermd::rmd_node_attr(x, "ast")
-
   code <- unlist(rmd_node_code(x[["ast"]]))
   # There is a function (or R6Class)
   regex_isfunction <- paste(
@@ -85,34 +75,108 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
                             example_pos_end
   )
 
+  # Get @rdname and @filename for groups
+  tag_filename <- gsub("^#'\\s*@filename\\s*", "",
+                     code[grep("^#'\\s*@filename", code)])
+  tag_rdname <- gsub("^#'\\s*@rdname\\s*", "",
+                     code[grep("^#'\\s*@rdname", code)])
+  rox_filename <- c(tag_filename, tag_rdname)[1]
+  # Clean code for @filename as non standard roxygen
+  code[grep("^#'\\s*@filename", code)] <- "#'"
+
   tibble::tibble(
     fun_name = fun_name[1],
     code = list(code),
     example_pos_start = example_pos_start,
-    example_pos_end = example_pos_end
+    example_pos_end = example_pos_end,
+    rox_filename = rox_filename
   )
 }
 
 
-#' Add function name to parsed_tbl ----
+#' Add function name and filenames to parsed_tbl ----
 #' @param parsed_tbl tibble of a parsed Rmd
-#' @param fun_names Names of functions in Rmd
+#' @param fun_code Information extracted from functions code
 #' @importFrom stats na.omit
 #' @noRd
-add_fun_to_parsed <- function(parsed_tbl, fun_names) {
+add_fun_to_parsed <- function(parsed_tbl, fun_code) {
+  # Which parts were functions
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
                               grepl(regex_functions, parsed_tbl$label))
 
+  # From fun_code, we retrieve fun_name & rox_filename
   parsed_tbl$fun_name <- NA_character_
-  # Function name
-  parsed_tbl[["fun_name"]][which_parsed_fun] <- fun_names
+  parsed_tbl$rox_filename <- NA_character_
 
+  # Function name
+  fun_names <- fun_code[["fun_name"]]
+  parsed_tbl[["fun_name"]][which_parsed_fun] <- fun_names
+  # roxygen filename
+  rox_filename <- fun_code[["rox_filename"]]
+  parsed_tbl[["rox_filename"]][which_parsed_fun] <- rox_filename
+  # sec_title - get fun_name of first function
+  parsed_tbl[["sec_fun_name"]] <- NA_character_
+  df <- data.frame(
+    sec_title = parsed_tbl[["sec_title"]][which_parsed_fun],
+    sec_fun_name = parsed_tbl[["fun_name"]][which_parsed_fun],
+    fake = NA)
+  sec_title_name <- group_code(df, group_col = "sec_title", code_col = "fake")
+
+  # Fill values for parts that are not function chunks
   pkg_filled <- lapply(na.omit(unique(parsed_tbl[["sec_title"]])), function(x) {
     group <- which(parsed_tbl[["sec_title"]] == x)
-    parsed_tbl[group, ] <- tidyr::fill(parsed_tbl[group, ], fun_name)
+    # reorder chunks for fun, ex, test ?
+    # however, what happens when multiple groups under same title ?
+    sec_fun_name <- sec_title_name[
+      sec_title_name[["sec_title"]] == x, "sec_fun_name"]
+    parsed_tbl[group, "sec_fun_name"] <- ifelse(length(sec_fun_name) == 0, NA, sec_fun_name)
+    parsed_tbl[group, ] <- tidyr::fill(
+      parsed_tbl[group, ],
+      fun_name, rox_filename, chunk_filename,
+      .direction = "down")
+    parsed_tbl[group, ] <- tidyr::fill(
+      parsed_tbl[group, ],
+      fun_name, rox_filename, chunk_filename,
+      .direction = "up")
   }) %>%
     do.call("rbind", .)
   parsed_tbl[["fun_name"]][pkg_filled[["order"]]] <- pkg_filled[["fun_name"]]
+
+  # Choose future filename ----
+  # Priority = chunk_filename > rox_filename > sec_title_fun_name > fun_name > sec_title
+  # If sec_title, choose fun_name of the first function
+  pkg_filled[["file_name"]] <- NA_character_
+  # chunk_filename
+  pkg_filled[["file_name"]] <- ifelse(!is.na(pkg_filled[["chunk_filename"]]),
+                                      pkg_filled[["chunk_filename"]], NA)
+  # rox_filename
+  pkg_filled[["file_name"]] <- ifelse(
+    is.na(pkg_filled[["file_name"]]) &
+      !is.na(pkg_filled[["rox_filename"]]),
+    pkg_filled[["rox_filename"]],
+    pkg_filled[["file_name"]])
+  # sec_title - get sec_fun_name
+  pkg_filled[["file_name"]] <- ifelse(
+    is.na(pkg_filled[["file_name"]]) &
+      !is.na(pkg_filled[["sec_fun_name"]]),
+    pkg_filled[["sec_fun_name"]],
+    pkg_filled[["file_name"]])
+  # fun_name
+  pkg_filled[["file_name"]] <- ifelse(
+    is.na(pkg_filled[["file_name"]]) &
+      !is.na(pkg_filled[["fun_name"]]),
+    pkg_filled[["fun_name"]],
+    pkg_filled[["file_name"]])
+  # sec_title alone if not real function
+  pkg_filled[["file_name"]] <- ifelse(
+    is.na(pkg_filled[["file_name"]]) &
+      !is.na(pkg_filled[["sec_title"]]),
+    pkg_filled[["sec_title"]],
+    pkg_filled[["file_name"]])
+
+  parsed_tbl[["file_name"]] <- NA_character_
+  parsed_tbl[["file_name"]][pkg_filled[["order"]]] <- pkg_filled[["file_name"]]
+
   parsed_tbl
 }
 
@@ -123,7 +187,19 @@ add_fun_to_parsed <- function(parsed_tbl, fun_names) {
 #' @importFrom parsermd rmd_node_code
 #' @noRd
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
-  # fun_code <- fun_code[!is.na(fun_code[["fun_name"]]), ]
+
+  # Get file_name variable
+  fun_code$order <- 1:nrow(fun_code)
+  fun_file <- parsed_tbl[!is.na(parsed_tbl[["fun_name"]]), c("fun_name", "file_name")]
+  fun_file_groups <- fun_file[!duplicated(fun_file),]
+  # Keep all as some are not functions
+  fun_code <- as_tibble(merge(fun_code, fun_file_groups, by = 'fun_name', all.x = TRUE, sort = FALSE))
+  fun_code <- fun_code[order(fun_code[["order"]]), ]
+  # Get file_name for not functions. Only last place where possible
+  fun_code[["file_name"]] <- ifelse(is.na(fun_code[["file_name"]]),
+                                    fun_code[["sec_title"]],
+                                    fun_code[["file_name"]])
+
   #  Example already in skeleton
   fun_code$example_in <- apply(fun_code, 1, function(x) {
     if (is.na(x[["fun_name"]])) {
@@ -215,6 +291,7 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   fun_code[["code_example"]] <- lapply(fun_code[["code_example"]], function(example) {
     gsub("#' #' ", "#' ", example)
   })
+
 
   return(fun_code)
 }
