@@ -426,13 +426,13 @@ test_that("Other flat_name works", {
   expect_equal(length(grep("flat_hello[.]Rmd", hello_flat)), 2)
   
   # Template minimal used with "min", same name, flat changes name
-  dev_file_path <- expect_message(
+  expect_message(
     add_flat_template(
       template = "min", 
       pkg = dummypackage, flat_name = "hello", open = FALSE),
     regexp = "flat_hello.Rmd already exists.")
-  expect_true(file.exists(file.path(dummypackage, "dev/flat_hello_2.Rmd")))
-  flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
+  flat_file <- file.path(dummypackage, "dev/flat_hello_2.Rmd")
+  expect_true(file.exists(flat_file))
   hello_flat <- readLines(flat_file)
   # 7 times hello for function name
   # 2 times hello in flat_hello_2.Rmd
