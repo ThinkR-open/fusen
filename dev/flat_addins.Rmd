@@ -16,7 +16,7 @@ pkgload::load_all(export_all = FALSE)
 
 # Add fusen chunk
 
-```{r function}
+```{r function, filename="add_fusen_chunks"}
 # do not edit by hand
 
 #' Add `{fusen}` chunks
@@ -102,7 +102,7 @@ add_fusen_chunks <- function(
 # No tests for addins
 ```
 
-```{r function-2}
+```{r function-2, filename="add_fusen_chunks"}
 # do not edit by hand
 
 #' Build fusen chunks

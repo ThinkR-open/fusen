@@ -28,6 +28,7 @@
 
 ## Minor changes
 
+* `add_flat_template()` uses the `flat_name` to pre-fill the template with the first function name.
 * Fix .onLoad functions file creation
 * Allow `R6Class()` in `function` chunks
 * Fix inflate function chunks with data or package documentation only
