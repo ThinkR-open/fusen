@@ -200,7 +200,7 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
   # Check
   if (isTRUE(check)) {
     cli::cat_rule("Launching rcmdcheck()")
-    res <- rcmdcheck::rcmdcheck(
+    res <- devtools::check(
       pkg,
       ...
     )

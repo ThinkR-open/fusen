@@ -542,11 +542,19 @@ for (pkgname in c("full", "teaching", "minimal")) {
       to_inflate <- gsub("fusen::inflate\\(", extra_params, inflate_lines)
 
       # No redirection of stdout/stderr when non-interactive
-      expect_error(
-        suppressMessages(
-          eval(parse(text = to_inflate))
-        ),
-        regexp = NA)
+      withr::with_envvar(
+        new = c(
+          # "R_CHECK_INSTALL_DEPENDS" = FALSE,
+          # "R_CHECK_DEPENDS_ONLY" = FALSE,
+          # "R_CHECK_SUGGESTS_ONLY" = TRUE,
+          "R_CHECK_NO_RECOMMENDED" = FALSE),
+        {
+          expect_error(
+            suppressMessages(
+              eval(parse(text = to_inflate))
+            ),
+            regexp = NA)
+        })
 
       skip_if_not(interactive())
       # Needs MASS, lattice, Matrix installed
@@ -636,21 +644,31 @@ usethis::with_project(dummypackage, {
 
     checkdir <- tempfile("dircheck")
     # Disable checking for future file timestamps
-    withr::with_envvar(
-      new = c(`_R_CHECK_SYSTEM_CLOCK_` = 0),
-      {
+    # withr::with_envvar(
+    #   new = c(
+    #     "R_CHECK_INSTALL_DEPENDS" = FALSE,
+    #     "R_CHECK_DEPENDS_ONLY" = FALSE,
+    #     "R_CHECK_SUGGESTS_ONLY" = FALSE,
+    #     "R_CHECK_NO_RECOMMENDED" = FALSE),
+    #   {
         expect_error(
           suppressMessages(
             inflate(pkg = dummypackage, flat_file = flat_file,
                     vignette_name = "Get started", check = TRUE,
                     check_dir = checkdir, quiet = TRUE,
-                    overwrite = TRUE, open_vignette = FALSE)),
+                    overwrite = TRUE, open_vignette = FALSE,
+                    env_vars = c(
+                      "R_CHECK_INSTALL_DEPENDS" = FALSE,
+                      "R_CHECK_DEPENDS_ONLY" = FALSE,
+                      "R_CHECK_SUGGESTS_ONLY" = FALSE,
+                      "R_CHECK_NO_RECOMMENDED" = FALSE))),
           regexp = NA
         )
-      })
+      # })
     # Should not be any errors with templates
     check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
-    expect_equal(check_lines[length(check_lines)], "Status: OK")
+    expect_equal(check_lines[length(check_lines)], "Status: 1 WARNING")
+    expect_true(any(grepl("there is no package called", check_lines)))
     unlink(checkdir, recursive = TRUE)
   })
 })

@@ -184,6 +184,7 @@ DT::datatable(x)
 
 # Check package as CRAN
 rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"))
+devtools::check(args = c("--no-manual", "--as-cran"))
 
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")
