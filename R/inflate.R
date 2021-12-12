@@ -92,6 +92,7 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
   }
 
   pkg <- normalizePath(pkg)
+  needs_restart <- isFALSE(is_pkg_proj(pkg))
   flat_file <- normalizePath(flat_file, mustWork = FALSE)
 
   if (!file.exists(file.path(normalizePath(pkg), "DESCRIPTION"))) {
@@ -206,6 +207,11 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
     print(res)
   }
 
+  # Restart RStudio
+  if (needs_restart) {
+    cli::cat_rule("RStudio restart needed")
+    getFromNamespace("restart_rstudio", "usethis")("A restart of RStudio is required to activate the Build pane")
+  }
   pkg
 }
 
