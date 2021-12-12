@@ -21,23 +21,26 @@ library(tools)
 #' @param open Logical. Whether to open file after creation
 #' @param dev_dir Name of directory for development Rmarkdown files. Default to "dev".
 #' @param flat_name Name of the file to write in dev.
+#' Use the name of the main function of your template to get chunks pre-filled with this function name. 
 #'
 #' @importFrom tools file_path_sans_ext
-#'
 #' @details
 #' Choose `template` among the different templates available:
 #'
-#' - "full": the full template with a reproducible package to inflate directly. Default.
-#' - "minimal": Minimal template to start a new package when you already know {fusen}.
-#' - "additional": Template for an additional vignette, thus additional functions.
+#' - "full": The full template with a reproducible package that can directly be inflated.
+#' It comes along with the "dev_history" template. Default.
+#' - "minimal": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template.
+#' - "additional": Template for an additional vignette or set of additional functions.
 #' - "teaching": Template with a reproducible package, simpler than "full", but everything to
 #'  teach the minimal structure of a package.
+#' - "dev_history": Template with functions commonly used during package development.
+#' This does not contain chunks to write your own functions.
 #'
-#' Abbreviated names can also be used for the different templates. For example "add"
-#' instead of additional.
+#' Abbreviated names can also be used for the different templates:
+#' "add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".
 #'
 #' @return
-#' Create flat Rmd file(s) and return its (their) path
+#' Create flat Rmd file(s) template(s) and return its (their) path
 #' @export
 #'
 #' @examples
@@ -56,8 +59,14 @@ add_flat_template <- function(
   }
 
   template <- match.arg(template)
+  if (!template %in% c("full", "teaching", "dev_history")
+      & !flat_name %in% c("minimal", "additional")) {
+    fun_name <- gsub("-", "_", asciify_name(flat_name))
+  } else {
+    fun_name <- NA
+  }
   flat_name <- paste0("flat_", 
-                      asciify_name(file_path_sans_ext(flat_name[1])), ".Rmd")
+                      asciify_name(gsub("[.]Rmd$", "", flat_name[1])), ".Rmd")
   
   pkg <- normalizePath(pkg)
   dev_dir <- file.path(pkg, dev_dir)
@@ -92,6 +101,13 @@ add_flat_template <- function(
     lines_template[grepl("flat_template.Rmd", lines_template)] <-
       gsub("flat_template.Rmd", dev_name,
            lines_template[grepl("flat_template.Rmd", lines_template)])
+    
+    # Change my_fun to fun_name
+    if (!is.na(fun_name)) {
+      lines_template[grepl("my_fun", lines_template)] <-
+        gsub("my_fun", fun_name,
+             lines_template[grepl("my_fun", lines_template)])
+    }
     
     cat(enc2utf8(lines_template), file = dev_file_path, sep = "\n")
   }
@@ -391,15 +407,57 @@ for (template in all_templates) {
 } # end of loop on template knit
 
 
-# Test other names works ----
+# Test other names modifies template ----
 dummypackage <- tempfile(pattern = "other.names")
 dir.create(dummypackage)
 # Add
 test_that("Other flat_name works", {
+  # Template additional used with "add"
   dev_file_path <- expect_error(
-    add_flat_template(pkg = dummypackage, flat_name = "hello", open = FALSE),
+    add_flat_template(
+      template = "add", 
+      pkg = dummypackage, flat_name = "hello", open = FALSE),
     regexp = NA)
   expect_true(file.exists(file.path(dummypackage, "dev/flat_hello.Rmd")))
+  hello_flat <- readLines(dev_file_path)
+  # 7 times hello for function name
+  # 2 times hello in flat_hello.Rmd
+  expect_equal(length(grep("hello", hello_flat)), 7 + 2)
+  expect_equal(length(grep("flat_hello[.]Rmd", hello_flat)), 2)
+  
+  # Template minimal used with "min", same name, flat changes name
+  expect_message(
+    add_flat_template(
+      template = "min", 
+      pkg = dummypackage, flat_name = "hello", open = FALSE),
+    regexp = "flat_hello.Rmd already exists.")
+  flat_file <- file.path(dummypackage, "dev/flat_hello_2.Rmd")
+  expect_true(file.exists(flat_file))
+  hello_flat <- readLines(flat_file)
+  # 7 times hello for function name
+  # 2 times hello in flat_hello_2.Rmd
+  expect_equal(length(grep("hello", hello_flat)), 7 + 2)
+  expect_equal(length(grep("flat_hello_2[.]Rmd", hello_flat)), 2)
+  
+  # Try inflate to see if files get hello name
+  usethis::with_project(dummypackage, {
+    fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+    expect_error(
+      inflate(pkg = dummypackage, flat_file = flat_file,
+              vignette_name = "hello", check = FALSE,
+              open_vignette = FALSE), 
+      regexp = NA)
+  })
+  
+  expect_true(file.exists(file.path(dummypackage, "R", "hello.R")))
+  expect_true(file.exists(file.path(dummypackage, "tests", "testthat", "test-hello.R")))
+  expect_true(file.exists(file.path(dummypackage, "vignettes", "hello.Rmd")))
+  test_hello <- readLines(file.path(dummypackage, "tests", "testthat", "test-hello.R"))
+  expect_true(any(grepl("hello works", test_hello)))
+  vignette_hello <- readLines(file.path(dummypackage, "vignettes", "hello.Rmd"))
+  expect_true(any(grepl("title: \"hello\"", vignette_hello)))
+  expect_true(any(grepl("  %\\VignetteIndexEntry{hello}", vignette_hello, fixed = TRUE)))
+  expect_true(any(grepl("hello()", vignette_hello)))
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -411,8 +469,9 @@ unlink(dummypackage, recursive = TRUE)
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(flat_file = "dev/dev_history_flat.Rmd", check = FALSE)
-unlink("vignettes/get-started.Rmd")
+fusen::inflate(flat_file = "dev/dev_history_flat.Rmd", check = FALSE,
+               vignette_name = NA)
+# unlink("vignettes/get-started.Rmd")
 attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi"),
   extra.suggests = c("testthat", "pkgload", "rstudioapi")

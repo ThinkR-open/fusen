@@ -20,14 +20,15 @@ add_flat_template(
 
 \item{dev_dir}{Name of directory for development Rmarkdown files. Default to "dev".}
 
-\item{flat_name}{Name of the file to write in dev.}
+\item{flat_name}{Name of the file to write in dev.
+Use the name of the main function of your template to get chunks pre-filled with this function name.}
 
 \item{overwrite}{Whether to overwrite existing flat Rmd template file with same name}
 
 \item{open}{Logical. Whether to open file after creation}
 }
 \value{
-Create flat Rmd file(s) and return its (their) path
+Create flat Rmd file(s) template(s) and return its (their) path
 }
 \description{
 Add flat Rmd file that drives package development
@@ -35,15 +36,18 @@ Add flat Rmd file that drives package development
 \details{
 Choose \code{template} among the different templates available:
 \itemize{
-\item "full": the full template with a reproducible package to inflate directly. Default.
-\item "minimal": Minimal template to start a new package when you already know {fusen}.
-\item "additional": Template for an additional vignette, thus additional functions.
+\item "full": The full template with a reproducible package that can directly be inflated.
+It comes along with the "dev_history" template. Default.
+\item "minimal": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template.
+\item "additional": Template for an additional vignette or set of additional functions.
 \item "teaching": Template with a reproducible package, simpler than "full", but everything to
 teach the minimal structure of a package.
+\item "dev_history": Template with functions commonly used during package development.
+This does not contain chunks to write your own functions.
 }
 
-Abbreviated names can also be used for the different templates. For example "add"
-instead of additional.
+Abbreviated names can also be used for the different templates:
+"add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".
 }
 \examples{
 # Create a new project

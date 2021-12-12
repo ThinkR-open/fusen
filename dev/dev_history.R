@@ -93,7 +93,11 @@ usethis::use_coverage()
 usethis::use_build_ignore("_pkgdown.yml")
 
 # Inflates ----
-fusen::inflate(flat_file = "dev/dev_history_flat.Rmd", check = FALSE, vignette_name = NA)
+fusen::inflate(flat_file = "dev/flat_addins.Rmd",
+               check = FALSE, vignette_name = NA, document = FALSE)
+# testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
+fusen::inflate(flat_file = "dev/flat_create_flat.Rmd",
+               check = FALSE, vignette_name = NA, document = FALSE)
 
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")

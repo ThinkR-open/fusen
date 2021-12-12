@@ -16,24 +16,24 @@ pkgload::load_all(export_all = FALSE)
 
 # My function
 
-```{r function-fun}
-#' Title
+```{r function-my_fun}
+#' my_fun Title
 #'
 #' @return 1
 #' @export
 #'
 #' @examples
-fun <- function() {
+my_fun <- function() {
   1
 }
 ```
 
-```{r examples-fun}
-fun()
+```{r examples-my_fun}
+my_fun()
 ```
 
-```{r tests-fun}
-test_that("fun works", {
+```{r tests-my_fun}
+test_that("my_fun works", {
 
 })
 ```

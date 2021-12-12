@@ -8,23 +8,26 @@
 #' @param open Logical. Whether to open file after creation
 #' @param dev_dir Name of directory for development Rmarkdown files. Default to "dev".
 #' @param flat_name Name of the file to write in dev.
+#' Use the name of the main function of your template to get chunks pre-filled with this function name. 
 #'
 #' @importFrom tools file_path_sans_ext
-#'
 #' @details
 #' Choose `template` among the different templates available:
 #'
-#' - "full": the full template with a reproducible package to inflate directly. Default.
-#' - "minimal": Minimal template to start a new package when you already know {fusen}.
-#' - "additional": Template for an additional vignette, thus additional functions.
+#' - "full": The full template with a reproducible package that can directly be inflated.
+#' It comes along with the "dev_history" template. Default.
+#' - "minimal": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template.
+#' - "additional": Template for an additional vignette or set of additional functions.
 #' - "teaching": Template with a reproducible package, simpler than "full", but everything to
 #'  teach the minimal structure of a package.
+#' - "dev_history": Template with functions commonly used during package development.
+#' This does not contain chunks to write your own functions.
 #'
-#' Abbreviated names can also be used for the different templates. For example "add"
-#' instead of additional.
+#' Abbreviated names can also be used for the different templates:
+#' "add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".
 #'
 #' @return
-#' Create flat Rmd file(s) and return its (their) path
+#' Create flat Rmd file(s) template(s) and return its (their) path
 #' @export
 #'
 #' @examples
@@ -63,8 +66,14 @@ add_flat_template <- function(
   }
 
   template <- match.arg(template)
+  if (!template %in% c("full", "teaching", "dev_history")
+      & !flat_name %in% c("minimal", "additional")) {
+    fun_name <- gsub("-", "_", asciify_name(flat_name))
+  } else {
+    fun_name <- NA
+  }
   flat_name <- paste0("flat_", 
-                      asciify_name(file_path_sans_ext(flat_name[1])), ".Rmd")
+                      asciify_name(gsub("[.]Rmd$", "", flat_name[1])), ".Rmd")
   
   pkg <- normalizePath(pkg)
   dev_dir <- file.path(pkg, dev_dir)
@@ -99,6 +108,13 @@ add_flat_template <- function(
     lines_template[grepl("flat_template.Rmd", lines_template)] <-
       gsub("flat_template.Rmd", dev_name,
            lines_template[grepl("flat_template.Rmd", lines_template)])
+    
+    # Change my_fun to fun_name
+    if (!is.na(fun_name)) {
+      lines_template[grepl("my_fun", lines_template)] <-
+        gsub("my_fun", fun_name,
+             lines_template[grepl("my_fun", lines_template)])
+    }
     
     cat(enc2utf8(lines_template), file = dev_file_path, sep = "\n")
   }
@@ -145,8 +161,8 @@ add_flat_template <- function(
   
   # Add a gitignore file in dev_dir
   # Files to ignore
-  lines <- c("*.html")
-
+  lines <- c("*.html", "*.R")
+  
   gitfile <- normalizePath(file.path(dev_dir, ".gitignore"), mustWork = FALSE)
   if (!file.exists(gitfile)) {
     existing_lines <- ""
