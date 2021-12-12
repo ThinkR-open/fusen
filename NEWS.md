@@ -36,6 +36,7 @@
 * Fix filename to inflate in templates with new calls of `add_dev_history()` (@Cervangirard)
 * Default vignette name is now "Get started" creating "vignettes/get-started.Rmd"
 * All open files are saved when using `inflate()` where {rstudioapi} works
+* Ask to restart RStudio after first inflate
 
 # fusen 0.2.4
 

@@ -382,3 +382,22 @@ write_utf8 <- function(path, lines, append = FALSE){
 
   close(con)
 }
+
+#' Is the current project a recognized package
+#' @param path Project path
+#' @noRd
+is_pkg_proj <- function(path = ".") {
+  files <- list.files(normalizePath(path), full.names = TRUE)
+  rprojfile <- files[grep("[.]Rproj$", files)]
+  if (length(rprojfile) != 0) {
+    rprojfile <- rprojfile[1]
+    rproj_lines <- readLines(rprojfile)
+    if (any(grepl("BuildType: Package", rproj_lines))) {
+      return(TRUE)
+    } else {
+      return(FALSE)
+    }
+  } else {
+    return(NA)
+  }
+}
