@@ -231,8 +231,8 @@ test_that("Other flat_name works", {
       pkg = dummypackage, flat_name = "hello", open = FALSE),
     regexp = "flat_hello.Rmd already exists.")
   expect_true(file.exists(file.path(dummypackage, "dev/flat_hello_2.Rmd")))
-  dev_file <- dev_file_path[grep("flat_", dev_file_path)]
-  hello_flat <- readLines(dev_file)
+  flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
+  hello_flat <- readLines(flat_file)
   # 7 times hello for function name
   # 2 times hello in flat_hello_2.Rmd
   expect_equal(length(grep("hello", hello_flat)), 7 + 2)
