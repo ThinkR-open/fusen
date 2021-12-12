@@ -237,6 +237,26 @@ test_that("Other flat_name works", {
   # 2 times hello in flat_hello_2.Rmd
   expect_equal(length(grep("hello", hello_flat)), 7 + 2)
   expect_equal(length(grep("flat_hello_2[.]Rmd", hello_flat)), 2)
+  
+  # Try inflate to see if files get hello name
+  usethis::with_project(dummypackage, {
+    fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+    expect_error(
+      inflate(pkg = dummypackage, flat_file = flat_file,
+              vignette_name = "hello", check = FALSE,
+              open_vignette = FALSE), 
+      regexp = NA)
+  })
+  
+  expect_true(file.exists(file.path(dummypackage, "R", "hello.R")))
+  expect_true(file.exists(file.path(dummypackage, "tests", "testthat", "test-hello.R")))
+  expect_true(file.exists(file.path(dummypackage, "vignettes", "hello.Rmd")))
+  test_hello <- readLines(file.path(dummypackage, "tests", "testthat", "test-hello.R"))
+  expect_true(any(grepl("hello works", test_hello)))
+  vignette_hello <- readLines(file.path(dummypackage, "vignettes", "hello.Rmd"))
+  expect_true(any(grepl("title: \"hello\"", vignette_hello)))
+  expect_true(any(grepl("  %\\VignetteIndexEntry{hello}", vignette_hello, fixed = TRUE)))
+  expect_true(any(grepl("hello()", vignette_hello)))
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
