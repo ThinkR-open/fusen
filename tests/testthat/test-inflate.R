@@ -533,20 +533,59 @@ for (pkgname in c("full", "teaching", "minimal")) {
       w.end <- grep("\\)", flat_lines)
       w.end <- w.end[w.end >= w.start][1]
       inflate_lines <- flat_lines[w.start:w.end]
-      # Modify with extra values
-      extra_params <- glue(
-        'fusen::inflate(pkg = "{path_foosen}",
+
+      if (!interactive()) {
+        print(" ==== Not interactive ====")
+        # Modify with extra values
+        extra_params <- glue(
+          'fusen::inflate(pkg = "{path_foosen}",
+      check = FALSE, quiet = TRUE, args = c("--no-manual"),
+      overwrite = TRUE, open_vignette = FALSE, '
+        )
+        to_inflate <- gsub("fusen::inflate\\(", extra_params, inflate_lines)
+
+        # No redirection of stdout/stderr when non-interactive
+        expect_error(
+          suppressMessages(
+            eval(parse(text = to_inflate))
+          ),
+          regexp = NA)
+
+        # Run rcmdcheck
+        # Do not check inside check if on CRAN
+        skip_on_os(os = c("windows", "solaris"))
+
+        # If this check is run inside a not "--as-cran" check, then it wont work as expected
+        check_out <- rcmdcheck::rcmdcheck(path_foosen, quiet = TRUE,
+                             args = c("--no-manual"))
+
+        # No errors
+        expect_true(length(check_out[["errors"]]) == 0)
+        expect_true(length(check_out[["warnings"]]) <= 1)
+        if (length(check_out[["warnings"]]) == 1) {
+          expect_true(grepl("there is no package called", check_out[["warnings"]]))
+        }
+        #  ‘MASS’
+        # print(" -- warnings --")
+        # print(check_out[["warnings"]])
+        expect_true(length(check_out[["notes"]]) == 0)
+      } else {
+        print(" ==== Interactive ====")
+        # Modify with extra values
+        extra_params <- glue(
+          'fusen::inflate(pkg = "{path_foosen}",
       check = TRUE, quiet = TRUE, args = c("--no-manual"),
       overwrite = TRUE, open_vignette = FALSE, '
-      )
-      to_inflate <- gsub("fusen::inflate\\(", extra_params, inflate_lines)
+        )
+        to_inflate <- gsub("fusen::inflate\\(", extra_params, inflate_lines)
 
-      # No redirection of stdout/stderr when non-interactive
-      expect_error(
-        suppressMessages(
-          eval(parse(text = to_inflate))
-        ),
-        regexp = NA)
+        # No redirection of stdout/stderr when non-interactive
+        expect_error(
+          suppressMessages(
+            eval(parse(text = to_inflate))
+          ),
+          regexp = NA)
+      }
 
       skip_if_not(interactive())
       # Needs MASS, lattice, Matrix installed
@@ -631,27 +670,53 @@ usethis::with_project(dummypackage, {
       "}"
     )))
 
-    skip_if_not(interactive())
-    # Needs MASS, lattice, Matrix installed
-
     checkdir <- tempfile("dircheck")
     # Disable checking for future file timestamps
-    withr::with_envvar(
-      new = c(`_R_CHECK_SYSTEM_CLOCK_` = 0),
-      {
-        expect_error(
-          suppressMessages(
-            inflate(pkg = dummypackage, flat_file = flat_file,
-                    vignette_name = "Get started", check = TRUE,
-                    check_dir = checkdir, quiet = TRUE,
-                    overwrite = TRUE, open_vignette = FALSE)),
-          regexp = NA
-        )
-      })
-    # Should not be any errors with templates
-    check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
-    expect_equal(check_lines[length(check_lines)], "Status: OK")
-    unlink(checkdir, recursive = TRUE)
+    if (!interactive()) {
+      expect_error(
+        suppressMessages(
+          inflate(pkg = dummypackage, flat_file = flat_file,
+                  vignette_name = "Get started", check = FALSE,
+                  quiet = TRUE,
+                  overwrite = TRUE, open_vignette = FALSE)),
+        regexp = NA
+      )
+
+      # Do not check inside check if on CRAN
+      skip_on_os(os = c("windows", "solaris"))
+
+      # If this check is run inside a not "--as-cran" check, then it wont work as expected
+      check_out <- rcmdcheck::rcmdcheck(dummypackage, quiet = TRUE,
+                                        args = c("--no-manual"),
+                                        check_dir = checkdir)
+
+      # No errors
+      expect_true(length(check_out[["errors"]]) == 0)
+      expect_true(length(check_out[["warnings"]]) <= 1)
+      if (length(check_out[["warnings"]]) == 1) {
+        expect_true(grepl("there is no package called", check_out[["warnings"]]))
+      }
+      #  ‘MASS’
+      # print(" -- warnings --")
+      # print(check_out[["warnings"]])
+      expect_true(length(check_out[["notes"]]) == 0)
+    } else {
+      expect_error(
+        suppressMessages(
+          inflate(pkg = dummypackage, flat_file = flat_file,
+                  vignette_name = "Get started", check = TRUE,
+                  check_dir = checkdir, quiet = TRUE,
+                  overwrite = TRUE, open_vignette = FALSE)),
+        regexp = NA
+      )
+
+      # Should not be any errors with templates in interactive
+      check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
+      expect_equal(check_lines[length(check_lines)], "Status: OK")
+      unlink(checkdir, recursive = TRUE)
+    }
+
+
   })
 })
 unlink(dummypackage, recursive = TRUE)
@@ -862,7 +927,7 @@ usethis::with_project(dummypackage, {
     expect_true(any(grepl("my_median2 <- function", r_lines)))
     # example at the right place
     expect_equal(r_lines[12:14],
-      c("#' @examples", "#' my_median(2:20)" , "#' my_median(1:12)")
+                 c("#' @examples", "#' my_median(2:20)" , "#' my_median(1:12)")
     )
     expect_equal(r_lines[29:31],
                  c("#' @examples", "#' my_median2(2:20)" , "#' my_median2(1:12)")
