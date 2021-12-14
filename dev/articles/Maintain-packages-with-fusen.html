@@ -250,7 +250,7 @@ Maintaining such a package requires a choice:</p>
 <li>Run command of the last chunk: <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd")</code>
 <ul>
 <li>This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", document = FALSE)</code> to avoid that.</li>
-<li>This will also run <code>devtools::check()</code>. Use <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", check = FALSE)</code> to avoid that.</li>
+<li>This will also run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>. Use <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", check = FALSE)</code> to avoid that.</li>
 </ul>
 </li>
 </ul>
