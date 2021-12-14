@@ -561,9 +561,13 @@ for (pkgname in c("full", "teaching", "minimal")) {
 
         # No errors
         expect_true(length(check_out[["errors"]]) == 0)
-        expect_true(length(check_out[["warnings"]]) == 0)
-        print(" -- warnings --")
-        print(check_out[["warnings"]])
+        expect_true(length(check_out[["warnings"]]) <= 1)
+        if (length(check_out[["warnings"]]) == 1) {
+          expect_true(grepl("there is no package called", check_out[["warnings"]]))
+        }
+        #  ‘MASS’
+        # print(" -- warnings --")
+        # print(check_out[["warnings"]])
         expect_true(length(check_out[["notes"]]) == 0)
       } else {
         print(" ==== Interactive ====")
