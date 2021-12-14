@@ -205,8 +205,8 @@ urlchecker::url_update()
 devtools::check_rhub()
 rhub::check_on_windows(check_args = "--force-multiarch")
 rhub::check_on_solaris()
-rhub::check(platform = "debian-clang-devel")
-rhub::check(platform = "fedora-clang-devel")
+rhub::check(platform = "debian-clang-devel", show_status = FALSE)
+rhub::check(platform = "fedora-clang-devel", show_status = FALSE)
 rhub::check_for_cran(show_status = FALSE)
 
 # Run locally in Docker

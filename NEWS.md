@@ -1,4 +1,4 @@
-# fusen 0.2.4.9000
+# fusen 0.2.5
 
 ## Breaking changes
 
