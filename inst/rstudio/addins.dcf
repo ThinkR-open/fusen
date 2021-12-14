@@ -3,3 +3,7 @@ Description: Create {fusen} chunks inside your Rmd
 Binding: add_fusen_chunks
 Interactive: false
 
+Name: Add {fusen} flat template
+Description: Create a new flat template file in your project
+Binding: addin_add_template
+Interactive: true
