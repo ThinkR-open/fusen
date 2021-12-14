@@ -692,6 +692,14 @@ usethis::with_project(dummypackage, {
 
       # No errors
       expect_true(length(check_out[["errors"]]) == 0)
+      expect_true(length(check_out[["warnings"]]) <= 1)
+      if (length(check_out[["warnings"]]) == 1) {
+        expect_true(grepl("there is no package called", check_out[["warnings"]]))
+      }
+      #  ‘MASS’
+      # print(" -- warnings --")
+      # print(check_out[["warnings"]])
+      expect_true(length(check_out[["notes"]]) == 0)
     } else {
       expect_error(
         suppressMessages(
@@ -701,12 +709,13 @@ usethis::with_project(dummypackage, {
                   overwrite = TRUE, open_vignette = FALSE)),
         regexp = NA
       )
+
+      # Should not be any errors with templates in interactive
+      check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
+      expect_equal(check_lines[length(check_lines)], "Status: OK")
+      unlink(checkdir, recursive = TRUE)
     }
-    # })
-    # Should not be any errors with templates
-    check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
-    expect_equal(check_lines[length(check_lines)], "Status: OK")
-    unlink(checkdir, recursive = TRUE)
+
 
   })
 })
