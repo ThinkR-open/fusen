@@ -150,6 +150,7 @@ usethis::pr_finish(41)
 # _Check in interactive test-inflate for templates and Addins
 pkgload::load_all()
 testthat::test_dir("tests/testthat/")
+testthat::test_file("tests/testthat/test-inflate.R")
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 # Test no output generated in the user files
 # pkgload::load_all(export_all = FALSE)
@@ -205,6 +206,7 @@ devtools::check_rhub()
 rhub::check_on_windows(check_args = "--force-multiarch")
 rhub::check_on_solaris()
 rhub::check(platform = "debian-clang-devel")
+rhub::check(platform = "fedora-clang-devel")
 rhub::check_for_cran(show_status = FALSE)
 
 # Run locally in Docker
@@ -213,6 +215,7 @@ rhub::check_for_cran(show_status = FALSE)
 # docker run -v /mnt/Data/github/ThinkR-open/fusen:/home/root/toto -ti rhub/debian-clang-devel bash
 # debugonce(rhub::local_check_linux)
 rhub::local_check_linux(image = "rhub/debian-clang-devel")
+rhub::local_check_linux(image = "rhub/fedora-clang-devel")
 # a55df815-38f2-4854-a3bc-29cdcac878cc-2
 
 rstudioapi::navigateToFile(system.file(package = "rhub", "bin", "rhub-linux-docker.sh"))
