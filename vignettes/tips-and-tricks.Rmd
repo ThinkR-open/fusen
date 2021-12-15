@@ -30,7 +30,7 @@ library(stringr)
 
 _Note that this will not be used anywhere in the package. A `development` chunk is only there for your code exploration, during development._
 
-- Remember that in the package structure, examples and tests code will be run independantly. Thus, `examples` and `tests` chunk need to have all code required to run independantly.
+- Remember that in the package structure, examples and tests code will be run independently. Thus, `examples` and `tests` chunk need to have all code required to run independently.
 
 - The `development` chunk that contains the `inflate()` call need to have `eval=FALSE` parameter to avoid side effects if you knit the flat file.
 
@@ -119,12 +119,12 @@ inflate(vignette_name = NA)
 If it is the first function of the flat template:
 
 - you can create the template with `add_flat_template("minimal", flat_name = "my_function_name")`.  In this case, the template will be pre-filled with your function name: chunk names, function calls.
-- You can also use the RStudio addin "Add {fusen} flat template" to create a new template in your "dev/" directory. You will be prompt for the template type and the function name
+- You can also use the RStudio Addin "Add {fusen} flat template" to create a new template in your "dev/" directory. You will be prompt for the template type and the function name
 
 If this is the second function inside an existing template:
 
 - Position your prompt where you want to add the new function and use the RStudio Addin: "Add {fusen} chunks". You will be asked for the function name. 
-- The addin uses `add_fusen_chunks("my_function_name")`
+- The Addin uses `add_fusen_chunks("my_function_name")`
 
 # How to Inflate multiple flat files ?
 
