@@ -555,6 +555,7 @@ for (pkgname in c("full", "teaching", "minimal")) {
         # Do not check inside check if on CRAN
         skip_on_os(os = c("windows", "solaris"))
 
+
         # If this check is run inside a not "--as-cran" check, then it wont work as expected
         check_out <- rcmdcheck::rcmdcheck(path_foosen, quiet = TRUE,
                              args = c("--no-manual"))
@@ -568,6 +569,7 @@ for (pkgname in c("full", "teaching", "minimal")) {
         #  ‘MASS’
         # print(" -- warnings --")
         # print(check_out[["warnings"]])
+        skip_on_cran()
         expect_true(length(check_out[["notes"]]) == 0)
       } else {
         print(" ==== Interactive ====")
@@ -699,6 +701,7 @@ usethis::with_project(dummypackage, {
       #  ‘MASS’
       # print(" -- warnings --")
       # print(check_out[["warnings"]])
+      skip_on_cran()
       expect_true(length(check_out[["notes"]]) == 0)
     } else {
       expect_error(
@@ -936,6 +939,12 @@ usethis::with_project(dummypackage, {
     r_lines <- readLines(my_rdname1_file)
     expect_true(any(grepl("my_fun_rdname1 <- function", r_lines)))
     expect_true(any(grepl("my_fun_rdname2 <- function", r_lines)))
+    expect_equal(r_lines[13:15],
+                 c("#' @examples" , "#' my_fun_rdname1(2:20)", "#' my_fun_rdname1(1:12)"))
+    expect_equal(r_lines[21:25],
+                 c("#' @rdname same_rdname" ,
+                   "#' @importFrom stats median", "#' @export",
+                   "#' @examples", "#' my_fun_rdname2(1:12)" ))
     # Same chunk name
     r_lines <- readLines(my_chunk1_file)
     expect_true(any(grepl("my_fun_chunk1 <- function", r_lines)))
@@ -946,6 +955,29 @@ usethis::with_project(dummypackage, {
     expect_true(any(grepl("my_fun_filename2 <- function", r_lines)))
     # @filename cleaned in R file
     expect_false(any(grepl("@filename", r_lines)))
+
+    # -- doc files --
+    my_median_file <- file.path(dummypackage, "man", "my_median.Rd")
+    expect_true(file.exists(my_median_file))
+    my_median2_file <- file.path(dummypackage, "man", "my_median2.Rd")
+    expect_true(file.exists(my_median2_file))
+    # chunk name
+    my_median_file <- file.path(dummypackage, "man", "my_fun_chunk1.Rd")
+    expect_true(file.exists(my_median_file))
+    my_median2_file <- file.path(dummypackage, "man", "my_fun_chunk2.Rd")
+    expect_true(file.exists(my_median2_file))
+    # rdname
+    my_median_file <- file.path(dummypackage, "man", "my_fun_rdname1.Rd")
+    expect_false(file.exists(my_median_file))
+    my_median2_file <- file.path(dummypackage, "man", "my_fun_rdname2.Rd")
+    expect_false(file.exists(my_median2_file))
+    my_median3_file <- file.path(dummypackage, "man", "same_rdname.Rd")
+    expect_true(file.exists(my_median3_file))
+    # filename
+    my_median_file <- file.path(dummypackage, "man", "my_fun_filename1.Rd")
+    expect_true(file.exists(my_median_file))
+    my_median2_file <- file.path(dummypackage, "man", "my_fun_filename2.Rd")
+    expect_true(file.exists(my_median2_file))
 
     # -- test files --
     my_median_file <- file.path(dummypackage, "tests", "testthat", "test-my_median.R")

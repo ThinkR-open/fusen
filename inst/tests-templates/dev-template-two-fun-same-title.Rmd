@@ -163,21 +163,12 @@ test_that("my_fun_rdname1 works properly and show error if needed", {
 ## fun_rdname2
 
 ```{r function-fun_rdname2}
-#' My fun_rdname2
-#'
-#' @param x Vector of Numeric values
-#' @inheritParams stats::median
-#'
 #' @rdname same_rdname
-#' @return
-#' Median of vector x
+#' @importFrom stats median
 #' @export
-#'
-#' @examples
-#' my_fun_rdname2(2:20)
 my_fun_rdname2 <- function(x, na.rm = TRUE) {
   if (!is.numeric(x)) {stop("x should be numeric")}
-  stats::median(x, na.rm = na.rm)
+  median(x, na.rm = na.rm)
 }
 ```
 
