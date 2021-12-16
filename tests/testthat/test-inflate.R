@@ -495,7 +495,8 @@ usethis::with_project(dummypackage, {
       ),
       regexp = NA)
     # Check error
-    skip_on_os(os = c("windows", "solaris"))
+    # skip_on_os(os = c("windows", "solaris"))
+    skip_on_cran()
 
     # Could not find function "my_norox2"
     expect_error(rcmdcheck::rcmdcheck(dummypackage, quiet = TRUE,
