@@ -1,0 +1,303 @@
+---
+title: "Tips and tricks"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{tips-and-tricks}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+# Can I knit the content of the flat template ?
+
+Yes. Although this is not the real goal, the flat template can be filled and run like any other Rmarkdown file.  
+However, you need to keep in mind that this will be transformed as a R package, which requires some specific attention.
+
+- Use a `development` chunk at the beginning of your flat template to declare all packages that you will need to explore your code
+
+````
+```{r dev}`r ''`
+library(glue)
+library(stringr)
+```
+````
+
+_Note that this will not be used anywhere in the package. A `development` chunk is only there for your code exploration, during development._
+
+- Remember that in the package structure, examples and tests code will be run independently. Thus, `examples` and `tests` chunk need to have all code required to run independently.
+
+- The `development` chunk that contains the `inflate()` call need to have `eval=FALSE` parameter to avoid side effects if you knit the flat file.
+
+# How to declare packages with `library()` for the future vignette ?
+
+If you use a classical chunk, without any specific name, it will be copied as is in the vignette.
+
+````
+```{r}`r ''`
+library(glue)
+library(stringr)
+```
+````
+
+# How to include examples that cannot be run ?
+
+I created a chunk `example` but I do not want the example to be run in the function example and I do not want it to be run in the vignette.
+
+- Use `eval=FALSE` in the chunk options, so that it wont be run in the vignette
+- Use `#' \dontrun{}` syntax, with `#' ` before so that examples in the function example will not be run
+
+````
+```{r function-myfunction}`r ''`
+myfunction <- function(x) {x}
+```
+
+```{r example-myfunction, eval=FALSE}`r ''`
+# Will be run in example but not in vignette
+myfunction(10)
+
+# Will not be run in example
+#' \dontrun{
+myfunction(12)
+#' }
+
+#' \dontrun{
+#' myfunction(12)
+#' }
+```
+````
+
+# Document your internal datasets in a `function` chunk as usual
+
+To document datasets, pkgdoc, special R files, you can write them as is in the `function` chunk.  
+If {fusen} does not detect the keyword `function()` or `R6Class()` in the `function` chunk code, then the chunk is copied as is in a "R/" file.
+
+````
+```{r function-cars}`r ''`
+#' cars
+#'
+#' data in 'datasets'.
+#'
+#' @format A data frame with 50 rows and 2 variables:
+#' \describe{
+#'   \item{ speed }{  numeric }
+#'   \item{ dist }{  numeric }
+#' }
+#' @source Ezekiel, M. (1930) Methods of Correlation Analysis. Wiley.
+"cars"
+```
+````
+
+# How to ignore some chunks ?
+
+All chunks named `dev` or `development` will not be used in the package.  
+Use them for your exploration that you do not want to keep at the end of the process.  
+This won't affect your package.
+
+````
+```{r dev}`r ''`
+# Some code exploration
+```
+````
+
+# How not to create a vignette ?
+
+- If I only build internal functions, I may not want to inflate the flat file as a vignette.
+- The flat file is the developer's documentation and that may be enough
+
+```{r, eval=FALSE}
+inflate(vignette_name = NA)
+```
+
+# How to get a pre-filled template for a specific function name ?
+
+If it is the first function of the flat template:
+
+- you can create the template with `add_flat_template("minimal", flat_name = "my_function_name")`.  In this case, the template will be pre-filled with your function name: chunk names, function calls.
+- You can also use the RStudio Addin "Add {fusen} flat template" to create a new template in your "dev/" directory. You will be prompt for the template type and the function name
+
+If this is the second function inside an existing template:
+
+- Position your prompt where you want to add the new function and use the RStudio Addin: "Add {fusen} chunks". You will be asked for the function name. 
+- The Addin uses `add_fusen_chunks("my_function_name")`
+
+# How to Inflate multiple flat files ?
+
+- Add an entry in your main "dev_history.Rmd" file
+
+```r
+fusen::inflate("dev/flat_file1.Rmd")
+fusen::inflate("dev/flat_file2.Rmd")
+fusen::inflate("dev/flat_file3.Rmd")
+```
+
+If the main "dev_history.Rmd" file does not exists, you can create it with `add_flat_template("dev_history")`
+
+# How to store multiple functions in a unique R file ?
+
+There are multiple ways of doing it. Choose one of: use the section title structure, use roxygen tags or use chunk parameter.
+
+## All functions under one title section
+
+Use the 3-set of chunks (`fun`, `example`, `test`) twice, under the same title section of the Rmd
+
+````md
+# One title for both groups of chunk
+
+The code and tests for the first function
+
+```{r function-fun1}`r ''`
+```
+
+```{r example-fun1}`r ''`
+```
+
+```{r test-fun1}`r ''`
+```
+
+The code and tests for the second function
+
+```{r function-fun2}`r ''`
+```
+
+```{r example-fun2}`r ''`
+```
+
+```{r test-fun2}`r ''`
+```
+
+````
+
+## Use same `@rdname` in function roxygen
+
+````md
+# Title 1 for function 1
+
+```{r function-fun_rdname1}`r ''`
+#' My fun_rdname1
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @rdname same_rdname
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_rdname1(2:20)
+my_fun_rdname1 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+# Title  2 for function 2
+
+```{r function-fun_rdname2}`r ''`
+#' My fun_rdname2
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @rdname same_rdname
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_rdname2(2:20)
+my_fun_rdname2 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+````
+
+## Use same `@filename` in function roxygen
+
+`@filename` is recognized only by {fusen} as a proper roxygen tag to merge multiple functions in the same "R/" and "tests/" files.  
+This code line is removed in the resulting "R/" files to avoid any interference with Roxygenize.
+
+````md
+# Title 1 for function 1
+
+```{r function-fun_filename1}`r ''`
+#' My fun_filename1
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @filename same_filename
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_filename1(2:20)
+my_fun_filename1 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+# Title  2 for function 2
+
+```{r function-fun_filename2}`r ''`
+#' My fun_filename2
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @filename same_filename
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_filename2(2:20)
+my_fun_filename2 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+````
+
+## Use chunk param `filename = "the_comon_filename"`
+
+Add it in the `function` chunk only
+
+````md
+# Title 1 for function 1
+
+```{r function-fun_chunk1, filename = "fun_chunk1"}`r ''`
+#' The code of your function 1
+```
+
+```{r example-fun_chunk1}`r ''`
+```
+
+```{r test-fun_chunk1}`r ''`
+```
+
+# Title 2 for function 2
+
+```{r function-fun_chunk2, filename = "fun_chunk1"}`r ''`
+#' The code of your function 2
+```
+
+```{r example-fun_chunk2}`r ''`
+```
+
+```{r test-fun_chunk2}`r ''`
+```
+
+````
+

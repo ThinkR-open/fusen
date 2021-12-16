@@ -1,4 +1,4 @@
-# fusen 0.2.4.9000
+# fusen 0.3.0
 
 ## Breaking changes
 
@@ -9,9 +9,11 @@
 
 ## Major changes
 
+* Check included now uses `devtools::check()` instead of `rcmdcheck()`
 * Avoid creating vignette with `inflate(vignette_name = NA)`
 * Decide whether or not to open vignette when inflate with `inflate(open_vignette = FALSE)`
 * Improve documentation included in flat templates to reflect changes in using dev_history file
+* Add Rstudio Addin to insert a new flat template
 * Add Rstudio Addin to insert chunks for new function (@ColinFay)
 * Deal with `\dontrun{}` in example chunks
 * Allow short names for chunks: dev, fun, ex, test
