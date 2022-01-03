@@ -92,12 +92,17 @@ unlink(dummygui$path, recursive = TRUE)
 
 ## Test initialise git ----
 # if git exists
+dummypackage <- tempfile(pattern = "dummy")
+dir.create(dummypackage)
 git_output <- system(
-  command = paste("git init", path),
+  command = paste("git init", dummypackage),
   ignore.stdout = TRUE,
   ignore.stderr = TRUE
 )
-if (git_output) {
+unlink(dummypackage, recursive = TRUE)
+
+if (git_output != 0) {
+  # No git installed on machine
   # "Error initializing git repository"
   dummypackage <- tempfile(pattern = "dummy")
   dir.create(dummypackage)
@@ -118,7 +123,7 @@ if (git_output) {
 } else {
   # "Initialized git repository"
 
-  # In cli
+  # In cli, git TRUE
   dummypackage <- tempfile(pattern = "dummy")
   dir.create(dummypackage)
   withr::with_dir(dummypackage, {
@@ -134,7 +139,23 @@ if (git_output) {
   })
   unlink(dummypackage, recursive = TRUE)
 
-  # In Rstudio GUI project wizard
+  # In cli, git FALSE
+  dummypackage <- tempfile(pattern = "dummy")
+  dir.create(dummypackage)
+  withr::with_dir(dummypackage, {
+    test_that("Create a fusen project without git at the cli", {
+      path_gigit <- file.path(dummypackage, "gigit")
+      dev_path <- suppressMessages(create_fusen(path_gigit, template = "full", open = FALSE, with_git = FALSE))
+
+      expect_true(dir.exists(path_gigit))
+      expect_true(all(file.exists(dev_path)))
+      # git is not initialized
+      expect_false(dir.exists(file.path(path_gigit, ".git")))
+    })
+  })
+  unlink(dummypackage, recursive = TRUE)
+
+  # In Rstudio GUI project wizard, git TRUE
   dummygui <- create_dummygui()
   withr::with_dir(dummygui$dirname, {
     test_that("Create a fusen project with git using Rstudio GUI", {
@@ -148,6 +169,24 @@ if (git_output) {
       expect_true(file.exists(dev_file))
       # git is initialized
       expect_true(dir.exists(file.path(dummygui$path, ".git/")))
+    })
+  })
+  unlink(dummygui$path, recursive = TRUE)
+
+  # In Rstudio GUI project wizard, git FALSE
+  dummygui <- create_dummygui()
+  withr::with_dir(dummygui$dirname, {
+    test_that("Create a fusen project without git using Rstudio GUI", {
+      dev_file <- expect_error(
+        suppressMessages(
+          create_fusen_gui(dummygui$basename, template = "teaching", with_git = FALSE)
+        ),
+        regexp = NA # expect no errors
+      )
+      expect_true(dir.exists(dummygui$path))
+      expect_true(file.exists(dev_file))
+      # git is not initialized
+      expect_false(dir.exists(file.path(dummygui$path, ".git/")))
     })
   })
   unlink(dummygui$path, recursive = TRUE)

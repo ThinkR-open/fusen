@@ -56,14 +56,14 @@ create_fusen <- function(
   }
 
   ## Eventually initialise git
-  if (with_git) {
+  if (isTRUE(with_git)) {
     cat_rule("Initializing git repository")
     git_output <- system(
       command = paste("git init", path),
       ignore.stdout = TRUE,
       ignore.stderr = TRUE
     )
-    if (git_output) {
+    if (git_output != 0) {
       cli::cli_alert_warning("Error initializing git repository")
     } else {
       cli::cli_alert_success("Initialized git repository")
