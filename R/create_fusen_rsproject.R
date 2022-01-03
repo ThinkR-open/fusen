@@ -29,6 +29,12 @@ create_fusen <- function(
   path <- normalizePath(path, mustWork = FALSE)
   template <- match.arg(template)
 
+  project_name <- basename(path)
+  if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
+    stop("Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
+         "` as a package name should only contain letters, numbers and dots.")
+  }
+
   if (dir.exists(path)){
     cli::cli_alert_warning(
       paste(

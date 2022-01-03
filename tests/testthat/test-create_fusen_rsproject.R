@@ -114,7 +114,11 @@ if (git_output != 0) {
         regexp = "Error initializing git repository")
 
       expect_true(dir.exists(path_gigit))
-      expect_true(all(file.exists(dev_path)))
+      expect_true(all(file.exists(c(
+        file.path(path_gigit, "dev", "flat_full.Rmd"),
+        file.path(path_gigit, "dev", "0-dev_history.Rmd")
+      )
+      )))
       # git is not initialized
       expect_false(dir.exists(file.path(path_gigit, ".git")))
     })
@@ -132,7 +136,11 @@ if (git_output != 0) {
       dev_path <- suppressMessages(create_fusen(path_gigit, template = "full", open = FALSE, with_git = TRUE))
 
       expect_true(dir.exists(path_gigit))
-      expect_true(all(file.exists(dev_path)))
+      expect_true(all(file.exists(c(
+        file.path(path_gigit, "dev", "flat_full.Rmd"),
+        file.path(path_gigit, "dev", "0-dev_history.Rmd")
+      )
+      )))
       # git is initialized
       expect_true(dir.exists(file.path(path_gigit, ".git")))
     })
@@ -148,7 +156,11 @@ if (git_output != 0) {
       dev_path <- suppressMessages(create_fusen(path_gigit, template = "full", open = FALSE, with_git = FALSE))
 
       expect_true(dir.exists(path_gigit))
-      expect_true(all(file.exists(dev_path)))
+      expect_true(all(file.exists(c(
+        file.path(path_gigit, "dev", "flat_full.Rmd"),
+        file.path(path_gigit, "dev", "0-dev_history.Rmd")
+      )
+      )))
       # git is not initialized
       expect_false(dir.exists(file.path(path_gigit, ".git")))
     })
@@ -166,7 +178,9 @@ if (git_output != 0) {
         regexp = NA # expect no errors
       )
       expect_true(dir.exists(dummygui$path))
-      expect_true(file.exists(dev_file))
+      expect_true(all(file.exists(
+        file.path(dummygui$path, "dev", "flat_teaching.Rmd")
+      )))
       # git is initialized
       expect_true(dir.exists(file.path(dummygui$path, ".git/")))
     })
@@ -184,10 +198,27 @@ if (git_output != 0) {
         regexp = NA # expect no errors
       )
       expect_true(dir.exists(dummygui$path))
-      expect_true(file.exists(dev_file))
+      expect_true(all(file.exists(
+        file.path(dummygui$path, "dev", "flat_teaching.Rmd")
+      )))
       # git is not initialized
       expect_false(dir.exists(file.path(dummygui$path, ".git/")))
     })
   })
   unlink(dummygui$path, recursive = TRUE)
 }
+
+# Test bad path for package stops soon
+dummypackage <- tempfile(pattern = "dummy")
+dir.create(dummypackage)
+withr::with_dir(dummypackage, {
+  test_that("Create a fusen project with git at the cli", {
+    path_bad_name <- file.path(dummypackage, "bad-name")
+    expect_error(
+      create_fusen(path_bad_name, template = "full", open = FALSE),
+      regexp = "Please rename")
+
+    expect_false(dir.exists(path_bad_name))
+  })
+})
+unlink(dummypackage, recursive = TRUE)
