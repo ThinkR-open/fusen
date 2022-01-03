@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.2.4.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.3.0.9000</span>
       </span>
     </div>
 
@@ -51,6 +51,9 @@
     </li>
     <li>
       <a href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
+    </li>
+    <li>
+      <a href="../articles/tips-and-tricks.html">Tips and tricks</a>
     </li>
   </ul></li>
 <li>
@@ -79,9 +82,14 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.2.4.9000" id="fusen-0249000">fusen 0.2.4.9000<a class="anchor" aria-label="anchor" href="#fusen-0249000"></a></h2>
+<h2 class="page-header" data-toc-text="0.3.0.9000" id="fusen-0309000">fusen 0.3.0.9000<a class="anchor" aria-label="anchor" href="#fusen-0309000"></a></h2>
+<ul><li>Improve template ‘full’ for internal data use</li>
+<li>Fix tests when git does not exists</li>
+</ul></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.3.0" id="fusen-030">fusen 0.3.0<small>2021-12-16</small><a class="anchor" aria-label="anchor" href="#fusen-030"></a></h2>
 <div class="section level3">
-<h3 id="breaking-changes-0-2-4-9000">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-4-9000"></a></h3>
+<h3 id="breaking-changes-0-3-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-3-0"></a></h3>
 <ul><li>
 <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> superseeds <code><a href="../reference/add_dev_history.html">add_dev_history()</a></code> with more advanced possibilities</li>
 <li>
@@ -92,12 +100,15 @@
 </li>
 </ul></div>
 <div class="section level3">
-<h3 id="major-changes-0-2-4-9000">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-2-4-9000"></a></h3>
-<ul><li>Avoid creating vignette with <code>inflate(vignette_name = NA)</code>
+<h3 id="major-changes-0-3-0">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-3-0"></a></h3>
+<ul><li>Check included now uses <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> instead of <code>rcmdcheck()</code>
+</li>
+<li>Avoid creating vignette with <code>inflate(vignette_name = NA)</code>
 </li>
 <li>Decide whether or not to open vignette when inflate with <code>inflate(open_vignette = FALSE)</code>
 </li>
 <li>Improve documentation included in flat templates to reflect changes in using dev_history file</li>
+<li>Add Rstudio Addin to insert a new flat template</li>
 <li>Add Rstudio Addin to insert chunks for new function (<a href="https://github.com/ColinFay" class="external-link">@ColinFay</a>)</li>
 <li>Deal with <code>\dontrun{}</code> in example chunks</li>
 <li>Allow short names for chunks: dev, fun, ex, test</li>
@@ -105,7 +116,7 @@
 <code><a href="../reference/create_fusen.html">create_fusen()</a></code> to create a {fusen} project from command line or with RStudio new project (<a href="https://github.com/ALanguillaume" class="external-link">@ALanguillaume</a>)</li>
 <li>Add “do not edit by hand” in files generated</li>
 </ul><div class="section level4">
-<h4 id="grouping-functions-under-the-same-file-0-2-4-9000">Grouping functions under the same file<a class="anchor" aria-label="anchor" href="#grouping-functions-under-the-same-file-0-2-4-9000"></a></h4>
+<h4 id="grouping-functions-under-the-same-file-0-3-0">Grouping functions under the same file<a class="anchor" aria-label="anchor" href="#grouping-functions-under-the-same-file-0-3-0"></a></h4>
 <ul><li>Group functions in same R file and test file if under same (level 1 + level 2) titles in the Rmd</li>
 <li>Group functions in same R file and test file if they have the same <code>@rdname</code> roxygen tag</li>
 <li>Group functions in same R file and test file if they have the same <code>@filename</code> roxygen tag (only recognized by ‘fusen’)</li>
@@ -114,7 +125,7 @@
 </ul></div>
 </div>
 <div class="section level3">
-<h3 id="minor-changes-0-2-4-9000">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-2-4-9000"></a></h3>
+<h3 id="minor-changes-0-3-0">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-3-0"></a></h3>
 <ul><li>
 <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> uses the <code>flat_name</code> to pre-fill the template with the first function name.</li>
 <li>Fix .onLoad functions file creation</li>
