@@ -29,6 +29,12 @@ create_fusen <- function(
   path <- normalizePath(path, mustWork = FALSE)
   template <- match.arg(template)
 
+  project_name <- basename(path)
+  if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
+    stop("Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
+         "` as a package name should only contain letters, numbers and dots.")
+  }
+
   if (dir.exists(path)){
     cli::cli_alert_warning(
       paste(
@@ -56,14 +62,14 @@ create_fusen <- function(
   }
 
   ## Eventually initialise git
-  if (with_git) {
+  if (isTRUE(with_git)) {
     cat_rule("Initializing git repository")
     git_output <- system(
       command = paste("git init", path),
       ignore.stdout = TRUE,
       ignore.stderr = TRUE
     )
-    if (git_output) {
+    if (git_output != 0) {
       cli::cli_alert_warning("Error initializing git repository")
     } else {
       cli::cli_alert_success("Initialized git repository")

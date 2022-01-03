@@ -1,3 +1,8 @@
+# fusen 0.3.0.9000
+
+* Improve template 'full' for internal data use
+* Fix tests when git does not exists
+
 # fusen 0.3.0
 
 ## Breaking changes

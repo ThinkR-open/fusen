@@ -14,6 +14,7 @@ test_that("add_flat_template adds flat_template.Rmd and co.", {
   expect_true(all(file.exists(dev_file_path)))
   expect_true(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
   expect_true(file.exists(file.path(dummypackage, ".here")))
+  expect_true(file.exists(file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")))
 
   rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
   expect_true(file.exists(rbuildignore_file))
@@ -22,7 +23,7 @@ test_that("add_flat_template adds flat_template.Rmd and co.", {
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
 
   dev_lines <- readLines(flat_file)
-  expect_true(length(grep(pkg_name, dev_lines)) == 1)
+  expect_equal(length(grep(pkg_name, dev_lines)), 3)
 
   # Second time message and new file
   expect_message(add_flat_template(pkg = dummypackage))

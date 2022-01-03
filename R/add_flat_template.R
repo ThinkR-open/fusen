@@ -50,6 +50,9 @@
 #' 
 #' # add new flat file for new functions
 #' add_flat_template("add")
+#' 
+#' # add new flat template for teaching (a reduced full template)
+#' add_flat_template("teaching")
 #' #'}
 add_flat_template <- function(
     template = c("full", "minimal", "additional", "teaching", "dev_history"),
@@ -61,8 +64,8 @@ add_flat_template <- function(
 
   project_name <- basename(normalizePath(pkg))
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
-    stop("Please rename your project/directory with: ", asciify_name(project_name, to_pkg = TRUE),
-         " as a package name should only contain letters, numbers and dots.")
+    stop("Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
+         "` as a package name should only contain letters, numbers and dots.")
   }
 
   template <- match.arg(template)
@@ -80,7 +83,7 @@ add_flat_template <- function(
   if (!dir.exists(dev_dir)) {dir.create(dev_dir)}
   dev_file_path <- file.path(dev_dir, flat_name) #"dev_history.Rmd")
   
-  # Which template
+  # Which template ----
   if (template == "dev_history") {
     dev_file_path <- character(0)
   } else {
@@ -119,7 +122,7 @@ add_flat_template <- function(
     cat(enc2utf8(lines_template), file = dev_file_path, sep = "\n")
   }
   
-  # Add the-dev-history when needed
+  # Add the-dev-history when needed ----
   if (template %in% c("full", "minimal", "dev_history")) {
     dev_file <- file.path(dev_dir, "0-dev_history.Rmd")
     if (file.exists(dev_file) & !isTRUE(overwrite)) {
@@ -139,7 +142,18 @@ add_flat_template <- function(
     
   }
   
-  # .Rbuildignore
+  # Add data for the full template exemple
+  if (template %in% c("full")) {
+    inst_dir <- file.path(pkg, "inst")
+    # Create "inst/" directory
+    if (!dir.exists(inst_dir)) {
+      dir.create(inst_dir)
+    }
+    # Example dataset
+    file.copy(system.file("nyc_squirrels_sample.csv", package = "fusen"), inst_dir)
+  }
+  
+  # .Rbuildignore ----
   # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
     lines <- c(paste0("^", basename(dev_dir), "$"), "^\\.here$")
@@ -159,7 +173,7 @@ add_flat_template <- function(
     cat(enc2utf8(all), file = buildfile, sep = "\n")
   }
   
-  # Add a gitignore file in dev_dir
+  # Add a gitignore file in dev_dir ----
   # Files to ignore
   lines <- c("*.html", "*.R")
   
