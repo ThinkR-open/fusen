@@ -128,9 +128,9 @@
 
     
     
-<div class="section level1">
-<h1 id="can-i-knit-the-content-of-the-flat-template">Can I knit the content of the flat template ?<a class="anchor" aria-label="anchor" href="#can-i-knit-the-content-of-the-flat-template"></a>
-</h1>
+<div class="section level2">
+<h2 id="can-i-knit-the-content-of-the-flat-template">Can I knit the content of the flat template ?<a class="anchor" aria-label="anchor" href="#can-i-knit-the-content-of-the-flat-template"></a>
+</h2>
 <p>Yes. Although this is not the real goal, the flat template can be filled and run like any other Rmarkdown file.<br>
 However, you need to keep in mind that this will be transformed as a R package, which requires some specific attention.</p>
 <ul>
@@ -146,18 +146,18 @@ library(stringr)
 <li><p>The <code>development</code> chunk that contains the <code><a href="../reference/inflate.html">inflate()</a></code> call need to have <code>eval=FALSE</code> parameter to avoid side effects if you knit the flat file.</p></li>
 </ul>
 </div>
-<div class="section level1">
-<h1 id="how-to-declare-packages-with-library-for-the-future-vignette">How to declare packages with <code>library()</code> for the future vignette ?<a class="anchor" aria-label="anchor" href="#how-to-declare-packages-with-library-for-the-future-vignette"></a>
-</h1>
+<div class="section level2">
+<h2 id="how-to-declare-packages-with-library-for-the-future-vignette">How to declare packages with <code>library()</code> for the future vignette ?<a class="anchor" aria-label="anchor" href="#how-to-declare-packages-with-library-for-the-future-vignette"></a>
+</h2>
 <p>If you use a classical chunk, without any specific name, it will be copied as is in the vignette.</p>
 <pre><code>```{r}
 library(glue)
 library(stringr)
 ```</code></pre>
 </div>
-<div class="section level1">
-<h1 id="how-to-include-examples-that-cannot-be-run">How to include examples that cannot be run ?<a class="anchor" aria-label="anchor" href="#how-to-include-examples-that-cannot-be-run"></a>
-</h1>
+<div class="section level2">
+<h2 id="how-to-include-examples-that-cannot-be-run">How to include examples that cannot be run ?<a class="anchor" aria-label="anchor" href="#how-to-include-examples-that-cannot-be-run"></a>
+</h2>
 <p>I created a chunk <code>example</code> but I do not want the example to be run in the function example and I do not want it to be run in the vignette.</p>
 <ul>
 <li>Use <code>eval=FALSE</code> in the chunk options, so that it wont be run in the vignette</li>
@@ -181,9 +181,9 @@ myfunction(12)
 #' }
 ```</code></pre>
 </div>
-<div class="section level1">
-<h1 id="document-your-internal-datasets-in-a-function-chunk-as-usual">Document your internal datasets in a <code>function</code> chunk as usual<a class="anchor" aria-label="anchor" href="#document-your-internal-datasets-in-a-function-chunk-as-usual"></a>
-</h1>
+<div class="section level2">
+<h2 id="document-your-internal-datasets-in-a-function-chunk-as-usual">Document your internal datasets in a <code>function</code> chunk as usual<a class="anchor" aria-label="anchor" href="#document-your-internal-datasets-in-a-function-chunk-as-usual"></a>
+</h2>
 <p>To document datasets, pkgdoc, special R files, you can write them as is in the <code>function</code> chunk.<br>
 If {fusen} does not detect the keyword <code>function()</code> or <code>R6Class()</code> in the <code>function</code> chunk code, then the chunk is copied as is in a “R/” file.</p>
 <pre><code>```{r function-cars}
@@ -200,9 +200,9 @@ If {fusen} does not detect the keyword <code>function()</code> or <code>R6Class(
 "cars"
 ```</code></pre>
 </div>
-<div class="section level1">
-<h1 id="how-to-ignore-some-chunks">How to ignore some chunks ?<a class="anchor" aria-label="anchor" href="#how-to-ignore-some-chunks"></a>
-</h1>
+<div class="section level2">
+<h2 id="how-to-ignore-some-chunks">How to ignore some chunks ?<a class="anchor" aria-label="anchor" href="#how-to-ignore-some-chunks"></a>
+</h2>
 <p>All chunks named <code>dev</code> or <code>development</code> will not be used in the package.<br>
 Use them for your exploration that you do not want to keep at the end of the process.<br>
 This won’t affect your package.</p>
@@ -210,9 +210,9 @@ This won’t affect your package.</p>
 # Some code exploration
 ```</code></pre>
 </div>
-<div class="section level1">
-<h1 id="how-not-to-create-a-vignette">How not to create a vignette ?<a class="anchor" aria-label="anchor" href="#how-not-to-create-a-vignette"></a>
-</h1>
+<div class="section level2">
+<h2 id="how-not-to-create-a-vignette">How not to create a vignette ?<a class="anchor" aria-label="anchor" href="#how-not-to-create-a-vignette"></a>
+</h2>
 <ul>
 <li>If I only build internal functions, I may not want to inflate the flat file as a vignette.</li>
 <li>The flat file is the developer’s documentation and that may be enough</li>
@@ -220,9 +220,9 @@ This won’t affect your package.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>vignette_name <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="how-to-get-a-pre-filled-template-for-a-specific-function-name">How to get a pre-filled template for a specific function name ?<a class="anchor" aria-label="anchor" href="#how-to-get-a-pre-filled-template-for-a-specific-function-name"></a>
-</h1>
+<div class="section level2">
+<h2 id="how-to-get-a-pre-filled-template-for-a-specific-function-name">How to get a pre-filled template for a specific function name ?<a class="anchor" aria-label="anchor" href="#how-to-get-a-pre-filled-template-for-a-specific-function-name"></a>
+</h2>
 <p>If it is the first function of the flat template:</p>
 <ul>
 <li>you can create the template with <code>add_flat_template("minimal", flat_name = "my_function_name")</code>. In this case, the template will be pre-filled with your function name: chunk names, function calls.</li>
@@ -235,9 +235,9 @@ This won’t affect your package.</p>
 </li>
 </ul>
 </div>
-<div class="section level1">
-<h1 id="how-to-inflate-multiple-flat-files">How to Inflate multiple flat files ?<a class="anchor" aria-label="anchor" href="#how-to-inflate-multiple-flat-files"></a>
-</h1>
+<div class="section level2">
+<h2 id="how-to-inflate-multiple-flat-files">How to Inflate multiple flat files ?<a class="anchor" aria-label="anchor" href="#how-to-inflate-multiple-flat-files"></a>
+</h2>
 <ul>
 <li>Add an entry in your main “dev_history.Rmd” file</li>
 </ul>
@@ -247,13 +247,13 @@ This won’t affect your package.</p>
 <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file3.Rmd"</span><span class="op">)</span></code></pre></div>
 <p>If the main “dev_history.Rmd” file does not exists, you can create it with <code>add_flat_template("dev_history")</code></p>
 </div>
-<div class="section level1">
-<h1 id="how-to-store-multiple-functions-in-a-unique-r-file">How to store multiple functions in a unique R file ?<a class="anchor" aria-label="anchor" href="#how-to-store-multiple-functions-in-a-unique-r-file"></a>
-</h1>
-<p>There are multiple ways of doing it. Choose one of: use the section title structure, use roxygen tags or use chunk parameter.</p>
 <div class="section level2">
-<h2 id="all-functions-under-one-title-section">All functions under one title section<a class="anchor" aria-label="anchor" href="#all-functions-under-one-title-section"></a>
+<h2 id="how-to-store-multiple-functions-in-a-unique-r-file">How to store multiple functions in a unique R file ?<a class="anchor" aria-label="anchor" href="#how-to-store-multiple-functions-in-a-unique-r-file"></a>
 </h2>
+<p>There are multiple ways of doing it. Choose one of: use the section title structure, use roxygen tags or use chunk parameter.</p>
+<div class="section level3">
+<h3 id="all-functions-under-one-title-section">All functions under one title section<a class="anchor" aria-label="anchor" href="#all-functions-under-one-title-section"></a>
+</h3>
 <p>Use the 3-set of chunks (<code>fun</code>, <code>example</code>, <code>test</code>) twice, under the same title section of the Rmd</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu"># One title for both groups of chunk</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a></span>
@@ -279,9 +279,9 @@ This won’t affect your package.</p>
 <span id="cb8-22"><a href="#cb8-22"></a><span class="bn">```{r test-fun2}</span></span>
 <span id="cb8-23"><a href="#cb8-23"></a><span class="bn">```</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="use-same-rdname-in-function-roxygen">Use same <code>@rdname</code> in function roxygen<a class="anchor" aria-label="anchor" href="#use-same-rdname-in-function-roxygen"></a>
-</h2>
+<div class="section level3">
+<h3 id="use-same-rdname-in-function-roxygen">Use same <code>@rdname</code> in function roxygen<a class="anchor" aria-label="anchor" href="#use-same-rdname-in-function-roxygen"></a>
+</h3>
 <div class="sourceCode" id="cb9"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu"># Title 1 for function 1</span></span>
 <span id="cb9-2"><a href="#cb9-2"></a></span>
 <span id="cb9-3"><a href="#cb9-3"></a><span class="bn">```{r function-fun_rdname1}</span></span>
@@ -324,9 +324,9 @@ This won’t affect your package.</p>
 <span id="cb9-40"><a href="#cb9-40"></a><span class="bn">}</span></span>
 <span id="cb9-41"><a href="#cb9-41"></a><span class="bn">```</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="use-same-filename-in-function-roxygen">Use same <code>@filename</code> in function roxygen<a class="anchor" aria-label="anchor" href="#use-same-filename-in-function-roxygen"></a>
-</h2>
+<div class="section level3">
+<h3 id="use-same-filename-in-function-roxygen">Use same <code>@filename</code> in function roxygen<a class="anchor" aria-label="anchor" href="#use-same-filename-in-function-roxygen"></a>
+</h3>
 <p><code>@filename</code> is recognized only by {fusen} as a proper roxygen tag to merge multiple functions in the same “R/” and “tests/” files.<br>
 This code line is removed in the resulting “R/” files to avoid any interference with Roxygenize.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu"># Title 1 for function 1</span></span>
@@ -371,9 +371,9 @@ This code line is removed in the resulting “R/” files to avoid any interfere
 <span id="cb10-40"><a href="#cb10-40"></a><span class="bn">}</span></span>
 <span id="cb10-41"><a href="#cb10-41"></a><span class="bn">```</span></span></code></pre></div>
 </div>
-<div class="section level2">
-<h2 id="use-chunk-param-filename-the_comon_filename">Use chunk param <code>filename = "the_comon_filename"</code><a class="anchor" aria-label="anchor" href="#use-chunk-param-filename-the_comon_filename"></a>
-</h2>
+<div class="section level3">
+<h3 id="use-chunk-param-filename-the_comon_filename">Use chunk param <code>filename = "the_comon_filename"</code><a class="anchor" aria-label="anchor" href="#use-chunk-param-filename-the_comon_filename"></a>
+</h3>
 <p>Add it in the <code>function</code> chunk only</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu"># Title 1 for function 1</span></span>
 <span id="cb11-2"><a href="#cb11-2"></a></span>
@@ -414,7 +414,7 @@ This code line is removed in the resulting “R/” files to avoid any interfere
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
 <div class="author">

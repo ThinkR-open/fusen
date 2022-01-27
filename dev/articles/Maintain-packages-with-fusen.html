@@ -130,29 +130,29 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://thinkr-open.github.io/fusen/">fusen</a></span><span class="op">)</span></code></pre></div>
-<div class="section level1">
-<h1 id="daily-use-of-fusen">Daily use of {fusen}<a class="anchor" aria-label="anchor" href="#daily-use-of-fusen"></a>
-</h1>
 <div class="section level2">
-<h2 id="add-a-new-set-of-chunks-in-the-current-rmd">Add a new set of chunks in the current Rmd<a class="anchor" aria-label="anchor" href="#add-a-new-set-of-chunks-in-the-current-rmd"></a>
+<h2 id="daily-use-of-fusen">Daily use of {fusen}<a class="anchor" aria-label="anchor" href="#daily-use-of-fusen"></a>
 </h2>
+<div class="section level3">
+<h3 id="add-a-new-set-of-chunks-in-the-current-rmd">Add a new set of chunks in the current Rmd<a class="anchor" aria-label="anchor" href="#add-a-new-set-of-chunks-in-the-current-rmd"></a>
+</h3>
 <p>Use the Addin “Add {fusen} chunks”</p>
 <ul>
 <li>Name the chunks using function name planned to be created</li>
 <li>Decide if this function is exported to the user or not</li>
 </ul>
 </div>
-<div class="section level2">
-<h2 id="create-a-new-flat-rmd-template">Create a new flat Rmd template<a class="anchor" aria-label="anchor" href="#create-a-new-flat-rmd-template"></a>
-</h2>
+<div class="section level3">
+<h3 id="create-a-new-flat-rmd-template">Create a new flat Rmd template<a class="anchor" aria-label="anchor" href="#create-a-new-flat-rmd-template"></a>
+</h3>
 <p>To add a new family of functions, create a new flat Rmd template</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></code></pre></div>
 </div>
 </div>
-<div class="section level1">
-<h1 id="how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages">How to maintain a {fusen}? Can I use {fusen} with old-way packages ?<a class="anchor" aria-label="anchor" href="#how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages"></a>
-</h1>
+<div class="section level2">
+<h2 id="how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages">How to maintain a {fusen}? Can I use {fusen} with old-way packages ?<a class="anchor" aria-label="anchor" href="#how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages"></a>
+</h2>
 <p>After you <code><a href="../reference/inflate.html">inflate()</a></code> the “flat_template.Rmd”, your code appears twice in the package. In the “flat_template.Rmd” itself and in the correct place for it to be a package. Take it as a documentation for the other developers.<br>
 Maintaining such a package requires a choice:</p>
 <ul>
@@ -168,9 +168,9 @@ Maintaining such a package requires a choice:</p>
 <blockquote>
 <p>Advice 2 : Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place</p>
 </blockquote>
-<div class="section level2">
-<h2 id="option-1-continue-with-the-flat_template-rmd">Option 1: Continue with the “flat_template.Rmd”<a class="anchor" aria-label="anchor" href="#option-1-continue-with-the-flat_template-rmd"></a>
-</h2>
+<div class="section level3">
+<h3 id="option-1-continue-with-the-flat_template-rmd">Option 1: Continue with the “flat_template.Rmd”<a class="anchor" aria-label="anchor" href="#option-1-continue-with-the-flat_template-rmd"></a>
+</h3>
 <ul>
 <li>(+) This does not require to fully understand the package structure and files to continue building your package, and you continue to develop in a unique file</li>
 <li>(+) You are encouraged to continue documenting and testing all parts of your package</li>
@@ -179,9 +179,9 @@ Maintaining such a package requires a choice:</p>
 </ul>
 <p>=&gt; {fusen} itself is built as is. Each modification is added to the dedicated dev_history file and then inflated</p>
 </div>
-<div class="section level2">
-<h2 id="option-2-maintain-like-a-classical-package">Option 2: Maintain like a classical package<a class="anchor" aria-label="anchor" href="#option-2-maintain-like-a-classical-package"></a>
-</h2>
+<div class="section level3">
+<h3 id="option-2-maintain-like-a-classical-package">Option 2: Maintain like a classical package<a class="anchor" aria-label="anchor" href="#option-2-maintain-like-a-classical-package"></a>
+</h3>
 <ul>
 <li>(+) You can use dedicated checking and debugging tools as is, in particular in RStudio. There are built to direct you as quickly as possible to the source of the problem</li>
 <li>(+) This allows collaboration with more advanced developers who are used to debug in the package structure directly</li>
@@ -191,9 +191,9 @@ Maintaining such a package requires a choice:</p>
 <p>=&gt; This is the way I add new functionalities in packages that started in the old way, and in specific cases where inflating is now too complicated, like for function <code><a href="../reference/inflate.html">inflate()</a></code> and all its unit tests in this very {fusen} package.</p>
 </div>
 </div>
-<div class="section level1">
-<h1 id="what-about-packages-already-built-the-old-way">What about packages already built the old way ?<a class="anchor" aria-label="anchor" href="#what-about-packages-already-built-the-old-way"></a>
-</h1>
+<div class="section level2">
+<h2 id="what-about-packages-already-built-the-old-way">What about packages already built the old way ?<a class="anchor" aria-label="anchor" href="#what-about-packages-already-built-the-old-way"></a>
+</h2>
 <p>The “flat_template.Rmd” template only modifies files related to functions presented inside the template. <strong>This does not remove or modify previous functions, tests or vignettes, provided that names are different.</strong></p>
 <ul>
 <li>{fusen} itself was started in the classical way before having enough functions to be able to build a package from itself. This does not prevent me at all to use {fusen} to build himself now !</li>
@@ -201,9 +201,9 @@ Maintaining such a package requires a choice:</p>
 <li>If you want to add new functionalities, correctly documented and tested, you can use {fusen}. This will not delete previous work.</li>
 <li>Use the “Option 2” above to continue after the development of your functionality</li>
 </ul>
-<div class="section level2">
-<h2 id="lets-try-to-convince-package-developers-with-an-example">Let’s try to convince package developers with an example<a class="anchor" aria-label="anchor" href="#lets-try-to-convince-package-developers-with-an-example"></a>
-</h2>
+<div class="section level3">
+<h3 id="lets-try-to-convince-package-developers-with-an-example">Let’s try to convince package developers with an example<a class="anchor" aria-label="anchor" href="#lets-try-to-convince-package-developers-with-an-example"></a>
+</h3>
 <ul>
 <li>Install {fusen} : <code>install.packages("fusen")</code>
 </li>
@@ -280,7 +280,7 @@ You added a new function in your package, along with example, test and a new vig
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.2.</p>
 </div>
 
 <div class="author">
