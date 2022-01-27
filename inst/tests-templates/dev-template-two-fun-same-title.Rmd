@@ -182,7 +182,7 @@ test_that("my_fun_rdname2 works properly and show error if needed", {
 })
 ```
 
-# Two functions, same `@filename`
+# Two functions, mix same `@filename` + chunk param
 ## fun_filename1
 
 ```{r function-fun_filename1}
@@ -216,13 +216,12 @@ test_that("my_fun_filename1 works properly and show error if needed", {
 
 ## fun_filename2
 
-```{r function-fun_filename2}
+```{r function-fun_filename2, filename = "same_filename.R"}
 #' My fun_filename2
 #'
 #' @param x Vector of Numeric values
 #' @inheritParams stats::median
 #'
-#' @filename same_filename
 #' @return
 #' Median of vector x
 #' @export
