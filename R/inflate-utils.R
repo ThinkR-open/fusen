@@ -175,6 +175,9 @@ add_fun_to_parsed <- function(parsed_tbl, fun_code) {
     pkg_filled[["sec_title"]],
     pkg_filled[["file_name"]])
 
+  # Clean filename if script extension
+  pkg_filled[["file_name"]] <- gsub("[.]R$|[.]r$", "", pkg_filled[["file_name"]])
+
   parsed_tbl[["file_name"]] <- NA_character_
   parsed_tbl[["file_name"]][pkg_filled[["order"]]] <- pkg_filled[["file_name"]]
 

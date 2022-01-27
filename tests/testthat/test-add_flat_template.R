@@ -262,4 +262,30 @@ test_that("Other flat_name works", {
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
-
+# Test other dev_dir works ----
+dummypackage <- tempfile(pattern = "devdir")
+dir.create(dummypackage)
+# Add
+test_that("Other dev_dir works", {
+  # Template additional used with "add"
+  dev_file_path <- expect_error(
+    add_flat_template(
+      template = "add", 
+      pkg = dummypackage, flat_name = "hello", 
+      dev_dir = "devdir",
+      open = FALSE),
+    regexp = NA)
+  expect_true(file.exists(file.path(dummypackage, "devdir/flat_hello.Rmd")))
+  hello_flat <- readLines(dev_file_path)
+  
+  # 7 times hello for function name
+  # 2 times hello in flat_hello.Rmd
+  # 1 time devdir/flat_hello.Rmd
+  # O time dev/flat_hello.Rmd
+  expect_equal(length(grep("hello", hello_flat)), 7 + 2)
+  expect_equal(length(grep("flat_hello[.]Rmd", hello_flat)), 2)
+  expect_equal(length(grep("devdir/flat_hello[.]Rmd", hello_flat)), 1)
+  expect_equal(length(grep("dev/flat_hello[.]Rmd", hello_flat)), 0)
+})
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
