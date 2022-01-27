@@ -79,9 +79,9 @@ add_flat_template <- function(
                       asciify_name(gsub("[.]Rmd$", "", flat_name[1])), ".Rmd")
   
   pkg <- normalizePath(pkg)
-  dev_dir <- file.path(pkg, dev_dir)
-  if (!dir.exists(dev_dir)) {dir.create(dev_dir)}
-  dev_file_path <- file.path(dev_dir, flat_name) #"dev_history.Rmd")
+  full_dev_dir <- file.path(pkg, dev_dir)
+  if (!dir.exists(full_dev_dir)) {dir.create(full_dev_dir)}
+  dev_file_path <- file.path(full_dev_dir, flat_name) #"dev_history.Rmd")
   
   # Which template ----
   if (template == "dev_history") {
@@ -90,8 +90,8 @@ add_flat_template <- function(
     template_file <- system.file(paste0("flat-template-", template, ".Rmd"), package = "fusen")
     
     if (file.exists(dev_file_path) & overwrite == FALSE) {
-      n <- length(list.files(dev_dir, pattern = "^flat_.*[.]Rmd"))
-      dev_file_path <- file.path(dev_dir, paste0(file_path_sans_ext(flat_name), "_", n + 1, ".Rmd"))
+      n <- length(list.files(full_dev_dir, pattern = "^flat_.*[.]Rmd"))
+      dev_file_path <- file.path(full_dev_dir, paste0(file_path_sans_ext(flat_name), "_", n + 1, ".Rmd"))
       message(
         flat_name, " already exists. New flat file is renamed '",
         basename(dev_file_path), "'. Use overwrite = TRUE, if you want to ",
@@ -108,10 +108,15 @@ add_flat_template <- function(
            lines_template[grepl("<my_package_name>", lines_template)])
     
     # Change flat_template file name
+    # _inflate
+    lines_template[grepl("dev/flat_template.Rmd", lines_template)] <-
+      gsub("dev/flat_template.Rmd", file.path(dev_dir, dev_name),
+           lines_template[grepl("dev/flat_template.Rmd", lines_template)])
+    # _title
     lines_template[grepl("flat_template.Rmd", lines_template)] <-
       gsub("flat_template.Rmd", dev_name,
            lines_template[grepl("flat_template.Rmd", lines_template)])
-    
+        
     # Change my_fun to fun_name
     if (!is.na(fun_name)) {
       lines_template[grepl("my_fun", lines_template)] <-
@@ -124,7 +129,7 @@ add_flat_template <- function(
   
   # Add the-dev-history when needed ----
   if (template %in% c("full", "minimal", "dev_history")) {
-    dev_file <- file.path(dev_dir, "0-dev_history.Rmd")
+    dev_file <- file.path(full_dev_dir, "0-dev_history.Rmd")
     if (file.exists(dev_file) & !isTRUE(overwrite)) {
       message("'0-dev_history.Rmd' already exists. It was not overwritten. ",
               "Set `add_flat_template(overwrite = TRUE)` if you want to do so.")
@@ -135,7 +140,7 @@ add_flat_template <- function(
         overwrite = overwrite
       )
       if (!copy) {
-        stop("'0-dev_history.Rmd' could not be created in '", dev_dir, "'")
+        stop("'0-dev_history.Rmd' could not be created in '", full_dev_dir, "'")
       }
       dev_file_path <- c(dev_file_path, dev_file)
     }
@@ -156,9 +161,9 @@ add_flat_template <- function(
   # .Rbuildignore ----
   # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
-    lines <- c(paste0("^", basename(dev_dir), "$"), "^\\.here$")
+    lines <- c(paste0("^", dev_dir, "$"), "^\\.here$")
   } else {
-    lines <- c(paste0("^", basename(dev_dir), "$"))
+    lines <- c(paste0("^", dev_dir, "$"))
   }
   
   buildfile <- normalizePath(file.path(pkg, ".Rbuildignore"), mustWork = FALSE)
@@ -177,7 +182,7 @@ add_flat_template <- function(
   # Files to ignore
   lines <- c("*.html", "*.R")
   
-  gitfile <- normalizePath(file.path(dev_dir, ".gitignore"), mustWork = FALSE)
+  gitfile <- normalizePath(file.path(full_dev_dir, ".gitignore"), mustWork = FALSE)
   if (!file.exists(gitfile)) {
     existing_lines <- ""
   } else {
