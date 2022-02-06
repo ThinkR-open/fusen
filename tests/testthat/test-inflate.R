@@ -426,7 +426,7 @@ usethis::with_project(dummypackage, {
             open_vignette = FALSE)
   )
   # Vignette name is also cleaned by {usethis} for special characters
-  vignette_path <- file.path(dummypackage, "vignettes", "y-p-n---1.Rmd")
+  vignette_path <- file.path(dummypackage, "vignettes", "y-p-n-e-1.Rmd")
 
   test_that("vignette is created with clean vignette_name", {
     expect_true(file.exists(vignette_path))
@@ -434,7 +434,7 @@ usethis::with_project(dummypackage, {
     vig_lines <- readLines(vignette_path, encoding = "UTF-8")
     expect_true(sum(grepl(enc2utf8("# y  _ p n@ \u00E9 ! 1"), vig_lines, fixed = TRUE)) == 2)
     expect_equal(vig_lines[2], enc2utf8('title: "# y  _ p n@ \u00E9 ! 1"'))
-    expect_true(sum(grepl("y-p-n---1", vig_lines, fixed = TRUE)) == 0)
+    expect_true(sum(grepl("y-p-n-e-1", vig_lines, fixed = TRUE)) == 0)
   })
 
   # Clean R, tests and vignettes
