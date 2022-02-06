@@ -50,12 +50,12 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
 #' Clean names for any file and package
 #' @param name Character to clean
 #' @param to_pkg Transform all non authorized characters to dots for packages, instead of dash
-#' @importFrom stringi stri_trans_general
 #' @noRd
 asciify_name <- function(name, to_pkg = FALSE) {
   # name <- "@.-y  _ p n@ é ! 1"
 
   # Escape all diacritics
+  stri_trans_general <- getFromNamespace("stri_trans_general", "stringi")
   name <- stri_trans_general(name, id = "Latin-ASCII")
 
   cleaned_name <- gsub("^[.]*|^-|-$", "",
