@@ -178,6 +178,8 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
 
   # Get flat file path relative to package root
   # To be inserted in "DO NOT EDIT" comments
+  pkg <- unixify_windows_path(pkg)
+  flat_file <- unixify_windows_path(flat_file)
   relative_flat_file <- sub(pkg, "", flat_file)
 
   # Check if there are functions ----
