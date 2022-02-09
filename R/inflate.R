@@ -86,18 +86,18 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
   on.exit(setwd(old))
 
   old_proj <- usethis::proj_get()
-  if (normalizePath(old_proj) != normalizePath(pkg)) {
+  if (normalize_path(old_proj) != normalize_path(pkg)) {
     on.exit(usethis::proj_set(old_proj))
     usethis::proj_set(pkg)
   }
 
-  pkg <- normalizePath(pkg)
+  pkg <- normalize_path(pkg)
   needs_restart <- isFALSE(is_pkg_proj(pkg))
-  flat_file <- normalizePath(flat_file, mustWork = FALSE)
+  flat_file <- normalize_path(flat_file, mustWork = FALSE)
 
-  if (!file.exists(file.path(normalizePath(pkg), "DESCRIPTION"))) {
+  if (!file.exists(file.path(normalize_path(pkg), "DESCRIPTION"))) {
     stop(
-      "DESCRIPTION file does not exist in your directory:", normalizePath(pkg), ".\n",
+      "DESCRIPTION file does not exist in your directory:", normalize_path(pkg), ".\n",
       "Have you run the content of the 'description' chunk of your {fusen} template?"
     )
   }
@@ -178,8 +178,6 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
 
   # Get flat file path relative to package root
   # To be inserted in "DO NOT EDIT" comments
-  pkg <- unixify_windows_path(pkg)
-  flat_file <- unixify_windows_path(flat_file)
   relative_flat_file <- sub(pkg, "", flat_file)
 
   # Check if there are functions ----
@@ -402,7 +400,7 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
 create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, open_vignette = TRUE) {
   old_proj <- usethis::proj_get()
 
-  if (normalizePath(old_proj) != normalizePath(pkg)) {
+  if (normalize_path(old_proj) != normalize_path(pkg)) {
     on.exit(usethis::proj_set(old_proj))
     usethis::proj_set(pkg)
   }

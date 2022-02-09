@@ -405,8 +405,6 @@ is_pkg_proj <- function(path = ".") {
   }
 }
 
-#' Unixify windows path
-#' @param path A character string representing a windows path
-#' e.g. "C:\\Users\\dev\\flat_full.Rmd".
+#' A flavor of normarlizePath() that unixifies all its output
 #' @noRd
-unixify_windows_path <- function(path) gsub("\\\\","/", path)
+normalize_path <- function(...) normalizePath(..., winslash = "/")
