@@ -407,4 +407,4 @@ is_pkg_proj <- function(path = ".") {
 
 #' A flavor of normarlizePath() that unixifies all its output
 #' @noRd
-normalize_path <- function(...) normalizePath(..., winslash = "/")
+normalize_path_winslash <- function(...) normalizePath(..., winslash = "/")
