@@ -55,3 +55,17 @@ usethis::with_project(dummypackage, {
     expect_equal(is_pkg_proj(dummypackage), TRUE)
   })
 })
+
+# asciify_name ----
+test_that(
+  "Diacritics are properly escaped in vignette file name", {
+    vignette_name <- asciify_name(
+      "\u00c0 l'or\u00e9e de l'\u00e2pre f\u00f4ret c\u00e9l\u00e8ste"
+    )
+    expect_identical(vignette_name, "a-l-oree-de-l-apre-foret-celeste")
+
+    vignette_name <- asciify_name(
+    "# y  _ p n@ \u00E9 ! 1"
+    )
+    expect_identical(vignette_name, "y-p-n-e-1")
+  })
