@@ -34,7 +34,7 @@ split_rmd <- function(file) {
     if (type[[x]] != "rmd_chunk") { 
       return(NA_character_) 
     } else {
-      stringr::str_extract(lines[[x]][1], paste(target_labels, collapse = "|"))
+      stringi::stri_extract_first_regex(lines[[x]][1], paste(target_labels, collapse = "|"))
     }
   }
   extract_title <- function(x, type, lines) {
@@ -54,7 +54,7 @@ split_rmd <- function(file) {
   
   parsed <- tibble::tibble(  
     groups = groups[first_of_group],
-    type = stringr::str_extract(groups, "(\\w+)"),
+    type = stringi::stri_extract_first_regex(groups, "(\\w+)"),
     lines = split(x, count_groups),
     labels = unlist(
       lapply(seq_along(type), extract_labels, 

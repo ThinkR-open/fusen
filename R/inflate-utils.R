@@ -23,13 +23,13 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
     "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)R6::R6Class)",
     sep = "|")
 
-  # stringr::str_extract(
+  # stringi::stri_extract_first_regex(
   #   c("zaza <- function()", "zozo <- R6Class()", "zuzu <- R6::R6Class()"),
   #   regex_extract_fun_name
   # )
   #
   # find function name
-  fun_name <- stringr::str_extract(
+  fun_name <- stringi::stri_extract_first_regex(
     code[grep(regex_isfunction, code)],
     regex_extract_fun_name
   ) %>%

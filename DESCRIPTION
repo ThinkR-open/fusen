@@ -29,7 +29,6 @@ Imports:
     roxygen2,
     stats,
     stringi,
-    stringr,
     tibble,
     tidyr,
     tools,

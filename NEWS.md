@@ -1,5 +1,7 @@
 # fusen 0.3.0.9000
 
+* Fix `asciify_name()` to account for diacritics (@
+ALanguillaume)
 * Improve template 'full' for internal data use
 * Fix tests when git does not exists
 

@@ -24,7 +24,7 @@ However, you need to keep in mind that this will be transformed as a R package, 
 ````
 ```{r dev}`r ''`
 library(glue)
-library(stringr)
+library(stringi)
 ```
 ````
 
@@ -41,7 +41,7 @@ If you use a classical chunk, without any specific name, it will be copied as is
 ````
 ```{r}`r ''`
 library(glue)
-library(stringr)
+library(stringi)
 ```
 ````
 
