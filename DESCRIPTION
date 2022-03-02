@@ -28,7 +28,7 @@ Imports:
     parsermd (>= 0.1.0),
     roxygen2,
     stats,
-    stringr,
+    stringi,
     tibble,
     tidyr,
     tools,

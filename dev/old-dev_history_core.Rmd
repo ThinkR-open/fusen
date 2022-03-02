@@ -575,7 +575,7 @@ get_functions <- function(parsed_tbl) {
 
       code <- rmd_get_chunk(x)$code
       # find function name
-      fun_name <- stringr::str_extract(
+      fun_name <- stringi::stri_extract_first_regex(
         code[grep("function(\\s*)\\(", code)],
         "\\w*(?=(\\s*)(<-|=)(\\s*)function)"
       ) %>%
