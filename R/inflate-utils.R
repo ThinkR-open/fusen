@@ -433,3 +433,7 @@ asciify_name <- function(name, to_pkg = FALSE) {
   }
   cleaned_name
 }
+
+#' A flavor of normalizePath() that unixifies all its output
+#' @noRd
+normalize_path_winslash <- function(...) normalizePath(..., winslash = "/")
