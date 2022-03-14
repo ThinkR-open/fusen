@@ -13,6 +13,11 @@ library(testthat)
  You need to run the 'description' chunk in the '0-dev_history.Rmd' file before continuing your code there.
 -->
 
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
 # My function
 
 ```{r function-my_fun}
