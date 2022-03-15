@@ -102,7 +102,7 @@ devtools::check()
 usethis::use_pkgdown()
 pkgdown::build_site()
 
-# build the tar.gz to share with others
-devtools::build()
+# build the tar.gz with vignettes to share with others
+devtools::build(vignettes = TRUE)
 ```
 
