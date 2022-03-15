@@ -18,6 +18,11 @@ library(testthat)
 If it is the first time you use {fusen}, after 'description', you can directly run the last chunk of the present file with inflate() inside.
 --> 
 
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
 # Include some data examples in your package
 
 <!-- 

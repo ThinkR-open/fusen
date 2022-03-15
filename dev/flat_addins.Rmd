@@ -111,7 +111,7 @@ add_fusen_chunks <- function(
 build_fusen_chunks <- function(function_name, export = TRUE){
   paste(
     sep = "\n",
-    sprintf("## %s", function_name),
+    sprintf("# %s", function_name),
     "    ",
     sprintf("```{r function-%s}", function_name),
     "#' Title",
@@ -154,7 +154,7 @@ cat(build_fusen_chunks("pouet"))
 test_that("build_fusen_chunks works properly", {
   res <- build_fusen_chunks("pouet")
   expect_true(
-    grepl("pouet", res)
+    grepl("^# pouet", res)
   )
   expect_true(
     grepl("function-pouet", res)
@@ -236,7 +236,7 @@ test_that("build_fusen_chunks add lines as expected", {
     
     dev_lines_new <- readLines(path_dev_history)
     expect_equal(length(dev_lines_new), length(dev_lines_orig) + 24)
-    expect_equal(dev_lines_new[40], "## zaza")
+    expect_equal(dev_lines_new[40], "# zaza")
     expect_equal(dev_lines_new[42], "```{r function-zaza}")
     expect_equal(dev_lines_new[49], "#' @export")
     expect_equal(dev_lines_new[55], "```{r example-zaza}")
@@ -297,7 +297,7 @@ test_that("build_fusen_chunks add lines as expected", {
     
     dev_lines_new <- readLines(path_dev_history)
     expect_equal(length(dev_lines_new), length(dev_lines_orig) + 24)
-    expect_equal(dev_lines_new[40], "## zaza")
+    expect_equal(dev_lines_new[40], "# zaza")
     expect_equal(dev_lines_new[42], "```{r function-zaza}")
     expect_equal(dev_lines_new[49], "#' @noRd")
     expect_equal(dev_lines_new[55], "```{r example-zaza}")
@@ -313,9 +313,10 @@ test_that("build_fusen_chunks add lines as expected", {
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(
-  flat_file = "dev/dev_history_addins.Rmd", 
+  flat_file = "dev/flat_addins.Rmd", 
   vignette_name = NA, 
-  check = FALSE
+  check = FALSE, 
+  document = FALSE
 )
-devtools::check()
+rstudioapi::navigateToFile("dev/dev_history.R", line = 102)
 ```

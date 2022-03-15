@@ -34,11 +34,15 @@ usethis::use_mit_license("Sébastien Rochette")
 usethis::use_git()
 # Deal with classical files to ignore
 usethis::git_vaccinate()
+# Use main for primary branch
+usethis::git_default_branch_rename()
 ```
 
 # Set extra sources of documentation
 
 ```{r, eval=FALSE}
+# Install a first time
+remotes::install_local()
 # README
 usethis::use_readme_rmd()
 # Code of Conduct
@@ -60,7 +64,13 @@ usethis::use_pipe()
 # package-level documentation
 usethis::use_package_doc()
 
-# Set CI
+# GitHub
+# Add your credentials for GitHub
+gitcreds::gitcreds_set()
+# Send your project to a new GitHub project
+usethis::use_github()
+
+# Set Continuous Integration
 # _GitHub
 usethis::use_github_action_check_standard()
 usethis::use_github_action("pkgdown")
@@ -92,7 +102,7 @@ devtools::check()
 usethis::use_pkgdown()
 pkgdown::build_site()
 
-# build the tar.gz to share with others
-devtools::build()
+# build the tar.gz with vignettes to share with others
+devtools::build(vignettes = TRUE)
 ```
 

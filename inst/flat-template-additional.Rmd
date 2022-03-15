@@ -9,8 +9,8 @@ editor_options:
 library(testthat)
 ```
 
-```{r development-1}
-# Load already included functions
+```{r development-load}
+# Load already included functions if relevant
 pkgload::load_all(export_all = FALSE)
 ```
 

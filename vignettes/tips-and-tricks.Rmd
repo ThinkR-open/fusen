@@ -126,6 +126,35 @@ If this is the second function inside an existing template:
 - Position your prompt where you want to add the new function and use the RStudio Addin: "Add {fusen} chunks". You will be asked for the function name. 
 - The Addin uses `add_fusen_chunks("my_function_name")`
 
+## How to pre-fill multiple functions in one template
+
+This can be added in the "dev_history.Rmd", and will replace a place holder in your flat rmd (`HERE` in this case) with proper fusen chunks for all your future functions to be.
+
+- Add a line with `HERE` in your flat file
+```r
+# Path of the flat file
+path_flat_rmd <- here::here("dev/flat_minimal.Rmd")
+
+# Name of future functions to add - example
+fun_nms <- c(
+  "get_contract_by_country_of",
+  "get_contract_subsidies_of",
+  "get_contract_effort_of",
+  "get_contract_fees_of",
+  "get_contract_target_countries_of",
+  "get_contract_all_info_of"
+)
+
+# Create content
+l_chunks <- purrr::map_chr(fun_nms, fusen:::build_fusen_chunks)
+chunks <- paste(l_chunks, collapse = "")
+
+# Add in the flat file
+flat_rmd <- readLines(path_flat_rmd)
+flat_rmd <- sub("^HERE$", chunks, flat_rmd)
+writeLines(flat_rmd, path_flat_rmd)
+```
+
 # How to Inflate multiple flat files ?
 
 - Add an entry in your main "dev_history.Rmd" file

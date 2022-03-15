@@ -41,38 +41,30 @@ fusen::fill_description(
 usethis::use_mit_license("Sébastien Rochette")
 ```
 
-# Calculate the median of a vector
+# Add one to any value
 
-This is the first tools of our wonderful package. 
-You can calculate the median of a numeric vector using function `my_median()`.  
-
-- Note that this will first verify that the vector is numeric, otherwise it stops with a meaningful message.
+This is the first tool of our wonderful package. 
+You can add `1` to any `value` using function `add_one()`.
 
 <!-- 
 This first section shows:
 
 - the three parts necessary for a package: 'function', 'examples' and 'tests'.  
   + Note that the three following chunks have names accordingly.
-- the use of {roxygen2} skeleton to document a function
-  + Use of `#' @importFrom` to list dependencies
-  
+
 -->
 
-```{r function-my_median}
-#' My median
+```{r function-add_one}
+#' Add one to any value
+#' 
+#' @param value A numeric value
 #'
-#' @param x Vector of Numeric values
-#' @inheritParams stats::median
-#' @importFrom stats median
-#'
-#' @return
-#' Median of vector x
+#' @return Numeric. value + 1
 #' @export
-#'
-#' @examples
-my_median <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
-  median(x, na.rm = na.rm)
+
+add_one <- function(value) {
+  result <- value + 1
+  return(result)
 }
 ```
 
@@ -81,61 +73,19 @@ Here is an example on how to use the function.
 This should be a reproducible and working example
 -->
 
-```{r examples-my_median}
-my_median(1:12)
+```{r examples-add_one}
+add_one(12)
+add_one(56)
 ```
 
 <!--
 Here are some unit tests to verify the function works as expected.
 -->
 
-```{r tests-my_median}
-test_that("my_median works properly and show error if needed", {
-  expect_equal(my_median(1:12), 6.5)
-  expect_error(my_median("text"))
-})
-```
-
-# Calculate again the median of a vector
-## Use sub-functions in the same chunk
-
-Here is the second wonderful function of our package: `my_other_median()`.
-This looks like the first one for sure, but when we teach, it is better to repeat things.
-
-```{r function-my_other_median}
-#' My Other median
-#'
-#' @param x Vector of Numeric values
-#' @inheritParams stats::median
-#'
-#' @return
-#' Median of vector x
-#' @export
-#'
-#' @examples
-my_other_median <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
-  sub_median(x, na.rm = na.rm)
-}
-
-#' Core of the median not exported
-#' @param x Vector of Numeric values
-#' @inheritParams stats::median
-#' @importFrom stats median
-#' @noRd
-sub_median <- function(x, na.rm = TRUE) {
-  median(x, na.rm)
-}
-```
-
-```{r examples-my_other_median}
-my_other_median(1:12)
-```
-
-```{r tests-my_other_median}
-test_that("my_median works properly and show error if needed", {
-  expect_true(my_other_median(1:12) == 6.5)
-  expect_error(my_other_median("text"))
+```{r tests-add_one}
+test_that("add_one works", {
+  expect_equal(add_one(12), 13)
+  expect_equal(add_one(56), 57)
 })
 ```
 
