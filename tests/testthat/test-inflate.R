@@ -1,4 +1,4 @@
-# Create a new project
+# Test full ----
 dummypackage <- tempfile("inflate.tests")
 dir.create(dummypackage)
 
@@ -571,7 +571,10 @@ for (pkgname in c("full", "teaching", "minimal")) {
         # print(" -- warnings --")
         # print(check_out[["warnings"]])
         skip_on_cran()
-        expect_true(length(check_out[["notes"]]) == 0)
+        expect_true(length(check_out[["notes"]]) <= 1)
+        if (length(check_out[["notes"]]) == 1) {
+          expect_true(grepl("future file timestamps", check_out[["notes"]]))
+        }
       } else {
         print(" ==== Interactive ====")
         # Modify with extra values
@@ -770,25 +773,6 @@ usethis::with_project(dummypackage, {
 })
 unlink(dummypackage, recursive = TRUE)
 
-
-# Test create_vignette_head ----
-
-# Create a new project
-dummypackage <- tempfile("vignette.head")
-dir.create(dummypackage)
-
-# {fusen} steps
-fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-
-test_that("create_vignette_head works", {
-  usethis::with_project(dummypackage, {
-    head <- create_vignette_head(pkg = dummypackage, vignette_name = "My Super Vignette")
-    expect_true(grepl('title: "My Super Vignette"', head))
-    expect_true(grepl('  %\\VignetteIndexEntry{My Super Vignette}', head, fixed = TRUE))
-    expect_true(grepl(paste0('library(', basename(dummypackage) ,')'), head, fixed = TRUE))
-  })
-})
-unlink(dummypackage, recursive = TRUE)
 
 # Depreaction of name and rmd ----
 # Create a new project
@@ -1025,3 +1009,46 @@ usethis::with_project(dummypackage, {
   })
 })
 unlink(dummypackage, recursive = TRUE)
+
+# Test author and date ----
+dummypackage <- tempfile("inflate.authors")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-author-date.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+
+  suppressMessages(
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "Get started", check = FALSE,
+            open_vignette = FALSE)
+  )
+
+  # Check vignette content
+  the_vignette <- file.path(dummypackage, "vignettes", "get-started.Rmd")
+  expect_true(file.exists(the_vignette))
+  content_vignette <- readLines(the_vignette)
+
+  expect_true(any(
+    grepl("^author: ", content_vignette, fixed = FALSE)))
+  expect_true(any(
+    grepl("author: \"S\\u00e9bastien Rochette\"", content_vignette, fixed = TRUE)))
+  expect_true(any(
+    grepl("^date: ", content_vignette, fixed = FALSE)))
+  expect_true(any(
+    grepl("date: \"`r Sys.Date()`\"", content_vignette, fixed = TRUE)))
+
+})
+
+unlink(dummypackage, recursive = TRUE)
+

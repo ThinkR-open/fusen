@@ -1,0 +1,40 @@
+---
+title: "dev_history.Rmd for working package"
+author: "S\\u00e9bastien Rochette"
+date: "`r Sys.Date()`"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+# Calculate the median of a vector
+
+```{r function}
+#' My median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+my_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+
+# Inflate your package
+
+You're one inflate from paper to box.
+Build your package from this very Rmd using `fusen::inflate()`
+
+- Verify your `"DESCRIPTION"` file has been updated
+- Verify your function is in `"R/"` directory
+- Verify your test is in `"tests/testthat/"` directory
+- Verify this Rmd appears in `"vignettes/"` directory
