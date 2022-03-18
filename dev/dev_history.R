@@ -151,10 +151,25 @@ usethis::pr_finish(41)
 
 
 # Prepare for CRAN ----
+# Update template Rmd
+skeleton_dir <- tempfile()
+dir.create(skeleton_dir)
+the_flat <- fusen::add_additional(
+  pkg = skeleton_dir,
+  dev_dir = "dev",
+  flat_name = "skeleton",
+  open = TRUE)
+file.copy(
+  the_flat,
+  here::here("inst/rmarkdown/templates/additional/skeleton/skeleton.Rmd"),
+  overwrite = TRUE)
+unlink(skeleton_dir, recursive = TRUE)
+
 # _Check in interactive test-inflate for templates and Addins
 pkgload::load_all()
 testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate.R")
+testthat::test_file("tests/testthat/test-skeleton.R")
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 # Test no output generated in the user files
 # pkgload::load_all(export_all = FALSE)

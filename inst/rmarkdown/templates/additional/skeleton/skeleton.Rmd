@@ -1,0 +1,47 @@
+---
+title: "flat_skeleton.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# My function
+
+```{r function-skeleton}
+#' skeleton Title
+#'
+#' @return 1
+#' @export
+#'
+#' @examples
+skeleton <- function() {
+  1
+}
+```
+
+```{r examples-skeleton}
+skeleton()
+```
+
+```{r tests-skeleton}
+test_that("skeleton works", {
+
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_skeleton.Rmd", vignette_name = "Go further")
+```
+
