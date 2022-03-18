@@ -14,6 +14,17 @@ knitr::opts_chunk$set(
 )
 ```
 
+# Can I be lazy in names used?
+
+- Chunk short names are possible:
+  - `function` can be named `fun-` or `fun_` or `fun-my_function_name`
+  - `example` can be named `ex-` or `ex_` or `ex-my_function_name`
+  - `tests` can be named `test-` or `test-my_function_name`
+  - `development` can be named `dev-` or `dev_` or `dev-my_function_name`
+
+- There are wrappers around `add_flat_template()` for lazy developpers: `add_additional()`, `add_full()`, `add_minimal()`
+
+
 # Can I knit the content of the flat template ?
 
 Yes. Although this is not the real goal, the flat template can be filled and run like any other Rmarkdown file.  

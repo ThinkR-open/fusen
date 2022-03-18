@@ -111,6 +111,9 @@ attachment::att_amend_desc(
 )
 # attachment::create_dependencies_file()
 
+# Clean style
+styler::style_pkg()
+
 # Description and Bibliography
 chameleon::create_pkg_desc_file(out.dir = "inst", source = c("archive"), to = "html")
 thinkridentity::create_pkg_biblio_file_thinkr()
