@@ -1,3 +1,4 @@
+# group_code groups columns ----
 df <- tibble::tibble(
   id = c(1, 2, 3),
   the_group = c("A", "A", "B"),
@@ -69,3 +70,69 @@ test_that(
     )
     expect_identical(vignette_name, "y-p-n-e-1")
   })
+
+# create_vignette_head ----
+yaml_options <- structure(list(
+  title = "dev_history.Rmd for working package",
+  author = "S\\u00e9bastien Rochette", date = "`r Sys.Date()`",
+  output = "html_document", editor_options = list(chunk_output_type = "console")
+), class = "rmd_yaml_list")
+
+
+
+test_that("create_vignette_head works", {
+  # Full with authors
+  output <- create_vignette_head(
+    pkg = "mypkg", vignette_name = "the_name",
+    yaml_options)
+
+  expect_true(grepl("mypkg", output))
+  expect_true(grepl("the_name", output))
+  expect_true(grepl('author: "S\\u00e9bastien Rochette"', output, fixed = TRUE))
+  expect_true(grepl('date: "`r Sys.Date()`"', output, fixed = TRUE))
+  expect_true(grepl("vignette: >", output))
+
+  # Only not extra yaml
+  yaml_options <- yaml_options[c("title", "output", "editor_options")]
+  output <- create_vignette_head(
+    pkg = "mypkg", vignette_name = "the_name",
+    yaml_options)
+
+  expect_true(grepl("mypkg", output))
+  expect_true(grepl("the_name", output))
+  expect_false(grepl('author: "S\\u00e9bastien Rochette"', output, fixed = TRUE))
+  expect_false(grepl('date: "`r Sys.Date()`"', output, fixed = TRUE))
+  expect_true(grepl("vignette: >", output))
+
+  # No yaml options
+  output <- create_vignette_head(
+    pkg = "mypkg", vignette_name = "the_name",
+    yaml_options = NULL)
+
+  expect_true(grepl("mypkg", output))
+  expect_true(grepl("the_name", output))
+  expect_false(grepl('author: "S\\u00e9bastien Rochette"', output, fixed = TRUE))
+  expect_false(grepl('date: "`r Sys.Date()`"', output, fixed = TRUE))
+  expect_true(grepl("vignette: >", output))
+
+})
+
+# Test create_vignette_head ----
+
+# Create a new project
+dummypackage <- tempfile("vignette.head")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+test_that("create_vignette_head works", {
+  usethis::with_project(dummypackage, {
+    # browser()
+    head <- create_vignette_head(pkg = dummypackage, vignette_name = "My Super Vignette")
+    expect_true(grepl('title: "My Super Vignette"', head))
+    expect_true(grepl('  %\\VignetteIndexEntry{My Super Vignette}', head, fixed = TRUE))
+    expect_true(grepl(paste0('library(', basename(dummypackage) ,')'), head, fixed = TRUE))
+  })
+})
+unlink(dummypackage, recursive = TRUE)

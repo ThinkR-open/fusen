@@ -426,6 +426,7 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
         grepl("rmd_yaml_list", parsed_tbl[["type"]])),
   ]
 
+  flat_yaml <- parsed_tbl[grepl("rmd_yaml_list", parsed_tbl[["type"]]),]
   # Make chunk names unique
   # vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])] <-
   #   gsub("unnamed-", "parsermd-", vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])])
@@ -454,16 +455,19 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
   cleaned_vignette_name <- asciify_name(vignette_name)
   vignette_file <- file.path("vignettes", paste0(cleaned_vignette_name, ".Rmd"))
 
-  # usethis::use_vignette(name = cleaned_vignette_name, title = vignette_name)
-  # if (!file.exists(vignette_file)) {
-  #   stop(
-  #     "Vignette could not be filled because of naming problem.",
-  #     "Have you used some special characters in `vignette_name`?"
-  #   )
-  # }
+  # Yaml info
+  yaml_options <- flat_yaml[["ast"]][[1]]
+  # Vignette
+  # Copied from usethis::use_vignette() to allow to not open vignette created
+  # usethis:::use_dependency("knitr", "Suggests")
+  getFromNamespace("use_dependency", "usethis")("knitr", "Suggests")
+  getFromNamespace("use_description_field", "usethis")("VignetteBuilder", "knitr", overwrite = TRUE)
+  usethis::use_git_ignore("inst/doc")
 
   # Vignette head
-  head <- create_vignette_head(pkg = pkg, vignette_name = vignette_name)
+  head <- create_vignette_head(pkg = pkg,
+                               vignette_name = vignette_name,
+                               yaml_options = yaml_options)
 
   # Write vignette
   lines <- c(

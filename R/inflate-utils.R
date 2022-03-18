@@ -328,24 +328,29 @@ group_code <- function(df, group_col, code_col) {
 #' Create vignette header
 #' @param pkg Path to package
 #' @param vignette_name Name of the resulting vignette
+#' @param yaml_options List of yaml options
 #' @importFrom glue glue
 #' @importFrom utils getFromNamespace
 #' @noRd
-create_vignette_head <- function(pkg, vignette_name) {
+create_vignette_head <- function(pkg, vignette_name, yaml_options = NULL) {
   pkgname <- basename(pkg)
 
-  # Copied from usethis::use_vignette() to allow to not open vignette created
-  # usethis:::use_dependency("knitr", "Suggests")
-  getFromNamespace("use_dependency", "usethis")("knitr", "Suggests")
-  getFromNamespace("use_description_field", "usethis")("VignetteBuilder", "knitr", overwrite = TRUE)
-  usethis::use_git_ignore("inst/doc")
+  # Get all yaml options except Title, output, editor_options
+  yaml_options <- yaml_options[
+    !names(yaml_options) %in% c("output", "title", "editor_options")]
 
   enc2utf8(
     glue(
       '---
 title: ".{vignette_name}."
-output: rmarkdown::html_vignette
-vignette: >
+output: rmarkdown::html_vignette',
+      ifelse(length(yaml_options) != 0,
+             glue::glue_collapse(
+               c("",
+                 glue("{names(yaml_options)}: \"{yaml_options}\""), ""),
+               sep = "\n"),
+             "\n"),
+      'vignette: >
   %\\VignetteIndexEntry{.{vignette_name}.}
   %\\VignetteEngine{knitr::rmarkdown}
   %\\VignetteEncoding{UTF-8}
