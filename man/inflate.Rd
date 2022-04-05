@@ -6,7 +6,7 @@
 \usage{
 inflate(
   pkg = ".",
-  flat_file = file.path("dev", "flat_full.Rmd"),
+  flat_file,
   vignette_name = "Get started",
   open_vignette = TRUE,
   check = TRUE,

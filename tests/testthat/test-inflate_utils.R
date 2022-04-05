@@ -128,7 +128,6 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 
 test_that("create_vignette_head works", {
   usethis::with_project(dummypackage, {
-    # browser()
     head <- create_vignette_head(pkg = dummypackage, vignette_name = "My Super Vignette")
     expect_true(grepl('title: "My Super Vignette"', head))
     expect_true(grepl('  %\\VignetteIndexEntry{My Super Vignette}', head, fixed = TRUE))

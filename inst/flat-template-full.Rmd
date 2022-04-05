@@ -33,7 +33,7 @@ and `system.file()` to read it in your examples.
 - There already is a dataset in the "inst/" directory to be used in the examples below
 -->
 
-```{r development-2}
+```{r development-dataset}
 # Run all this chunk in the console directly
 # There already is a dataset in the "inst/" directory
 # Make the dataset file available to the current Rmd during development

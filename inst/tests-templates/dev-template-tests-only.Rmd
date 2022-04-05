@@ -1,0 +1,39 @@
+---
+title: "dev_history.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+## One title no function no name
+
+```{r tests}
+test_that("my_median works properly and show error if needed", {
+  expect_error(my_median("text"))
+})
+```
+
+## One title no function filename
+
+```{r tests-2, filename = "the_test.R"}
+test_that("my_median2 works properly and show error if needed", {
+  expect_error(my_median2("text"))
+})
+```
+
+## One empty test chunk
+
+```{r tests-empty}
+
+```
+
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/dev_history.Rmd")
+```
