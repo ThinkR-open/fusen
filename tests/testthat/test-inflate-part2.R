@@ -684,3 +684,103 @@ usethis::with_project(dummypackage, {
 
 unlink(dummypackage, recursive = TRUE)
 
+# Test unit tests and examples only ----
+dummypackage <- tempfile("inflate.tests")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-tests-examples-only.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+
+  test_that("unit tests and examples only works", {
+    # no title may return
+    expect_error(
+      suppressMessages(
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "Get started", check = FALSE,
+                open_vignette = FALSE)
+      ),
+      regexp = NA #"Some `test` chunks can not be handled: tests-fails."
+    )
+
+    # Check tests do not exist
+    the_tests <- file.path(dummypackage, "tests", "testthat")
+    expect_true(dir.exists(the_tests))
+    expect_equal(length(list.files(the_tests)), 2)
+    # expect_true(file.exists(file.path(the_tests, "test-fake-section-title.R")))
+
+    # Check other files
+    # R created just before tests but no functions
+    the_r <- file.path(dummypackage, "R")
+    expect_false(dir.exists(the_r))
+    # vignette created with one example
+    the_vignettes <- file.path(dummypackage, "vignettes")
+    expect_true(dir.exists(the_vignettes))
+    vignette_lines <- readLines(file.path(the_vignettes, "get-started.Rmd"))
+    expect_length(grep("```{r examples}", vignette_lines, fixed = TRUE), 1)
+  })
+})
+
+unlink(dummypackage, recursive = TRUE)
+
+# Test some examples without functions and others with ----
+dummypackage <- tempfile("inflate.examples")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-some-examples-without-functions.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+
+  test_that("unit tests and examples only works", {
+    # no title may return
+      expect_message(
+        inflate(pkg = dummypackage, flat_file = flat_file,
+                vignette_name = "Get started", check = FALSE,
+                open_vignette = FALSE),
+      regexp = "Some example chunks are not associated to any function"
+    )
+
+    # Check tests do not exist
+    the_tests <- file.path(dummypackage, "tests", "testthat")
+    expect_true(dir.exists(the_tests))
+    expect_equal(length(list.files(the_tests)), 2)
+
+    # Check other files
+    # R created just before tests but no functions
+    the_r <- file.path(dummypackage, "R")
+    expect_true(dir.exists(the_r))
+    expect_equal(length(list.files(the_r)), 1)
+
+    # vignette created with 2 examples
+    the_vignettes <- file.path(dummypackage, "vignettes")
+    expect_true(dir.exists(the_vignettes))
+    vignette_lines <- readLines(file.path(the_vignettes, "get-started.Rmd"))
+    expect_length(grep("```{r examples-2}", vignette_lines, fixed = TRUE), 1)
+    expect_length(grep("```{r examples-my_median}", vignette_lines, fixed = TRUE), 1)
+  })
+})
+
+unlink(dummypackage, recursive = TRUE)
+
+
+

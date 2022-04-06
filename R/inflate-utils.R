@@ -253,10 +253,16 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
     }
   }) %>% lapply(., function(x) x[[1]])
 
-
   # No function, no example to add
-  rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]), ]
+  ex_alone <- rmd_ex[is.na(rmd_ex[["fun_name"]]), ]
 
+  if (nrow(ex_alone) != 0) {
+    message("Some example chunks are not associated to any function: ",
+            paste(ex_alone[["label"]], collapse = ", "), ".",
+            "\nIf you plan to include them only in the vignette, then ",
+            "you can give them any other name except `dev*`, `fun*`, `test*`")
+  }
+  rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]), ]
 
   if (nrow(rmd_ex) != 0) {
     example_code <- lapply(

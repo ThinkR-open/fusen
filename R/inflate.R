@@ -183,8 +183,6 @@ inflate <- function(pkg = ".", flat_file,
   # Check if there are functions ----
   fun_code <- get_functions_tests(parsed_tbl)
 
-  # What if there are tests and no functions ?
-
   # Get functions and create R and tests files ----s
   if (!is.null(fun_code)) {
     create_functions_all(parsed_tbl, fun_code, pkg, relative_flat_file)
@@ -311,13 +309,15 @@ get_functions_tests <- function(parsed_tbl) {
     fun_code$sec_title <- rmd_fun[["sec_title"]]
   } else if (length(which_parsed_tests) != 0) {
     # Some tests but no function at all
+    # Needs to be an empty tibble, and not a NULL
+    # 0 lines allows to avoid dealing with examples associated with no functions
     fun_code <- tibble::tibble(
-      fun_name = NA_character_,
+      fun_name = character(0),
       code = list(), # empty to avoid writing R file
-      example_pos_start = NA_real_,
-      example_pos_end = NA_real_,
-      rox_filename = NA_character_,
-      sec_title = NA_character_
+      example_pos_start = logical(0),
+      example_pos_end = logical(0),
+      rox_filename = character(0),
+      sec_title = character(0)
     )
   } else {
     fun_code <- NULL
