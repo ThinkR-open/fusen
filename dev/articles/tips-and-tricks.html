@@ -454,6 +454,19 @@ This code line is removed in the resulting “R/” files to avoid any interfere
 <span id="cb12-23"><a href="#cb12-23"></a><span class="bn">```</span></span></code></pre></div>
 </div>
 </div>
+<div class="section level2">
+<h2 id="how-to-read-dataset-that-i-usually-put-in-teststestthat-for-my-unit-tests">How to read dataset that I usually put in “tests/testthat/” for my unit tests?<a class="anchor" aria-label="anchor" href="#how-to-read-dataset-that-i-usually-put-in-teststestthat-for-my-unit-tests"></a>
+</h2>
+<p>You will need to write two ways of reading the data: - One to use on-demand in the flat file, which needs to be commented - One to be use in the future test file</p>
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># The code that you will run manually in the flat file if needed during development</span>
+<span class="co"># &gt; This needs to be commented</span>
+<span class="co"># my_file &lt;- read.csv("tests/testthat/my_file.csv")</span>
+
+<span class="co"># The code that will be used in the inflated test file</span>
+<span class="co"># This needs to be uncommented</span>
+<span class="va">my_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"my_file.csv"</span><span class="op">)</span></code></pre></div>
+</div>
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
