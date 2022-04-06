@@ -54,7 +54,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' # pkgdown::build_site(dummypackage)
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
-inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
+inflate <- function(pkg = ".", flat_file,
                     vignette_name = "Get started",
                     open_vignette = TRUE,
                     check = TRUE, document = TRUE,
@@ -93,7 +93,7 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
 
   pkg <- normalizePath(pkg)
   needs_restart <- isFALSE(is_pkg_proj(pkg))
-  flat_file <- normalizePath(flat_file, mustWork = FALSE)
+  flat_file <- normalizePath(flat_file, mustWork = TRUE)
 
   if (!file.exists(file.path(normalizePath(pkg), "DESCRIPTION"))) {
     stop(
@@ -173,7 +173,7 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
   if (length(sec_title) != 0) {
     parsed_tbl$sec_title <- sec_title
   } else {
-    parsed_tbl$sec_title <- "fake-title"
+    parsed_tbl$sec_title <- "fake-section-title"
   }
 
   # Get flat file path relative to package root
@@ -181,7 +181,8 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
   relative_flat_file <- sub(normalize_path_winslash(pkg), "", normalize_path_winslash(flat_file))
 
   # Check if there are functions ----
-  fun_code <- get_functions(parsed_tbl)
+  fun_code <- get_functions_tests(parsed_tbl)
+
   # Get functions and create R and tests files ----s
   if (!is.null(fun_code)) {
     create_functions_all(parsed_tbl, fun_code, pkg, relative_flat_file)
@@ -229,17 +230,20 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "flat_full.Rmd"),
 #' Create function code, doc and tests ----
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param fun_code tibble as issued from `get_functions`
+#' @param relative_flat_file Path to the flat file to show in R scripts.
 #' @param pkg Path to package
 #' @importFrom stats na.omit
 #' @noRd
 create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) {
+
   fun_names <- fun_code[["fun_name"]]
 
   if (length(unique(na.omit(fun_names))) != length(na.omit(fun_names))) {
     stop("Some functions names are not unique: ", paste(sort(fun_names), collapse = ", "))
   }
 
-  parsed_tbl <- add_fun_to_parsed(parsed_tbl, fun_code)
+  # Add funs if there are or deal with tests alone
+  parsed_tbl <- add_names_to_parsed(parsed_tbl, fun_code)
 
   # Verify labels are unique
   dev_labels_noex <- c(
@@ -265,17 +269,22 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
     )
   }
 
-  # _Get examples
-  fun_code <- add_fun_code_examples(parsed_tbl, fun_code)
+  # If there are functions
+  if (nrow(fun_code) != 0) {
+    # _Get examples
+    fun_code <- add_fun_code_examples(parsed_tbl, fun_code)
 
-  # _Create function files in R/
-  # Create R directory if needed
-  R_dir <- file.path(pkg, "R")
-  if (!dir.exists(R_dir)) {
-    dir.create(R_dir)
+    # _Create function files in R/
+    # Create R directory if needed
+    R_dir <- file.path(pkg, "R")
+    if (!dir.exists(R_dir)) {
+      dir.create(R_dir)
+    }
+
+    create_r_files(fun_code, pkg, relative_flat_file)
   }
 
-  create_r_files(fun_code, pkg, relative_flat_file)
+  # If there are tests
   create_tests_files(parsed_tbl, pkg, relative_flat_file)
 }
 
@@ -283,28 +292,47 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @importFrom parsermd rmd_get_chunk
 #' @noRd
-get_functions <- function(parsed_tbl) {
+get_functions_tests <- function(parsed_tbl) {
 
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
                               grepl(regex_functions, parsed_tbl$label))
+  which_parsed_tests <- which(!is.na(parsed_tbl$label) &
+                                grepl(regex_tests, parsed_tbl$label))
+
   rmd_fun <- parsed_tbl[which_parsed_fun, ]
 
   if (nrow(rmd_fun) != 0) {
+    # At least one function
     fun_code <- lapply(seq_len(nrow(rmd_fun)), function(x) parse_fun(rmd_fun[x, ]))
     fun_code <- do.call("rbind", fun_code)
     fun_code$sec_h1 <- rmd_fun[["sec_h1"]]
     fun_code$sec_title <- rmd_fun[["sec_title"]]
-    return(fun_code)
+  } else if (length(which_parsed_tests) != 0) {
+    # Some tests but no function at all
+    # Needs to be an empty tibble, and not a NULL
+    # 0 lines allows to avoid dealing with examples associated with no functions
+    fun_code <- tibble::tibble(
+      fun_name = character(0),
+      code = list(), # empty to avoid writing R file
+      example_pos_start = logical(0),
+      example_pos_end = logical(0),
+      rox_filename = character(0),
+      sec_title = character(0)
+    )
   } else {
-    return(NULL)
+    fun_code <- NULL
   }
+
+  return(fun_code)
 }
 
 #' create R file with code content and fun name
 #' @param fun_code R code of functions in Rmd as character
 #' @param pkg Path to package
+#' @param relative_flat_file Path to the flat file to show in R scripts
 #' @noRd
 create_r_files <- function(fun_code, pkg, relative_flat_file) {
+
   fun_code <- fun_code[(lengths(fun_code[["code"]]) != 0), ]
 
   # Combine code with same sec_title to be set in same R file
@@ -335,65 +363,72 @@ create_r_files <- function(fun_code, pkg, relative_flat_file) {
 #' Check if there are unit tests ----
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param pkg Path to package
+#' @param relative_flat_file Path to the flat file to show in R scripts
+#'
 #' @importFrom parsermd rmd_node_code
+#'
 #' @noRd
 create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
+
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
                            grepl(regex_tests, parsed_tbl$label), ]
 
-  rmd_test <- rmd_test[!is.na(rmd_test[["fun_name"]]), ]
 
+  # If there is at least one test
   if (nrow(rmd_test) != 0) {
-    requireNamespace("testthat")
-    # setup testhat
-    test_dir <- file.path(pkg, "tests")
-    if (!dir.exists(test_dir)) {
-      dir.create(test_dir)
-      dir.create(file.path(test_dir, "testthat"))
-      cat(enc2utf8(c(
-        "library(testthat)",
-        paste0("library(", basename(pkg), ")"),
-        "",
-        paste0('test_check("', basename(pkg), '")')
-      )),
-      sep = "\n",
-      file = file.path(test_dir, "testthat.R")
+
+    # Stop for tests chunks not having file_name
+    if (any(is.na(rmd_test[["file_name"]]) | rmd_test[["file_name"]] == "")) {
+      stop(
+        "Some `test` chunks can not be handled: ",
+        paste(rmd_test[["label"]][!is.na(rmd_test[["file_name"]])],
+              collapse  = ", "),
+        ". Please associate these `test` chunks with a `function` chunk, ",
+        "under a section title or with a `filename='mytestfile.R'` chunk option."
       )
     }
 
-    parse_test <- function(x) { # x <- rmd_test[1,]
-      # create R file with code content and fun name
-      file_name <- x[["file_name"]]
-
-      if (is.na(file_name) || file_name == "") {
-        stop("No function found associated to chunk ", x[["label"]])
-      }
-
-      test_file <- file.path(
-        pkg, "tests", "testthat",
-        paste0("test-", asciify_name(file_name), ".R"))
-      if (file.exists(test_file)) {
-        cli::cli_alert_warning(paste(basename(test_file), "has been overwritten"))
-      }
-      lines <- c(
-        sprintf("# WARNING - Generated by {fusen} from %s: do not edit by hand\n", relative_flat_file),
-        x[["code"]][[1]])
-      write_utf8(path = test_file, lines = lines)
-      file_name
-    }
-
+    # Group code by file_name
     rmd_test[["code"]] <- rmd_node_code(rmd_test[["ast"]])
-    # Group by file_name
     rmd_test <- group_code(rmd_test, group_col = "file_name", code_col = "code")
 
-    out <- unlist(lapply(seq_len(nrow(rmd_test)),
-                         function(x) parse_test(rmd_test[x, ])))
+    # Filter if code is still empty after code grouped
+    rmd_test[["is_empty"]] <- lapply(
+      rmd_test[["code"]], function(x) grepl("^\\s*$", paste(x, collapse = ""))) %>%
+      unlist()
+    rmd_test <- rmd_test[!rmd_test[["is_empty"]],]
+
+    if (nrow(rmd_test) != 0) {
+      # Add directory
+      requireNamespace("testthat")
+
+      # setup testhat
+      test_dir <- file.path(pkg, "tests")
+      if (!dir.exists(test_dir)) {
+        dir.create(test_dir)
+        dir.create(file.path(test_dir, "testthat"))
+        cat(enc2utf8(c(
+          "library(testthat)",
+          paste0("library(", basename(pkg), ")"),
+          "",
+          paste0('test_check("', basename(pkg), '")')
+        )),
+        sep = "\n",
+        file = file.path(test_dir, "testthat.R")
+        )
+      }
+
+      out <- unlist(lapply(
+        seq_len(nrow(rmd_test)),
+        function(x) parse_test(rmd_test[x, ], pkg, relative_flat_file)))
+    }
   }
 }
 
 #' Create vignette
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param pkg Path to package
+#' @param relative_flat_file Path to the flat file to show in R scripts.
 #' @param vignette_name Name of the resulting vignette
 #' @param open_vignette Logical. Whether to open vignette file
 #' @noRd

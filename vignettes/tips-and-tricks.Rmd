@@ -341,3 +341,19 @@ Add it in the `function` chunk only
 
 ````
 
+# How to read dataset that I usually put in "tests/testthat/" for my unit tests?
+
+You will need to write two ways of reading the data: 
+- One to use on-demand in the flat file, which needs to be commented
+- One to be use in the future test file
+
+```{r, eval=FALSE}
+# The code that you will run manually in the flat file if needed during development
+# > This needs to be commented
+# my_file <- read.csv("tests/testthat/my_file.csv")
+
+# The code that will be used in the inflated test file
+# This needs to be uncommented
+my_file <- read.csv("my_file.csv")
+```
+

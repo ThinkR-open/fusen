@@ -1,5 +1,6 @@
 # fusen 0.3.0.9000
 
+* Allow flat files with `tests` only
 * Add rmarkdown template for additional flat file for RStudio
 * Extract yaml metadata from flat file, like author or date to include in the inflated vignette
 * Add wrappers around `add_flat_template()` for lazy devs: `add_additional()`, `add_full()`, `add_minimal()`
