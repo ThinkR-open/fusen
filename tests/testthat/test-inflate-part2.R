@@ -58,7 +58,11 @@ for (pkgname in c("full", "teaching", "minimal")) {
 
   usethis::with_project(path_foosen, {
     # Do not check inside check if on CRAN
-    skip_on_os(os = c("windows", "solaris"))
+    # skip_on_os(os = c("windows", "solaris"))
+    skip_on_cran()
+
+
+    # browser()
 
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
     usethis::use_gpl_license()
