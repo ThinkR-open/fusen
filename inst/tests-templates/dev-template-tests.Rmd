@@ -57,7 +57,7 @@ datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>
 datafile <- pkgload:::shim_system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
 here::here()
 datafile
-nyc_squirrels <- read.csv(datafile)
+nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
 ```
 
 # Calculate the median of a vector

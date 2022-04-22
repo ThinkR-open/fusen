@@ -52,17 +52,16 @@ dir.create(alltemp)
 for (pkgname in c("full", "teaching", "minimal")) {
   # No "additional" with create_fusen
   # {fusen} steps
-  path_foosen <- file.path(alltemp, pkgname)
+  path_foosen <- normalize_path_winslash(file.path(alltemp, pkgname))
   dev_file <- create_fusen(path_foosen, template = pkgname, open = FALSE)
   flat_file <- dev_file[grepl("flat_", dev_file)]
 
   usethis::with_project(path_foosen, {
+
     # Do not check inside check if on CRAN
     # skip_on_os(os = c("windows", "solaris"))
     skip_on_cran()
 
-
-    # browser()
 
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
     usethis::use_gpl_license()
@@ -96,8 +95,8 @@ for (pkgname in c("full", "teaching", "minimal")) {
 
         # Run rcmdcheck
         # Do not check inside check if on CRAN
-        skip_on_os(os = c("windows", "solaris"))
-
+        # skip_on_os(os = c("windows", "solaris"))
+        skip_on_cran()
 
         # If this check is run inside a not "--as-cran" check, then it wont work as expected
         check_out <- rcmdcheck::rcmdcheck(path_foosen, quiet = TRUE,
@@ -164,6 +163,90 @@ for (pkgname in c("full", "teaching", "minimal")) {
 } # end of template loop
 # Delete dummy package
 unlink(alltemp, recursive = TRUE)
+
+# Test included datasets ----
+# Should not return error at check in "full" template
+dummypackage <- tempfile("dataset")
+dir.create(dummypackage)
+dummypackage <- normalizePath(dummypackage, winslash = "/")
+
+checkdir <- tempfile("checkdirdata")
+dir.create(checkdir)
+checkdir <- normalizePath(checkdir, winslash = "/")
+
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+# Run development-dataset chunk
+usethis::with_project(dummypackage, {
+  # skip_on_cran()
+
+  flat_lines <- readLines(flat_file)
+  # Change directory to current
+  flatlines <- gsub("here::here()", paste0('"', dummypackage, '"'), flat_lines, fixed = TRUE)
+
+  flatlines_chunk <- grep("```", flatlines)
+  flatlines_chunk_data <- grep("```{r development-dataset}", flatlines, fixed = TRUE)
+  flatlines_chunk_data_end <- flatlines_chunk[flatlines_chunk > flatlines_chunk_data][1]
+  lines_data <- flatlines[(flatlines_chunk_data+1):(flatlines_chunk_data_end-1)]
+  eval(parse(text = lines_data))
+
+
+  # Include dataset in "data/" and document
+  usethis::use_data(nyc_squirrels, overwrite = TRUE)
+  expect_true(file.exists(file.path("data", "nyc_squirrels.rda")))
+
+  # Add documentation of dataset
+  dir.create("R")
+  cat("
+#' NYC Squirrels dataset reduced
+#'
+#'
+#' @format A data frame
+#' @source \\url{https://github.com/rfordatascience/tidytuesday}
+\"nyc_squirrels\"
+", file = file.path("R", "datasets.R"))
+
+
+  # _Inflate and check
+  skip_if_not(interactive())
+  # Needs MASS, lattice, Matrix installed
+  # quiet and checkdir
+  usethis::use_gpl_license()
+
+  w.start <- grep("fusen::inflate\\(flat_file", flat_lines)
+  w.end <- grep("\\)", flat_lines)
+  w.end <- w.end[w.end >= w.start][1]
+  inflate_lines <- flat_lines[w.start:w.end]
+
+  # Modify inflate
+  extra_params <- glue(
+    'fusen::inflate(pkg = "{dummypackage}",
+      check = TRUE, check_dir = "{checkdir}",
+      quiet = TRUE, args = c("--no-manual"),
+      overwrite = TRUE, open_vignette = FALSE, '
+  )
+  to_inflate <- gsub("fusen::inflate\\(", extra_params, inflate_lines)
+
+  expect_error(
+    suppressMessages(
+      eval(parse(text = to_inflate))
+    ),
+    regexp = NA)
+
+  # Should not be any errors with templates
+  check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
+  expect_equal(check_lines[length(check_lines)], "Status: OK")
+  unlink(checkdir, recursive = TRUE)
+
+})
+
+
+unlink(dummypackage, recursive = TRUE)
+unlink(checkdir, recursive = TRUE)
 
 # Tests empty chunks ----
 dummypackage <- tempfile("empty.chunks")

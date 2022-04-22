@@ -59,6 +59,7 @@ unlink(dummypackage2, recursive = TRUE)
 # Test "dev_history" template ----
 dummypackage <- tempfile(pattern = "dev.history.template")
 dir.create(dummypackage)
+dummypackage <- normalize_path_winslash(dummypackage)
 # Add
 test_that("add dev_history template works", {
   withr::with_dir(dummypackage, {
@@ -67,7 +68,6 @@ test_that("add dev_history template works", {
     expect_true(file.exists(dev_file_path))
 
     usethis::with_project(dummypackage, {
-
       # Extract and test the description chunk
       dev_lines <- readLines(dev_file_path)
       # Change path of project

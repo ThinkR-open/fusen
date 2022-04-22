@@ -1,5 +1,6 @@
 # fusen 0.3.0.9000
 
+* Read `nyc_squirrels` with encoding to avoid encoding problems with `use_data()`
 * Allow flat files with `tests` only
 * Add rmarkdown template for additional flat file for RStudio
 * Extract yaml metadata from flat file, like author or date to include in the inflated vignette
