@@ -21,7 +21,6 @@ test_that("group_code groups columns", {
 # Create a new project
 dummypackage <- tempfile("isrproj.pkg")
 dir.create(dummypackage)
-
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
@@ -38,7 +37,7 @@ usethis::with_project(dummypackage, {
   test_that("is_pkg_proj works when rproj no pkg", {
     expect_equal(is_pkg_proj(dummypackage), FALSE)
   })
-
+  # create_vignette
   usethis::with_project(dummypackage, {
       inflate(pkg = dummypackage, flat_file = flat_file,
               vignette_name = "Get started", check = FALSE,
@@ -56,6 +55,10 @@ usethis::with_project(dummypackage, {
     expect_equal(is_pkg_proj(dummypackage), TRUE)
   })
 })
+
+
+
+
 
 # asciify_name ----
 test_that(
@@ -135,3 +138,60 @@ test_that("create_vignette_head works", {
   })
 })
 unlink(dummypackage, recursive = TRUE)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+dummypackage <- tempfile("checkpk.gname")
+dir.create(dummypackage)
+# rstudioapi::filesPaneNavigate(dummypackage)
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package",Package="COUCOU"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+# debugonce(inflate)
+debugonce(attachment::att_amend_desc)
+  usethis::with_project(dummypackage, {
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "Get started", check = FALSE,
+            open_vignette = FALSE)
+  })
+
+

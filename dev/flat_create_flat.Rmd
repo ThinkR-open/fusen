@@ -56,7 +56,7 @@ add_flat_template <- function(
     overwrite = FALSE,
     open = TRUE) {
 
-  project_name <- basename(normalizePath(pkg))
+   project_name <- get_pkg_name(pkg = pkg)
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
     stop("Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
          "` as a package name should only contain letters, numbers and dots.")

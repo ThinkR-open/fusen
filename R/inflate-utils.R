@@ -374,7 +374,14 @@ group_code <- function(df, group_col, code_col) {
 #' @importFrom utils getFromNamespace
 #' @noRd
 create_vignette_head <- function(pkg, vignette_name, yaml_options = NULL) {
-  pkgname <- basename(pkg)
+  if (file.exists(desc <- file.path(pkg, "DESCRIPTION"))) {
+    pkgname <- read.dcf(desc)[colnames(read.dcf(desc)) == "Package"]
+  } else{
+    pkgname <- basename(pkg)
+
+  }
+
+
 
   # Get all yaml options except Title, output, editor_options
   yaml_options <- yaml_options[
