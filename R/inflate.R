@@ -370,6 +370,9 @@ create_r_files <- function(fun_code, pkg, relative_flat_file) {
 #' @noRd
 create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
 
+  project_name <- get_pkg_name(pkg = pkg)
+
+
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
                            grepl(regex_tests, parsed_tbl$label), ]
 
@@ -409,9 +412,9 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
         dir.create(file.path(test_dir, "testthat"))
         cat(enc2utf8(c(
           "library(testthat)",
-          paste0("library(", basename(pkg), ")"),
+          paste0("library(", project_name, ")"),
           "",
-          paste0('test_check("', basename(pkg), '")')
+          paste0('test_check("', project_name, '")')
         )),
         sep = "\n",
         file = file.path(test_dir, "testthat.R")

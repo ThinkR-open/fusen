@@ -366,6 +366,18 @@ group_code <- function(df, group_col, code_col) {
     do.call("rbind", .)
 }
 
+#' @noRd
+get_pkg_name <- function(pkg){
+  if (file.exists(desc <- file.path(pkg, "DESCRIPTION"))) {
+    pkgname <- read.dcf(desc)[colnames(read.dcf(desc)) == "Package"]
+  } else{
+    pkgname <- basename(pkg)
+
+  }
+  pkgname
+}
+
+
 #' Create vignette header
 #' @param pkg Path to package
 #' @param vignette_name Name of the resulting vignette
@@ -374,12 +386,11 @@ group_code <- function(df, group_col, code_col) {
 #' @importFrom utils getFromNamespace
 #' @noRd
 create_vignette_head <- function(pkg, vignette_name, yaml_options = NULL) {
-  if (file.exists(desc <- file.path(pkg, "DESCRIPTION"))) {
-    pkgname <- read.dcf(desc)[colnames(read.dcf(desc)) == "Package"]
-  } else{
-    pkgname <- basename(pkg)
 
-  }
+
+
+
+  pkgname <- get_pkg_name(pkg = pkg)
 
 
 
