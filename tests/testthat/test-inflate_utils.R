@@ -140,58 +140,37 @@ test_that("create_vignette_head works", {
 unlink(dummypackage, recursive = TRUE)
 
 
+# get_pkg_name ----
+dummypackage <- tempfile("checkpk.gname2")
+dir.create(dummypackage)
+# rstudioapi::filesPaneNavigate(dummypackage)
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package", Package = "COUCOU2"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
 
+test_that("get_pkg_name works", {
+  flat_file_lines <- readLines(flat_file)
+  #the package name must be used and not the project name
+  expect_true(any(grepl("COUCOU2", flat_file_lines, fixed = TRUE)))
+  expect_false(any(grepl("gname2", flat_file_lines)))
+})
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+unlink(dummypackage, recursive = TRUE)
 
 
 dummypackage <- tempfile("checkpk.gname")
 dir.create(dummypackage)
-# rstudioapi::filesPaneNavigate(dummypackage)
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package",Package="COUCOU"))
 dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
-# debugonce(inflate)
-debugonce(attachment::att_amend_desc)
+test_that("get_pkg_name inflates", {
   usethis::with_project(dummypackage, {
     inflate(pkg = dummypackage, flat_file = flat_file,
             vignette_name = "Get started", check = FALSE,
             open_vignette = FALSE)
   })
-
+})
 
