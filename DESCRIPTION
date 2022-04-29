@@ -40,7 +40,6 @@ Suggests:
     rcmdcheck,
     rmarkdown,
     rstudioapi,
-    spelling,
     testthat (>= 3.0.0),
     withr
 VignetteBuilder: 
