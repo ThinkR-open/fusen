@@ -220,6 +220,9 @@ spelling::spell_check_package()
 urlchecker::url_check()
 urlchecker::url_update()
 
+# Upgrade version number
+usethis::use_version(which = c("patch", "minor", "major", "dev")[2])
+
 # check on other distributions
 # _rhub
 devtools::check_rhub()
@@ -248,7 +251,7 @@ rstudioapi::navigateToFile(system.file(package = "rhub", "bin", "rhub-linux-dock
 # /opt/R-devel/bin/R
 
 
-rhub::check(platform = "windows-x86_64-devel")
+rhub::check(platform = "windows-x86_64-devel", show_status = FALSE)
 
 # _win devel
 devtools::check_win_devel()

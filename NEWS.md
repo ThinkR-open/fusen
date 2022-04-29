@@ -1,4 +1,4 @@
-# fusen 0.3.0.9000
+# fusen 0.4.0
 
 ## New features
 
@@ -37,8 +37,8 @@ ALanguillaume)
 * Avoid creating vignette with `inflate(vignette_name = NA)`
 * Decide whether or not to open vignette when inflate with `inflate(open_vignette = FALSE)`
 * Improve documentation included in flat templates to reflect changes in using dev_history file
-* Add Rstudio Addin to insert a new flat template
-* Add Rstudio Addin to insert chunks for new function (@ColinFay)
+* Add RStudio Addin to insert a new flat template
+* Add RStudio Addin to insert chunks for new function (@ColinFay)
 * Deal with `\dontrun{}` in example chunks
 * Allow short names for chunks: dev, fun, ex, test
 * `create_fusen()` to create a {fusen} project from command line or with RStudio new project (@ALanguillaume)
@@ -61,7 +61,7 @@ ALanguillaume)
 * Fix inflate with empty functions chunks
 * Fix filename to inflate in templates with new calls of `add_dev_history()` (@Cervangirard)
 * Default vignette name is now "Get started" creating "vignettes/get-started.Rmd"
-* All open files are saved when using `inflate()` where {rstudioapi} works
+* All open files are saved when using `inflate()` where {RStudioapi} works
 * Ask to restart RStudio after first inflate
 
 # fusen 0.2.4
