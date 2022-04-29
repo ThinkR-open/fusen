@@ -1,3 +1,5 @@
+print("==== inflate_utils ====")
+
 # group_code groups columns ----
 df <- tibble::tibble(
   id = c(1, 2, 3),
@@ -21,6 +23,7 @@ test_that("group_code groups columns", {
 # Create a new project
 dummypackage <- tempfile("isrproj.pkg")
 dir.create(dummypackage)
+
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
@@ -39,9 +42,9 @@ usethis::with_project(dummypackage, {
   })
   # create_vignette
   usethis::with_project(dummypackage, {
-      inflate(pkg = dummypackage, flat_file = flat_file,
-              vignette_name = "Get started", check = FALSE,
-              open_vignette = FALSE)
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = "Get started", check = FALSE,
+            open_vignette = FALSE)
     # See RStudio restart needed
   })
 
@@ -56,10 +59,6 @@ usethis::with_project(dummypackage, {
   })
 })
 
-
-
-
-
 # asciify_name ----
 test_that(
   "Diacritics are properly escaped in vignette file name", {
@@ -69,7 +68,7 @@ test_that(
     expect_identical(vignette_name, "a-l-oree-de-l-apre-foret-celeste")
 
     vignette_name <- asciify_name(
-    "# y  _ p n@ \u00E9 ! 1"
+      "# y  _ p n@ \u00E9 ! 1"
     )
     expect_identical(vignette_name, "y-p-n-e-1")
   })
@@ -127,9 +126,10 @@ dummypackage <- tempfile("vignette.head")
 dir.create(dummypackage)
 
 # {fusen} steps
-fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 
 test_that("create_vignette_head works", {
+  expect_error(fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+               , regexp = NA)
   usethis::with_project(dummypackage, {
     head <- create_vignette_head(pkg = dummypackage, vignette_name = "My Super Vignette")
     expect_true(grepl('title: "My Super Vignette"', head))
