@@ -1,5 +1,6 @@
 # fusen 0.3.0.9000
 
+* `inflate()` the current opened flat file if `flat_file` is empty (#138)
 * Read DESCRIPTION file for package name when available (#144 @VincentGuyader)
 * Read `nyc_squirrels` with encoding to avoid encoding problems with `use_data()`
 * Allow flat files with `tests` only

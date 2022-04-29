@@ -477,3 +477,51 @@ unlink(dummypackage, recursive = TRUE)
 if (exists("dummypackage.special")) {
   unlink(dummypackage.special, recursive = TRUE)
 }
+
+# Inflate fails or not if no flat_file ----
+test_that("inflate fails without flat file", {
+  expect_error(inflate(overwrite = FALSE), regexp = "directly in the console")
+})
+
+dummypackage <- tempfile("flatfile.empty")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+# If interactive in RStudio
+if (
+  requireNamespace("rstudioapi") &&
+  rstudioapi::isAvailable() &&
+  rstudioapi::hasFun("navigateToFile") &&
+  rstudioapi::hasFun("documentId")
+) {
+  print("Test with RStudio")
+  # current position
+  curr_editor <- rstudioapi::getSourceEditorContext()
+  curr_position <- curr_editor$selection[[1L]]$range$start
+  # Change file
+  rstudioapi::navigateToFile(flat_file)
+  Sys.sleep(1)
+  id <- rstudioapi::documentId()
+
+  usethis::with_project(dummypackage, {
+    test_that("inflate works without flat file when current is Rmd", {
+      expect_message(
+        inflate(pkg = dummypackage, #flat_file = flat_file,
+                vignette_name = "Get started", check = FALSE,
+                open_vignette = FALSE, overwrite = TRUE),
+        regexp = "The current file will be inflated"
+      )
+    })
+  })
+
+  # # Back to current position
+  rstudioapi::navigateToFile(curr_editor$path, line = curr_position[1])
+
+  if (rstudioapi::hasFun("documentClose")) {
+    rstudioapi::documentClose(id)
+  }
+}
