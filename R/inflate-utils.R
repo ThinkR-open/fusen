@@ -394,10 +394,16 @@ create_vignette_head <- function(pkg, vignette_name, yaml_options = NULL) {
   yaml_options <- yaml_options[
     !names(yaml_options) %in% c("output", "title", "editor_options")]
 
+  if (is.null(names(vignette_name)) || names(vignette_name) == "") {
+    vignette_title <- vignette_name
+  } else {
+    vignette_title <- names(vignette_name)
+  }
+
   enc2utf8(
     glue(
       '---
-title: ".{vignette_name}."
+title: ".{vignette_title}."
 output: rmarkdown::html_vignette',
       ifelse(length(yaml_options) != 0,
              glue::glue_collapse(
@@ -406,7 +412,7 @@ output: rmarkdown::html_vignette',
                sep = "\n"),
              "\n"),
       'vignette: >
-  %\\VignetteIndexEntry{.{vignette_name}.}
+  %\\VignetteIndexEntry{.{asciify_name(vignette_name)}.}
   %\\VignetteEngine{knitr::rmarkdown}
   %\\VignetteEncoding{UTF-8}
 ---

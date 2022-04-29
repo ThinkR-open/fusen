@@ -133,7 +133,7 @@ test_that("create_vignette_head works", {
   usethis::with_project(dummypackage, {
     head <- create_vignette_head(pkg = dummypackage, vignette_name = "My Super Vignette")
     expect_true(grepl('title: "My Super Vignette"', head))
-    expect_true(grepl('  %\\VignetteIndexEntry{My Super Vignette}', head, fixed = TRUE))
+    expect_true(grepl('  %\\VignetteIndexEntry{my-super-vignette}', head, fixed = TRUE))
     expect_true(grepl(paste0('library(', basename(dummypackage) ,')'), head, fixed = TRUE))
   })
 })

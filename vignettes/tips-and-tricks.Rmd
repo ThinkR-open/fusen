@@ -116,7 +116,15 @@ This won't affect your package.
 ```
 ````
 
-# How not to create a vignette ?
+# How to create a vignette with different title and Index Entry?
+
+You can use `inflate(vignette_name = c("Super title" = "01-Super Slug"))` for vignette title different from vignette Entry
+
+```{r, eval=FALSE}
+inflate(vignette_name = c("Super title" = "01-Super Vignette Index Entry"))
+```
+
+# How not to create a vignette?
 
 - If I only build internal functions, I may not want to inflate the flat file as a vignette.
 - The flat file is the developer's documentation and that may be enough

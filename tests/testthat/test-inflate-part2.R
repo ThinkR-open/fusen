@@ -57,15 +57,14 @@ for (pkgname in c("full", "teaching", "minimal")) {
 
   usethis::with_project(path_foosen, {
 
-    # Do not check inside check if on CRAN
-    # skip_on_os(os = c("windows", "solaris"))
-    skip_on_cran()
-
-
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
     usethis::use_gpl_license()
 
     test_that(paste("Check returns OK for template", pkgname), {
+      # Do not check inside check if on CRAN
+      # skip_on_os(os = c("windows", "solaris"))
+      skip_on_cran()
+
       # extract the 'inflate' line in the flat file
       # Add pkg, check, quiet, args, overwrite
       # And inflate
@@ -901,5 +900,32 @@ usethis::with_project(dummypackage, {
 
 unlink(dummypackage, recursive = TRUE)
 
+# vignette name and slug independent ----
+dummypackage <- tempfile("vignette.name")
+dir.create(dummypackage)
 
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
 
+usethis::with_project(dummypackage, {
+
+  suppressMessages(
+    inflate(pkg = dummypackage, flat_file = flat_file,
+            vignette_name = c("Super title" = "01-Super Slug"), check = FALSE,
+            open_vignette = FALSE)
+  )
+
+  the_vignette <- file.path(dummypackage, "vignettes", "01-super-slug.Rmd")
+  test_that("vignette header is good", {
+    expect_true(file.exists(the_vignette))
+    the_vignette_lines <- readLines(the_vignette)
+    expect_true(grepl("title:.*Super title.*", the_vignette_lines[2]))
+    expect_false(any(grep("01-Super Slug", the_vignette_lines)))
+    expect_true(any(grep("01-super-slug", the_vignette_lines)))
+  })
+
+})
+
+unlink(dummypackage, recursive = TRUE)
