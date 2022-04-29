@@ -74,10 +74,12 @@ nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
 #'
 #' @examples
 #' my_median(2:20)
-my_median <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
-  stats::median(x, na.rm = na.rm)
-}
+my_median <- 
+  # Volontarily on two lines separated with comment
+  function(x, na.rm = TRUE) {
+    if (!is.numeric(x)) {stop("x should be numeric")}
+    stats::median(x, na.rm = na.rm)
+  }
 ```
 
 ```{r examples}

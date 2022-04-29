@@ -35,6 +35,23 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   ) %>%
     gsub(" ", "", .) # remove spaces
 
+  browser()
+
+  # if (is.null(fun_name) || is.na(fun_name)) {
+  #   # Maybe function name is on (not commented) line above
+  #   # if exists
+  #   code_nocomment <- code[!grepl("^\\s*#", code)]
+  #   code.function <- grep(regex_isfunction, code_nocomment)
+  #   if (length(code_nocomment[code.function-1]) != 0) {
+  #     fun_name <- stringi::stri_extract_first_regex(
+  #       paste(
+  #         code_nocomment[code.function-1],
+  #         code_nocomment[code.function]),
+  #       regex_extract_fun_name
+  #     )
+  #   }
+  # }
+
   # Clean extra space between #' and @
   code <- gsub(pattern = "#'\\s*@", "#' @", code)
 

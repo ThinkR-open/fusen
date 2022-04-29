@@ -18,6 +18,8 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
 
+  browser()
+
   suppressMessages(
     inflate(pkg = dummypackage, flat_file = flat_file,
             vignette_name = "Get started", check = FALSE,
