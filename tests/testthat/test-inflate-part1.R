@@ -1,3 +1,5 @@
+print("==== inflate-part1 ====")
+
 # Test full ----
 dummypackage <- tempfile("inflate.tests")
 dir.create(dummypackage)

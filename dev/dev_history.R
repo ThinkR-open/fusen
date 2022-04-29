@@ -168,7 +168,8 @@ unlink(skeleton_dir, recursive = TRUE)
 # _Check in interactive test-inflate for templates and Addins
 pkgload::load_all()
 testthat::test_dir("tests/testthat/")
-testthat::test_file("tests/testthat/test-inflate.R")
+testthat::test_file("tests/testthat/test-inflate-part1.R")
+testthat::test_file("tests/testthat/test-inflate-part2.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 # Test no output generated in the user files

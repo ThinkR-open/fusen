@@ -41,7 +41,7 @@ pkgload::load_all(path = here::here(), export_all = FALSE)
 
 # You will be able to read your example data file in each of your function examples and tests as follows - see chunks below
 datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
-nyc_squirrels <- read.csv(datafile)
+nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
 
 nyc_squirrels
 ```
@@ -99,7 +99,7 @@ my_median(1:12)
 
 # Example with your dataset in "inst/"
 datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
-nyc_squirrels <- read.csv(datafile)
+nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
 # Apply my function
 my_median(nyc_squirrels[,"hectare_squirrel_number"])
 ```
@@ -125,7 +125,7 @@ test_that("my_median works properly and show error if needed", {
 
 # Test with your dataset in "inst/"
 datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
-nyc_squirrels <- read.csv(datafile)
+nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
 # Apply test on my function
 test_that("my_median works properly with internal dataset", {
   expect_equal(my_median(nyc_squirrels[,"hectare_squirrel_number"]), 3)
