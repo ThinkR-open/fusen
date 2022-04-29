@@ -111,14 +111,14 @@ if (git_output != 0) {
       path_gigit <- file.path(dummypackage, "gigit")
       expect_warning(
         create_fusen(path_gigit, template = "full", open = FALSE, with_git = TRUE),
-        regexp = "Error initializing git repository")
+        regexp = "Error initializing git repository"
+      )
 
       expect_true(dir.exists(path_gigit))
       expect_true(all(file.exists(c(
         file.path(path_gigit, "dev", "flat_full.Rmd"),
         file.path(path_gigit, "dev", "0-dev_history.Rmd")
-      )
-      )))
+      ))))
       # git is not initialized
       expect_false(dir.exists(file.path(path_gigit, ".git")))
     })
@@ -139,8 +139,7 @@ if (git_output != 0) {
       expect_true(all(file.exists(c(
         file.path(path_gigit, "dev", "flat_full.Rmd"),
         file.path(path_gigit, "dev", "0-dev_history.Rmd")
-      )
-      )))
+      ))))
       # git is initialized
       expect_true(dir.exists(file.path(path_gigit, ".git")))
     })
@@ -159,8 +158,7 @@ if (git_output != 0) {
       expect_true(all(file.exists(c(
         file.path(path_gigit, "dev", "flat_full.Rmd"),
         file.path(path_gigit, "dev", "0-dev_history.Rmd")
-      )
-      )))
+      ))))
       # git is not initialized
       expect_false(dir.exists(file.path(path_gigit, ".git")))
     })
@@ -216,7 +214,8 @@ withr::with_dir(dummypackage, {
     path_bad_name <- file.path(dummypackage, "bad-name")
     expect_error(
       create_fusen(path_bad_name, template = "full", open = FALSE),
-      regexp = "Please rename")
+      regexp = "Please rename"
+    )
 
     expect_false(dir.exists(path_bad_name))
   })

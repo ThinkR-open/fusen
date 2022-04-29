@@ -49,10 +49,12 @@ dir.create(dummypackage)
 
 # {fusen} steps
 dev_file <- add_flat_template(template = "full", pkg = dummypackage, overwrite = TRUE)
-flat_file <- dev_file[grepl('flat', dev_file)]
+flat_file <- dev_file[grepl("flat", dev_file)]
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-inflate(pkg = dummypackage, flat_file = flat_file,
-  vignette_name = "Exploration of my Data", check = FALSE)
+inflate(
+  pkg = dummypackage, flat_file = flat_file,
+  vignette_name = "Exploration of my Data", check = FALSE
+)
 
 # Explore directory of the package
 # browseURL(dummypackage)

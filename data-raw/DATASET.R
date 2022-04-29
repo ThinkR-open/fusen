@@ -10,8 +10,11 @@ clients <- database$clients %>%
   tidyr::fill(departement) %>%
   mutate(
     entry_year = lubridate::year(entry_date),
-    age_class = cut(age, breaks = c(18, 25, 40, 55, 70, 100),
-                    include.lowest = TRUE))
+    age_class = cut(age,
+      breaks = c(18, 25, 40, 55, 70, 100),
+      include.lowest = TRUE
+    )
+  )
 
 # usethis::use_data(clients, overwrite = TRUE)
 
