@@ -372,10 +372,8 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
 
   project_name <- get_pkg_name(pkg = pkg)
 
-
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
                            grepl(regex_tests, parsed_tbl$label), ]
-
 
   # If there is at least one test
   if (nrow(rmd_test) != 0) {

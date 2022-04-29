@@ -8,23 +8,23 @@ pkg_name <- basename(dummypackage)
 # add_flat_template ----
 test_that("add_flat_template adds flat_template.Rmd and co.", {
   dev_file_path <- expect_error(add_flat_template(pkg = dummypackage, open = FALSE), 
-               regexp = NA)
+                                regexp = NA)
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
   
   expect_true(all(file.exists(dev_file_path)))
   expect_true(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
   expect_true(file.exists(file.path(dummypackage, ".here")))
   expect_true(file.exists(file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")))
-
+  
   rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
   expect_true(any(grepl("^dev$", rbuildignore_lines, fixed = TRUE)))
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
-
+  
   dev_lines <- readLines(flat_file)
   expect_equal(length(grep(pkg_name, dev_lines)), 3)
-
+  
   # Second time message and new file
   expect_message(add_flat_template(pkg = dummypackage))
   expect_true(file.exists(file.path(dummypackage, "dev", "flat_full_2.Rmd")))
@@ -43,11 +43,11 @@ cat("", file = file.path(dummypackage2, 'dummy.Rproj'))
 # Add
 dev_file_path <- add_flat_template(pkg = dummypackage2, open = FALSE)
 flat_file <- dev_file_path[grepl("flat", dev_file_path)]
-  
+
 test_that("add_flat_template works with .Rproj and no .here", {
   expect_true(all(file.exists(dev_file_path)))
   expect_false(file.exists(file.path(dummypackage2, ".here")))
-
+  
   rbuildignore_file <- file.path(dummypackage2, ".Rbuildignore")
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
@@ -67,7 +67,7 @@ test_that("add dev_history template works", {
     expect_true(file.exists(dev_file_path))
     
     usethis::with_project(dummypackage, {
-
+      
       # Extract and test the description chunk
       dev_lines <- readLines(dev_file_path)
       # Change path of project
@@ -93,7 +93,7 @@ test_that("add dev_history template works", {
 })
 
 unlink(dummypackage)
-  
+
 
 # Test "dev_history" template ----
 dummypackage <- tempfile(pattern = "dev.history.template.uu")
@@ -110,7 +110,7 @@ test_that("add dev_history template works with windows \\users path", {
     # Test specific \\users path
     newdir_uu <- tempfile("aa\\U/gzv")
     dir.create(newdir_uu, recursive = TRUE)
-        
+    
     usethis::with_project(dummypackage, {
       # Extract and test the description chunk
       dev_lines <- readLines(dev_file_path)
@@ -191,7 +191,7 @@ for (template in all_templates) {
   test_that(paste0("template", template, "runs as markdown"), {
     expect_true(file.exists(file.path(dummypackage4, "dev", paste0("flat_", template, ".Rmd"))))
     if (template %in% c("full", "minimal")) {
-        expect_true(file.exists(file.path(dirname(flat_file), "0-dev_history.Rmd")))
+      expect_true(file.exists(file.path(dirname(flat_file), "0-dev_history.Rmd")))
     }
     
     if (rmarkdown::pandoc_available("1.12.3")) {
@@ -297,20 +297,20 @@ pkg_name <- basename(dummypackage)
 # add_full ----
 test_that("add_full adds flat_full.Rmd", {
   dev_file_path <- expect_error(add_full(pkg = dummypackage, open = FALSE), 
-               regexp = NA)
+                                regexp = NA)
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
   
   expect_true(all(file.exists(dev_file_path)))
   expect_true(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
   expect_true(file.exists(file.path(dummypackage, ".here")))
   expect_true(file.exists(file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")))
-
+  
   rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
   expect_true(any(grepl("^dev$", rbuildignore_lines, fixed = TRUE)))
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
-
+  
   dev_lines <- readLines(flat_file)
   expect_equal(length(grep(pkg_name, dev_lines)), 3)
 })
@@ -322,20 +322,20 @@ pkg_name <- basename(dummypackage)
 # add_minimal
 test_that("add_minimal adds flat_minimal.Rmd", {
   dev_file_path <- expect_error(add_minimal(pkg = dummypackage, open = FALSE), 
-               regexp = NA)
+                                regexp = NA)
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
   
   expect_true(all(file.exists(dev_file_path)))
   expect_true(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
   expect_true(file.exists(file.path(dummypackage, ".here")))
   expect_false(file.exists(file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")))
-
+  
   rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
   expect_true(any(grepl("^dev$", rbuildignore_lines, fixed = TRUE)))
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
-
+  
   dev_lines <- readLines(flat_file)
   expect_equal(length(grep("minimal", dev_lines)), 2)
 })
@@ -347,32 +347,24 @@ pkg_name <- basename(dummypackage)
 # add_additional
 test_that("add_additional adds flat_additional.Rmd", {
   dev_file_path <- expect_error(add_additional(pkg = dummypackage, open = FALSE), 
-               regexp = NA)
+                                regexp = NA)
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
   
   expect_true(all(file.exists(dev_file_path)))
   expect_false(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
   expect_true(file.exists(file.path(dummypackage, ".here")))
   expect_false(file.exists(file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")))
-
+  
   rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
   expect_true(file.exists(rbuildignore_file))
   rbuildignore_lines <- readLines(rbuildignore_file)
   expect_true(any(grepl("^dev$", rbuildignore_lines, fixed = TRUE)))
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
-
+  
   dev_lines <- readLines(flat_file)
   expect_equal(length(grep("additional", dev_lines)), 2)
 })
 unlink(dummypackage, recursive = TRUE)
-
-
-
-
-
-
-
-
 
 
 dummypackage <- tempfile("checkpk.gname2")
@@ -380,16 +372,16 @@ dir.create(dummypackage)
 # rstudioapi::filesPaneNavigate(dummypackage)
 # {fusen} steps
 
-fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package",Package="COUCOU2"))
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package", Package = "COUCOU2"))
 dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 flat_file <- dev_file[grepl("flat_", dev_file)]
-# file.edit(flat_file)
-flat_file
 
+test_that("get_pkg_name works", {
   flat_file_lines <- readLines(flat_file)
   #the package name must be used and not the project name
   expect_true(any(grepl("COUCOU2", flat_file_lines, fixed = TRUE)))
   expect_false(any(grepl("gname2", flat_file_lines)))
+})
 
 unlink(dummypackage, recursive = TRUE)
 

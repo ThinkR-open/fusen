@@ -366,9 +366,11 @@ group_code <- function(df, group_col, code_col) {
     do.call("rbind", .)
 }
 
+#' Retrieve name of the package if there is a DESCRIPTION
 #' @noRd
 get_pkg_name <- function(pkg){
-  if (file.exists(desc <- file.path(pkg, "DESCRIPTION"))) {
+  desc <- file.path(pkg, "DESCRIPTION")
+  if (file.exists(desc)) {
     pkgname <- read.dcf(desc)[colnames(read.dcf(desc)) == "Package"]
   } else{
     pkgname <- basename(pkg)
@@ -386,13 +388,7 @@ get_pkg_name <- function(pkg){
 #' @importFrom utils getFromNamespace
 #' @noRd
 create_vignette_head <- function(pkg, vignette_name, yaml_options = NULL) {
-
-
-
-
   pkgname <- get_pkg_name(pkg = pkg)
-
-
 
   # Get all yaml options except Title, output, editor_options
   yaml_options <- yaml_options[

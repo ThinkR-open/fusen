@@ -116,14 +116,14 @@ add_flat_template <- function(
     flat_name = template,
     overwrite = FALSE,
     open = TRUE) {
-
-   project_name <- get_pkg_name(pkg = pkg)
-   
+  
+  project_name <- get_pkg_name(pkg = pkg)
+  
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
     stop("Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
          "` as a package name should only contain letters, numbers and dots.")
   }
-
+  
   template <- match.arg(template)
   if (!template %in% c("full", "teaching", "dev_history")
       & !flat_name %in% c("minimal", "additional")) {
@@ -172,7 +172,7 @@ add_flat_template <- function(
     lines_template[grepl("flat_template.Rmd", lines_template)] <-
       gsub("flat_template.Rmd", dev_name,
            lines_template[grepl("flat_template.Rmd", lines_template)])
-        
+    
     # Change my_fun to fun_name
     if (!is.na(fun_name)) {
       lines_template[grepl("my_fun", lines_template)] <-
