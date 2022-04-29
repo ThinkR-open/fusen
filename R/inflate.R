@@ -77,9 +77,40 @@ inflate <- function(pkg = ".", flat_file,
   if (
     requireNamespace("rstudioapi") &&
     rstudioapi::isAvailable() &&
-    rstudioapi::hasFun("documentSaveAll")
+    rstudioapi::hasFun("documentSaveAll") &&
+    rstudioapi::hasFun("documentPath")
   ) {
     rstudioapi::documentSaveAll()
+  }
+
+
+  # IF flat_file empty
+  if (
+    requireNamespace("rstudioapi") &&
+    rstudioapi::isAvailable() &&
+    rstudioapi::hasFun("documentPath")
+  ) {
+    current_file <- rstudioapi::documentPath()
+    if (missing(flat_file) & grepl("^flat.*[.]Rmd$", basename(current_file))) {
+      if (overwrite == "ask") {
+        do_it <- yesno::yesno(
+          "The current file will be inflated: ",
+          current_file, ".\n",
+          "Are you sure this is what you planned?")
+      } else {
+        do_it <- isTRUE(overwrite)
+      }
+      if (do_it) {
+        message("The current file will be inflated: ", current_file)
+        flat_file <- current_file
+      }
+    }
+  }
+
+  if (missing(flat_file)) {
+    stop("`flat_file` argument is empty. ",
+         "Did you run `inflate()` directly in the console, ",
+         "instead of the one at the bottom of your flat file?")
   }
 
   old <- setwd(pkg)
