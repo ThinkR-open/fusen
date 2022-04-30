@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.3.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
       </span>
     </div>
 
@@ -68,7 +68,7 @@
   <a href="../reference/index.html">Reference</a>
 </li>
 <li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
     Articles
      
     <span class="caret"></span>
@@ -129,9 +129,9 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://thinkr-open.github.io/fusen/">fusen</a></span><span class="op">)</span></code></pre></div>
-<div class="section level1">
-<h1 id="how-to-use-fusen">How to use {fusen}<a class="anchor" aria-label="anchor" href="#how-to-use-fusen"></a>
-</h1>
+<div class="section level2">
+<h2 id="all-steps-to-create-a-package-with-fusen-from-one-rmd-file">All steps to create a package with {fusen} from one Rmd file<a class="anchor" aria-label="anchor" href="#all-steps-to-create-a-package-with-fusen-from-one-rmd-file"></a>
+</h2>
 <ul>
 <li>Create a new directory / new project with
 <ul>
@@ -156,91 +156,19 @@
 <li>Chunk named <code>development</code> gets the code for development purposes, usually only used once like {usethis} functions</li>
 </ul>
 </li>
-<li>Inflate the flat template to transform it as an inflated package with functions, unit tests and the current Rmd template transformed as a vignette. And check.</li>
+<li>Run the <code>dev-inflate</code> chunk to inflate the flat template and transform it as an inflated package with functions, unit tests and the current Rmd template transformed as a vignette. And check.</li>
 <li>Build your {pkgdown} site to verify everything is at the right place</li>
 </ul>
 <blockquote>
 <p>Create multiple <code>"flat_xxx.Rmd"</code> files with <code>fusen::add_flat_template(template = "add")</code> if needed</p>
 </blockquote>
-<div class="section level2">
-<h2 id="limitations">Limitations<a class="anchor" aria-label="anchor" href="#limitations"></a>
-</h2>
-<ul>
-<li>One title / one chunk is for one function</li>
-<li>
-<code>examples</code> and <code>tests</code> chunks need to be placed after the associated <code>function</code> chunk</li>
-<li>You can add sub-functions in the <code>function</code> chunk to store them in the same R file, but they won’t have <code>@examples</code>. Only the first function of the chunk will be able to get examples.</li>
-<li>As for any Rmarkdown file, chunk names need to be unique. Thus, you better use <code>examples-myfunction</code>, <code>examples-myotherfunction</code>, …</li>
-<li><em>Do not forget to regularly clear your Workspace to avoid functions hidden by global environment</em></li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="short-names">Short names<a class="anchor" aria-label="anchor" href="#short-names"></a>
-</h2>
-<ul>
-<li>Chunk short names are possible:
-<ul>
-<li>
-<code>function</code> can be named <code>fun-</code> or <code>fun_</code> or <code>fun-my_function_name</code>
-</li>
-<li>
-<code>example</code> can be named <code>ex-</code> or <code>ex_</code> or <code>ex-my_function_name</code>
-</li>
-<li>
-<code>tests</code> can be named <code>test-</code> or <code>test-my_function_name</code>
-</li>
-<li>
-<code>development</code> can be named <code>dev-</code> or <code>dev_</code> or <code>dev-my_function_name</code>
-</li>
-</ul>
-</li>
-<li>Short “flat” templates names are possible thanks to fuzzy match like <code>add_flat_template("add")</code> for template <code>additionnal</code>
-</li>
-</ul>
-</div>
-<div class="section level2">
-<h2 id="use-dontrun">Use <code>\dontrun{}</code><a class="anchor" aria-label="anchor" href="#use-dontrun"></a>
-</h2>
-<p>You can use <code>\dontrun{}</code> in an example chunk as follows:</p>
+<div class="section level3">
+<h3 id="fill-your-package-description">Fill your package Description<a class="anchor" aria-label="anchor" href="#fill-your-package-description"></a>
+</h3>
+<p>Fonction <code><a href="../reference/fill_description.html">fill_description()</a></code> requires the description of your package: What does it do? Who are the developers?<br>
+This will fill the DESCRIPTION file in the proper way.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co">#' \dontrun{</span>
-<span class="va">an_example</span> <span class="op">&lt;-</span> <span class="fl">1</span> <span class="op">+</span> <span class="fl">1</span>
-<span class="va">an_example</span>
-<span class="co">#' }</span>
-
-<span class="co">#' OR</span>
-
-<span class="co">#' \dontrun{</span>
-<span class="co">#' an_example &lt;- 1 + 1</span>
-<span class="co">#' an_example</span>
-<span class="co">#' }</span></code></pre></div>
-</div>
-</div>
-<div class="section level1">
-<h1 id="add-a-new-flat_template-rmd-template-in-dev-directory">Add a new flat_template.Rmd template in “dev” directory<a class="anchor" aria-label="anchor" href="#add-a-new-flat_template-rmd-template-in-dev-directory"></a>
-</h1>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create a new project</span>
-<span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span>
-
-<span class="co"># Add an additional dev template</span>
-<span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"add"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span>
-<span class="co">#&gt; Created file .here in /tmp/RtmpuI9szC/dummypackage32e89fb06af . Please start a new R session in the new project directory.</span>
-<span class="co">#&gt; [1] "/tmp/RtmpuI9szC/dummypackage32e89fb06af/dev/flat_additional.Rmd"</span>
-
-<span class="co"># Delete dummy package</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
-</div>
-<div class="section level1">
-<h1 id="fill-your-package-description">Fill your package Description<a class="anchor" aria-label="anchor" href="#fill-your-package-description"></a>
-</h1>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create a new project</span>
-<span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span>
-
-<span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span>
+<code class="sourceCode R"><span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span>
   pkg <span class="op">=</span> <span class="va">dummypackage</span>,
   fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
     Title <span class="op">=</span> <span class="st">"Build A Package From Rmarkdown file"</span>,
@@ -253,29 +181,11 @@
       <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span>given <span class="op">=</span> <span class="st">"ThinkR"</span>, role <span class="op">=</span> <span class="st">"cph"</span><span class="op">)</span>
     <span class="op">)</span>
   <span class="op">)</span>
-<span class="op">)</span>
-<span class="co">#&gt; <span style="color: #BBBB00;">!</span> Title was modified to 'Title Case'.</span>
-<span class="co">#&gt; [1] "/tmp/RtmpuI9szC/dummypackage32e81127d768/DESCRIPTION"</span>
-
-<span class="co"># Delete dummy package</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<span class="op">)</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="there-can-be-development-actions">There can be development actions<a class="anchor" aria-label="anchor" href="#there-can-be-development-actions"></a>
-</h1>
-<p>These are only included in the flat template file, their content will not be part of the package anywhere else.</p>
-<p>Name the following chunk with <code>{r development-1, eval=FALSE}</code></p>
-<pre><code><span class="co"># Run but keep eval=FALSE to avoid infinite loop</span>
-
-<span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html" class="external-link">use_mit_license</a></span><span class="op">(</span><span class="st">"Sébastien Rochette"</span><span class="op">)</span>
-
-<span class="co"># Execute in the console directly</span>
-
-<span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>flat_file <span class="op">=</span> <span class="st">"dev/dev_history.Rmd"</span><span class="op">)</span></code></pre>
-</div>
-<div class="section level1">
-<h1 id="inflate-your-package-from-dev-rmd-template">Inflate your package from dev Rmd template<a class="anchor" aria-label="anchor" href="#inflate-your-package-from-dev-rmd-template"></a>
-</h1>
+<div class="section level3">
+<h3 id="inflate-your-package-from-the-flat-rmd-template">Inflate your package from the flat Rmd template<a class="anchor" aria-label="anchor" href="#inflate-your-package-from-the-flat-rmd-template"></a>
+</h3>
 <p>You’re one inflate from flat paper to box. Build your package from the flat Rmd template using the <code><a href="../reference/inflate.html">inflate()</a></code> command below.</p>
 <p>After that, you can:</p>
 <ul>
@@ -283,34 +193,21 @@
 <li>Verify your function is in <code>"R/"</code> directory</li>
 <li>Verify your test is in <code>"tests/testthat/"</code> directory</li>
 <li>Verify this Rmd appears in <code>"vignettes/"</code> directory</li>
-<li>Build your documentation using <code>pkgdown::build()</code> for vignette and examples checks</li>
+<li>Build your documentation using <code><a href="https://usethis.r-lib.org/reference/use_pkgdown.html" class="external-link">usethis::use_pkgdown()</a></code> then <code>pkgdown::build()</code> for vignette and examples checks</li>
 </ul>
-<p><em>This code creates a package in a temporary directory. You will most probably be inside your project when ready to inflate, hence there will be no need to specify the directory of the package. This code is here as a reproducible example for you to test.</em></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create a new project</span>
-<span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span>
-
-<span class="co"># {fusen} steps</span>
-<span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span>
-<span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"teaching"</span>,
-                              pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
-<span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>
-  pkg <span class="op">=</span> <span class="va">dummypackage</span>, 
-  flat_file <span class="op">=</span> <span class="va">dev_file</span>, 
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>
+  flat_file <span class="op">=</span> <span class="st">"dev/flat_teaching.Rmd"</span>, 
   vignette_name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>,
-  check <span class="op">=</span> <span class="cn">FALSE</span>
-<span class="op">)</span>
-
-<span class="co"># Explore directory of the package</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span>
-
-<span class="co"># Delete dummy package</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+  open_vignette <span class="op">=</span> <span class="cn">TRUE</span>,
+  document <span class="op">=</span> <span class="cn">TRUE</span>,
+  check <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span></code></pre></div>
 </div>
-<div class="section level1">
-<h1 id="create-a-new-package-from-command-line-directly-using-a-pre-defined-template">Create a new package from command line directly, using a pre-defined template<a class="anchor" aria-label="anchor" href="#create-a-new-package-from-command-line-directly-using-a-pre-defined-template"></a>
-</h1>
+</div>
+<div class="section level2">
+<h2 id="create-a-new-package-from-command-line-directly-using-a-pre-defined-template">Create a new package from command line directly, using a pre-defined template<a class="anchor" aria-label="anchor" href="#create-a-new-package-from-command-line-directly-using-a-pre-defined-template"></a>
+</h2>
 <ul>
 <li>Build a package from Rmd template in a temporary directory
 <ul>
@@ -318,7 +215,7 @@
 </ul>
 </li>
 </ul>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="co"># Create a new project</span>
 <span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"dummy"</span><span class="op">)</span>
 
@@ -336,7 +233,47 @@
   <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, 
                  flat_file <span class="op">=</span> <span class="va">dev_file</span>,
                  vignette_name <span class="op">=</span> <span class="st">"Get started"</span><span class="op">)</span>
-<span class="op">}</span><span class="op">)</span></code></pre></div>
+<span class="op">}</span><span class="op">)</span>
+
+<span class="co"># Explore directory of the package</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span>
+
+<span class="co"># Delete dummy package</span>
+<span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="add-a-new-flat_template-rmd-template-in-dev-directory">Add a new “flat_template.Rmd” template in “dev/” directory<a class="anchor" aria-label="anchor" href="#add-a-new-flat_template-rmd-template-in-dev-directory"></a>
+</h2>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="co"># Add an additional dev template</span>
+<span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"add"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="there-can-be-development-actions">There can be development actions<a class="anchor" aria-label="anchor" href="#there-can-be-development-actions"></a>
+</h2>
+<p>These are only included in the flat template file, their content will not be part of the package anywhere else.</p>
+<p>Name the following chunk with <code>{r development-something, eval=FALSE}</code></p>
+<pre><code>```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+
+usethis::use_mit_license("Sébastien Rochette")
+
+# Execute in the console directly
+
+fusen::inflate(flat_file = "dev/dev_history.Rmd")
+```</code></pre>
+</div>
+<div class="section level2">
+<h2 id="limitations">Limitations<a class="anchor" aria-label="anchor" href="#limitations"></a>
+</h2>
+<ul>
+<li>One title / one chunk is for one function</li>
+<li>
+<code>examples</code> and <code>tests</code> chunks need to be placed after the associated <code>function</code> chunk</li>
+<li>You can add sub-functions in the <code>function</code> chunk to store them in the same R file, but they won’t have <code>@examples</code>. Only the first function of the chunk will be able to get examples.</li>
+<li>As for any Rmarkdown file, chunk names need to be unique. Thus, you better use <code>examples-myfunction</code>, <code>examples-myotherfunction</code>, …</li>
+<li><em>Do not forget to regularly clear your Workspace to avoid functions hidden by global environment</em></li>
+</ul>
 </div>
   </div>
 
@@ -352,7 +289,7 @@
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.1.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
 </div>
 
 <div class="author">
