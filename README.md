@@ -193,6 +193,25 @@ tests in multiple places. Here, you can do it in one place. No risk to
 forget one. Think also about code review: everything related to one
 function is at the same place.
 
+## Q&A : All tips and tricks of a {fusen} template
+
+-   Can I be lazy in names used?
+-   Can I knit the content of the flat template ?
+-   How to declare packages with library() for the future vignette ?
+-   How to include examples that cannot be run ?
+-   Document your internal datasets in a function chunk as usual
+-   How to ignore some chunks ?
+-   How to create a vignette with different title and Index Entry?
+-   How not to create a vignette ?
+-   How to get a pre-filled template for a specific function name ?
+-   How to Inflate multiple flat files ?
+-   How to store multiple functions in a unique R file ?
+-   How to read dataset that I usually put in “tests/testthat/” for my
+    unit tests?
+
+=> See vignette Tips and Tricks:
+<https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html>
+
 ## Why is this package named {fusen} ?
 
 A fusen is an origami. It is a flat piece of paper that you fold in a

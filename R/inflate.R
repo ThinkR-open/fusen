@@ -41,10 +41,12 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #'
 #' # {fusen} steps
 #' dev_file <- add_flat_template(template = "full", pkg = dummypackage, overwrite = TRUE)
-#' flat_file <- dev_file[grepl('flat', dev_file)]
+#' flat_file <- dev_file[grepl("flat", dev_file)]
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-#' inflate(pkg = dummypackage, flat_file = flat_file,
-#'   vignette_name = "Exploration of my Data", check = FALSE)
+#' inflate(
+#'   pkg = dummypackage, flat_file = flat_file,
+#'   vignette_name = "Exploration of my Data", check = FALSE
+#' )
 #'
 #' # Explore directory of the package
 #' # browseURL(dummypackage)
@@ -59,25 +61,28 @@ inflate <- function(pkg = ".", flat_file,
                     open_vignette = TRUE,
                     check = TRUE, document = TRUE,
                     overwrite = "ask", ...) {
-
   if (!is.null(list(...)[["name"]])) {
-    warning(paste0("The `name` argument to `inflate()` is deprecated since {fusen} version 0.3.0,",
-                   " and will be removed in a future version.",
-                   "\nPlease use `vignette_name = '", list(...)[["name"]],"'` instead.\n"))
+    warning(paste0(
+      "The `name` argument to `inflate()` is deprecated since {fusen} version 0.3.0,",
+      " and will be removed in a future version.",
+      "\nPlease use `vignette_name = '", list(...)[["name"]], "'` instead.\n"
+    ))
     vignette_name <- list(...)[["name"]]
   }
   if (!is.null(list(...)[["rmd"]])) {
-    warning(paste0("The `rmd` argument to `inflate()` is deprecated since {fusen} version 0.3.0,",
-                   " and will be removed in a future version.",
-                   "\nPlease use `flat_file = '", list(...)[["rmd"]],"'` instead.\n"))
+    warning(paste0(
+      "The `rmd` argument to `inflate()` is deprecated since {fusen} version 0.3.0,",
+      " and will be removed in a future version.",
+      "\nPlease use `flat_file = '", list(...)[["rmd"]], "'` instead.\n"
+    ))
     flat_file <- list(...)[["rmd"]]
   }
 
   # Save all open files
   if (
     requireNamespace("rstudioapi") &&
-    rstudioapi::isAvailable() &&
-    rstudioapi::hasFun("documentSaveAll")
+      rstudioapi::isAvailable() &&
+      rstudioapi::hasFun("documentSaveAll")
   ) {
     rstudioapi::documentSaveAll()
   }
@@ -86,17 +91,18 @@ inflate <- function(pkg = ".", flat_file,
   # If flat_file empty
   if (
     requireNamespace("rstudioapi") &&
-    rstudioapi::isAvailable() &&
-    rstudioapi::hasFun("documentPath")
+      rstudioapi::isAvailable() &&
+      rstudioapi::hasFun("documentPath")
   ) {
     current_file <- rstudioapi::documentPath()
     if (missing(flat_file) & grepl("^flat.*[.]Rmd$", basename(current_file))) {
       if (overwrite == "ask") {
-       sure  <- paste(
+        sure <- paste(
           "The current file will be inflated:\n",
           current_file, ".\n",
-          "Are you sure this is what you planned? (y/n)\n")
-       do_it <- readline(sure) == "y"
+          "Are you sure this is what you planned? (y/n)\n"
+        )
+        do_it <- readline(sure) == "y"
       } else {
         do_it <- isTRUE(overwrite)
       }
@@ -108,9 +114,11 @@ inflate <- function(pkg = ".", flat_file,
   }
 
   if (missing(flat_file)) {
-    stop("`flat_file` argument is empty. ",
-         "Did you run `inflate()` directly in the console, ",
-         "instead of the one at the bottom of your flat file?")
+    stop(
+      "`flat_file` argument is empty. ",
+      "Did you run `inflate()` directly in the console, ",
+      "instead of the one at the bottom of your flat file?"
+    )
   }
 
   old <- setwd(pkg)
@@ -193,13 +201,18 @@ inflate <- function(pkg = ".", flat_file,
   parsed_tbl$chunk_filename <- unlist(
     lapply(
       parsed_tbl[["options"]],
-      function(x) ifelse(is.null(x[["filename"]]),
-                         NA_character_, gsub('"', '', x[["filename"]])))
+      function(x) {
+        ifelse(is.null(x[["filename"]]),
+          NA_character_, gsub('"', "", x[["filename"]])
+        )
+      }
+    )
   )
   # Define sec_title to group functions in same R file
   sec_title <- paste(parsed_tbl[["sec_h1"]],
-                     parsed_tbl[["sec_h2"]],
-                     sep = "-")
+    parsed_tbl[["sec_h2"]],
+    sep = "-"
+  )
 
   if (length(sec_title) != 0) {
     parsed_tbl$sec_title <- sec_title
@@ -266,7 +279,6 @@ inflate <- function(pkg = ".", flat_file,
 #' @importFrom stats na.omit
 #' @noRd
 create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) {
-
   fun_names <- fun_code[["fun_name"]]
 
   if (length(unique(na.omit(fun_names))) != length(na.omit(fun_names))) {
@@ -295,7 +307,7 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
       "please rename chunks with 'examples-fun_name' for instance.\n",
       "Duplicates: ",
       paste(labels_in_vignette[duplicated(labels_in_vignette)],
-            collapse = ", "
+        collapse = ", "
       )
     )
   }
@@ -324,11 +336,10 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
 #' @importFrom parsermd rmd_get_chunk
 #' @noRd
 get_functions_tests <- function(parsed_tbl) {
-
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-                              grepl(regex_functions, parsed_tbl$label))
+    grepl(regex_functions, parsed_tbl$label))
   which_parsed_tests <- which(!is.na(parsed_tbl$label) &
-                                grepl(regex_tests, parsed_tbl$label))
+    grepl(regex_tests, parsed_tbl$label))
 
   rmd_fun <- parsed_tbl[which_parsed_fun, ]
 
@@ -363,7 +374,6 @@ get_functions_tests <- function(parsed_tbl) {
 #' @param relative_flat_file Path to the flat file to show in R scripts
 #' @noRd
 create_r_files <- function(fun_code, pkg, relative_flat_file) {
-
   fun_code <- fun_code[(lengths(fun_code[["code"]]) != 0), ]
 
   # Combine code with same sec_title to be set in same R file
@@ -400,11 +410,10 @@ create_r_files <- function(fun_code, pkg, relative_flat_file) {
 #'
 #' @noRd
 create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
-
   project_name <- get_pkg_name(pkg = pkg)
 
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
-                           grepl(regex_tests, parsed_tbl$label), ]
+    grepl(regex_tests, parsed_tbl$label), ]
 
   # If there is at least one test
   if (nrow(rmd_test) != 0) {
@@ -414,7 +423,8 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
       stop(
         "Some `test` chunks can not be handled: ",
         paste(rmd_test[["label"]][!is.na(rmd_test[["file_name"]])],
-              collapse  = ", "),
+          collapse = ", "
+        ),
         ". Please associate these `test` chunks with a `function` chunk, ",
         "under a section title or with a `filename='mytestfile.R'` chunk option."
       )
@@ -426,9 +436,10 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
 
     # Filter if code is still empty after code grouped
     rmd_test[["is_empty"]] <- lapply(
-      rmd_test[["code"]], function(x) grepl("^\\s*$", paste(x, collapse = ""))) %>%
+      rmd_test[["code"]], function(x) grepl("^\\s*$", paste(x, collapse = ""))
+    ) %>%
       unlist()
-    rmd_test <- rmd_test[!rmd_test[["is_empty"]],]
+    rmd_test <- rmd_test[!rmd_test[["is_empty"]], ]
 
     if (nrow(rmd_test) != 0) {
       # Add directory
@@ -452,7 +463,8 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
 
       out <- unlist(lapply(
         seq_len(nrow(rmd_test)),
-        function(x) parse_test(rmd_test[x, ], pkg, relative_flat_file)))
+        function(x) parse_test(rmd_test[x, ], pkg, relative_flat_file)
+      ))
     }
   }
 }
@@ -490,10 +502,10 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
     ), collapse = "|")
   vignette_tbl <- parsed_tbl[
     !(grepl(not_in_vignette, parsed_tbl[["label"]]) |
-        grepl("rmd_yaml_list", parsed_tbl[["type"]])),
+      grepl("rmd_yaml_list", parsed_tbl[["type"]])),
   ]
 
-  flat_yaml <- parsed_tbl[grepl("rmd_yaml_list", parsed_tbl[["type"]]),]
+  flat_yaml <- parsed_tbl[grepl("rmd_yaml_list", parsed_tbl[["type"]]), ]
   # Make chunk names unique
   # vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])] <-
   #   gsub("unnamed-", "parsermd-", vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])])
@@ -532,9 +544,11 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
   usethis::use_git_ignore("inst/doc")
 
   # Vignette head
-  head <- create_vignette_head(pkg = pkg,
-                               vignette_name = vignette_name,
-                               yaml_options = yaml_options)
+  head <- create_vignette_head(
+    pkg = pkg,
+    vignette_name = vignette_name,
+    yaml_options = yaml_options
+  )
 
   # Write vignette
   lines <- c(
@@ -545,7 +559,7 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
       relative_flat_file
     )
   )
-  if ( nrow(vignette_tbl) != 0 ) {
+  if (nrow(vignette_tbl) != 0) {
     lines <- c(
       lines,
       parsermd::as_document(vignette_tbl)
@@ -554,6 +568,7 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
 
   write_utf8(path = vignette_file, lines = lines)
 
-  if (isTRUE(open_vignette) & interactive()) {usethis::edit_file(vignette_file)}
+  if (isTRUE(open_vignette) & interactive()) {
+    usethis::edit_file(vignette_file)
+  }
 }
-

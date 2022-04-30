@@ -18,24 +18,23 @@
 #' @examples
 #' my_path <- tempfile("mypkg")
 #' create_fusen(path = my_path, template = "full", open = FALSE)
-create_fusen <- function(
-  path,
-  template = c("full", "minimal", "teaching"),
-  open = TRUE,
-  overwrite = FALSE,
-  with_git = FALSE
-) {
-
+create_fusen <- function(path,
+                         template = c("full", "minimal", "teaching"),
+                         open = TRUE,
+                         overwrite = FALSE,
+                         with_git = FALSE) {
   path <- normalizePath(path, mustWork = FALSE)
   template <- match.arg(template)
 
   project_name <- get_pkg_name(pkg = path)
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
-    stop("Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
-         "` as a package name should only contain letters, numbers and dots.")
+    stop(
+      "Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
+      "` as a package name should only contain letters, numbers and dots."
+    )
   }
 
-  if (dir.exists(path)){
+  if (dir.exists(path)) {
     cli::cli_alert_warning(
       paste(
         "The path:", path, "already exists."
@@ -45,13 +44,16 @@ create_fusen <- function(
       cli::cli_alert_danger(
         paste(
           "Aborting fusen project creation.",
-          "Set `create_fusen(overwrite = TRUE)` to avoid a stop."))
+          "Set `create_fusen(overwrite = TRUE)` to avoid a stop."
+        )
+      )
       stop("Could not create fusen project", call. = FALSE)
     } else {
       cli::cli_alert_warning(
         paste(
           "You set `create_fusen(overwrite = TRUE)`.",
-          "Some files may be overwritten in 'dev/'.")
+          "Some files may be overwritten in 'dev/'."
+        )
       )
     }
   } else {
@@ -89,10 +91,10 @@ create_fusen <- function(
 
   ## Open new project if function is called from Rstudio console
   ## Rstudio project wizard will spontaneously open the new project
-  if (isTRUE(open) && #!rstudio_project_wizard_context &&
-      requireNamespace("rstudioapi") &&
-      rstudioapi::isAvailable() &&
-      rstudioapi::hasFun("openProject")) {
+  if (isTRUE(open) && # !rstudio_project_wizard_context &&
+    requireNamespace("rstudioapi") &&
+    rstudioapi::isAvailable() &&
+    rstudioapi::hasFun("openProject")) {
     cli::cat_rule("Opening new fusen project")
     rstudioapi::openProject(path = path)
     cli::cli_alert_success("Opened new fusen project")
@@ -106,18 +108,13 @@ create_fusen <- function(
 
 #' This will only work with Rstudio Project Wizard
 #' @noRd
-create_fusen_gui <- function(
-  path,
-  template,
-  with_git
-) {
-
+create_fusen_gui <- function(path,
+                             template,
+                             with_git) {
   create_fusen(
     path = file.path(getwd(), path),
     template = template,
     open = FALSE, # Project opening is done spontaneously by Rstudio Project Wizard
     with_git = with_git
   )
-
 }
-

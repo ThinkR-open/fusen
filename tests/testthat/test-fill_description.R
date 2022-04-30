@@ -4,7 +4,6 @@ dir.create(dummypackage)
 pkg_name <- basename(dummypackage)
 
 test_that("fill_description adds DESCRIPTION", {
-
   expect_message(
     fill_description(
       pkg = dummypackage,
@@ -29,7 +28,9 @@ test_that("fill_description adds DESCRIPTION", {
     expect_message(
       fill_description(
         pkg = dummypackage, fields = list(Title = "Second launch")
-      )))
+      )
+    )
+  )
 
   lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
   expect_true(lines[1] == paste0("Package: ", pkg_name))
@@ -46,25 +47,32 @@ test_that("no dot description fails", {
       pkg = dummypackage,
       fields = list(
         Title = "Build A Package From Rmarkdown file",
-        Description = paste("Use Rmd First method to build your package.",
-                            "Start your package with documentation.",
-                            "Everything can be set from a Rmarkdown file in your project"),
+        Description = paste(
+          "Use Rmd First method to build your package.",
+          "Start your package with documentation.",
+          "Everything can be set from a Rmarkdown file in your project"
+        ),
         `Authors@R` = c(
-          person("Sebastien", "Rochette", email = "sebastien@thinkr.fr",
-                 role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+          person("Sebastien", "Rochette",
+            email = "sebastien@thinkr.fr",
+            role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")
+          ),
           person(given = "ThinkR", role = "cph")
         )
       ), overwrite = TRUE
     ),
-    "A dot was added.")
+    "A dot was added."
+  )
 
   lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
   # Description with dot
   expect_equal(
     lines[4],
-    paste("Description: Use Rmd First method to build your package.",
-          "Start your package with documentation.",
-          "Everything can be set from a Rmarkdown file in your project.")
+    paste(
+      "Description: Use Rmd First method to build your package.",
+      "Start your package with documentation.",
+      "Everything can be set from a Rmarkdown file in your project."
+    )
   )
 })
 
@@ -76,18 +84,18 @@ dummypackage <- tempfile(pattern = "dummy")
 dir.create(dummypackage)
 
 test_that("curly bracket in title and description works", {
-# Works with {} in text although not allowed by CRAN
-expect_message(fill_description(
-  pkg = dummypackage,
-  fields = list(
-    Title = "Build a package with {fusen}",
-    Description = "Use Rmarkdown First method to build your package with {fusen}.",
-    `Authors@R` = c(
-      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
-      person(given = "ThinkR", role = "cph")
+  # Works with {} in text although not allowed by CRAN
+  expect_message(fill_description(
+    pkg = dummypackage,
+    fields = list(
+      Title = "Build a package with {fusen}",
+      Description = "Use Rmarkdown First method to build your package with {fusen}.",
+      `Authors@R` = c(
+        person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+        person(given = "ThinkR", role = "cph")
+      )
     )
-  )
-), "Title Case")
+  ), "Title Case")
 })
 
 # Delete dummy package

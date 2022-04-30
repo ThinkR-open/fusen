@@ -3,14 +3,15 @@
 addin_add_template <- function() {
   if (
     requireNamespace("rstudioapi") &&
-    rstudioapi::isAvailable()
+      rstudioapi::isAvailable()
   ) {
     # This will allow to interactively have the function name
     if (rstudioapi::hasFun("showPrompt")) {
       template <- rstudioapi::showPrompt(
         title = "Enter the flat template type",
         message = "e.g. add = additional; min = minimal;",
-        default = "additional")
+        default = "additional"
+      )
     } else {
       template <- readline("Enter the flat template type: ")
     }
@@ -18,7 +19,8 @@ addin_add_template <- function() {
       flat_name <- rstudioapi::showPrompt(
         title = "Choose the function name",
         message = "Name is used to pre-fill the template",
-        default = "my_fun")
+        default = "my_fun"
+      )
     } else {
       flat_name <- readline("Enter the function name: ")
     }
