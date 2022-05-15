@@ -270,9 +270,3 @@ usethis::use_version(which = c("patch", "minor", "major", "dev")[1])
 
 # Verify you're ready for release, and release
 devtools::release()
-
-# TODO #############
-# - [x] Find which version of yaml fails the special character
-# - [x] Change for yaml.load or remove éè
-# - [x] Add autosave all files when inflate (see golem)
-# - Add rdname grouping ?
