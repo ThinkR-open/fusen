@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.3.0.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.0.9000</span>
       </span>
     </div>
 
@@ -116,18 +116,22 @@ personalized defaults using package options</p></dd>
 <span class="r-in">  pkg <span class="op">=</span> <span class="va">dummypackage</span>,</span>
 <span class="r-in">  fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span class="r-in">    Title <span class="op">=</span> <span class="st">"Build A Package From Rmarkdown file"</span>,</span>
-<span class="r-in">    Description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Use Rmd First method to build your package."</span>,</span>
-<span class="r-in">                        <span class="st">"Start your package with documentation."</span>,</span>
-<span class="r-in">                        <span class="st">"Everything can be set from a Rmarkdown file in your project."</span><span class="op">)</span>,</span>
+<span class="r-in">    Description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
+<span class="r-in">      <span class="st">"Use Rmd First method to build your package."</span>,</span>
+<span class="r-in">      <span class="st">"Start your package with documentation."</span>,</span>
+<span class="r-in">      <span class="st">"Everything can be set from a Rmarkdown file in your project."</span></span>
+<span class="r-in">    <span class="op">)</span>,</span>
 <span class="r-in">    `Authors@R` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Sebastien"</span>, <span class="st">"Rochette"</span>, email <span class="op">=</span> <span class="st">"sebastien@thinkr.fr"</span>,</span>
-<span class="r-in">             role <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"aut"</span>, <span class="st">"cre"</span><span class="op">)</span>, comment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ORCID <span class="op">=</span> <span class="st">"0000-0002-1565-9313"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Sebastien"</span>, <span class="st">"Rochette"</span>,</span>
+<span class="r-in">        email <span class="op">=</span> <span class="st">"sebastien@thinkr.fr"</span>,</span>
+<span class="r-in">        role <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"aut"</span>, <span class="st">"cre"</span><span class="op">)</span>, comment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ORCID <span class="op">=</span> <span class="st">"0000-0002-1565-9313"</span><span class="op">)</span></span>
+<span class="r-in">      <span class="op">)</span>,</span>
 <span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span>given <span class="op">=</span> <span class="st">"ThinkR"</span>, role <span class="op">=</span> <span class="st">"cph"</span><span class="op">)</span></span>
 <span class="r-in">    <span class="op">)</span></span>
 <span class="r-in">  <span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Title was modified to 'Title Case'.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpIsrHdS/dummypackage36d8182e468b/DESCRIPTION"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp8W2tfr/dummypackage386d73b53f09/DESCRIPTION"</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># Delete dummy package</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
