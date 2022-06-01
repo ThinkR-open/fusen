@@ -176,7 +176,7 @@ inflate <- function(pkg = ".", flat_file,
       file.remove(vignette_path)
     } else {
       stop(
-        "Vignette already exists, anwser 'yes' to the previous question",
+        "Vignette already exists, answer 'yes' to the previous question",
         " or set inflate(..., overwrite = 'yes') to always overwrite."
       )
     }
