@@ -94,8 +94,10 @@ inflate <- function(pkg = ".", flat_file,
     current_file <- rstudioapi::documentPath()
     if (!is.null(current_file) && grepl("^flat.*[.]Rmd$", basename(current_file))) {
       if (overwrite == "ask") {
-        sure <- paste("The current file will be inflated:\n",
-                      current_file, ".\n", "Are you sure this is what you planned? (y/n)\n")
+        sure <- paste0("You did not specify parameter 'flat_file'. The current file will be inflated:\n",
+                      current_file, ".\n",
+                      "With vignette name: ", vignette_name, "\n",
+                      "Are you sure this is what you planned? (y/n)\n")
         do_it <- readline(sure) == "y"
       }
       else {
