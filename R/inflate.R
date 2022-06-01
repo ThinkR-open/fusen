@@ -89,25 +89,21 @@ inflate <- function(pkg = ".", flat_file,
 
 
   # If flat_file empty
-  if (
-    requireNamespace("rstudioapi") &&
-      rstudioapi::isAvailable() &&
-      rstudioapi::hasFun("documentPath")
-  ) {
+  if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
+      rstudioapi::hasFun("documentPath") ) {
     current_file <- rstudioapi::documentPath()
-    if (missing(flat_file) & grepl("^flat.*[.]Rmd$", basename(current_file))) {
+    if (!is.null(current_file) && grepl("^flat.*[.]Rmd$", basename(current_file))) {
       if (overwrite == "ask") {
-        sure <- paste(
-          "The current file will be inflated:\n",
-          current_file, ".\n",
-          "Are you sure this is what you planned? (y/n)\n"
-        )
+        sure <- paste("The current file will be inflated:\n",
+                      current_file, ".\n", "Are you sure this is what you planned? (y/n)\n")
         do_it <- readline(sure) == "y"
-      } else {
+      }
+      else {
         do_it <- isTRUE(overwrite)
       }
       if (do_it) {
-        message("The current file will be inflated: ", current_file)
+        message("The current file will be inflated: ",
+                current_file)
         flat_file <- current_file
       }
     }
