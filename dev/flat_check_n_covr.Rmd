@@ -1,0 +1,49 @@
+---
+title: "flat_check_n_covr.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# My function
+
+```{r function-check_n_covr}
+#' check_n_covr Title
+#'
+#' @return 1
+#' @export
+#'
+#' @examples
+check_n_covr <- function() {
+  res <- devtools::check(args = c("--no-tests"))
+  print(res)
+  covr::package_coverage(type = "tests", quiet = TRUE)
+}
+```
+
+```{r examples-check_n_covr}
+check_n_covr()
+```
+
+```{r tests-check_n_covr}
+test_that("check_n_covr works", {
+
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_check_n_covr.Rmd", vignette_name = "Go further")
+```
+
