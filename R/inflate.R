@@ -183,10 +183,10 @@ inflate <- function(pkg = ".", flat_file,
   }
 
   # Create NAMESPACE
-  namespace_file <- file.path(pkg, "NAMESPACE")
-  if (!file.exists(namespace_file)) {
-    roxygen2::roxygenise(pkg)
-  }
+  # namespace_file <- file.path(pkg, "NAMESPACE")
+  # if (!file.exists(namespace_file)) {
+  #   roxygen2::roxygenise(pkg)
+  # }
 
   parsed_flat_file <- parse_rmd(flat_file)
   parsed_tbl <- as_tibble(parsed_flat_file)
