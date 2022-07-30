@@ -24,12 +24,14 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
 #' @param overwrite Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 #' Whether to overwrite vignette and functions if already exists.
+#' @param config_file Path to configuration file for 'fusen'
 #' @param ... Arguments passed to `rcmdcheck::rcmdcheck()`.
 #'     For example, you can do `inflate(check = TRUE, quiet = TRUE)`, where `quiet` is
 #'     passed to `rcmdcheck::rcmdcheck()`.
 #'
 #' @importFrom parsermd parse_rmd as_tibble
 #' @importFrom utils getFromNamespace
+#'
 #' @return
 #' Package structure. Return path to current package.
 #' @export
@@ -60,7 +62,8 @@ inflate <- function(pkg = ".", flat_file,
                     vignette_name = "Get started",
                     open_vignette = TRUE,
                     check = TRUE, document = TRUE,
-                    overwrite = "ask", ...) {
+                    overwrite = "ask",
+                    ...) {
   if (!is.null(list(...)[["name"]])) {
     warning(paste0(
       "The `name` argument to `inflate()` is deprecated since {fusen} version 0.3.0,",
@@ -86,7 +89,6 @@ inflate <- function(pkg = ".", flat_file,
   ) {
     rstudioapi::documentSaveAll()
   }
-
 
   # If flat_file empty
   if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
@@ -227,23 +229,33 @@ inflate <- function(pkg = ".", flat_file,
 
   # Get functions and create R and tests files ----s
   if (!is.null(fun_code)) {
-    create_functions_all(parsed_tbl, fun_code, pkg, relative_flat_file)
+    script_files <- create_functions_all(parsed_tbl, fun_code, pkg, relative_flat_file)
   } else {
     message("No chunks named 'function-xx' or 'fun-xx' were found in the Rmarkdown file: ", flat_file)
+    script_files <- tibble::tibble(type = character(0), files = character(0))
   }
 
   # Create vignette ----
   if (!(is.null(vignette_name) || is.na(vignette_name) || vignette_name == "")) {
-    create_vignette(
+    vignette_file <- create_vignette(
       parsed_tbl = parsed_tbl,
       pkg = pkg,
       relative_flat_file = relative_flat_file,
       vignette_name = vignette_name,
       open_vignette = open_vignette
     )
+
+    all_files <- rbind(
+      script_files,
+      tibble::tibble(type = "vignette", files = vignette_file)
+    )
   } else {
+    all_files <- script_files
     message("`vignette_name` is empty: no vignette created")
   }
+
+  # config file store ----
+  df_to_config(flat_file_path, all_files)
 
   # Run attachment
   if (isTRUE(document)) {
@@ -322,11 +334,20 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
       dir.create(R_dir)
     }
 
-    create_r_files(fun_code, pkg, relative_flat_file)
+   r_files <- create_r_files(fun_code, pkg, relative_flat_file)
   }
 
   # If there are tests
-  create_tests_files(parsed_tbl, pkg, relative_flat_file)
+  test_files <- create_tests_files(parsed_tbl, pkg, relative_flat_file)
+
+  script_files <- tibble::tibble(
+    type =
+      c(rep("R", length(r_files)),
+        rep("test", length(test_files))),
+    files = c(r_files, test_files)
+  )
+
+  return(script_files)
 }
 
 #' Get function names ----
@@ -397,6 +418,9 @@ create_r_files <- function(fun_code, pkg, relative_flat_file) {
     write_utf8(path = r_file, lines = lines)
     r_file
   })
+
+  r_files <- unlist(r_files)
+  return(r_files)
 }
 
 #' Check if there are unit tests ----
@@ -463,8 +487,11 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
         seq_len(nrow(rmd_test)),
         function(x) parse_test(rmd_test[x, ], pkg, relative_flat_file)
       ))
+
+      return(out)
     }
   }
+  return(NULL)
 }
 
 #' Create vignette
@@ -569,4 +596,6 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
   if (isTRUE(open_vignette) & interactive()) {
     usethis::edit_file(vignette_file)
   }
+
+  return(vignette_file)
 }
