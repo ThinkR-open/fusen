@@ -235,7 +235,7 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
   )
   write_utf8(path = test_file, lines = lines)
 
-  return(file_name)
+  return(test_file)
 }
 
 #' Add examples in function code
@@ -540,3 +540,4 @@ asciify_name <- function(name, to_pkg = FALSE) {
 #' A flavor of normalizePath() that unixifies all its output
 #' @noRd
 normalize_path_winslash <- function(...) normalizePath(..., winslash = "/")
+

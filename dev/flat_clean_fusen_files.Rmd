@@ -1,0 +1,272 @@
+---
+title: "flat_df_to_config.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+## Protect existing R, tests and vignettes files
+
+`df_to_config()` allows to add your own list of files that you want to `keep` in your package, despite not beeing created with a flat file.
+
+```{r function-df_to_config, filename="clean_fusen_files"}
+#' Add a tibble of files and types to the 'fusen' config file
+#' @param df_files A dataframe with 'type' and 'path' columns
+#' @param flat_file_path
+#'
+#' @return Config file path.
+#' Side effect: create a yaml config file.
+#'
+#' @details
+#' - Only types: "R", "test", "vignette" are accepted.
+#' - All `path` should exist.
+#' - Change path to config file with `options(fusen.config_file = "dev/config_fusen.yaml")`
+#'
+df_to_config <- function(df_files, flat_file_path = "keep") {
+
+  # Verify df_files
+  if (!is.data.frame(df_files)) {
+    stop("df_files should be a dataframe with 'type' and 'path' columns.")
+  }
+  if (!all(c("type", "path") %in% names(df_files))) {
+    stop("df_files should contains two columns named: 'type' and 'path'")
+  }
+  if (!all(grepl("^R$|^r$|^test$|^tests$|^vignette$|^vignettes$", df_files[["type"]]))) {
+    stop("Only types 'R', 'test' or 'vignette' are allowed")
+  }
+  all_exists <- file.exists(df_files[["path"]])
+  if (!all(all_exists)) {
+    stop(paste("Some files in df_files do not exist: ", 
+               paste(
+                 paste0(df_files[["type"]][!all_exists], ": ",
+                       df_files[["path"]][!all_exists]), 
+                 collapse = ", ")))
+  }
+  
+  if (is.null(getOption("fusen.config_file"))) {
+    config_file <- "dev/config_fusen.yaml"
+  } else {
+    config_file <- getOption("fusen.config_file")
+  }
+
+  # browser()
+  if (file.exists(config_file)) {
+    complete_yaml <- yaml::read_yaml(config_file)
+    all_keep_before <- complete_yaml[[basename(flat_file_path)]]
+    if (!is.null(complete_yaml)) {
+      cli::cli_alert_info("This files group already existed, it has been overwritten.")
+      complete_yaml[[basename(flat_file_path)]] <- NULL
+    }
+  } else {
+    complete_yaml <- list()
+  }
+
+  this_group_list <- list(
+    flat = list(
+      path = flat_file_path,
+      R = c(df_files$path[grepl("^R$|^r$", df_files$type)]),
+      tests = c(df_files$path[grepl("^test$|^tests$", df_files$type)]),
+      vignettes = c(df_files$path[grepl("^vignette$|^vignettes$", df_files$type)])
+    )
+  ) %>% setNames(basename(flat_file_path))
+
+  # Combine with complete_yaml
+  complete_yaml <- c(complete_yaml, this_group_list)
+  complete_yaml <- complete_yaml[sort(names(complete_yaml))]
+  yaml::write_yaml(complete_yaml, file = config_file)
+  # rstudioapi::navigateToFile(config_file)
+
+  return(config_file)
+}
+
+```
+
+```{r examples-df_to_config}
+# Add your own list of files to "keep", 
+# if they are not in a flat file.
+# Otherwise, they may be deleted with your next `inflate()`
+my_files_to_protect <- tibble::tribble(
+  ~type, ~path,
+  "R", "R/zaza.R",
+  "R", "R/zozo.R",
+  "test", "tests/testthat/test-zaza.R",
+  "vignette", "vignettes/my-zaza-vignette.Rmd"
+)
+
+# \dontrun{
+df_to_config(my_files_to_protect)
+# }
+
+```
+
+```{r tests-df_to_config}
+# Test df_to_config with custom config file path ----
+config_file_path <- tempfile(fileext = ".yaml")
+
+test_that("df_to_config fails when appropriate", {
+  withr::with_options(list(fusen.config_file = config_file_path), {
+    all_files <- tibble::tribble(
+      ~type, ~files,
+      "R", "zaza.R",
+      "R", "zozo.R",
+      "test", "test-zaza.R"
+    )
+    
+    expect_error(df_to_config(all_files, flat_file_path = "keep"),
+                 "df_files should contains two columns named: 'type' and 'path'")
+    
+    all_files <- tibble::tribble(
+      ~type, ~path,
+      "R", "zaza.R",
+      "R", "zozo.R",
+      "test", "test-zaza.R"
+    )
+    
+    expect_error(
+      df_to_config(all_files),
+      "Some files in df_files do not exist:  R: zaza.R, R: zozo.R, test: test-zaza.R")
+  })
+})
+
+test_that("df_to_config works", {
+  withr::with_options(list(fusen.config_file = config_file_path), {
+    # Create files, even empty
+    dir_tmp <- tempfile()
+    dir.create(dir_tmp)
+    file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
+    # Use full path
+    all_files <- tibble::tribble(
+      ~type, ~path,
+      "R", file.path(dir_tmp, "zaza.R"),
+      "R", file.path(dir_tmp, "zozo.R"),
+      "test", file.path(dir_tmp, "test-zaza.R")
+    )
+    
+    config_file_out <- df_to_config(all_files)
+  })
+  
+  expect_equal(config_file_out, config_file_path)
+  all_keep <- yaml::read_yaml(config_file_out)
+  expect_equal(names(all_keep), "keep")
+  expect_equal(names(all_keep$keep), c("path", "R", "tests", "vignettes"))
+  expect_equal(all_keep$keep$path, c("keep"))
+  expect_equal(basename(all_keep$keep$R), c("zaza.R", "zozo.R"))
+  expect_equal(basename(all_keep$keep$tests), c("test-zaza.R"))
+  expect_equal(all_keep$keep$vignettes, list())
+})
+
+# Second pass
+all_files <- tibble::tribble(
+  ~type, ~path,
+  "r", "tata.R",
+  "R", "toto.R",
+  "tests", "test-tata.R",
+  "vignettes", "tata_vignette.Rmd"
+  )
+
+withr::with_options(list(fusen.config_file = config_file_path), {
+  debugonce(df_to_config)
+  config_file <- df_to_config(all_files) # "keep" is default
+})
+```
+
+## List files that are not registered in config
+    
+`not_registered_files()` list files that are not already registered in the yaml config file.
+
+```{r function-not_registered_files, filename="clean_fusen_files"}
+#' Title
+#' 
+#' Description
+#' 
+#' @return
+#' 
+#' @export
+not_registered_files <- function(){
+   
+  # return a `dput()` to allow to add to `df_to_config()`
+  dput()
+}
+```
+  
+```{r example-not_registered_files}
+not_registered_files()
+```
+  
+```{r tests-not_registered_files}
+test_that("not_registered_files works", {
+  expect_true(inherits(not_registered_files, "function")) 
+})
+```
+  
+# clean_fusen_files
+    
+```{r function-clean_fusen_files, filename="clean_fusen_files"}
+#' Title
+#' 
+#' Description
+#' 
+#' @return
+#' 
+#' @export
+clean_fusen_files <- function(){
+    
+}
+```
+  
+```{r example-clean_fusen_files}
+clean_fusen_files()
+```
+  
+```{r tests-clean_fusen_files}
+
+# Test full ----
+# Change options(fusen.config_file = "dev/config_fusen.yaml")
+dummypackage <- tempfile("clean")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+# Detect all files created ----
+usethis::with_project(dummypackage, {
+  browser()
+
+  # Create empty config file
+
+  # Inflate once
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  debugonce(inflate)
+
+
+})
+
+
+
+```
+  
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_clean_fusen_files.Rmd", vignette_name = "Clean {fusen} files")
+```
+
