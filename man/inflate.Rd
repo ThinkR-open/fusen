@@ -35,6 +35,8 @@ Whether to overwrite vignette and functions if already exists.}
 \item{...}{Arguments passed to \code{rcmdcheck::rcmdcheck()}.
 For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is
 passed to \code{rcmdcheck::rcmdcheck()}.}
+
+\item{config_file}{Path to configuration file for 'fusen'}
 }
 \value{
 Package structure. Return path to current package.

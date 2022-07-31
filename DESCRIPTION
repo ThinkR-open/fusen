@@ -33,7 +33,8 @@ Imports:
     tidyr,
     tools,
     usethis (>= 2.0.0),
-    utils
+    utils,
+    yaml
 Suggests: 
     knitr,
     pkgload,
@@ -49,4 +50,4 @@ Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
