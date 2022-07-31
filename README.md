@@ -216,7 +216,7 @@ function is at the same place.
 -   How to store multiple functions in a unique R file ?
 -   How to read dataset that I usually put in “tests/testthat/” for my
     unit tests?
--   Can I load all functions of th current flat file during development
+-   Can I load all functions of the current flat file during development
     without having to `inflate()`?
 -   Can I inflate a Quarto qmd file?
 
