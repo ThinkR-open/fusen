@@ -255,7 +255,7 @@ inflate <- function(pkg = ".", flat_file,
   }
 
   # config file store ----
-  # df_to_config(flat_file_path, all_files)
+  # df_to_config(df_files = all_files, flat_file_path = flat_file_path)
 
   # Run attachment
   if (isTRUE(document)) {

@@ -16,12 +16,15 @@ pkgload::load_all(export_all = FALSE)
 
 ## Protect existing R, tests and vignettes files
 
-`df_to_config()` allows to add your own list of files that you want to `keep` in your package, despite not beeing created with a flat file.
+`df_to_config()` allows to add your own list of files that you want to `keep` in your package, despite not beeing created with a flat file.  
+This is important if you started to develop without {fusen}, and start using a flat file from now on, so that {fusen} does not delete your existing files.
 
 ```{r function-df_to_config, filename="clean_fusen_files"}
 #' Add a tibble of files and types to the 'fusen' config file
 #' @param df_files A dataframe with 'type' and 'path' columns
 #' @param flat_file_path
+#' 
+#' @importFrom stats setNames
 #'
 #' @return Config file path.
 #' Side effect: create a yaml config file.
@@ -58,6 +61,10 @@ df_to_config <- function(df_files, flat_file_path = "keep") {
     config_file <- getOption("fusen.config_file")
   }
 
+  # TODO Separate function for a unique df
+  # TODO Run it on multiple 'flat_file_path', if there is column 'origin'
+  # If there is no 'origin', then fill it with "keep"
+  
   # browser()
   if (file.exists(config_file)) {
     complete_yaml <- yaml::read_yaml(config_file)
@@ -68,6 +75,7 @@ df_to_config <- function(df_files, flat_file_path = "keep") {
     }
   } else {
     complete_yaml <- list()
+    all_keep_before <- NULL
   }
 
   this_group_list <- list(
@@ -79,18 +87,51 @@ df_to_config <- function(df_files, flat_file_path = "keep") {
     )
   ) %>% setNames(basename(flat_file_path))
 
+  # All these will be deleted
+  
+  
+  
+  files_list_to_vector <- function(list_of_files) {
+    lapply(seq_along(list_of_files), function(x) {
+      if (length(list_of_files[[x]]) != 0) {
+        paste(names(list_of_files[x]), list_of_files[[x]], sep = ": ")
+      }
+    }) %>% unlist()
+  }
+  
+  # Those removed
+  those_removed <- setdiff(
+    all_keep_before,
+    this_group_list[[1]]
+  )
+  those_removed_vec <- files_list_to_vector(those_removed)
+  those_added <- setdiff(
+    this_group_list[[1]],
+    all_keep_before
+  )
+  those_added_vec <- files_list_to_vector(those_added)
+  
+
+    
   # Combine with complete_yaml
   complete_yaml <- c(complete_yaml, this_group_list)
   complete_yaml <- complete_yaml[sort(names(complete_yaml))]
   yaml::write_yaml(complete_yaml, file = config_file)
   # rstudioapi::navigateToFile(config_file)
-
+  
+  if (!is.null(those_removed_vec) || length(those_removed_vec) != 0) {
+    silent <- lapply(paste(those_removed_vec, "was removed from the config file"), cli::cli_alert_warning)
+  }
+  if (!is.null(those_added_vec) || length(those_added_vec) != 0) {
+    silent <- lapply(paste(those_added_vec, "was added to the config file"), cli::cli_alert_success)
+  }
+  
   return(config_file)
 }
 
 ```
 
-```{r examples-df_to_config}
+```{r examples-df_to_config, eval=FALSE}
 # Add your own list of files to "keep", 
 # if they are not in a flat file.
 # Otherwise, they may be deleted with your next `inflate()`
@@ -137,12 +178,14 @@ test_that("df_to_config fails when appropriate", {
   })
 })
 
+# Create files, even empty
+dir_tmp <- tempfile()
+dir.create(dir_tmp)
+file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
+    
 test_that("df_to_config works", {
   withr::with_options(list(fusen.config_file = config_file_path), {
-    # Create files, even empty
-    dir_tmp <- tempfile()
-    dir.create(dir_tmp)
-    file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
+
     # Use full path
     all_files <- tibble::tribble(
       ~type, ~path,
@@ -151,7 +194,7 @@ test_that("df_to_config works", {
       "test", file.path(dir_tmp, "test-zaza.R")
     )
     
-    config_file_out <- df_to_config(all_files)
+   expect_message(config_file_out <- df_to_config(all_files))
   })
   
   expect_equal(config_file_out, config_file_path)
@@ -167,45 +210,154 @@ test_that("df_to_config works", {
 # Second pass
 all_files <- tibble::tribble(
   ~type, ~path,
-  "r", "tata.R",
-  "R", "toto.R",
-  "tests", "test-tata.R",
-  "vignettes", "tata_vignette.Rmd"
-  )
+  "r", file.path(dir_tmp, "tata.R"),
+  "R", file.path(dir_tmp, "toto.R"),
+  "tests", file.path(dir_tmp, "test-tata.R"),
+  "vignettes", file.path(dir_tmp, "tata_vignette.Rmd")
+)
+
+file.create(file.path(dir_tmp, c("tata.R", "toto.R", "test-tata.R", "tata_vignette.Rmd")))
 
 withr::with_options(list(fusen.config_file = config_file_path), {
-  debugonce(df_to_config)
-  config_file <- df_to_config(all_files) # "keep" is default
+  # debugonce(df_to_config)
+  expect_message(config_file <- df_to_config(all_files)) # "keep" is default
 })
+
+# rstudioapi::navigateToFile(config_file)
 ```
 
 ## List files that are not registered in config
     
-`not_registered_files()` list files that are not already registered in the yaml config file.
+{fusen} now registers all files created during `inflate()`. 
+This allows to clean the packages directories in case some functions do not exist anymore and were renamed.  
+However, this also requires to register all existing files if you started your package without {fusen} or with an earlier version of {fusen}.  
+`check_not_registered_files()` shows files that are not already registered in the yaml config file. The output is consistent with what is needed for `df_to_config()` to register them if wanted. 
 
-```{r function-not_registered_files, filename="clean_fusen_files"}
-#' Title
+```{r function-check_not_registered_files, filename="clean_fusen_files"}
+#' Show files that are not already registered in the yaml config file
 #' 
-#' Description
 #' 
+#' @param path Path to package to check for not registered files
+#' @param guess Logical. Guess if the file was inflated by a specific flat file
+#' @param to_csv Logical. Whether to store along the config file, the outputs in a csv for the user to clean it manually
 #' @return
 #' 
 #' @export
-not_registered_files <- function(){
+check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) {
    
+  path <- normalizePath(path)
+  
+    
+  all_r <- list.files(file.path(path, "R"), pattern = "[.]R$|[.]r$", full.names = TRUE)
+  all_test <- list.files(file.path(path, "tests", "testthat"), pattern = "[.]R$|[.]r$", full.names = TRUE)
+  all_vignette <-list.files(file.path(path, "vignettes"), pattern = "[.]Rmd$|[.]rmd$", full.names = TRUE) 
+    
+  res <- data.frame(
+    type = c(rep('R', length(all_r)),
+             rep('test', length(all_test)),
+             rep('vignette', length(all_vignette))
+             ),
+    path = c(
+      all_r, all_test, all_vignette
+    )
+  )
+  
+  if (nrow(res) == 0) {
+    message("There are no files in the package. Did you inflate it once?")
+    return(NULL)
+  }
+  if (isTRUE(guess)) {
+    # List all files
+    res$origin <- unlist(lapply(res$path, guess_flat_origin))
+  } else {
+    res$origin <- "keep"
+  }
+
+  # TODO Are they in the config file already ?
+  # Read config file, and remove those already there
+  # All files without path, are changed for "keep"
+  
+  if (isTRUE(to_csv)) {
+    if (is.null(getOption("fusen.config_file"))) {
+      csv_file <- "dev/config_not_registered.csv"
+    } else {
+      csv_file <- file.path(
+        dirname(getOption("fusen.config_file")),
+        'config_not_registered.csv')
+    }
+    write.csv(res, csv_file)
+    cli::cli_alert_info(paste(
+      "Wrote not registered files in:", csv_file, 
+      "\nKeep only those necessary and run `df_to_config()` on the csv file."))
+  }
   # return a `dput()` to allow to add to `df_to_config()`
-  dput()
+  # dput()
+  return(dput(res))
+}
+
+#' Guess flat file of origin of a script
+#'
+#' @param path Path of the script to test
+guess_flat_origin <- function(path) {
+  lines <- readLines(path)
+
+  guess_path <- sub(".* from\\s*/(.+[.].{1}md).*", "\\1",
+      lines[grep("(G|g)enerated by \\{fusen\\} from", lines)][1]
+  )
+  
+  guess_path <- normalizePath(guess_path, mustWork = FALSE)
+  if (file.exists(guess_path)) {
+    return(guess_path)
+  } else {
+    return("No path or dont exists")
+  }
 }
 ```
   
-```{r example-not_registered_files}
-not_registered_files()
+```{r example-check_not_registered_files}
+check_not_registered_files()
 ```
   
-```{r tests-not_registered_files}
-test_that("not_registered_files works", {
-  expect_true(inherits(not_registered_files, "function")) 
+```{r tests-check_not_registered_files}
+dummypackage <- tempfile("clean")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  browser()
+  
+  test_that("check_not_registered_files returns message if empty", {
+    expect_true(inherits(check_not_registered_files, "function")) 
+    
+    debugonce(check_not_registered_files)
+    expect_message(check_not_registered_files(), "There are no files in the package")
+  })
+  
+  # Inflate once
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+  
+  guessed_path <- guess_flat_origin(file.path(dummypackage, "R", "my_median.R"))
+  expect_equal(guessed_path, file.path(dummypackage, "dev", "flat_full.Rmd"))
+  
+  guessed_path <- guess_flat_origin(file.path(dummypackage, "dev", "0-dev_history.Rmd"))
+  expect_equal(guessed_path, "No path or dont exists")
+  
+  debugonce(check_not_registered_files)
+  out <- check_not_registered_files()
+  
 })
+
+
 ```
   
 # clean_fusen_files
@@ -267,6 +419,7 @@ usethis::with_project(dummypackage, {
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(flat_file = "dev/flat_clean_fusen_files.Rmd", vignette_name = "Clean {fusen} files")
+fusen::inflate(flat_file = "dev/flat_clean_fusen_files.Rmd", vignette_name = "Clean {fusen} files", check = FALSE)
+rstudioapi::navigateToFile("dev/dev_history.R", line = 105)
 ```
 
