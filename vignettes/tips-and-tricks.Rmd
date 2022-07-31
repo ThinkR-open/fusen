@@ -365,3 +365,10 @@ You will need to write two ways of reading the data:
 my_file <- read.csv("my_file.csv")
 ```
 
+# Can I inflate a Quarto qmd file?
+
+Yes you can. As long as what you include in your qmd flat file is good for a R package vignette, you can use the qmd format.  
+This will not really change the output of anything as the flat file is not meant to be rendered.  
+But why not!?
+
+So, you can add a flat file a change it to ".qmd" if it suits you.  

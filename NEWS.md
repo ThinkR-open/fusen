@@ -1,5 +1,9 @@
 # fusen (development version)
 
+## New features
+
+- Allow to `inflate()` a Quarto ".qmd" flat file (#160)
+
 # fusen 0.4.0
 
 ## New features
