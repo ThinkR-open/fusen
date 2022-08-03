@@ -2,6 +2,7 @@
 
 ## New features
 
+- Load all `function` chunks of the flat file currently opened with `load_flat_functions()` (Like a `load_all()` for a flat file)
 - Allow to `inflate()` a Quarto ".qmd" flat file (#160)
 
 # fusen 0.4.0

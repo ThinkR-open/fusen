@@ -169,6 +169,7 @@ After that, you need to move your functions and scripts in the correct place. Le
 - How to Inflate multiple flat files ?
 - How to store multiple functions in a unique R file ?
 - How to read dataset that I usually put in “tests/testthat/” for my unit tests? 
+- Can I load all functions of th current flat file during development without having to `inflate()`?
 - Can I inflate a Quarto qmd file?
 
 => See vignette Tips and Tricks: https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html

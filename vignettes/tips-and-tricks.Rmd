@@ -365,6 +365,25 @@ You will need to write two ways of reading the data:
 my_file <- read.csv("my_file.csv")
 ```
 
+# Can I load all functions of th current flat file during development without having to `inflate()`?
+
+Yes. You can run `function` chunks only in the currently opened flat file with `load_flat_functions()`.  
+With long flat file currently in developement, and before `inflate()`, it is sometimes difficult to run all chunks needed after multiple modifications. This can also be useful when you start again your development the day after.
+
+`load_flat_functions()` is like a `load_all()` for a flat file, although it does not account for dependencies.
+
+In the console, run:  
+
+```r
+fusen::load_flat_functions()
+```
+
+You can also run `function` chunks from a specific flat file with:
+
+```r
+fusen::load_flat_functions(flat_file = "dev/flat_full.Rmd")
+```
+
 # Can I inflate a Quarto qmd file?
 
 Yes you can. As long as what you include in your qmd flat file is good for a R package vignette, you can use the qmd format.  
