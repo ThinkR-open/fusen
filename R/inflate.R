@@ -335,6 +335,8 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
     }
 
    r_files <- create_r_files(fun_code, pkg, relative_flat_file)
+  } else {
+    r_files <- character(0)
   }
 
   # If there are tests
