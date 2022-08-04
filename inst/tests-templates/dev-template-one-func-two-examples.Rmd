@@ -1,0 +1,38 @@
+---
+title: "dev_history.Rmd for working package"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+# Two examples for one function
+
+```{r fun-norox2}
+#' @export
+my_twoexamples <- function(x) {
+  x + 10
+}
+```
+
+```{r examples-norox2, eval=FALSE}
+#' \dontrun{
+my_twoexamples(10)
+#' }
+```
+
+```{r examples2-norox2, eval=TRUE}
+my_twoexamples(20)
+```
+
+# There can be development actions
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/dev_history.Rmd")
+```
+

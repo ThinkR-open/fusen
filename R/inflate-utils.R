@@ -288,13 +288,20 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]), ]
 
   if (nrow(rmd_ex) != 0) {
+    # Group rmd_ex for the same function
+    rmd_ex$rmd_ex_code <- lapply(1:nrow(rmd_ex), function(x)
+      rmd_node_code(rmd_ex[x, ][["ast"]]))
+    rmd_ex_group <- group_code(df = rmd_ex, group_col = "fun_name", code_col = "rmd_ex_code")
+
+    # Get example code
     example_code <- lapply(
-      seq_len(nrow(rmd_ex)),
+      seq_len(nrow(rmd_ex_group)),
       function(x) {
         tibble::tibble(
-          fun_name = rmd_ex[x, ][["fun_name"]],
+          fun_name = rmd_ex_group[x, ][["fun_name"]],
           # example_chunk = list(paste("#'", rmd_get_chunk(rmd_ex[x, ])$code))
-          example_chunk = list(paste("#'", unlist(rmd_node_code(rmd_ex[x, ][["ast"]]))))
+          # example_chunk = list(paste("#'", unlist(rmd_node_code(rmd_ex[x, ][["ast"]]))))
+          example_chunk = list(paste("#'", unlist(rmd_ex_group[x, ][["rmd_ex_code"]])))
         )
       }
     ) %>% do.call("rbind", .)
