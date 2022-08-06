@@ -24,7 +24,6 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
 #' @param overwrite Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 #' Whether to overwrite vignette and functions if already exists.
-#' @param config_file Path to configuration file for 'fusen'
 #' @param ... Arguments passed to `rcmdcheck::rcmdcheck()`.
 #'     For example, you can do `inflate(check = TRUE, quiet = TRUE)`, where `quiet` is
 #'     passed to `rcmdcheck::rcmdcheck()`.
@@ -254,7 +253,7 @@ inflate <- function(pkg = ".", flat_file,
     message("`vignette_name` is empty: no vignette created")
   }
 
-  # config file store ----
+  # TODO config file store ----
   # df_to_config(df_files = all_files, flat_file_path = flat_file_path)
 
   # Run attachment
