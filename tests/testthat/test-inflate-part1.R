@@ -166,7 +166,6 @@ usethis::with_project(dummypackage, {
     # Do not check inside check if on CRAN
     skip_on_os(os = c("windows", "solaris"))
 
-    # browser()
     # If this check is run inside a not "--as-cran" check, then it wont work as expected
     check_out <- rcmdcheck::rcmdcheck(dummypackage,
       quiet = TRUE,

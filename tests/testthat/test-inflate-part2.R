@@ -1006,8 +1006,6 @@ usethis::with_project(dummypackage, {
 
   test_that("Deal with 2 examples for one function", {
     # No error
-    # browser()
-    # debugonce(inflate)
     expect_error(
       suppressMessages(
         inflate(
