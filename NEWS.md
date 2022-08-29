@@ -2,6 +2,7 @@
 
 ## New features
 
+- Migrate from a non-fusen package or a previous version of {fusen} use with `register_all_to_config()`
 - Create or update the config file from a data.frame to list legitimate scripts
 - Load all `function` chunks of the flat file currently opened with `load_flat_functions()` (Like a `load_all()` for a flat file)
 - Allow multiple examples for the same function (#149)
