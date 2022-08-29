@@ -81,7 +81,14 @@
       <small>Source: <a href="https://github.com/Thinkr-open/fusen/blob/HEAD/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
-    <div class="section level2"><h2 class="page-header" data-toc-text="development version" id="fusen-development-version">fusen (development version)<a class="anchor" aria-label="anchor" href="#fusen-development-version"></a></h2></div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="development version" id="fusen-development-version">fusen (development version)<a class="anchor" aria-label="anchor" href="#fusen-development-version"></a></h2>
+<div class="section level3">
+<h3 id="new-features-development-version">New features<a class="anchor" aria-label="anchor" href="#new-features-development-version"></a></h3>
+<ul><li>Load all <code>function</code> chunks of the flat file currently opened with <code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code> (Like a <code>load_all()</code> for a flat file)</li>
+<li>Allow to <code><a href="../reference/inflate.html">inflate()</a></code> a Quarto “.qmd” flat file (<a href="https://github.com/Thinkr-open/fusen/issues/160" class="external-link">#160</a>)</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="page-header" data-toc-text="0.4.0" id="fusen-040">fusen 0.4.0<small>2022-04-30</small><a class="anchor" aria-label="anchor" href="#fusen-040"></a></h2>
 <div class="section level3">
@@ -140,8 +147,8 @@
 </ul><div class="section level4">
 <h4 id="grouping-functions-under-the-same-file-0-3-0">Grouping functions under the same file<a class="anchor" aria-label="anchor" href="#grouping-functions-under-the-same-file-0-3-0"></a></h4>
 <ul><li>Group functions in same R file and test file if under same (level 1 + level 2) titles in the Rmd</li>
-<li>Group functions in same R file and test file if they have the same <code><a href="https://github.com/rdname" class="external-link">@rdname</a></code> roxygen tag</li>
-<li>Group functions in same R file and test file if they have the same <code><a href="https://github.com/filename" class="external-link">@filename</a></code> roxygen tag (only recognized by ‘fusen’)</li>
+<li>Group functions in same R file and test file if they have the same <code>@rdname</code> roxygen tag</li>
+<li>Group functions in same R file and test file if they have the same <code>@filename</code> roxygen tag (only recognized by ‘fusen’)</li>
 <li>Group functions in same R file and test file if the function chunk get chunk option <code>{r function-my_func, filename = "my_filename"}</code>
 </li>
 </ul></div>
@@ -214,7 +221,7 @@
 
 
       <footer><div class="thinkr">
-  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
 <div class="author">

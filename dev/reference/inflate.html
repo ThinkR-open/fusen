@@ -87,16 +87,16 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">inflate</span><span class="op">(</span>
-  pkg <span class="op">=</span> <span class="st">"."</span>,
-  <span class="va">flat_file</span>,
-  vignette_name <span class="op">=</span> <span class="st">"Get started"</span>,
-  open_vignette <span class="op">=</span> <span class="cn">TRUE</span>,
-  check <span class="op">=</span> <span class="cn">TRUE</span>,
-  document <span class="op">=</span> <span class="cn">TRUE</span>,
-  overwrite <span class="op">=</span> <span class="st">"ask"</span>,
-  <span class="va">...</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">inflate</span><span class="op">(</span></span>
+<span>  pkg <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  <span class="va">flat_file</span>,</span>
+<span>  vignette_name <span class="op">=</span> <span class="st">"Get started"</span>,</span>
+<span>  open_vignette <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  check <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  document <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="st">"ask"</span>,</span>
+<span>  <span class="va">...</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -146,43 +146,44 @@ passed to <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Create a new project</span></span>
-<span class="r-in"><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># {fusen} steps</span></span>
-<span class="r-in"><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"full"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpfNlKHk/dummypackage36df4656c1fe . Please start a new R session in the new project directory.</span>
-<span class="r-in"><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">dev_file</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"flat"</span>, <span class="va">dev_file</span><span class="op">)</span><span class="op">]</span></span>
-<span class="r-in"><span class="fu"><a href="fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpfNlKHk/dummypackage36df4656c1fe/DESCRIPTION"</span>
-<span class="r-in"><span class="fu">inflate</span><span class="op">(</span></span>
-<span class="r-in">  pkg <span class="op">=</span> <span class="va">dummypackage</span>, flat_file <span class="op">=</span> <span class="va">flat_file</span>,</span>
-<span class="r-in">  vignette_name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>, check <span class="op">=</span> <span class="cn">FALSE</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpfNlKHk/dummypackage36df4656c1fe'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage36df4656c1fe</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Create a new project</span></span></span>
+<span class="r-in"><span><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># {fusen} steps</span></span></span>
+<span class="r-in"><span><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"full"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/Rtmp07wOT3/dummypackage4295629b7f9c . Please start a new R session in the new project directory.</span>
+<span class="r-in"><span><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">dev_file</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"flat"</span>, <span class="va">dev_file</span><span class="op">)</span><span class="op">]</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp07wOT3/dummypackage4295629b7f9c/DESCRIPTION"</span>
+<span class="r-in"><span><span class="fu">inflate</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  pkg <span class="op">=</span> <span class="va">dummypackage</span>, flat_file <span class="op">=</span> <span class="va">flat_file</span>,</span></span>
+<span class="r-in"><span>  vignette_name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>, check <span class="op">=</span> <span class="cn">FALSE</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmp07wOT3/dummypackage4295629b7f9c'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage4295629b7f9c</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: testthat</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'knitr'</span> to <span style="color: #00BB00;">Suggests</span> field in DESCRIPTION</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting <span style="color: #00BB00;">VignetteBuilder</span> field in DESCRIPTION to <span style="color: #0000BB;">'knitr'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'inst/doc'</span> to <span style="color: #0000BB;">'.gitignore'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating dummypackage36df4656c1fe documentation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage36df4656c1fe</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating dummypackage4295629b7f9c documentation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage4295629b7f9c</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">my_median.Rd</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">my_other_median.Rd</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">sub_median.Rd</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> [+] 3 package(s) added: stats, rmarkdown, testthat.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpfNlKHk/dummypackage36df4656c1fe"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Explore directory of the package</span></span>
-<span class="r-in"><span class="co"># browseURL(dummypackage)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Try pkgdown build</span></span>
-<span class="r-in"><span class="co"># usethis::use_pkgdown()</span></span>
-<span class="r-in"><span class="co"># pkgdown::build_site(dummypackage)</span></span>
-<span class="r-in"><span class="co"># Delete dummy package</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp07wOT3/dummypackage4295629b7f9c"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Explore directory of the package</span></span></span>
+<span class="r-in"><span><span class="co"># browseURL(dummypackage)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Try pkgdown build</span></span></span>
+<span class="r-in"><span><span class="co"># usethis::use_pkgdown()</span></span></span>
+<span class="r-in"><span><span class="co"># pkgdown::build_site(dummypackage)</span></span></span>
+<span class="r-in"><span><span class="co"># Delete dummy package</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -193,7 +194,7 @@ passed to <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
 
 
       <footer><div class="thinkr">
-  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
 <div class="author">

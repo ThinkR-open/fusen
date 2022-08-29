@@ -87,7 +87,7 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">fill_description</span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"."</span>, <span class="va">fields</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">fill_description</span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"."</span>, <span class="va">fields</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -115,33 +115,33 @@ personalized defaults using package options</p></dd>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Create a new project</span></span>
-<span class="r-in"><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu">fill_description</span><span class="op">(</span></span>
-<span class="r-in">  pkg <span class="op">=</span> <span class="va">dummypackage</span>,</span>
-<span class="r-in">  fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span class="r-in">    Title <span class="op">=</span> <span class="st">"Build A Package From Rmarkdown file"</span>,</span>
-<span class="r-in">    Description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span>
-<span class="r-in">      <span class="st">"Use Rmd First method to build your package."</span>,</span>
-<span class="r-in">      <span class="st">"Start your package with documentation."</span>,</span>
-<span class="r-in">      <span class="st">"Everything can be set from a Rmarkdown file in your project."</span></span>
-<span class="r-in">    <span class="op">)</span>,</span>
-<span class="r-in">    `Authors@R` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Sebastien"</span>, <span class="st">"Rochette"</span>,</span>
-<span class="r-in">        email <span class="op">=</span> <span class="st">"sebastien@thinkr.fr"</span>,</span>
-<span class="r-in">        role <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"aut"</span>, <span class="st">"cre"</span><span class="op">)</span>, comment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ORCID <span class="op">=</span> <span class="st">"0000-0002-1565-9313"</span><span class="op">)</span></span>
-<span class="r-in">      <span class="op">)</span>,</span>
-<span class="r-in">      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span>given <span class="op">=</span> <span class="st">"ThinkR"</span>, role <span class="op">=</span> <span class="st">"cph"</span><span class="op">)</span></span>
-<span class="r-in">    <span class="op">)</span></span>
-<span class="r-in">  <span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Create a new project</span></span></span>
+<span class="r-in"><span><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">fill_description</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  pkg <span class="op">=</span> <span class="va">dummypackage</span>,</span></span>
+<span class="r-in"><span>  fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    Title <span class="op">=</span> <span class="st">"Build A Package From Rmarkdown file"</span>,</span></span>
+<span class="r-in"><span>    Description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="st">"Use Rmd First method to build your package."</span>,</span></span>
+<span class="r-in"><span>      <span class="st">"Start your package with documentation."</span>,</span></span>
+<span class="r-in"><span>      <span class="st">"Everything can be set from a Rmarkdown file in your project."</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span>,</span></span>
+<span class="r-in"><span>    `Authors@R` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Sebastien"</span>, <span class="st">"Rochette"</span>,</span></span>
+<span class="r-in"><span>        email <span class="op">=</span> <span class="st">"sebastien@thinkr.fr"</span>,</span></span>
+<span class="r-in"><span>        role <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"aut"</span>, <span class="st">"cre"</span><span class="op">)</span>, comment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ORCID <span class="op">=</span> <span class="st">"0000-0002-1565-9313"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>      <span class="op">)</span>,</span></span>
+<span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span>given <span class="op">=</span> <span class="st">"ThinkR"</span>, role <span class="op">=</span> <span class="st">"cph"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BBBB00;">!</span> Title was modified to 'Title Case'.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpfNlKHk/dummypackage36df5598d44f/DESCRIPTION"</span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Delete dummy package</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp07wOT3/dummypackage429561911d0c/DESCRIPTION"</span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Delete dummy package</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -152,7 +152,7 @@ personalized defaults using package options</p></dd>
 
 
       <footer><div class="thinkr">
-  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.4.</p>
+  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
 <div class="author">
