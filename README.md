@@ -21,13 +21,21 @@ coverage](https://codecov.io/gh/ThinkR-open/fusen/branch/main/graph/badge.svg?to
 
 <img src="man/figures/fusen_inflate_functions.png" width="65%" style="display: block; margin: auto;" />
 
-*Fill the flat Rmd template with everything in one place and {fusen}
-will inflate the identified parts in the correct package files and
-directories.*
+*Fill the flat Rmd (or qmd) template with everything in one place and
+{fusen} will inflate the identified parts in the correct package files
+and directories.*
+
+> The {fusen} Rmarkdown template encourages users to fill their
+> documentation and tests at the same time of writing their functions
+> code. Thanks to the R package structure used by {fusen}, you can built
+> a robust workflow or R package. {fusen} simplifies and reduces the
+> number of steps towards a full R package.  
+> After that, your {pkgdown} documentation website is one command away
+> to be shared with all your users.
 
 This {fusen} package is a real-world example of {fusen} use as it was
-itself created from the “dev_history” flat templates available in
-`"dev/"` folder in its GitHub repository.
+itself created from the flat templates available in `"dev/"` folder in
+its GitHub repository.
 
 ## Installation
 
@@ -208,6 +216,9 @@ function is at the same place.
 -   How to store multiple functions in a unique R file ?
 -   How to read dataset that I usually put in “tests/testthat/” for my
     unit tests?
+-   Can I load all functions of th current flat file during development
+    without having to `inflate()`?
+-   Can I inflate a Quarto qmd file?
 
 =\> See vignette Tips and Tricks:
 <https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html>

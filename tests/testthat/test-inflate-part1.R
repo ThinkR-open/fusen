@@ -17,7 +17,7 @@ usethis::with_project(dummypackage, {
     flat_file,
     overwrite = TRUE
   )
-
+  usethis::use_mit_license("Statnmap")
   suppressMessages(
     inflate(
       pkg = dummypackage, flat_file = flat_file,
@@ -174,9 +174,9 @@ usethis::with_project(dummypackage, {
 
     # No errors
     expect_true(length(check_out[["errors"]]) == 0)
-    # 1 warning = License
+    # 1 warning = License => Now a note...
     # expect_true(length(check_out[["warnings"]]) == 1)
-    expect_true(grepl("license", check_out[["warnings"]][1]))
+    # expect_true(grepl("license", check_out[["warnings"]][1]))
     # No Notes or only one if CRAN
     expect_true(length(check_out[["notes"]]) <= 1)
     if (length(check_out[["notes"]]) == 1) {
