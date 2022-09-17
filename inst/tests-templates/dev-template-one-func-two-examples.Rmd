@@ -12,6 +12,8 @@ library(testthat)
 # Two examples for one function
 
 ```{r fun-norox2}
+#' my_twoexamples
+#' @param x x
 #' @export
 my_twoexamples <- function(x) {
   x + 10
