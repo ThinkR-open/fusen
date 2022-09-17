@@ -43,6 +43,8 @@ Suggests:
     rstudioapi,
     testthat (>= 3.0.0),
     withr
+Remotes:
+    ThinkR-open/attachment
 VignetteBuilder: 
     knitr
 Config/testthat/edition: 3
