@@ -268,7 +268,7 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
     here::set_here(pkg)
   }
   if (isTRUE(open) & interactive()) {
-    usethis::edit_file(dev_file_path)
+    opened <- lapply(dev_file_path, usethis::edit_file)
   }
 
   dev_file_path

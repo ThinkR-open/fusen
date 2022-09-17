@@ -35,23 +35,34 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 flat_file <- dev_file[grepl("flat_", dev_file)]
 # Inflate once
-suppressMessages(
-  inflate(
-    pkg = dummypackage, flat_file = flat_file,
-    vignette_name = "Get started", check = FALSE,
-    open_vignette = FALSE
+usethis::with_project(dummypackage, {
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
   )
-)
-# Add a not registered file to the package
-cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
   
-# Use the fonction to check the list of files
-out_csv <- check_not_registered_files(dummypackage)
-out_csv
-# Modify manually the list of files in the csv created
-# Then read the file to add to the config file
-content_csv <- read.csv(out_csv)
-out_config <- df_to_config(df_files = out_csv)
-out_config
-# Open the out_config file to see what's going on
+  # Add a not registered file to the package
+  cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
+  
+  # Use the fonction to check the list of files
+  out_csv <- check_not_registered_files(dummypackage)
+  out_csv
+  # Open the csv to modify manually the list of files in the csv created
+  # Indeed, the "to_keep.R" file will be registered as
+  # "No existing source path found."
+  # Manually change this line with "keep"
+  content_csv <- read.csv(out_csv)
+  # Here I change the line to simulate what you manually did above
+  content_csv[content_csv[["path"]] == "R/to_keep.R", "origin"] <- "keep"
+  write.csv(content_csv, out_csv)
+  
+  out_config <- df_to_config(df_files = out_csv)
+  out_config
+  # Open the out_config file to see what's going on
+  yaml::read_yaml(out_config)
+})
+unlink(dummypackage, recursive = TRUE)
 }

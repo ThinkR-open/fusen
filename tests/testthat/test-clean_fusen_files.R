@@ -9,13 +9,15 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 flat_file <- dev_file[grepl("flat_", dev_file)]
 # Inflate once
-suppressMessages(
-  inflate(
-    pkg = dummypackage, flat_file = flat_file,
-    vignette_name = "Get started", check = FALSE,
-    open_vignette = FALSE
+usethis::with_project(dummypackage, {
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
   )
-)
+})
 # Add a not registered file to the package
 cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
 
@@ -26,13 +28,13 @@ test_that("register_all_to_config works", {
   usethis::with_project(dummypackage, {
     expect_error(
       out_path <- register_all_to_config(dummypackage), regexp = NA)
-        expect_equal(out_path, file.path(dummypackage, "dev", "fusen_config.yaml"))
+        expect_equal(out_path, file.path("dev", "config_fusen.yaml"))
         
     # What happens if everything is already registered?
         expect_message(
       out_path <- register_all_to_config(dummypackage), regexp = "There is no file to register")
             
-        expect_equal(out_path, file.path(dummypackage, "dev", "fusen_config.yaml"))
+        expect_equal(out_path, file.path("dev", "config_fusen.yaml"))
 
   })
 })
@@ -277,7 +279,7 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 
 # Detect all files created ----
 usethis::with_project(dummypackage, {
-  browser()
+  # browser()
 
   # Create empty config file
 
@@ -290,5 +292,5 @@ usethis::with_project(dummypackage, {
     )
   )
 
-  debugonce(inflate)
+  # debugonce(inflate)
 })

@@ -52,9 +52,9 @@ test_that("build_fusen_chunks add lines as expected", {
     # If interactive in RStudio
     if (
       requireNamespace("rstudioapi") &&
-        rstudioapi::isAvailable() &&
-        rstudioapi::hasFun("navigateToFile") &&
-        rstudioapi::hasFun("documentSave") # &&
+      rstudioapi::isAvailable() &&
+      rstudioapi::hasFun("navigateToFile") &&
+      rstudioapi::hasFun("documentSave") #&&
       # rstudioapi::hasFun("documentClose")
     ) {
       print("Test with RStudio")
@@ -70,21 +70,21 @@ test_that("build_fusen_chunks add lines as expected", {
       # if (basename(the_open_path) != basename(path_dev_history)) {
       #   stop("Open the file was short to get the correct Id of the opened file")
       # }
-      # add chunks
-      add_fusen_chunks(function_name = "zaza", export = TRUE)
-      rstudioapi::documentSave(id)
-      if (rstudioapi::hasFun("documentClose")) {
-        rstudioapi::documentClose(id)
-      }
-      # # Back to current position
-      rstudioapi::navigateToFile(curr_editor$path, line = curr_position[1])
+        # add chunks
+        add_fusen_chunks(function_name = "zaza", export = TRUE)
+        rstudioapi::documentSave(id)
+        if (rstudioapi::hasFun("documentClose")) {
+          rstudioapi::documentClose(id)
+        }
+        # # Back to current position
+        rstudioapi::navigateToFile(curr_editor$path, line = curr_position[1])
     } else {
       print("test without interactive")
       dev_lines <- readLines(path_dev_history)
       dev_lines[40] <- build_fusen_chunks("zaza", export = TRUE)
       cat(dev_lines, sep = "\n", file = path_dev_history)
     }
-
+    
     dev_lines_new <- readLines(path_dev_history)
     expect_equal(length(dev_lines_new), length(dev_lines_orig) + 24)
     expect_equal(dev_lines_new[40], "# zaza")
@@ -93,7 +93,7 @@ test_that("build_fusen_chunks add lines as expected", {
     expect_equal(dev_lines_new[55], "```{r example-zaza}")
     expect_equal(dev_lines_new[56], "zaza()")
     expect_equal(dev_lines_new[59], "```{r tests-zaza}")
-
+    
     unlink(path_foosen, recursive = TRUE)
   })
 })
@@ -109,13 +109,13 @@ test_that("build_fusen_chunks add lines as expected", {
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
     path_dev_history <- dev_file[grepl("flat", dev_file)]
     dev_lines_orig <- readLines(path_dev_history)
-
+    
     # If interactive in RStudio
     if (
       requireNamespace("rstudioapi") &&
-        rstudioapi::isAvailable() &&
-        rstudioapi::hasFun("navigateToFile") &&
-        rstudioapi::hasFun("documentSave") # &&
+      rstudioapi::isAvailable() &&
+      rstudioapi::hasFun("navigateToFile") &&
+      rstudioapi::hasFun("documentSave") #&&
       # rstudioapi::hasFun("documentClose")
     ) {
       print("Test with RStudio")
@@ -145,7 +145,7 @@ test_that("build_fusen_chunks add lines as expected", {
       dev_lines[40] <- build_fusen_chunks("zaza", export = FALSE)
       cat(dev_lines, sep = "\n", file = path_dev_history)
     }
-
+    
     dev_lines_new <- readLines(path_dev_history)
     expect_equal(length(dev_lines_new), length(dev_lines_orig) + 24)
     expect_equal(dev_lines_new[40], "# zaza")

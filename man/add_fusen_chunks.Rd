@@ -24,5 +24,7 @@ A list with the context and the content, invisibly.
 Create \code{{fusen}} chunks inside your Rmd
 }
 \examples{
-add_fusen_chunks("this")
+\dontrun{
+add_fusen_chunks("this", export = TRUE)
+}
 }

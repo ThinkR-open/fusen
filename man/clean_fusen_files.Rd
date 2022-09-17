@@ -6,6 +6,9 @@
 \usage{
 clean_fusen_files()
 }
+\value{
+Used for side effect. Delete unregistered files.
+}
 \description{
 Description
 }

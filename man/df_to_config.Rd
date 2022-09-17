@@ -41,7 +41,7 @@ my_files_to_protect <- tibble::tribble(
   "vignette", "vignettes/my-zaza-vignette.Rmd"
 )
 
-# \dontrun{
+\dontrun{
 df_to_config(my_files_to_protect)
-# }
+}
 }
