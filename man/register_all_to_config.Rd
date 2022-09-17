@@ -20,4 +20,29 @@ Helps transition from non-fusen packages
 # Usually run this one inside the current project
 register_all_to_config()
 }
+
+# Or you can try on the reproducible example
+dummypackage <- tempfile("register")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+# Inflate once
+usethis::with_project(dummypackage, {
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+  
+  out_path <- register_all_to_config(dummypackage)
+  
+  # Look at the output
+  yaml::read_yaml(out_path)
+})
+
 }
