@@ -14,7 +14,7 @@ library(testthat)
 pkgload::load_all(export_all = FALSE)
 ```
 
-# My function
+# my_fun
 
 ```{r function-my_fun}
 #' my_fun Title
