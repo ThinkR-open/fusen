@@ -211,6 +211,8 @@ devtools::check(args = c("--no-manual", "--as-cran"))
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")
 checkhelper::find_missing_tags()
+checkhelper::check_clean_userspace(pkg = ".")
+checkhelper::check_as_cran()
 
 # Check spelling
 # usethis::use_spell_check()
