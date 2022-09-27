@@ -4,7 +4,7 @@
 \name{fusen-package}
 \alias{fusen}
 \alias{fusen-package}
-\title{fusen: Build a Package from Rmarkdown File}
+\title{fusen: Build a Package from Rmarkdown Files}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
