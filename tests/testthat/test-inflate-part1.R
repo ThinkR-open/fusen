@@ -177,7 +177,8 @@ usethis::with_project(dummypackage, {
     # 1 warning = License => Now a note...
     # expect_true(length(check_out[["warnings"]]) == 1)
     # expect_true(grepl("license", check_out[["warnings"]][1]))
-    # No Notes or only one if CRAN
+    # No Notes or only one if CRAN ?
+    skip_on_cran()
     expect_true(length(check_out[["notes"]]) <= 1)
     if (length(check_out[["notes"]]) == 1) {
       # if tested as cran
@@ -188,11 +189,13 @@ usethis::with_project(dummypackage, {
       expect_true(length(check_out[["notes"]]) == 0)
     }
   })
-  # Clean R, tests and vignettes
-  unlink(file.path(dummypackage, "R"), recursive = TRUE)
-  unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
-  unlink(file.path(dummypackage, "tests"), recursive = TRUE)
+
 })
+
+# Clean R, tests and vignettes
+unlink(file.path(dummypackage, "R"), recursive = TRUE)
+unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
+unlink(file.path(dummypackage, "tests"), recursive = TRUE)
 
 # Test no problem with special character in YAML ----
 if (packageVersion("parsermd") > "0.1.2") {

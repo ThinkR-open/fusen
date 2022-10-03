@@ -14,7 +14,7 @@ library(testthat)
 pkgload::load_all(export_all = FALSE)
 ```
 
-# My function
+# skeleton
 
 ```{r function-skeleton}
 #' skeleton Title

@@ -91,6 +91,7 @@ usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
 usethis::use_coverage()
 usethis::use_build_ignore("_pkgdown.yml")
+usethis::use_github_action(url = "https://github.com/DavisVaughan/extrachecks-html5/blob/main/R-CMD-check-HTML5.yaml")
 
 # Inflates ----
 fusen::inflate(flat_file = "dev/flat_addins.Rmd",
@@ -210,6 +211,8 @@ devtools::check(args = c("--no-manual", "--as-cran"))
 # Check content
 # remotes::install_github("ThinkR-open/checkhelper")
 checkhelper::find_missing_tags()
+checkhelper::check_clean_userspace(pkg = ".")
+checkhelper::check_as_cran()
 
 # Check spelling
 # usethis::use_spell_check()

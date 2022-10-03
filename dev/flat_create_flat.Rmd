@@ -447,9 +447,9 @@ test_that("Other flat_name works", {
     regexp = NA)
   expect_true(file.exists(file.path(dummypackage, "dev/flat_hello.Rmd")))
   hello_flat <- readLines(dev_file_path)
-  # 7 times hello for function name
+  # 8 times hello for function name
   # 2 times hello in flat_hello.Rmd
-  expect_equal(length(grep("hello", hello_flat)), 7 + 2)
+  expect_equal(length(grep("hello", hello_flat)), 8 + 2)
   expect_equal(length(grep("flat_hello[.]Rmd", hello_flat)), 2)
   
   # Template minimal used with "min", same name, flat changes name
@@ -461,9 +461,9 @@ test_that("Other flat_name works", {
   flat_file <- file.path(dummypackage, "dev/flat_hello_2.Rmd")
   expect_true(file.exists(flat_file))
   hello_flat <- readLines(flat_file)
-  # 7 times hello for function name
+  # 8 times hello for function name
   # 2 times hello in flat_hello_2.Rmd
-  expect_equal(length(grep("hello", hello_flat)), 7 + 2)
+  expect_equal(length(grep("hello", hello_flat)), 8 + 2)
   expect_equal(length(grep("flat_hello_2[.]Rmd", hello_flat)), 2)
   
   # Try inflate to see if files get hello name
@@ -505,11 +505,11 @@ test_that("Other dev_dir works", {
   expect_true(file.exists(file.path(dummypackage, "devdir/flat_hello.Rmd")))
   hello_flat <- readLines(dev_file_path)
   
-  # 7 times hello for function name
+  # 8 times hello for function name
   # 2 times hello in flat_hello.Rmd
   # 1 time devdir/flat_hello.Rmd
   # O time dev/flat_hello.Rmd
-  expect_equal(length(grep("hello", hello_flat)), 7 + 2)
+  expect_equal(length(grep("hello", hello_flat)), 8 + 2)
   expect_equal(length(grep("flat_hello[.]Rmd", hello_flat)), 2)
   expect_equal(length(grep("devdir/flat_hello[.]Rmd", hello_flat)), 1)
   expect_equal(length(grep("dev/flat_hello[.]Rmd", hello_flat)), 0)
