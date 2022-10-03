@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -238,7 +238,7 @@ This won’t affect your package.</p>
 </h2>
 <p>You can use <code>inflate(vignette_name = c("Super title" = "01-Super Slug"))</code> for vignette title different from vignette Entry</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>vignette_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Super title"</span> <span class="op">=</span> <span class="st">"01-Super Vignette Index Entry"</span><span class="op">)</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>vignette_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Super title"</span> <span class="op">=</span> <span class="st">"01-Super Vignette Index Entry"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="how-not-to-create-a-vignette">How not to create a vignette?<a class="anchor" aria-label="anchor" href="#how-not-to-create-a-vignette"></a>
@@ -248,7 +248,7 @@ This won’t affect your package.</p>
 <li>The flat file is the developer’s documentation and that may be enough</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>vignette_name <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>vignette_name <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="how-to-get-a-pre-filled-template-for-a-specific-function-name">How to get a pre-filled template for a specific function name ?<a class="anchor" aria-label="anchor" href="#how-to-get-a-pre-filled-template-for-a-specific-function-name"></a>
@@ -272,27 +272,27 @@ This won’t affect your package.</p>
 <li>Add a line with <code>HERE</code> in your flat file</li>
 </ul>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Path of the flat file</span>
-<span class="va">path_flat_rmd</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"dev/flat_minimal.Rmd"</span><span class="op">)</span>
-
-<span class="co"># Name of future functions to add - example</span>
-<span class="va">fun_nms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
-  <span class="st">"get_contract_by_country_of"</span>,
-  <span class="st">"get_contract_subsidies_of"</span>,
-  <span class="st">"get_contract_effort_of"</span>,
-  <span class="st">"get_contract_fees_of"</span>,
-  <span class="st">"get_contract_target_countries_of"</span>,
-  <span class="st">"get_contract_all_info_of"</span>
-<span class="op">)</span>
-
-<span class="co"># Create content</span>
-<span class="va">l_chunks</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_chr</a></span><span class="op">(</span><span class="va">fun_nms</span>, <span class="fu">fusen</span><span class="fu">:::</span><span class="va">build_fusen_chunks</span><span class="op">)</span>
-<span class="va">chunks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">l_chunks</span>, collapse <span class="op">=</span> <span class="st">""</span><span class="op">)</span>
-
-<span class="co"># Add in the flat file</span>
-<span class="va">flat_rmd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">path_flat_rmd</span><span class="op">)</span>
-<span class="va">flat_rmd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"^HERE$"</span>, <span class="va">chunks</span>, <span class="va">flat_rmd</span><span class="op">)</span>
-<span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="va">flat_rmd</span>, <span class="va">path_flat_rmd</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Path of the flat file</span></span>
+<span><span class="va">path_flat_rmd</span> <span class="op">&lt;-</span> <span class="fu">here</span><span class="fu">::</span><span class="fu"><a href="https://here.r-lib.org//reference/here.html" class="external-link">here</a></span><span class="op">(</span><span class="st">"dev/flat_minimal.Rmd"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Name of future functions to add - example</span></span>
+<span><span class="va">fun_nms</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  <span class="st">"get_contract_by_country_of"</span>,</span>
+<span>  <span class="st">"get_contract_subsidies_of"</span>,</span>
+<span>  <span class="st">"get_contract_effort_of"</span>,</span>
+<span>  <span class="st">"get_contract_fees_of"</span>,</span>
+<span>  <span class="st">"get_contract_target_countries_of"</span>,</span>
+<span>  <span class="st">"get_contract_all_info_of"</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Create content</span></span>
+<span><span class="va">l_chunks</span> <span class="op">&lt;-</span> <span class="fu">purrr</span><span class="fu">::</span><span class="fu"><a href="https://purrr.tidyverse.org/reference/map.html" class="external-link">map_chr</a></span><span class="op">(</span><span class="va">fun_nms</span>, <span class="fu">fusen</span><span class="fu">:::</span><span class="va">build_fusen_chunks</span><span class="op">)</span></span>
+<span><span class="va">chunks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="va">l_chunks</span>, collapse <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Add in the flat file</span></span>
+<span><span class="va">flat_rmd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/readLines.html" class="external-link">readLines</a></span><span class="op">(</span><span class="va">path_flat_rmd</span><span class="op">)</span></span>
+<span><span class="va">flat_rmd</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">sub</a></span><span class="op">(</span><span class="st">"^HERE$"</span>, <span class="va">chunks</span>, <span class="va">flat_rmd</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/writeLines.html" class="external-link">writeLines</a></span><span class="op">(</span><span class="va">flat_rmd</span>, <span class="va">path_flat_rmd</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -302,9 +302,9 @@ This won’t affect your package.</p>
 <li>Add an entry in your main “dev_history.Rmd” file</li>
 </ul>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file1.Rmd"</span><span class="op">)</span>
-<span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file2.Rmd"</span><span class="op">)</span>
-<span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file3.Rmd"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file1.Rmd"</span><span class="op">)</span></span>
+<span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file2.Rmd"</span><span class="op">)</span></span>
+<span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file3.Rmd"</span><span class="op">)</span></span></code></pre></div>
 <p>If the main “dev_history.Rmd” file does not exists, you can create it with <code>add_flat_template("dev_history")</code></p>
 </div>
 <div class="section level2">
@@ -463,15 +463,43 @@ This code line is removed in the resulting “R/” files to avoid any interfere
 <div class="section level2">
 <h2 id="how-to-read-dataset-that-i-usually-put-in-teststestthat-for-my-unit-tests">How to read dataset that I usually put in “tests/testthat/” for my unit tests?<a class="anchor" aria-label="anchor" href="#how-to-read-dataset-that-i-usually-put-in-teststestthat-for-my-unit-tests"></a>
 </h2>
-<p>You will need to write two ways of reading the data: - One to use on-demand in the flat file, which needs to be commented - One to be use in the future test file</p>
+<p>During checks, the tests are run relative to the “tests/testthat/” directory.<br>
+You will need to anticipate the two ways of reading the data:</p>
+<ul>
+<li>One from within the flat file, which needs to be modified</li>
+<li>One to be use in the future test file</li>
+</ul>
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># The code that you will run manually in the flat file if needed during development</span>
-<span class="co"># &gt; This needs to be commented</span>
-<span class="co"># my_file &lt;- read.csv("tests/testthat/my_file.csv")</span>
-
-<span class="co"># The code that will be used in the inflated test file</span>
-<span class="co"># This needs to be uncommented</span>
-<span class="va">my_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="st">"my_file.csv"</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># The path relative to the "tests/testthat" directory for tests</span></span>
+<span><span class="va">the_file</span> <span class="op">&lt;-</span> <span class="st">"my_file.csv"</span></span>
+<span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">the_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>  <span class="co"># The path to use during dev in the flat file</span></span>
+<span>  <span class="va">the_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"tests"</span>, <span class="st">"testthat"</span>, <span class="va">the_file</span><span class="op">)</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">the_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="va">the_file</span>, <span class="st">" does not exist"</span><span class="op">)</span><span class="op">}</span></span>
+<span><span class="op">}</span></span>
+<span></span>
+<span><span class="va">my_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">the_file</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="can-i-load-all-functions-of-th-current-flat-file-during-development-without-having-to-inflate">Can I load all functions of th current flat file during development without having to <code>inflate()</code>?<a class="anchor" aria-label="anchor" href="#can-i-load-all-functions-of-th-current-flat-file-during-development-without-having-to-inflate"></a>
+</h2>
+<p>Yes. You can run <code>function</code> chunks only in the currently opened flat file with <code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code>.<br>
+With long flat file currently in developement, and before <code><a href="../reference/inflate.html">inflate()</a></code>, it is sometimes difficult to run all chunks needed after multiple modifications. This can also be useful when you start again your development the day after.</p>
+<p><code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code> is like a <code>load_all()</code> for a flat file, although it does not account for dependencies.</p>
+<p>In the console, run:</p>
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/load_flat_functions.html">load_flat_functions</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p>You can also run <code>function</code> chunks from a specific flat file with:</p>
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/load_flat_functions.html">load_flat_functions</a></span><span class="op">(</span>flat_file <span class="op">=</span> <span class="st">"dev/flat_full.Rmd"</span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="can-i-inflate-a-quarto-qmd-file">Can I inflate a Quarto qmd file?<a class="anchor" aria-label="anchor" href="#can-i-inflate-a-quarto-qmd-file"></a>
+</h2>
+<p>Yes you can. As long as what you include in your qmd flat file is good for a R package vignette, you can use the qmd format.<br>
+This will not really change the output of anything as the flat file is not meant to be rendered.<br>
+But why not!?</p>
+<p>So, you can add a flat file a change it to “.qmd” if it suits you.</p>
 </div>
   </div>
 
@@ -487,7 +515,7 @@ This code line is removed in the resulting “R/” files to avoid any interfere
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
 <div class="author">

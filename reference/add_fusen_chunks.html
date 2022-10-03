@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -87,10 +87,10 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">add_fusen_chunks</span><span class="op">(</span>
-  function_name <span class="op">=</span> <span class="cn">NULL</span>,
-  export <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"fusen.export.functions"</span><span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_fusen_chunks</span><span class="op">(</span></span>
+<span>  function_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  export <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"fusen.export.functions"</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -98,19 +98,24 @@
     <dl><dt>function_name</dt>
 <dd><p>Name of the function to create.
 If NULL (the  default), the user will be prompted to enter it.</p></dd>
+
+
 <dt>export</dt>
 <dd><p>Should the function be exported?
 Default is <code>getOption("fusen.export.functions")</code>. If NULL, the
 user will be prompted to enter it.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>A list with the context and the content, invisibly.</p>
+    
+
+<p>A list with the context and the content, invisibly.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="fu">add_fusen_chunks</span><span class="op">(</span><span class="st">"this"</span><span class="op">)</span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">add_fusen_chunks</span><span class="op">(</span><span class="st">"this"</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </div>
@@ -121,7 +126,7 @@ user will be prompted to enter it.</p></dd>
 
 
       <footer><div class="thinkr">
-  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
 <div class="author">

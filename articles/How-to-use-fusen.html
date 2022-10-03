@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -128,7 +128,7 @@
     
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://thinkr-open.github.io/fusen/">fusen</a></span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://thinkr-open.github.io/fusen/">fusen</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
 <h2 id="all-steps-to-create-a-package-with-fusen-from-one-rmd-file">All steps to create a package with {fusen} from one Rmd file<a class="anchor" aria-label="anchor" href="#all-steps-to-create-a-package-with-fusen-from-one-rmd-file"></a>
 </h2>
@@ -168,20 +168,20 @@
 <p>Fonction <code><a href="../reference/fill_description.html">fill_description()</a></code> requires the description of your package: What does it do? Who are the developers?<br>
 This will fill the DESCRIPTION file in the proper way.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span>
-  pkg <span class="op">=</span> <span class="va">dummypackage</span>,
-  fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
-    Title <span class="op">=</span> <span class="st">"Build A Package From Rmarkdown file"</span>,
-    Description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Use Rmarkdown First method to build your package."</span>, 
-                        <span class="st">"Start your package with documentation."</span>, 
-                        <span class="st">"Everything can be set from a Rmarkdown file in your project."</span><span class="op">)</span>,
-    `Authors@R` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>
-      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Sebastien"</span>, <span class="st">"Rochette"</span>, email <span class="op">=</span> <span class="st">"sebastien@thinkr.fr"</span>, 
-             role <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"aut"</span>, <span class="st">"cre"</span><span class="op">)</span>, comment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ORCID <span class="op">=</span> <span class="st">"0000-0002-1565-9313"</span><span class="op">)</span><span class="op">)</span>,
-      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span>given <span class="op">=</span> <span class="st">"ThinkR"</span>, role <span class="op">=</span> <span class="st">"cph"</span><span class="op">)</span>
-    <span class="op">)</span>
-  <span class="op">)</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span></span>
+<span>  pkg <span class="op">=</span> <span class="va">dummypackage</span>,</span>
+<span>  fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>    Title <span class="op">=</span> <span class="st">"Build A Package From Rmarkdown file"</span>,</span>
+<span>    Description <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Use Rmarkdown First method to build your package."</span>, </span>
+<span>                        <span class="st">"Start your package with documentation."</span>, </span>
+<span>                        <span class="st">"Everything can be set from a Rmarkdown file in your project."</span><span class="op">)</span>,</span>
+<span>    `Authors@R` <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span><span class="st">"Sebastien"</span>, <span class="st">"Rochette"</span>, email <span class="op">=</span> <span class="st">"sebastien@thinkr.fr"</span>, </span>
+<span>             role <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"aut"</span>, <span class="st">"cre"</span><span class="op">)</span>, comment <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>ORCID <span class="op">=</span> <span class="st">"0000-0002-1565-9313"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/utils/person.html" class="external-link">person</a></span><span class="op">(</span>given <span class="op">=</span> <span class="st">"ThinkR"</span>, role <span class="op">=</span> <span class="st">"cph"</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="inflate-your-package-from-the-flat-rmd-template">Inflate your package from the flat Rmd template<a class="anchor" aria-label="anchor" href="#inflate-your-package-from-the-flat-rmd-template"></a>
@@ -196,13 +196,13 @@ This will fill the DESCRIPTION file in the proper way.</p>
 <li>Build your documentation using <code><a href="https://usethis.r-lib.org/reference/use_pkgdown.html" class="external-link">usethis::use_pkgdown()</a></code> then <code>pkgdown::build()</code> for vignette and examples checks</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>
-  flat_file <span class="op">=</span> <span class="st">"dev/flat_teaching.Rmd"</span>, 
-  vignette_name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>,
-  open_vignette <span class="op">=</span> <span class="cn">TRUE</span>,
-  document <span class="op">=</span> <span class="cn">TRUE</span>,
-  check <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span></span>
+<span>  flat_file <span class="op">=</span> <span class="st">"dev/flat_teaching.Rmd"</span>, </span>
+<span>  vignette_name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>,</span>
+<span>  open_vignette <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  document <span class="op">=</span> <span class="cn">TRUE</span>,</span>
+<span>  check <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -216,37 +216,37 @@ This will fill the DESCRIPTION file in the proper way.</p>
 </li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Create a new project</span>
-<span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"dummy"</span><span class="op">)</span>
-
-<span class="co"># {fusen} steps</span>
-<span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_fusen.html">create_fusen</a></span><span class="op">(</span><span class="va">dummypackage</span>, template <span class="op">=</span> <span class="st">"teaching"</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>
-<span class="co"># Description</span>
-<span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span>
-
-<span class="co"># From inside the package</span>
-<span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">with_project</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="op">{</span>
-  <span class="co"># Define License with use_*_license()</span>
-  <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html" class="external-link">use_mit_license</a></span><span class="op">(</span><span class="st">"Sébastien Rochette"</span><span class="op">)</span>
-  
-  <span class="co"># You may need to execute inflate() in the console directly</span>
-  <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, 
-                 flat_file <span class="op">=</span> <span class="va">dev_file</span>,
-                 vignette_name <span class="op">=</span> <span class="st">"Get started"</span><span class="op">)</span>
-<span class="op">}</span><span class="op">)</span>
-
-<span class="co"># Explore directory of the package</span>
-<span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span>
-
-<span class="co"># Delete dummy package</span>
-<span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Create a new project</span></span>
+<span><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"dummy"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># {fusen} steps</span></span>
+<span><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_fusen.html">create_fusen</a></span><span class="op">(</span><span class="va">dummypackage</span>, template <span class="op">=</span> <span class="st">"teaching"</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
+<span><span class="co"># Description</span></span>
+<span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># From inside the package</span></span>
+<span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">with_project</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="op">{</span></span>
+<span>  <span class="co"># Define License with use_*_license()</span></span>
+<span>  <span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html" class="external-link">use_mit_license</a></span><span class="op">(</span><span class="st">"Sébastien Rochette"</span><span class="op">)</span></span>
+<span>  </span>
+<span>  <span class="co"># You may need to execute inflate() in the console directly</span></span>
+<span>  <span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, </span>
+<span>                 flat_file <span class="op">=</span> <span class="va">dev_file</span>,</span>
+<span>                 vignette_name <span class="op">=</span> <span class="st">"Get started"</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Explore directory of the package</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/browseURL.html" class="external-link">browseURL</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># Delete dummy package</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="add-a-new-flat_template-rmd-template-in-dev-directory">Add a new “flat_template.Rmd” template in “dev/” directory<a class="anchor" aria-label="anchor" href="#add-a-new-flat_template-rmd-template-in-dev-directory"></a>
 </h2>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="co"># Add an additional dev template</span>
-<span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"add"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span><span class="co"># Add an additional dev template</span></span>
+<span><span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"add"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="there-can-be-development-actions">There can be development actions<a class="anchor" aria-label="anchor" href="#there-can-be-development-actions"></a>
@@ -289,7 +289,7 @@ fusen::inflate(flat_file = "dev/dev_history.Rmd")
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
 <div class="author">

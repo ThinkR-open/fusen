@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.0</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
       </span>
     </div>
 
@@ -87,59 +87,72 @@
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="fu">add_additional</span><span class="op">(</span>
-  pkg <span class="op">=</span> <span class="st">"."</span>,
-  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,
-  flat_name <span class="op">=</span> <span class="st">"additional"</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  open <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">add_minimal</span><span class="op">(</span>
-  pkg <span class="op">=</span> <span class="st">"."</span>,
-  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,
-  flat_name <span class="op">=</span> <span class="st">"minimal"</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  open <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">add_full</span><span class="op">(</span>
-  pkg <span class="op">=</span> <span class="st">"."</span>,
-  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,
-  flat_name <span class="op">=</span> <span class="st">"full"</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  open <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span>
-
-<span class="fu">add_flat_template</span><span class="op">(</span>
-  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"full"</span>, <span class="st">"minimal"</span>, <span class="st">"additional"</span>, <span class="st">"teaching"</span>, <span class="st">"dev_history"</span><span class="op">)</span>,
-  pkg <span class="op">=</span> <span class="st">"."</span>,
-  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,
-  flat_name <span class="op">=</span> <span class="va">template</span>,
-  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,
-  open <span class="op">=</span> <span class="cn">TRUE</span>
-<span class="op">)</span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">add_additional</span><span class="op">(</span></span>
+<span>  pkg <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,</span>
+<span>  flat_name <span class="op">=</span> <span class="st">"additional"</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  open <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">add_minimal</span><span class="op">(</span></span>
+<span>  pkg <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,</span>
+<span>  flat_name <span class="op">=</span> <span class="st">"minimal"</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  open <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">add_full</span><span class="op">(</span></span>
+<span>  pkg <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,</span>
+<span>  flat_name <span class="op">=</span> <span class="st">"full"</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  open <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">add_flat_template</span><span class="op">(</span></span>
+<span>  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"full"</span>, <span class="st">"minimal"</span>, <span class="st">"additional"</span>, <span class="st">"teaching"</span>, <span class="st">"dev_history"</span><span class="op">)</span>,</span>
+<span>  pkg <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,</span>
+<span>  flat_name <span class="op">=</span> <span class="va">template</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  open <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
     <h2>Arguments</h2>
     <dl><dt>pkg</dt>
 <dd><p>Path where to save file</p></dd>
+
+
 <dt>dev_dir</dt>
 <dd><p>Name of directory for development Rmarkdown files. Default to "dev".</p></dd>
+
+
 <dt>flat_name</dt>
 <dd><p>Name of the file to write in dev.
 Use the name of the main function of your template to get chunks pre-filled with this function name.</p></dd>
+
+
 <dt>overwrite</dt>
 <dd><p>Whether to overwrite existing flat Rmd template file with same name</p></dd>
+
+
 <dt>open</dt>
 <dd><p>Logical. Whether to open file after creation</p></dd>
+
+
 <dt>template</dt>
 <dd><p>Name of the template to use. See details.</p></dd>
+
 </dl></div>
     <div id="value">
     <h2>Value</h2>
-    <p>Create flat Rmd file(s) template(s) and return its (their) path</p>
+    
+
+<p>Create flat Rmd file(s) template(s) and return its (their) path</p>
     </div>
     <div id="details">
     <h2>Details</h2>
@@ -159,33 +172,7 @@ However, <code><a href="add_dev_history.html">add_dev_history()</a></code> is a 
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="co"># Create a new project</span></span>
-<span class="r-in"><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># Add</span></span>
-<span class="r-in"><span class="fu">add_flat_template</span><span class="op">(</span>template <span class="op">=</span> <span class="st">"teaching"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpNhecPP/dummypackage3f933242fecc . Please start a new R session in the new project directory.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpNhecPP/dummypackage3f933242fecc/dev/flat_teaching.Rmd"</span>
-<span class="r-in"><span class="co"># Delete dummy package</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># For classical use in your package</span></span>
-<span class="r-in"><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span>
-<span class="r-in"><span class="co"># first time ever using 'fusen'</span></span>
-<span class="r-in"><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"full"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># first time in your new package</span></span>
-<span class="r-in"><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"minimal"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># add new flat file for new functions</span></span>
-<span class="r-in"><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"add"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># add new flat template for teaching (a reduced full template)</span></span>
-<span class="r-in"><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"teaching"</span><span class="op">)</span></span>
-<span class="r-in"><span class="co">#'</span></span>
-<span class="r-in"><span class="op">}</span></span>
-</code></pre></div>
+    
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
@@ -195,7 +182,7 @@ However, <code><a href="add_dev_history.html">add_dev_history()</a></code> is a 
 
 
       <footer><div class="thinkr">
-  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.3.</p>
+  <p></p><p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
 </div>
 
 <div class="author">
