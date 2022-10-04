@@ -16,6 +16,7 @@ knitr::opts_chunk$set(
 # fusen <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 <!-- badges: start -->
+[![fusen status badge](https://thinkr-open.r-universe.dev/badges/fusen)](https://thinkr-open.r-universe.dev)
 [![CRAN status](https://www.r-pkg.org/badges/version/fusen)](https://CRAN.R-project.org/package=fusen)
 [![R build status](https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg)](https://github.com/ThinkR-open/fusen/actions)
 [![codecov test coverage](https://app.codecov.io/gh/ThinkR-open/fusen/branch/main/graph/badge.svg?token=V0HOSAY8WW)](https://app.codecov.io/gh/ThinkR-open/fusen)
@@ -52,10 +53,13 @@ You can install the development version of {fusen} from GitHub:
 
 ```{r, eval=FALSE}
 # From r-universe.dev (No need for GITHUB_PAT)
-install.packages("fusen", 
-                 repos = c("thinkropen" = "https://thinkr-open.r-universe.dev"))
+options(repos = c(
+  thinkropen = 'https://thinkr-open.r-universe.dev',
+  CRAN = 'https://cloud.r-project.org'))
+# Download and install {fusen} in R
+install.packages('fusen')
 
-# With {remotes} using GitHub API
+# With {remotes} using GitHub API - Need for GITHUB_PAT
 # install.packages("remotes")
 remotes::install_github("ThinkR-open/fusen")
 ```

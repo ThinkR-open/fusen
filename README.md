@@ -5,6 +5,8 @@
 
 <!-- badges: start -->
 
+[![fusen status
+badge](https://thinkr-open.r-universe.dev/badges/fusen)](https://thinkr-open.r-universe.dev)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/fusen)](https://CRAN.R-project.org/package=fusen)
 [![R build
@@ -52,10 +54,13 @@ You can install the development version of {fusen} from GitHub:
 
 ``` r
 # From r-universe.dev (No need for GITHUB_PAT)
-install.packages("fusen", 
-                 repos = c("thinkropen" = "https://thinkr-open.r-universe.dev"))
+options(repos = c(
+  thinkropen = 'https://thinkr-open.r-universe.dev',
+  CRAN = 'https://cloud.r-project.org'))
+# Download and install {fusen} in R
+install.packages('fusen')
 
-# With {remotes} using GitHub API
+# With {remotes} using GitHub API - Need for GITHUB_PAT
 # install.packages("remotes")
 remotes::install_github("ThinkR-open/fusen")
 ```
