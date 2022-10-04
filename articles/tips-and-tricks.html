@@ -481,15 +481,15 @@ You will need to anticipate the two ways of reading the data:</p>
 <span><span class="va">my_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">the_file</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="can-i-load-all-functions-of-th-current-flat-file-during-development-without-having-to-inflate">Can I load all functions of th current flat file during development without having to <code>inflate()</code>?<a class="anchor" aria-label="anchor" href="#can-i-load-all-functions-of-th-current-flat-file-during-development-without-having-to-inflate"></a>
+<h2 id="can-i-load-all-functions-of-the-current-flat-file-during-development-without-having-to-inflate">Can I load all functions of the current flat file during development without having to <code>inflate()</code>?<a class="anchor" aria-label="anchor" href="#can-i-load-all-functions-of-the-current-flat-file-during-development-without-having-to-inflate"></a>
 </h2>
-<p>Yes. You can run <code>function</code> chunks only in the currently opened flat file with <code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code>.<br>
-With long flat file currently in developement, and before <code><a href="../reference/inflate.html">inflate()</a></code>, it is sometimes difficult to run all chunks needed after multiple modifications. This can also be useful when you start again your development the day after.</p>
+<p>Yes. You can run and load <code>function</code> chunks only in the currently opened flat file with <code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code>.<br>
+With long flat file currently in development, and before <code><a href="../reference/inflate.html">inflate()</a></code>, it is sometimes difficult to run all chunks needed after multiple modifications. This can also be useful when you start again your development the day after.</p>
 <p><code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code> is like a <code>load_all()</code> for a flat file, although it does not account for dependencies.</p>
 <p>In the console, run:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/load_flat_functions.html">load_flat_functions</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>You can also run <code>function</code> chunks from a specific flat file with:</p>
+<p>You can also run <code>function</code> chunks of a specific flat file with:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/load_flat_functions.html">load_flat_functions</a></span><span class="op">(</span>flat_file <span class="op">=</span> <span class="st">"dev/flat_full.Rmd"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -498,8 +498,8 @@ With long flat file currently in developement, and before <code><a href="../refe
 </h2>
 <p>Yes you can. As long as what you include in your qmd flat file is good for a R package vignette, you can use the qmd format.<br>
 This will not really change the output of anything as the flat file is not meant to be rendered.<br>
-But why not!?</p>
-<p>So, you can add a flat file a change it to “.qmd” if it suits you.</p>
+The vignette created from this flat file will still be a Rmd file. But why not!?</p>
+<p>Hence, you can add a flat file and change its extension to “.qmd” if you like.</p>
 </div>
   </div>
 
