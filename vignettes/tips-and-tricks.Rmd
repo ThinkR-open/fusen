@@ -369,10 +369,10 @@ if (!file.exists(the_file)) {
 my_file <- read.csv(the_file)
 ```
 
-# Can I load all functions of th current flat file during development without having to `inflate()`?
+# Can I load all functions of the current flat file during development without having to `inflate()`?
 
-Yes. You can run `function` chunks only in the currently opened flat file with `load_flat_functions()`.  
-With long flat file currently in developement, and before `inflate()`, it is sometimes difficult to run all chunks needed after multiple modifications. This can also be useful when you start again your development the day after.
+Yes. You can run and load `function` chunks only in the currently opened flat file with `load_flat_functions()`.  
+With long flat file currently in development, and before `inflate()`, it is sometimes difficult to run all chunks needed after multiple modifications. This can also be useful when you start again your development the day after.
 
 `load_flat_functions()` is like a `load_all()` for a flat file, although it does not account for dependencies.
 
@@ -382,7 +382,7 @@ In the console, run:
 fusen::load_flat_functions()
 ```
 
-You can also run `function` chunks from a specific flat file with:
+You can also run `function` chunks of a specific flat file with:
 
 ```r
 fusen::load_flat_functions(flat_file = "dev/flat_full.Rmd")
@@ -392,6 +392,8 @@ fusen::load_flat_functions(flat_file = "dev/flat_full.Rmd")
 
 Yes you can. As long as what you include in your qmd flat file is good for a R package vignette, you can use the qmd format.  
 This will not really change the output of anything as the flat file is not meant to be rendered.  
+The vignette created from this flat file will still be a Rmd file.
 But why not!?
 
-So, you can add a flat file a change it to ".qmd" if it suits you.  
+Hence, you can add a flat file and change its extension to ".qmd" if you like.  
+
