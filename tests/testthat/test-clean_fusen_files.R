@@ -80,6 +80,8 @@ test_that("df_to_config works", {
   withr::with_dir(dir_tmp, {
     withr::with_options(list(fusen.config_file = config_file_path), {
       
+      browser()
+      
       # Use full path
       all_files <- tibble::tribble(
         ~type, ~path,
@@ -199,6 +201,7 @@ usethis::with_project(dummypackage, {
   test_that("check_not_registered_files returns message if empty", {
     expect_true(inherits(check_not_registered_files, "function"))
 
+    browser()
     # debugonce(check_not_registered_files)
     expect_message(check_not_registered_files(), "There are no files in the package")
   })

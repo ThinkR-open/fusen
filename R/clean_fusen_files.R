@@ -58,7 +58,7 @@
 #' })
 #' unlink(dummypackage, recursive = TRUE)
 check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) {
-  path <- normalizePath(path)
+  path <- normalizePath(path, winslash = "/")
 
   all_r <- list.files(file.path(path, "R"), pattern = "[.]R$|[.]r$", full.names = TRUE)
   all_test <- list.files(file.path(path, "tests", "testthat"), pattern = "[.]R$|[.]r$", full.names = TRUE)
@@ -86,7 +86,7 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
   if (file.exists(config_file)) {
     # Read config file, and remove those already there
     config_list <- yaml::read_yaml(config_file)
-    config_list_path <- normalizePath(get_list_paths(config_list), mustWork = FALSE)
+    config_list_path <- normalizePath(get_list_paths(config_list), mustWork = FALSE, winslash = "/")
     res_existing <- res[res$path %in% config_list_path, ]
     res_new <- res[!res$path %in% config_list_path, ]
   } else {
@@ -108,10 +108,13 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
     res_new$origin <- "keep"
   }
 
-  # TODO go back to relative path
-  res_new$path <- gsub(paste0(getwd(), "/"), "", normalizePath(res_new$path, mustWork = FALSE))
-      
-  csv_file <- file.path(dirname(normalizePath(config_file, mustWork = FALSE)), "config_not_registered.csv")
+    # TODO go back to relative path
+  res_new$path <- gsub(paste0(getwd(), "/"), "", normalize_path_winslash(res_new$path, mustWork = TRUE))
+
+  # config_file may not exist already
+  csv_file <- file.path(
+    gsub(paste0(getwd(), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE))), "config_not_registered.csv")
+
   # Save for manual modification
   if (isTRUE(to_csv)) {
     write.csv(res_new, csv_file, row.names = FALSE)
@@ -139,9 +142,9 @@ guess_flat_origin <- function(path) {
     lines[grep("(G|g)enerated by \\{fusen\\} from", lines)][1]
   )
   
-  guess_path <- normalizePath(guess_path, mustWork = FALSE)
+  guess_path <- normalizePath(guess_path, mustWork = FALSE, winslash = "/")
   if (file.exists(guess_path)) {
-    guess_path <- gsub(paste0(getwd(), "/"), "", normalizePath(guess_path, mustWork = FALSE))
+    guess_path <- gsub(paste0(getwd(), "/"), "", normalizePath(guess_path, mustWork = FALSE, winslash = "/"))
     return(guess_path)
   } else {
     return("No existing source path found. Write 'keep', the full path to the flat file source., or delete this line.")
@@ -223,6 +226,8 @@ df_to_config <- function(df_files, flat_file_path = "keep", force = FALSE) {
   if (!all(c("type", "path") %in% names(df_files))) {
     stop("df_files should contains two columns named: 'type' and 'path'")
   }
+  
+  
 
   if (!"origin" %in% names(df_files)) {
     df_files[["origin"]] <- flat_file_path
@@ -280,9 +285,22 @@ df_to_config <- function(df_files, flat_file_path = "keep", force = FALSE) {
 
   # Remove common part between config_file and all path 
   # to get relative paths to project
-  df_files$path <- gsub(paste0(getwd(), "/"), "", normalizePath(df_files$path, mustWork = FALSE))
-  df_files$origin <- gsub(paste0(getwd(), "/"), "", normalizePath(df_files$origin, mustWork = FALSE))
 
+  # TODO - When path does not exists, normalizePath does not correctly
+  # use path.expand.
+  # All path should exists. It is tested above.
+  df_files$path <- gsub(
+    paste0(normalize_path_winslash("."), "/"),
+    "",
+    normalize_path_winslash(df_files$path, mustWork = TRUE))
+  
+  # All origin path should exist, if not "keep"
+  df_files$origin[df_files$origin != "keep"] <- gsub(
+    paste0(normalize_path_winslash("."), "/"),
+    "",
+    normalize_path_winslash(df_files$origin[df_files$origin != "keep"], mustWork = TRUE))
+
+  
   if (any(duplicated(df_files$path))) {
     msg <- paste("Some paths appear multiple times in df_files. Please remove duplicated rows: ", paste(unique(df_files$path[duplicated(df_files$path)]), collapse = ", "))
 
