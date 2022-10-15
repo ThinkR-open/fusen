@@ -472,85 +472,114 @@ dir.create(dir_tmp)
 file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
 
 test_that("df_to_config works", {
-  withr::with_options(list(fusen.config_file = config_file_path), {
-
-    # Use full path
-    all_files <- tibble::tribble(
-      ~type, ~path,
-      "R", file.path(dir_tmp, "zaza.R"),
-      "R", file.path(dir_tmp, "zozo.R"),
-      "test", file.path(dir_tmp, "test-zaza.R")
-    )
-
-    expect_message(config_file_out <- df_to_config(all_files))
+  withr::with_dir(dir_tmp, {
+    withr::with_options(list(fusen.config_file = config_file_path), {
+      
+      # Use full path
+      all_files <- tibble::tribble(
+        ~type, ~path,
+        "R", "zaza.R",
+        "R", "zozo.R",
+        "test", "test-zaza.R"
+      )
+      
+      expect_message(config_file_out <- df_to_config(all_files))
+    })
+    
+    expect_equal(config_file_out, config_file_path)
+    all_keep <- yaml::read_yaml(config_file_out)
+    expect_equal(names(all_keep), "keep")
+    expect_equal(names(all_keep$keep), c("path", "R", "tests", "vignettes"))
+    expect_equal(all_keep$keep$path, c("keep"))
+    expect_equal(all_keep$keep$R, c("zaza.R", "zozo.R"))
+    expect_equal(all_keep$keep$tests, c("test-zaza.R"))
+    expect_equal(all_keep$keep$vignettes, list())
   })
-
-  expect_equal(config_file_out, config_file_path)
-  all_keep <- yaml::read_yaml(config_file_out)
-  expect_equal(names(all_keep), "keep")
-  expect_equal(names(all_keep$keep), c("path", "R", "tests", "vignettes"))
-  expect_equal(all_keep$keep$path, c("keep"))
-  expect_equal(all_keep$keep$R, file.path(dir_tmp, c("zaza.R", "zozo.R")))
-  expect_equal(all_keep$keep$tests,file.path(dir_tmp,  c("test-zaza.R")))
-  expect_equal(all_keep$keep$vignettes, list())
 })
 
 # Second pass
 all_files <- tibble::tribble(
   ~type, ~path,
-  "r", file.path(dir_tmp, "tata.R"),
-  "R", file.path(dir_tmp, "toto.R"),
-  "tests", file.path(dir_tmp, "test-tata.R"),
-  "vignettes", file.path(dir_tmp, "tata_vignette.Rmd")
+  "r", "tata.R",
+  "R", "toto.R",
+  "tests", "test-tata.R",
+  "vignettes", "tata_vignette.Rmd"
 )
 
 file.create(file.path(dir_tmp, c("tata.R", "toto.R", "test-tata.R", "tata_vignette.Rmd")))
 
-withr::with_options(list(fusen.config_file = config_file_path), {
-  # debugonce(df_to_config)
-  expect_message(
-    config_file <- df_to_config(all_files),
-    regexp = "Some files group already existed and were overwritten: keep"
-  ) # "keep" is default
+test_that("df_to_config works after 2nd run", {
+  withr::with_dir(dir_tmp, {
+    withr::with_options(list(fusen.config_file = config_file_path), {
+      # debugonce(df_to_config)
+      expect_message(
+        config_file <- df_to_config(all_files),
+        regexp = "Some files group already existed and were overwritten: keep"
+      ) # "keep" is default
+    })
+  })
 })
 
-# In a project ----
+unlink(dir_tmp, recursive = TRUE)
+file.remove(config_file_path)
 
-# Create files, even empty
+# Create files, even empty ----
 dir_tmp <- tempfile()
 dir.create(dir_tmp)
 file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
 dir.create(file.path(dir_tmp, "vignettes"))
 file.create(file.path(dir_tmp, "vignettes", "my-vignette.Rmd"))
-                      
-test_that("df_to_config works", {
+
+test_that("df_to_config works with files having no content", {
   withr::with_options(list(fusen.config_file = config_file_path), {
     withr::with_dir(dir_tmp, {
-
-    # Use relative path
-    all_files <- tibble::tribble(
-      ~type, ~path,
-      "R", "zaza.R",
-      "R", "zozo.R",
-      "test", "test-zaza.R",
-      "vignette", file.path("vignettes", "my-vignette.Rmd")
-    )
-
-    expect_message(config_file_out <- df_to_config(all_files))
-  })
-
-  expect_equal(config_file_out, config_file_path)
-  all_keep <- yaml::read_yaml(config_file_out)
-  expect_equal(names(all_keep), "keep")
-  expect_equal(names(all_keep$keep), c("path", "R", "tests", "vignettes"))
-  expect_equal(all_keep$keep$path, c("keep"))
-  # Relative path
-  expect_equal(all_keep$keep$R, c("zaza.R", "zozo.R"))
-  expect_equal(all_keep$keep$tests, c("test-zaza.R"))
-  expect_equal(all_keep$keep$vignettes, c("vignettes/my-vignette.Rmd"))
+      
+      # Use relative path
+      all_files <- tibble::tribble(
+        ~type, ~path,
+        "R", "zaza.R",
+        "R", "zozo.R",
+        "test", "test-zaza.R",
+        "vignette", file.path("vignettes", "my-vignette.Rmd")
+      )
+      
+      expect_message(config_file_out <- df_to_config(all_files))
+    })
+    
+    expect_equal(config_file_out, config_file_path)
+    all_keep <- yaml::read_yaml(config_file_out)
+    expect_equal(names(all_keep), "keep")
+    expect_equal(names(all_keep$keep), c("path", "R", "tests", "vignettes"))
+    expect_equal(all_keep$keep$path, c("keep"))
+    # Relative path
+    expect_equal(all_keep$keep$R, c("zaza.R", "zozo.R"))
+    expect_equal(all_keep$keep$tests, c("test-zaza.R"))
+    expect_equal(all_keep$keep$vignettes, c("vignettes/my-vignette.Rmd"))
   })
 })
 
+# Remove one file to see if it is detected
+file.remove(file.path(dir_tmp, c("zaza.R")))
+test_that("df_to_config works with files having no content", {
+  withr::with_options(list(fusen.config_file = config_file_path), {
+    withr::with_dir(dir_tmp, {
+      
+      # Use relative path
+      all_files <- tibble::tribble(
+        ~type, ~path,
+        "R", "zaza.R",
+        "R", "zozo.R",
+        "test", "test-zaza.R",
+        "vignette", file.path("vignettes", "my-vignette.Rmd")
+      )
+      
+      expect_error(config_file_out <- df_to_config(all_files), regexp = "zaza.R")
+    })
+  })
+})
+
+unlink(dir_tmp, recursive = TRUE)
+file.remove(config_file_path)
 # rstudioapi::navigateToFile(config_file)
 ```
 
@@ -871,8 +900,6 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 
 # Detect all files created ----
 usethis::with_project(dummypackage, {
-  # browser()
-
   # Create empty config file
 
   # Inflate once
