@@ -43,7 +43,7 @@ usethis::with_project(dummypackage, {
       open_vignette = FALSE
     )
   )
-  
+
   # Add a not registered file to the package
   cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
   
@@ -54,7 +54,7 @@ usethis::with_project(dummypackage, {
   # Indeed, the "to_keep.R" file will be registered as
   # "No existing source path found."
   # Manually change this line with "keep"
-  content_csv <- read.csv(out_csv)
+  content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
   # Here I change the line to simulate what you manually did above
   content_csv[content_csv[["path"]] == "R/to_keep.R", "origin"] <- "keep"
   write.csv(content_csv, out_csv)

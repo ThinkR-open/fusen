@@ -128,7 +128,8 @@ add_names_to_parsed <- function(parsed_tbl, fun_code) {
     df <- data.frame(
       sec_title = parsed_tbl[["sec_title"]][which_parsed_fun],
       sec_fun_name = parsed_tbl[["fun_name"]][which_parsed_fun],
-      fake = NA
+      fake = NA,
+      stringsAsFactors = FALSE
     )
     sec_title_name <- group_code(df, group_col = "sec_title", code_col = "fake")
 

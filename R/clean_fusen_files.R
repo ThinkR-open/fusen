@@ -35,7 +35,7 @@
 #'       open_vignette = FALSE
 #'     )
 #'   )
-#'   
+#' 
 #'   # Add a not registered file to the package
 #'   cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
 #'   
@@ -46,7 +46,7 @@
 #'   # Indeed, the "to_keep.R" file will be registered as
 #'   # "No existing source path found."
 #'   # Manually change this line with "keep"
-#'   content_csv <- read.csv(out_csv)
+#'   content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
 #'   # Here I change the line to simulate what you manually did above
 #'   content_csv[content_csv[["path"]] == "R/to_keep.R", "origin"] <- "keep"
 #'   write.csv(content_csv, out_csv)
@@ -72,7 +72,8 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
     ),
     path = c(
       all_r, all_test, all_vignette
-    )
+    ),
+    stringsAsFactors = FALSE
   )
 
   if (nrow(res) == 0) {
@@ -213,7 +214,7 @@ df_to_config <- function(df_files, flat_file_path = "keep", force = FALSE) {
   }
 
   if (!is.data.frame(df_files) && file.exists(df_files)) {
-    df_files <- read.csv(df_files)
+    df_files <- read.csv(df_files, stringsAsFactors = FALSE)
   } else if (!is.data.frame(df_files) && !file.exists(df_files)) {
     stop("'", df_files, "' does not exist. You can run `check_not_registered_files()` before.")
   }

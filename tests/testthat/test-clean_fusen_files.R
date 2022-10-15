@@ -223,7 +223,7 @@ usethis::with_project(dummypackage, {
     regexp = "Wrote not registered files in:  dev/config_not_registered.csv"
   )
 
-  content_csv <- read.csv(out_csv)
+  content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
   expect_true(all(names(content_csv) %in% c("type", "path", "origin")))
   expect_equal(content_csv[["type"]], c("R", "R", "test", "test", "vignette"))
   # Relative path
@@ -255,7 +255,7 @@ usethis::with_project(dummypackage, {
   cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
 
   expect_message(out_csv <- check_not_registered_files(), "Wrote not registered files")
-  content_csv <- read.csv(out_csv)
+  content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
   expect_true(
     grepl(
       "No existing source path found",
