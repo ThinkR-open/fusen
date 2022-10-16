@@ -26,9 +26,9 @@ From {fusen} >=0.5, a "config_fusen.yaml" file registers all files created from 
 Hence, you can keep track on where to find the source of your functions and tests.
 One of its major functionnality is to help you clean your package files in case you decide to change a function name, delete a function or change a vignette name.
 
-To make this work properly, you will have to register all files that were not created from a flat file. `add_files_to_config()` will help you do so (See details below).  
+To make this work properly, you will have to register all files that were not created from a flat file. `add_files_to_config()` will help you do so (See below: "Register some specific files, even with regex").  
 
-If you use this version of {fusen} in an existing project, you will want to register all existing files to avoid a too strong clean up: `register_all_to_config()` will help you do so (See details below).
+If you use this version of {fusen} in an existing project, you will want to register all existing files to avoid a too strong clean up: `register_all_to_config()` will help you do so (See below: "How to migrate from previous {fusen} versions?").
 
 
 ## {fusen} helps you clean your old functions and tests files
@@ -49,7 +49,7 @@ To make this work properly, all R, test and vignettes files will need to be regi
 TODO - clean_fusen_files
 
 
-### You can register some specific files, even with regex
+### Register some specific files, even with regex
 
 You may not want to register each new file that does not come during an inflate process. For instance, with {golem}, there are module (`^mod_*`) files, which need to be protected. You can add this regular expression directly in the yaml file with `add_files_to_config(c("R" = "^mod_*"))` 
 
@@ -70,7 +70,7 @@ They are visible to users as soon as they start using {fusen} >= 0.5, even if th
 The recommended process for a migration is:  
 
 - Run `register_all_to_config()` in your current package to create the "dev/config_fusen.yaml" that registers all your existing files. 
-  + You will note a "keep" section, which lists all files for which the source was not guessed.
+  + You will note a "keep" section, which lists all files for which the source was not guessed. You can clean it up if you want.
 - You're good to go with the new version of {fusen}
 
 
@@ -109,6 +109,7 @@ Run `register_all_to_config()` in your current package to create the "dev/config
 ```{r example-register_all_to_config-1, eval = FALSE}
 #' \dontrun{
 # Usually run this one inside the current project
+# Note: running this will write "dev/config_fusen.yaml" in your working directory
 register_all_to_config()
 #' }
 ```

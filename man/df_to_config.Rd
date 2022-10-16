@@ -4,7 +4,12 @@
 \alias{df_to_config}
 \title{Add a tibble of files and types to the 'fusen' config file}
 \usage{
-df_to_config(df_files, flat_file_path = "keep", force = FALSE)
+df_to_config(
+  df_files,
+  flat_file_path = "keep",
+  state = "active",
+  force = FALSE
+)
 }
 \arguments{
 \item{df_files}{A dataframe with 'type' and 'path' columns
@@ -14,6 +19,8 @@ or nothing (and it will take the csv file in "dev/")}
 \item{flat_file_path}{Character. Usually \code{"keep"} or the name of the origin flat file, although inflating the flat file should have the same result.}
 
 \item{force}{Logical. Whether to force writing the configuration file even with potential errors.}
+
+\item{state.}{Character. Whether if the flat file is active or deprecated.}
 }
 \value{
 Config file path.

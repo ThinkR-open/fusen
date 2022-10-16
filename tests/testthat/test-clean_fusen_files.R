@@ -26,6 +26,8 @@ test_that("register_all_to_config works", {
   expect_true(inherits(register_all_to_config, "function")) 
   
   usethis::with_project(dummypackage, {
+    browser()
+    
     expect_error(
       out_path <- register_all_to_config(dummypackage), regexp = NA)
         expect_equal(out_path, file.path("dev", "config_fusen.yaml"))
@@ -80,8 +82,6 @@ test_that("df_to_config works", {
   withr::with_dir(dir_tmp, {
     withr::with_options(list(fusen.config_file = config_file_path), {
       
-      browser()
-      
       # Use full path
       all_files <- tibble::tribble(
         ~type, ~path,
@@ -96,8 +96,9 @@ test_that("df_to_config works", {
     expect_equal(config_file_out, config_file_path)
     all_keep <- yaml::read_yaml(config_file_out)
     expect_equal(names(all_keep), "keep")
-    expect_equal(names(all_keep$keep), c("path", "R", "tests", "vignettes"))
+    expect_equal(names(all_keep$keep), c("path", "state", "R", "tests", "vignettes"))
     expect_equal(all_keep$keep$path, c("keep"))
+    expect_equal(all_keep$keep$state, c("active"))
     expect_equal(all_keep$keep$R, c("zaza.R", "zozo.R"))
     expect_equal(all_keep$keep$tests, c("test-zaza.R"))
     expect_equal(all_keep$keep$vignettes, list())
@@ -156,8 +157,9 @@ test_that("df_to_config works with files having no content", {
     expect_equal(config_file_out, config_file_path)
     all_keep <- yaml::read_yaml(config_file_out)
     expect_equal(names(all_keep), "keep")
-    expect_equal(names(all_keep$keep), c("path", "R", "tests", "vignettes"))
+    expect_equal(names(all_keep$keep), c("path", "state", "R", "tests", "vignettes"))
     expect_equal(all_keep$keep$path, c("keep"))
+    expect_equal(all_keep$keep$state, c("active"))
     # Relative path
     expect_equal(all_keep$keep$R, c("zaza.R", "zozo.R"))
     expect_equal(all_keep$keep$tests, c("test-zaza.R"))
@@ -165,7 +167,7 @@ test_that("df_to_config works with files having no content", {
   })
 })
 
-# Remove one file to see if it is detected
+# Remove one file to see if it is detected ----
 file.remove(file.path(dir_tmp, c("zaza.R")))
 test_that("df_to_config works with files having no content", {
   withr::with_options(list(fusen.config_file = config_file_path), {
@@ -187,6 +189,9 @@ test_that("df_to_config works with files having no content", {
 
 unlink(dir_tmp, recursive = TRUE)
 file.remove(config_file_path)
+
+# Verify df_to_config was run during ìnflate()
+
 # rstudioapi::navigateToFile(config_file)
 
 dummypackage <- tempfile("registered")
@@ -201,7 +206,6 @@ usethis::with_project(dummypackage, {
   test_that("check_not_registered_files returns message if empty", {
     expect_true(inherits(check_not_registered_files, "function"))
 
-    browser()
     # debugonce(check_not_registered_files)
     expect_message(check_not_registered_files(), "There are no files in the package")
   })
@@ -244,7 +248,7 @@ usethis::with_project(dummypackage, {
   expect_true(names(out_config_content) == "flat_full.Rmd")
   expect_equal(
     names(out_config_content[["flat_full.Rmd"]]),
-    c("path", "R", "tests", "vignettes")
+    c("path", "state", "R", "tests", "vignettes")
   )
   expect_equal(out_config_content[["flat_full.Rmd"]][["R"]],
                c("R/my_median.R", "R/my_other_median.R"))

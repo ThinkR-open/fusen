@@ -4,7 +4,7 @@
 \alias{register_all_to_config}
 \title{Include all existing package files in the config file}
 \usage{
-register_all_to_config(pkg)
+register_all_to_config(pkg = ".")
 }
 \arguments{
 \item{pkg}{Path to the package from which to add file to configuration file}
@@ -18,6 +18,7 @@ Helps transition from non-fusen packages
 \examples{
 \dontrun{
 # Usually run this one inside the current project
+# Note: running this will write "dev/config_fusen.yaml" in your working directory
 register_all_to_config()
 }
 

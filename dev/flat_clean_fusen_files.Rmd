@@ -20,9 +20,9 @@ From {fusen} >=0.5, a "config_fusen.yaml" file registers all files created from 
 Hence, you can keep track on where to find the source of your functions and tests.
 One of its major functionnality is to help you clean your package files in case you decide to change a function name, delete a function or change a vignette name.
 
-To make this work properly, you will have to register all files that were not created from a flat file. `add_files_to_config()` will help you do so (See details below).  
+To make this work properly, you will have to register all files that were not created from a flat file. `add_files_to_config()` will help you do so (See below: "Register some specific files, even with regex").  
 
-If you use this version of {fusen} in an existing project, you will want to register all existing files to avoid a too strong clean up: `register_all_to_config()` will help you do so (See details below).
+If you use this version of {fusen} in an existing project, you will want to register all existing files to avoid a too strong clean up: `register_all_to_config()` will help you do so (See below: "How to migrate from previous {fusen} versions?").
 
 ## {fusen} helps you clean your old functions and tests files
 
@@ -40,7 +40,7 @@ To make this work properly, all R, test and vignettes files will need to be regi
 
 TODO - clean_fusen_files
 
-### You can register some specific files, even with regex
+### Register some specific files, even with regex
 
 You may not want to register each new file that does not come during an inflate process. For instance, with {golem}, there are module (`^mod_*`) files, which need to be protected. You can add this regular expression directly in the yaml file with `add_files_to_config(c("R" = "^mod_*"))` 
 
@@ -59,7 +59,7 @@ They are visible to users as soon as they start using {fusen} >= 0.5, even if th
 The recommended process for a migration is:  
 
 - Run `register_all_to_config()` in your current package to create the "dev/config_fusen.yaml" that registers all your existing files. 
-  + You will note a "keep" section, which lists all files for which the source was not guessed.
+  + You will note a "keep" section, which lists all files for which the source was not guessed. You can clean it up if you want.
 - You're good to go with the new version of {fusen}
 
 ### You can take this opportunity to clean your repository
@@ -98,7 +98,7 @@ Run `register_all_to_config()` in your current package to create the "dev/config
 #' @return Path to configuration file
 #' 
 #' @export
-register_all_to_config <- function(pkg) {
+register_all_to_config <- function(pkg = ".") {
   # Use the fonction to check the list of files
   out_df <- check_not_registered_files(pkg, to_csv = FALSE)
   
@@ -111,13 +111,14 @@ register_all_to_config <- function(pkg) {
   out_df[["origin"]][w.keep] <- "keep"
   out_config <- df_to_config(df_files = out_df)
   # rstudioapi::navigateToFile(file.path(pkg, "dev", "config_fusen.yaml"))
-  return(out_config)
+  return(invisible(out_config))
 }
 ```
   
 ```{r example-register_all_to_config-1, eval=FALSE}
 #' \dontrun{
 # Usually run this one inside the current project
+# Note: running this will write "dev/config_fusen.yaml" in your working directory
 register_all_to_config()
 #' }
 ```
@@ -179,6 +180,8 @@ test_that("register_all_to_config works", {
   expect_true(inherits(register_all_to_config, "function")) 
   
   usethis::with_project(dummypackage, {
+    browser()
+    
     expect_error(
       out_path <- register_all_to_config(dummypackage), regexp = NA)
         expect_equal(out_path, file.path("dev", "config_fusen.yaml"))
@@ -205,6 +208,7 @@ This is important if you started to develop without {fusen}, and start using a f
 #' or a csv file path as issued from `[check_not_registered_files()]`
 #' or nothing (and it will take the csv file in "dev/")
 #' @param flat_file_path Character. Usually `"keep"` or the name of the origin flat file, although inflating the flat file should have the same result.
+#' @param state. Character. Whether if the flat file is active or deprecated.
 #' @param force Logical. Whether to force writing the configuration file even with potential errors.
 #'
 #' @importFrom stats setNames
@@ -219,9 +223,9 @@ This is important if you started to develop without {fusen}, and start using a f
 #' - All `path` should exist.
 #' - Change path to config file with `options(fusen.config_file = "dev/config_fusen.yaml")`
 #'
-df_to_config <- function(df_files, flat_file_path = "keep", force = FALSE) {
+df_to_config <- function(df_files, flat_file_path = "keep", state = "active", force = FALSE) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
-
+  
   # User entry verifications
   if (missing(df_files)) {
     df_files <- file.path(dirname(config_file), "config_not_registered.csv")
@@ -350,7 +354,14 @@ df_to_config <- function(df_files, flat_file_path = "keep", force = FALSE) {
   }
 
   each_flat_file_path <- unique(df_files[["origin"]])
-  all_groups_list <- lapply(each_flat_file_path, function(x) update_one_group_yaml(df_files, complete_yaml, x)) %>%
+  if (length(state) != length(each_flat_file_path)) {
+    state <- rep(state, length.out = length(each_flat_file_path))
+  }
+  all_groups_list <- lapply(
+    seq_along(each_flat_file_path), 
+    function(x) update_one_group_yaml(
+      df_files, complete_yaml,
+      each_flat_file_path[x], state = state[x])) %>%
     setNames(basename(each_flat_file_path))
 
   all_modified <- names(complete_yaml)[names(complete_yaml) %in% names(all_groups_list)]
@@ -371,6 +382,8 @@ df_to_config <- function(df_files, flat_file_path = "keep", force = FALSE) {
 
   # Get duplicated paths after update
   yaml_paths <- unlist(complete_yaml)
+  # Except info on state
+  yaml_paths <- yaml_paths[!grepl("[.]state$", names(yaml_paths))]
 
   if (any(duplicated(yaml_paths))) {
     which_file <- files_list_to_vector(
@@ -403,14 +416,18 @@ files_list_to_vector <- function(list_of_files) {
 #' Update one group in the complete yaml as list
 #' @param complete_yaml The list as output of config_yaml file
 #' @param flat_file_path The group to update
+#' @param state Character. "active" or "deprecated"
 #' @noRd
-update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path) {
+update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state = c("active", "deprecated")) {
+  
+  state <- match.arg(state, several.ok = FALSE)
   all_keep_before <- complete_yaml[[basename(flat_file_path)]]
 
   df_files_filtered <- df_files[df_files[["origin"]] == flat_file_path,]
   
   this_group_list <- list(
     path = flat_file_path,
+    state = state,
     R = c(df_files_filtered[["path"]][grepl("^R$|^r$", df_files_filtered[["type"]])]),
     tests = c(df_files_filtered[["path"]][grepl("^test$|^tests$", df_files_filtered[["type"]])]),
     vignettes = c(df_files_filtered[["path"]][grepl("^vignette$|^vignettes$", df_files_filtered[["type"]])])
@@ -500,8 +517,6 @@ test_that("df_to_config works", {
   withr::with_dir(dir_tmp, {
     withr::with_options(list(fusen.config_file = config_file_path), {
       
-      browser()
-      
       # Use full path
       all_files <- tibble::tribble(
         ~type, ~path,
@@ -516,8 +531,9 @@ test_that("df_to_config works", {
     expect_equal(config_file_out, config_file_path)
     all_keep <- yaml::read_yaml(config_file_out)
     expect_equal(names(all_keep), "keep")
-    expect_equal(names(all_keep$keep), c("path", "R", "tests", "vignettes"))
+    expect_equal(names(all_keep$keep), c("path", "state", "R", "tests", "vignettes"))
     expect_equal(all_keep$keep$path, c("keep"))
+    expect_equal(all_keep$keep$state, c("active"))
     expect_equal(all_keep$keep$R, c("zaza.R", "zozo.R"))
     expect_equal(all_keep$keep$tests, c("test-zaza.R"))
     expect_equal(all_keep$keep$vignettes, list())
@@ -576,8 +592,9 @@ test_that("df_to_config works with files having no content", {
     expect_equal(config_file_out, config_file_path)
     all_keep <- yaml::read_yaml(config_file_out)
     expect_equal(names(all_keep), "keep")
-    expect_equal(names(all_keep$keep), c("path", "R", "tests", "vignettes"))
+    expect_equal(names(all_keep$keep), c("path", "state", "R", "tests", "vignettes"))
     expect_equal(all_keep$keep$path, c("keep"))
+    expect_equal(all_keep$keep$state, c("active"))
     # Relative path
     expect_equal(all_keep$keep$R, c("zaza.R", "zozo.R"))
     expect_equal(all_keep$keep$tests, c("test-zaza.R"))
@@ -585,7 +602,7 @@ test_that("df_to_config works with files having no content", {
   })
 })
 
-# Remove one file to see if it is detected
+# Remove one file to see if it is detected ----
 file.remove(file.path(dir_tmp, c("zaza.R")))
 test_that("df_to_config works with files having no content", {
   withr::with_options(list(fusen.config_file = config_file_path), {
@@ -607,6 +624,9 @@ test_that("df_to_config works with files having no content", {
 
 unlink(dir_tmp, recursive = TRUE)
 file.remove(config_file_path)
+
+# Verify df_to_config was run during ìnflate()
+
 # rstudioapi::navigateToFile(config_file)
 ```
 
@@ -724,12 +744,13 @@ guess_flat_origin <- function(path) {
   }
 }
 
-#' Get all paths from a config list
+#' Get all paths from a config list, except some
 #' @param config_list List as read from config.yaml file
 #' @noRd
 get_list_paths <- function(config_list) {
   unlist(lapply(config_list, function(x) {
-    x$path <- NULL
+    if (x$path == "keep") x$path <- NULL
+    x$state <- NULL
     x
   }))
 }
@@ -843,7 +864,7 @@ usethis::with_project(dummypackage, {
   expect_true(names(out_config_content) == "flat_full.Rmd")
   expect_equal(
     names(out_config_content[["flat_full.Rmd"]]),
-    c("path", "R", "tests", "vignettes")
+    c("path", "state", "R", "tests", "vignettes")
   )
   expect_equal(out_config_content[["flat_full.Rmd"]][["R"]],
                c("R/my_median.R", "R/my_other_median.R"))
