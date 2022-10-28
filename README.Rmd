@@ -100,8 +100,14 @@ fusen::inflate(
   check = TRUE
 )
 ```
+- Share it on a website on GitHub
+```{r eval=FALSE}
+fusen::init_share_on_github()
+```
 
-**That's it! You built a package! A documented and tested package!**
+
+**That's it! You built a package! A documented and tested package!**  
+**You even have a website for it!**
 
 Let's test it now:
 
@@ -114,14 +120,6 @@ remotes::install_local()
 - Test functions of your package
 ```{r, eval=FALSE}
 my.package::my_median(1:12)
-```
-
-- Test the correct documentation of the package by building its dedicated website
-```{r, eval=FALSE}
-# Build {pkgdown} to test it
-usethis::use_pkgdown()
-pkgdown::build_site()
-# > See references and articles
 ```
 
 ## Description of the Rmd template

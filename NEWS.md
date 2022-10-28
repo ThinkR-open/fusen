@@ -1,3 +1,9 @@
+# fusen (development version)
+
+## New features
+
+- Publish your {fusen} project on a GitHub website with one command: `init_share_on_github()`
+
 # fusen 0.4.1
 
 ## New features
