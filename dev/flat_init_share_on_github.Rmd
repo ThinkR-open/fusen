@@ -1,0 +1,241 @@
+---
+title: "flat_init_share_on_github.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+**You write R scripts and you would like to share them with other users, in a sustainable and maintainable way. You already know how to write a notebook (Rmarkdown or Quarto) and share its HTML output, but you do not like to present the outputs along with how to use the functions in the same web page.**
+
+# Initiate GitHub to share your work on a website
+
+- Create a new project with {fusen} using git
+```{r}
+#| echo: false
+#| eval: false
+path_project <- "your/path/where/to/start/your/project/project_name"
+fusen::create_fusen(path = path_project, template = "minimal", with_git = TRUE, open = TRUE)
+```
+
+- Follow the "dev/0-dev_history.Rmd" to describe your project
+  + At least, you will have to fill the `fusen::fill_description()` function with your identity as below
+```{r}
+#| eval: false
+# Describe your project
+fusen::fill_description(
+  pkg = here::here(),
+  fields = list(
+    Title = "Share Your Project Following Good Development Practices From a Rmarkdown File",
+    Description = "Use Rmarkdown First method. Strengthen your work with documentation and tests. Everything can be set from a Rmarkdown file in your project.",
+    `Authors@R` = c(
+      person("John", "Doe", email = "john@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000"))
+    )
+  )
+)
+# Define License with use_*_license()
+usethis::use_mit_license("John Doe")
+```
+
+- Open the "dev/flat_full.Rmd"
+  + This is the skeleton to follow if you want a properly documented and tested work
+    + Write what the code is supposed to do in plain markdown
+    + Separate the `function` from the `example` and `test` chunks
+    + Create new sections below in your flat template with the Addin > add {fusen} chunk
+- Then `inflate()` the flat template to build the proper structure of the project
+    + Sections will be transferred in the correct places to get a proper package
+    + A set of checks will be run to verify that your work is properly documented and tested
+```{r}
+#| eval: false
+fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
+```
+
+- Share your work on a website using GitHub
+  + You may need to run `usethis::create_github_token()`, then `gitcreds::gitcreds_set()` before, if you do not have a registered GitHub token yet.
+  + You will be asked multiple times if you want to commit, you can say "yes" each time.
+
+```{r function-init_share_on_github}
+#' Initiate GitHub to share your work on a website
+#'
+#' This uses {pkgdown} to share the documentation of the package through GitHub Actions.
+#' You may need to run `usethis::create_github_token()`, then `gitcreds::gitcreds_set()` before.
+#'
+#' @return The URL of the website created
+#' @export
+#'
+#' @examples
+init_share_on_github <- function() {
+  pkg <- "."
+
+  # Init git if not already initiated
+  repo <- tryCatch(gert::git_find(pkg), error = function(e) NULL)
+  if (!is.null(repo)) {
+    to_init <- is.na(gert::git_info(pkg)[["head"]])
+  } else {
+    to_init <- TRUE
+  }
+  if (to_init) {
+    sure <- paste0("git is not initiated yet\n",
+                   "Do you want to init and commit the current state? (y/n)\n")
+    do_it <- readline(sure) == "y"
+    if (do_it) {
+      cli::cat_rule("Init Git Repository with first commit")
+      gert::git_init(path = pkg)
+      gert::git_add(".")
+      gert::git_commit_all(message = "chore: Init repository")
+      if (requireNamespace("rstudioapi") && rstudioapi::isAvailable()) {
+        message("After the procedure, you'll want to restart your RStudio session")
+      }
+    } else {
+      stop("Please Init you git repository using `usethis::use_git()`")
+    }
+  }
+
+  # Init GitHub connexion
+  cli::cat_rule("Init GitHub Connexion")
+  info_git <- gert::git_remote_list()
+  if (nrow(info_git) == 0) {
+    usethis::use_github()
+  } else if (grepl("github", info_git[info_git$name == "origin", "url"])) {
+    message("Your repository is already connected to a remote GitHub repository: ",
+            info_git[info_git$name == "origin", "url"])
+  } else {
+    stop("Your repository is not connected to a GitHub repository: ", info_git[info_git$name == "origin", "url"])
+  }
+  
+  # Add a NEWS if not exists
+  if (!file.exists("NEWS.md")) {
+    cli::cat_rule("Add NEWS")
+    usethis::use_news_md()
+  }
+  
+  # Add a Readme if not exists
+  if (!file.exists("README.Rmd")) {
+    cli::cat_rule("Add Readme")
+    usethis::use_readme_rmd()
+  }
+  
+  # Add GitHub Actions with pkgdown
+  cli::cat_rule("Init GitHub Actions")
+  usethis::use_github_action_check_standard()
+  usethis::use_github_action("pkgdown")
+  usethis::use_github_action("test-coverage")
+  
+  # Get info for website
+  github_url <- gert::git_remote_info()$url
+  github_url_no_git <- gsub("[.]git$", "", github_url)
+  username <- gsub("https://github.com/(.*)/.*$", "\\1", github_url_no_git)
+  projname <- gsub(paste0("https://github.com/", username, "/(.*)$"), "\\1", github_url_no_git)
+  url_pages <- paste0("https://", username, ".github.io/", projname)
+    
+  # Knit the Readme file
+  cli::cat_rule("Update and Knit the Readme file")
+  readme_lines <- readLines("README.Rmd")
+  add_line <- grep("## Example", readme_lines)[1]
+  readme_lines[add_line] <- paste0(
+    "## Documentation\n\n",
+    "Full documentation website on: ", url_pages,
+    "\n\n",
+    readme_lines[add_line]
+  )
+  cat(readme_lines, file = "README.Rmd", sep = "\n")
+  knitr::knit("README.Rmd")
+  message("After the procedure, you may want to manually update and knit your README.Rmd")
+  
+  # Push to the repository
+  cli::cat_rule("Push to GitHub and wait for publication")
+  gert::git_add(".")
+  gert::git_commit_all(message = "chore: Init Actions and website")
+  gert::git_push()
+  
+  # Message website
+  cli::cat_rule("Make sure GitHub is set for your website publication")
+  url_setting_pages <- paste0(github_url_no_git, '/settings/pages')
+  url_actions <- paste0(github_url_no_git, '/actions')
+  # usethis::ui_todo(
+  # cli::cli_warn(
+  cat(
+    cli::cli_text("\n1 - Wait for the Actions 'chore: Init Actions and website <pkgdown>' to finish on: {.url {url_actions}}."),
+    
+    cli::cli_text("\n2 - Once the 'gh-pages' branch is created, you need to tell GitHub to follow it."),
+    cli::cli_text("Go to: {.url  {url_setting_pages}} and choose 'gh-pages' in the 'Branch' drop-down menu, instead of 'None'."),
+    cli::cli_text("You may need to wait for it to be created by GitHub Actions."),
+    
+    # browseURL(paste0(github_url_no_git, "/settings/pages"))
+    cli::cli_text("\n3 - In a few seconds, you'll be able to see your project website at: {.url {url_pages}}"),
+    cli::cli_text("Now it's time to continue your project: fill the flat file, inflate, push to GitHub.")
+  )
+  
+  return(url_pages)
+}
+```
+
+```{r examples-init_share_on_github, eval=FALSE}
+#' \dontrun{
+init_share_on_github()
+#' }
+```
+
+_In a few minutes, you'll be able to see and share your project website._  
+You won't have to run this command line again. 
+Each time you push new commits to the main branch on GitHub, your website will be updated thanks to GitHub Actions.
+
+```{r tests-init_share_on_github}
+test_that("init_share_on_github works", {
+  
+  skip_if_not(interactive())
+  
+  if (Sys.getenv("FUSEN_TEST_PUBLISH", unset = "FALSE") == "TRUE") {
+    # Only create the project if specifically asked by maintainers
+    path_project <- file.path(tempdir(), paste0("fusen.github.", packageVersion("fusen"))) 
+    # path_project <- tempfile("fusen.github.proj")
+    the_devs <- create_fusen(path = path_project, template = "minimal", with_git = TRUE, open = FALSE)
+    the_flat <- the_devs[grep("flat", the_devs)]
+    # Follow the "dev/0-dev_history.Rmd"
+    usethis::with_project(path_project, {
+      fill_description(
+        pkg = path_project,
+        fields = list(
+          Title = "Share Your Project Following Good Development Practices From a Rmarkdown File",
+          Description = "Use Rmarkdown First method. Strengthen your work with documentation and tests. Everything can be set from a Rmarkdown file in your project.",
+          `Authors@R` = c(
+            person("John", "Doe", email = "john@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000"))
+          )
+        )
+      )
+      # Define License with use_*_license()
+      usethis::use_mit_license("John Doe")
+      
+      # Inflate
+      inflate(flat_file = the_flat, vignette_name = "Get started", open_vignette = FALSE)
+    })
+    
+    usethis::with_project(path_project, {
+      # Share on GitHub
+      website_url <- init_share_on_github()
+    }) # End of with_project
+  
+    do_it <- readline("Does pkgdown website exists after following instructions? (y/n)") == "y"
+    expect_true(do_it)
+  }
+  unlink(path_project, recursive = TRUE)
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_init_share_on_github.Rmd", vignette_name = "Share on a GitHub website", overwrite = TRUE, check = FALSE)
+
+rstudioapi::navigateToFile("dev/dev_history.R", line = 105)
+```
+

@@ -172,6 +172,9 @@ testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate-part1.R")
 testthat::test_file("tests/testthat/test-inflate-part2.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
+
+Sys.setenv("FUSEN_TEST_PUBLISH" = "TRUE")
+testthat::test_file("tests/testthat/test-init_share_on_github.R")
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 # Test no output generated in the user files
 # pkgload::load_all(export_all = FALSE)
