@@ -22,6 +22,9 @@
     <loc>https://thinkr-open.github.io/fusen/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://thinkr-open.github.io/fusen/articles/share-on-a-github-website.html</loc>
+  </url>
+  <url>
     <loc>https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html</loc>
   </url>
   <url>
@@ -56,6 +59,9 @@
   </url>
   <url>
     <loc>https://thinkr-open.github.io/fusen/reference/inflate.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/reference/init_share_on_github.html</loc>
   </url>
   <url>
     <loc>https://thinkr-open.github.io/fusen/reference/load_flat_functions.html</loc>
