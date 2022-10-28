@@ -99,19 +99,21 @@ init_share_on_github <- function() {
   # Message website
   cli::cat_rule("Make sure GitHub is set for your website publication")
   url_setting_pages <- paste0(github_url_no_git, '/settings/pages')
-  url_actions <- paste0(github_url_no_git, '/actions')
+  url_actions <- paste0(github_url_no_git, '/actions/workflows/pkgdown.yaml')
   # usethis::ui_todo(
   # cli::cli_warn(
   cat(
-    cli::cli_text("\n1 - Wait for the Actions 'chore: Init Actions and website <pkgdown>' to finish on: {.url {url_actions}}."),
+    cli::cli_text("1 - Wait for the 'pkgdown' Actions 'chore: Init Actions and website' to finish on: {.url {url_actions}}."),
     
-    cli::cli_text("\n2 - Once the 'gh-pages' branch is created, you need to tell GitHub to follow it."),
+    cli::cli_text("2 - Once the 'gh-pages' branch is created, you need to tell GitHub to follow it."),
     cli::cli_text("Go to: {.url  {url_setting_pages}} and choose 'gh-pages' in the 'Branch' drop-down menu, instead of 'None'."),
     cli::cli_text("You may need to wait for it to be created by GitHub Actions."),
     
     # browseURL(paste0(github_url_no_git, "/settings/pages"))
-    cli::cli_text("\n3 - In a few seconds, you'll be able to see your project website at: {.url {url_pages}}"),
-    cli::cli_text("Now it's time to continue your project: fill the flat file, inflate, push to GitHub.")
+    cli::cli_text("3 - In a few seconds, you'll be able to see your project website at: {.url {url_pages}}"),
+    cli::cli_text("Now it's time to continue your project: fill the flat file, inflate, push to GitHub."),
+    {if (!dir.exists("R")) cli::cli_text("> Note: The Action 'R-CMD-check' may fail as you do not have any function in your package yet. Inflate your flat file with a function once, and it should be good.")},
+    {if (!dir.exists("tests")) cli::cli_text("> Note: The Action 'test-coverage' may fail as you do not have any test in your package yet. Inflate your flat file with a unit test once, and it should be good.")}
   )
   
   return(url_pages)

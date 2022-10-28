@@ -25,8 +25,8 @@ test_that("init_share_on_github works", {
       # Define License with use_*_license()
       usethis::use_mit_license("John Doe")
       
-      # Inflate
-      inflate(flat_file = the_flat, vignette_name = "Get started", open_vignette = FALSE)
+      # Inflate ?
+      # inflate(flat_file = the_flat, vignette_name = "Get started", open_vignette = FALSE)
     })
     
     usethis::with_project(path_project, {
