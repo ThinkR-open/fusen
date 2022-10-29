@@ -74,7 +74,7 @@ fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
 #' @examples
 init_share_on_github <- function() {
   pkg <- "."
-
+  
   # Init git if not already initiated
   repo <- tryCatch(gert::git_find(pkg), error = function(e) NULL)
   if (!is.null(repo)) {
@@ -109,6 +109,15 @@ init_share_on_github <- function() {
             info_git[info_git$name == "origin", "url"])
   } else {
     stop("Your repository is not connected to a GitHub repository: ", info_git[info_git$name == "origin", "url"])
+  }
+  
+  msg <- character(0)
+  
+  # Add a DESCRIPTION if not exists
+  if (!file.exists("DESCRIPTION")) {
+    cli::cat_rule("Add DESCRIPTION")
+    fill_description(pkg = pkg)
+    msg <- c(msg, "You need to fill your DESCRIPTION file. See `?fusen::fill_description`.")
   }
   
   # Add a NEWS if not exists
@@ -148,7 +157,7 @@ init_share_on_github <- function() {
   )
   cat(readme_lines, file = "README.Rmd", sep = "\n")
   knitr::knit("README.Rmd")
-  message("After the procedure, you may want to manually update and knit your README.Rmd")
+  msg <- c(msg, "You will want to update your README.Rmd file. And then `knit()` it.")
   
   # Push to the repository
   cli::cat_rule("Push to GitHub and wait for publication")
@@ -172,6 +181,7 @@ init_share_on_github <- function() {
     # browseURL(paste0(github_url_no_git, "/settings/pages"))
     cli::cli_text("3 - In a few seconds, you'll be able to see your project website at: {.url {url_pages}}"),
     cli::cli_text("Now it's time to continue your project: fill the flat file, inflate, push to GitHub."),
+    cli::cli_text("> Infos: ", paste(msg, collapse = " - ")),
     {if (!dir.exists("R")) cli::cli_text("> Note: The Action 'R-CMD-check' may fail as you do not have any function in your package yet. Inflate your flat file with a function once, and it should be good.")},
     {if (!dir.exists("tests")) cli::cli_text("> Note: The Action 'test-coverage' may fail as you do not have any test in your package yet. Inflate your flat file with a unit test once, and it should be good.")}
   )
