@@ -987,3 +987,42 @@ usethis::with_project(dummypackage, {
 })
 
 unlink(dummypackage, recursive = TRUE)
+
+# Test "function ()" in documentation not read as a function ----
+
+# Create a new project
+dummypackage <- tempfile("inflate.fun.in.roxygen")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-word-function-in-doc.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = NA, check = FALSE
+    )
+  )
+
+  test_that("inflate() worked correctly", {
+    # Check only the first function is saved in a .R
+    the_codes <- file.path(dummypackage, "R")
+    expect_equal(list.files(the_codes), "my_function.R") # not c("add_one.R", "my_function.R")
+    # Check that .R contains example
+    code <- readLines(file.path(dummypackage, "R", "my_function.R"))
+    any(grepl("^#'\\s*my_function\\(x", code))
+  })
+})
+
+# Clean
+unlink(dummypackage, recursive = TRUE)
