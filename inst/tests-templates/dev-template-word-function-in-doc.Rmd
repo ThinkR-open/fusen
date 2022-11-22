@@ -17,6 +17,7 @@ Uses "function()" in parameter's documentation
 #' Call a stat function
 #' 
 #' Run a stat function (ex : mean, min, max)
+#' function()
 #' 
 #' @param x A numeric vector
 #' @param stat_function A stat function (ex : mean, min, max)
@@ -25,7 +26,8 @@ Uses "function()" in parameter's documentation
 #' 
 #' @export
 my_function <- function(x, stat_function){
-  stat_function(x, na.rm = TRUE)
+  stat_function(x, na.rm = TRUE) # function() comment after code
+# function() in code comment
 }
 ```
   
