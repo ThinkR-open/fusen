@@ -33,12 +33,14 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   # Clean extra space between #' and @
   code <- gsub(pattern = "#'\\s*@", "#' @", code)
 
-
   # Get all #'
   all_hastags <- grep("^#'", code)
 
+  # Get all #
+  all_comments <- grep("^#", code)
+
   # Get all functions
-  fun_positions <- setdiff(grep(regex_isfunction, code), all_hastags)
+  fun_positions <- setdiff(grep(regex_isfunction, code), all_comments)
 
   # find function name
   fun_name <- stringi::stri_extract_first_regex(

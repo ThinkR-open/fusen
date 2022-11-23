@@ -25,6 +25,7 @@ Uses "function()" in parameter's documentation
 #' @examples
 #' 
 #' @export
+# function() I can write "function()" in code comments really everywhere!
 my_function <- function(x, stat_function){
   stat_function(x, na.rm = TRUE) # function() comment after code
 # function() in code comment
