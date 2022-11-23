@@ -4,6 +4,10 @@
 
 - Publish your {fusen} project on a GitHub website with one command: `init_share_on_github()`
 
+## Bug fixes
+
+- Fix using `function(` in documentation (#174, @FlorenceMounier)
+
 # fusen 0.4.1
 
 ## New features
