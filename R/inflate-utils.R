@@ -29,21 +29,30 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   #   c("zaza <- function()", "zozo <- R6Class()", "zuzu <- R6::R6Class()"),
   #   regex_extract_fun_name
   # )
-  #
-  # find function name
-  fun_name <- stringi::stri_extract_first_regex(
-    code[grep(regex_isfunction, code)],
-    regex_extract_fun_name
-  ) %>%
-    gsub(" ", "", .) # remove spaces
 
   # Clean extra space between #' and @
   code <- gsub(pattern = "#'\\s*@", "#' @", code)
 
-  # Find start of function
-  first_function_start <- grep(regex_isfunction, code)[1]
   # Get all #'
   all_hastags <- grep("^#'", code)
+
+  # Get all #
+  all_comments <- grep("^#", code)
+
+  # Get all functions
+  fun_positions <- setdiff(grep(regex_isfunction, code), all_comments)
+
+  # find function name
+  fun_name <- stringi::stri_extract_first_regex(
+    code[fun_positions],
+    regex_extract_fun_name
+  ) %>%
+    gsub(" ", "", .) # remove spaces
+
+  # Find start of function
+  first_function_start <- fun_positions[1]
+
+  # Get last hastags above first fun
   if (length(all_hastags) != 0) {
     last_hastags_above_first_fun <- max(all_hastags[all_hastags < first_function_start])
   } else {

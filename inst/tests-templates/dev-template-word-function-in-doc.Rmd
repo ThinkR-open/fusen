@@ -1,0 +1,76 @@
+---
+title: "dev_history.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+# my_function 
+
+Uses "function()" in parameter's documentation
+    
+```{r function-my_function}
+#' Call a stat function
+#' 
+#' Run a stat function (ex : mean, min, max)
+#' function()
+#' 
+#' @param x A numeric vector
+#' @param stat_function A stat function (ex : mean, min, max)
+#' 
+#' @examples
+#' 
+#' @export
+# function() I can write "function()" in code comments really everywhere!
+my_function <- function(x, stat_function){
+  stat_function(x, na.rm = TRUE) # function() comment after code
+# function() in code comment
+}
+```
+  
+```{r example-my_function}
+my_function(x = rnorm(100), stat_function = mean)
+```
+  
+```{r tests-my_function}
+test_that("my_function works", {
+  expect_true(inherits(my_function, "function")) 
+})
+```
+
+Should be saved in a proper .R file
+
+```{r function-add_one}
+#' Add one to a numeric value
+#'  
+#' @param x A numeric value
+#' 
+#' @examples
+#' 
+#' @export
+add_one <- function(x){
+  x + 1
+}
+```
+  
+```{r example-add_one}
+add_one(x = 1)
+```
+  
+```{r tests-add_one}
+test_that("add_one works", {
+  expect_equal(object = add_one(1), expected = 2) 
+})
+```
+  
+
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/dev_history.Rmd")
+```
