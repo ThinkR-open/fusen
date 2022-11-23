@@ -1020,7 +1020,7 @@ usethis::with_project(dummypackage, {
     expect_equal(list.files(the_codes), "my_function.R") # not c("add_one.R", "my_function.R")
     # Check that .R contains example
     code <- readLines(file.path(dummypackage, "R", "my_function.R"))
-    any(grepl("^#'\\s*my_function\\(x", code))
+    expect_true(any(grepl("^#'\\s*my_function\\(x", code)))
   })
 })
 
