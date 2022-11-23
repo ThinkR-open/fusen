@@ -1026,3 +1026,42 @@ usethis::with_project(dummypackage, {
 
 # Clean
 unlink(dummypackage, recursive = TRUE)
+
+
+
+# Test function name recognized with linebreaks between it and the function ----
+
+# Create a new project
+dummypackage <- tempfile("inflate.fun.in.roxygen")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-function-name-linebreak.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = NA, check = FALSE
+    )
+  )
+
+  test_that("inflate() worked correctly", {
+    # Check only the first function is saved in a .R
+    the_codes <- file.path(dummypackage, "R")
+    expect_equal(list.files(the_codes), paste0(c("real_name"), 1:9, ".R"))
+    code <- readLines(file.path(dummypackage, "R", list.files(the_codes)[1]))
+  })
+})
+
+# Clean
+unlink(dummypackage, recursive = TRUE)

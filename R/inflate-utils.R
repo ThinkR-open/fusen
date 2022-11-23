@@ -6,6 +6,7 @@
 parse_fun <- function(x) { # x <- rmd_fun[3,]
 
   code <- unlist(rmd_node_code(x[["ast"]]))
+
   # There is a function (or R6Class)
   regex_isfunction <- paste(
     # function
@@ -42,15 +43,24 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   # Get all functions
   fun_positions <- setdiff(grep(regex_isfunction, code), all_comments)
 
+  # Find start of function
+  first_function_start <- fun_positions[1]
+
   # find function name
+  if (length(all_comments) != 0) {
+    code_above_first_fun <- code[1:first_function_start][-all_comments]
+  } else {
+    code_above_first_fun <- code[1:first_function_start]
+  }
+
+  code_above_first_fun <- gsub(x = code_above_first_fun, "#.*$", "") # clean inline comment
+
   fun_name <- stringi::stri_extract_first_regex(
-    code[fun_positions],
+    paste(code_above_first_fun[length(code_above_first_fun)-1], code_above_first_fun[length(code_above_first_fun)]),
     regex_extract_fun_name
   ) %>%
     gsub(" ", "", .) # remove spaces
 
-  # Find start of function
-  first_function_start <- fun_positions[1]
 
   # Get last hastags above first fun
   if (length(all_hastags) != 0) {

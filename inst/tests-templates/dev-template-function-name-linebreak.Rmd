@@ -1,0 +1,108 @@
+---
+title: "dev_history.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+# linebreak between name and function
+
+## linebreak, roxygen before
+    
+```{r function-real_name1}
+#' fake_name1
+real_name1 <-
+  function(x){
+  x + 1
+}
+```
+
+## linebreak, comment before
+
+```{r function-real_name2}
+#' fake_name2
+# a comment
+real_name2 <- 
+  function(x){
+  x + 2
+}
+```
+
+## comment between name and linebreak
+
+```{r function-real_name3}
+#' fake_name3
+real_name3 <- # a comment
+  function(x){
+  x + 3
+}
+```
+
+## commented line between name and linebreak
+
+```{r function-real_name4}
+#' fake_name4
+real_name4 <- 
+# a comment
+  function(x){
+  x + 4
+}
+```
+
+## linebreak, nothing before
+
+```{r function-real_name5}
+real_name5 <- 
+  function(x){
+  x + 5
+}
+```
+
+## linebreak, roxygen before, symbol "="
+
+```{r function-real_name6}
+real_name6 = 
+  function(x){
+  x + 6
+}
+```
+
+# No linebreak between name and function
+
+## no linebreak, comment before
+
+```{r function-real_name7}
+#' fake_name7
+# a comment
+real_name7 <- function(x){
+  x + 7
+}
+```
+
+## no linebreak, code before
+
+```{r function-real_name8}
+sqrt(1)
+real_name8 <- function(x){
+  x + 8
+}
+```
+
+## no linebreak, nothing before
+
+```{r function-real_name9}
+real_name9 <- function(x){
+  x + 9
+}
+```
+
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/dev_history.Rmd")
+```
