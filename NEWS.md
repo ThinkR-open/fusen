@@ -8,6 +8,10 @@
 
 - Fix using `function(` in documentation (#174, @FlorenceMounier)
 
+## Minor changes
+
+- replace the maintener's name from `fill_description()` in examples and templates (#155, @FlorenceMounier)
+
 # fusen 0.4.1
 
 ## New features
