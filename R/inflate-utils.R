@@ -47,11 +47,16 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   first_function_start <- fun_positions[1]
 
   # find function name
-  if (length(all_comments) != 0) {
-    code_above_first_fun <- code[1:first_function_start][-all_comments]
+  if ( length(fun_positions) != 0 ){
+    if (length(all_comments) != 0) {
+      code_above_first_fun <- code[1:first_function_start][-all_comments]
+    } else {
+      code_above_first_fun <- code[1:first_function_start]
+    }
   } else {
-    code_above_first_fun <- code[1:first_function_start]
+    code_above_first_fun <- NA
   }
+
 
   code_above_first_fun <- gsub(x = code_above_first_fun, "#.*$", "") # clean inline comment
 
