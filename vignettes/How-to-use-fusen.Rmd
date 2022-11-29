@@ -36,6 +36,7 @@ library(fusen)
 - Run the `dev-inflate` chunk to inflate the flat template and transform it as an inflated package with functions, unit tests and the current Rmd template transformed as a vignette. And check.
 - Build your {pkgdown} site to verify everything is at the right place
 
+
 > Create multiple `"flat_xxx.Rmd"` files with `fusen::add_flat_template(template = "add")` if needed
 
 ## Fill your package Description
