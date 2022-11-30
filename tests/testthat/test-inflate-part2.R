@@ -1055,11 +1055,22 @@ usethis::with_project(dummypackage, {
     )
   )
 
+  browser()
   test_that("inflate() worked correctly", {
     # Check only the first function is saved in a .R
     the_codes <- file.path(dummypackage, "R")
     expect_equal(list.files(the_codes), paste0(c("real_name"), 1:9, ".R"))
-    code <- readLines(file.path(dummypackage, "R", list.files(the_codes)[1]))
+
+    # Example is included in .R
+
+    code <- readLines(file.path(dummypackage, "R", "real_name2.R"))
+
+    # Example is included in .rd
+    the_docs <- file.path(dummypackage, "man")
+    expect_equal(list.files(the_docs), "real_name2.Rd")
+
+    # Number of tests
+    expect_equal(length(list.files(file.path(dummypackage, "tests", "testthat"))), 1)
   })
 })
 

@@ -92,6 +92,7 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
     # otherwise code stays code
   }
 
+  browser()
   all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
   example_pos_start <- grep("^#'\\s*@example", code)[1]
 

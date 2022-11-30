@@ -20,11 +20,23 @@ real_name1 <-
   x + 1
 }
 ```
+  
+```{r example-real_name1}
+real_name1(1)
+```
+  
+```{r tests-real_name1}
+test_that("real_name1 works", {
+  expect_true(inherits(real_name1, "function")) 
+})
+```
+  
 
 ## linebreak, comment before
 
 ```{r function-real_name2}
 #' fake_name2
+#' @export
 # a comment
 real_name2 <- 
   function(x){
@@ -32,10 +44,22 @@ real_name2 <-
 }
 ```
 
+```{r example-real_name2}
+real_name2(2)
+```
+  
+```{r tests-real_name2}
+test_that("real_name2 works", {
+  expect_true(inherits(real_name2, "function")) 
+})
+```
+  
+
 ## comment between name and linebreak
 
 ```{r function-real_name3}
 #' fake_name3
+#' @noRd
 real_name3 <- # a comment
   function(x){
   x + 3
