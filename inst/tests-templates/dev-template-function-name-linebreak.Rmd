@@ -12,9 +12,12 @@ library(testthat)
 # linebreak between name and function
 
 ## linebreak, roxygen before
-    
+
+to be checked: function name, no example in .R, 1 .Rd, 1 example in .Rd, 1 test
+
 ```{r function-real_name1}
 #' fake_name1
+#' @export
 real_name1 <-
   function(x){
   x + 1
@@ -34,9 +37,10 @@ test_that("real_name1 works", {
 
 ## linebreak, comment before
 
+to be checked: function name, 1 example in .R, no .Rd, 1 test
+
 ```{r function-real_name2}
 #' fake_name2
-#' @export
 # a comment
 real_name2 <- 
   function(x){
@@ -57,6 +61,8 @@ test_that("real_name2 works", {
 
 ## comment between name and linebreak
 
+to be checked: function name, 1 example in .R, no .Rd, 1 test
+
 ```{r function-real_name3}
 #' fake_name3
 #' @noRd
@@ -64,6 +70,16 @@ real_name3 <- # a comment
   function(x){
   x + 3
 }
+```
+
+```{r example-real_name3}
+real_name3(3)
+```
+  
+```{r tests-real_name3}
+test_that("real_name3 works", {
+  expect_true(inherits(real_name3, "function")) 
+})
 ```
 
 ## commented line between name and linebreak

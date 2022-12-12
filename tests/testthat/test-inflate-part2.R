@@ -1055,24 +1055,35 @@ usethis::with_project(dummypackage, {
     )
   )
 
-  browser()
   test_that("inflate() worked correctly", {
-    # Check only the first function is saved in a .R
+
+    browser()
+    # Check that the functions are saved in a .R with the right name
     the_codes <- file.path(dummypackage, "R")
     expect_equal(list.files(the_codes), paste0(c("real_name"), 1:9, ".R"))
 
-    # Example is included in .R
-
-    code <- readLines(file.path(dummypackage, "R", "real_name2.R"))
+    # Example is included in .R in the right place for the first 3 functions
+    code_fct1 <- readLines(file.path(dummypackage, "R", "real_name1.R"))
+    expect_true(all(code_fct1[5:8] == c(
+      "#' @examples", "#' real_name1(1)", "real_name1 <- ", "  function(x){"
+    )))
+    code_fct2 <- readLines(file.path(dummypackage, "R", "real_name2.R"))
+    expect_true(all(code_fct2[5:9] == c(
+      "#' @examples", "#' real_name2(2)", "# a comment", "real_name2 <- ", "  function(x){"
+    )))
+    code_fct3 <- readLines(file.path(dummypackage, "R", "real_name3.R"))
+    expect_true(all(code_fct3[5:8] == c(
+      "#' @examples", "#' real_name3(3)", "real_name3 <- # a comment", "  function(x){"
+    )))
 
     # Example is included in .rd
     the_docs <- file.path(dummypackage, "man")
-    expect_equal(list.files(the_docs), "real_name2.Rd")
+    expect_equal(list.files(the_docs), "real_name1.Rd")
 
     # Number of tests
-    expect_equal(length(list.files(file.path(dummypackage, "tests", "testthat"))), 1)
+    expect_equal(length(list.files(file.path(dummypackage, "tests", "testthat"))), 3)
   })
 })
 
 # Clean
-unlink(dummypackage, recursive = TRUE)
+  unlink(dummypackage, recursive = TRUE)

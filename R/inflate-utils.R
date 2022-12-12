@@ -49,19 +49,25 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   # find function name
   if ( length(fun_positions) != 0 ){
     if (length(all_comments) != 0) {
-      code_above_first_fun <- code[1:first_function_start][-all_comments]
+      code_above_first_fun <- c(1:first_function_start)[-all_comments]
     } else {
-      code_above_first_fun <- code[1:first_function_start]
+      code_above_first_fun <- c(1:first_function_start)
     }
   } else {
     code_above_first_fun <- NA
   }
 
-
-  code_above_first_fun <- gsub(x = code_above_first_fun, "#.*$", "") # clean inline comment
+  if (length(code_above_first_fun) > 1){
+    fun_assign_pos_start <- code_above_first_fun[length(code_above_first_fun)-1]
+    fun_assign_pos_end <- code_above_first_fun[length(code_above_first_fun)]
+    code_fun_assign <- gsub(x = code[c(fun_assign_pos_start, fun_assign_pos_end)], "#.*$", "") # clean inline comment
+  } else {
+    fun_assign_pos_start <- fun_assign_pos_end <- code_above_first_fun
+    code_fun_assign <- gsub(x = code[fun_assign_pos_start], "#.*$", "") # clean inline comment
+  }
 
   fun_name <- stringi::stri_extract_first_regex(
-    paste(code_above_first_fun[length(code_above_first_fun)-1], code_above_first_fun[length(code_above_first_fun)]),
+    paste0(code_fun_assign, collapse = ""),
     regex_extract_fun_name
   ) %>%
     gsub(" ", "", .) # remove spaces
@@ -92,15 +98,14 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
     # otherwise code stays code
   }
 
-  browser()
+
+  # example position
   all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
   example_pos_start <- grep("^#'\\s*@example", code)[1]
-
   example_pos_end <- all_arobase[all_arobase > example_pos_start][1] - 1
   example_pos_end <- ifelse(is.na(example_pos_end),
-    grep("function(\\s*)\\(", code) - 1,
-    example_pos_end
-  )
+                            fun_assign_pos_start - 1,
+                            example_pos_end)
 
   # Get @rdname and @filename for groups
   tag_filename <- gsub(
