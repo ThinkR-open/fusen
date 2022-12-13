@@ -46,33 +46,6 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   # Find start of function
   first_function_start <- fun_positions[1]
 
-  # find function name
-  if ( length(fun_positions) != 0 ){
-    if (length(all_comments) != 0) {
-      code_above_first_fun <- c(1:first_function_start)[-all_comments]
-    } else {
-      code_above_first_fun <- c(1:first_function_start)
-    }
-  } else {
-    code_above_first_fun <- NA
-  }
-
-  if (length(code_above_first_fun) > 1){
-    fun_assign_pos_start <- code_above_first_fun[length(code_above_first_fun)-1]
-    fun_assign_pos_end <- code_above_first_fun[length(code_above_first_fun)]
-    code_fun_assign <- gsub(x = code[c(fun_assign_pos_start, fun_assign_pos_end)], "#.*$", "") # clean inline comment
-  } else {
-    fun_assign_pos_start <- fun_assign_pos_end <- code_above_first_fun
-    code_fun_assign <- gsub(x = code[fun_assign_pos_start], "#.*$", "") # clean inline comment
-  }
-
-  fun_name <- stringi::stri_extract_first_regex(
-    paste0(code_fun_assign, collapse = ""),
-    regex_extract_fun_name
-  ) %>%
-    gsub(" ", "", .) # remove spaces
-
-
   # Get last hastags above first fun
   if (length(all_hastags) != 0) {
     last_hastags_above_first_fun <- max(all_hastags[all_hastags < first_function_start])
@@ -85,7 +58,7 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
     if (!is.na(last_hastags_above_first_fun)) {
       code <- c(
         code[1:last_hastags_above_first_fun],
-        "#' @noRd",
+        "#' @noRd", # between hastags and function
         code[(last_hastags_above_first_fun + 1):length(code)]
       )
     } else if (all(grepl("^\\s*$", code))) {
@@ -93,18 +66,57 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
       code <- character(0)
     } else if (!is.na(first_function_start)) {
       # If there is a function inside
-      code <- c("#' @noRd", code)
+      code <- c("#' @noRd", code) # at the beginning
     }
     # otherwise code stays code
   }
 
+  # Get UPDATED positions after adding (or not) @noRd
+  all_hastags <- grep("^#'", code)  # Get all #'
+  all_comments <- grep("^#", code) # Get all #
+  fun_positions <- setdiff(grep(regex_isfunction, code), all_comments)  # Get all functions
+  first_function_start <- fun_positions[1] # Find start of function
+
+  # Find function name
+  if ( length(fun_positions) != 0 ){
+    if ( length(all_comments) != 0 ) {
+      code_above_first_fun <- c(1:first_function_start)[-all_comments]
+    } else {
+      code_above_first_fun <- c(1:first_function_start)
+    }
+  } else {
+    code_above_first_fun <- NA
+  }
+
+  if (length(code_above_first_fun) > 1){
+    # multiple code lines above function: function name is splitted [the second to last : the last]
+    fun_assign_pos_start <- code_above_first_fun[length(code_above_first_fun)-1]
+    fun_assign_pos_end <- code_above_first_fun[length(code_above_first_fun)]
+    code_fun_assign <- gsub(x = code[c(fun_assign_pos_start, fun_assign_pos_end)], "#.*$", "") # clean inline comment
+  } else if (!is.na(code_above_first_fun)) {
+    # only one code lines above function: function name is the only line of code
+    fun_assign_pos_start <- fun_assign_pos_end <- code_above_first_fun
+    code_fun_assign <- gsub(x = code[fun_assign_pos_start], "#.*$", "") # clean inline comment
+  } else {
+    # no code line above function
+    fun_assign_pos_start <- fun_assign_pos_end <- NA
+    code_fun_assign <- NA
+  }
+
+  fun_name <- stringi::stri_extract_first_regex(
+    paste0(code_fun_assign, collapse = ""),
+    regex_extract_fun_name
+  ) %>%
+    gsub(" ", "", .) # remove spaces
 
   # example position
-  all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
+  all_arobase <- grep("^#'\\s*@", code)
+  all_arobase <- union(union(all_arobase, fun_assign_pos_start), fun_assign_pos_end)
+  # all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
   example_pos_start <- grep("^#'\\s*@example", code)[1]
   example_pos_end <- all_arobase[all_arobase > example_pos_start][1] - 1
   example_pos_end <- ifelse(is.na(example_pos_end),
-                            fun_assign_pos_start - 1,
+                            min(setdiff(all_comments, all_hastags), fun_assign_pos_start) - 1,
                             example_pos_end)
 
   # Get @rdname and @filename for groups

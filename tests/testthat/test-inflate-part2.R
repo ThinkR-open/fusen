@@ -307,6 +307,15 @@ usethis::with_project(dummypackage, {
   # Add cars data
   usethis::use_data(cars)
 
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = NA, check = FALSE
+    )
+  )
+
+  browser()
+
   test_that("inflate() output no error", {
     expect_error(
       suppressMessages(
@@ -1055,9 +1064,8 @@ usethis::with_project(dummypackage, {
     )
   )
 
-  test_that("inflate() worked correctly", {
+  test_that("inflate() worked correctly with linebreaks", {
 
-    browser()
     # Check that the functions are saved in a .R with the right name
     the_codes <- file.path(dummypackage, "R")
     expect_equal(list.files(the_codes), paste0(c("real_name"), 1:9, ".R"))
@@ -1065,7 +1073,7 @@ usethis::with_project(dummypackage, {
     # Example is included in .R in the right place for the first 3 functions
     code_fct1 <- readLines(file.path(dummypackage, "R", "real_name1.R"))
     expect_true(all(code_fct1[5:8] == c(
-      "#' @examples", "#' real_name1(1)", "real_name1 <- ", "  function(x){"
+      "#' @examples", "#' real_name1(1)", "real_name1 <-", "  function(x){"
     )))
     code_fct2 <- readLines(file.path(dummypackage, "R", "real_name2.R"))
     expect_true(all(code_fct2[5:9] == c(
