@@ -245,6 +245,13 @@ inflate <- function(pkg = ".", flat_file,
     message("`vignette_name` is empty: no vignette created")
   }
 
+  # Update version in Description
+  desc_file <- file.path(pkg, "DESCRIPTION")
+  version <- as.character(utils::packageVersion("fusen"))
+  the_desc <- desc::desc(file = desc_file)
+  the_desc$set(FusenVersion = version)
+  the_desc$write(file = desc_file)
+
   # Run attachment
   if (isTRUE(document)) {
     attachment::att_amend_desc(path = pkg)
