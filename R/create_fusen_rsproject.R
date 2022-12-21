@@ -72,7 +72,7 @@ create_fusen <- function(path,
       ignore.stderr = TRUE
     )
     if (git_output != 0) {
-      cli::cli_alert_warning("Error initializing git repository")
+      warning("Error initializing git repository")
     } else {
       cli::cli_alert_success("Initialized git repository")
     }

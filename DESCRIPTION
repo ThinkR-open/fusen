@@ -34,7 +34,8 @@ Imports:
     tidyr,
     tools,
     usethis (>= 2.0.0),
-    utils
+    utils,
+    yaml
 Suggests: 
     knitr,
     pkgload,

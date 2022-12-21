@@ -114,6 +114,7 @@ if (git_output != 0) {
         regexp = "Error initializing git repository"
       )
 
+
       expect_true(dir.exists(path_gigit))
       expect_true(all(file.exists(c(
         file.path(path_gigit, "dev", "flat_full.Rmd"),

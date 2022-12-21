@@ -181,6 +181,9 @@ testthat::test_file("tests/testthat/test-init_share_on_github.R")
 # remotes::install_github("ropensci-review-tools/autotest")
 # debugonce(autotest:::rm_not_parseable)
 
+# Run examples in interactive mode too
+devtools::run_examples()
+
 local <- utils::fileSnapshot (".", timestamp = tempfile("timestamp"), md5sum = TRUE)
 home <- utils::fileSnapshot ("~", timestamp = tempfile("timestamp"), md5sum = TRUE)
 
