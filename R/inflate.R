@@ -249,7 +249,7 @@ inflate <- function(pkg = ".", flat_file,
   desc_file <- file.path(pkg, "DESCRIPTION")
   version <- as.character(utils::packageVersion("fusen"))
   the_desc <- desc::desc(file = desc_file)
-  the_desc$set(FusenVersion = version)
+  the_desc$set(`Config/fusen/version` = version)
   the_desc$write(file = desc_file)
 
   # Run attachment

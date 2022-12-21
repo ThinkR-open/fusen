@@ -31,7 +31,7 @@ usethis::with_project(dummypackage, {
     # Description with version
     expect_true(file.exists(file.path(dummypackage, "DESCRIPTION")))
     desc <- desc::desc(file.path(dummypackage, "DESCRIPTION"))
-    version_line <- desc$get("FusenVersion")
+    version_line <- desc$get("Config/fusen/version")
     expect_equal(length(version_line), 1)
     expect_equal(as.character(version_line),
                  as.character(utils::packageVersion(pkg = "fusen")))
