@@ -47,6 +47,7 @@ VignetteBuilder:
     knitr
 Config/fusen/version: 0.4.1
 Config/testthat/edition: 3
+Config/Needs/website: ThinkR-open/thinkrtemplate
 Encoding: UTF-8
 Language: en-US
 LazyData: true
