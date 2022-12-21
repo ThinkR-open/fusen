@@ -118,7 +118,7 @@
 
       
 
-      </header><script src="Maintain-packages-with-fusen_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Maintain packages with {fusen}</h1>
@@ -154,55 +154,97 @@
 </div>
 </div>
 <div class="section level2">
-<h2 id="how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages">How to maintain a {fusen}? Can I use {fusen} with old-way packages ?<a class="anchor" aria-label="anchor" href="#how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages"></a>
+<h2 id="how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages">How to maintain a {fusen}? Can I use {fusen} with old-way packages
+?<a class="anchor" aria-label="anchor" href="#how-to-maintain-a-fusen-can-i-use-fusen-with-old-way-packages"></a>
 </h2>
-<p>After you <code><a href="../reference/inflate.html">inflate()</a></code> the “flat_template.Rmd”, your code appears twice in the package. In the “flat_template.Rmd” itself and in the correct place for it to be a package. Take it as a documentation for the other developers.<br>
+<p>After you <code><a href="../reference/inflate.html">inflate()</a></code> the “flat_template.Rmd”, your code
+appears twice in the package. In the “flat_template.Rmd” itself and in
+the correct place for it to be a package. Take it as a documentation for
+the other developers.<br>
 Maintaining such a package requires a choice:</p>
 <ul>
 <li>
-<strong>Option 1</strong>: Modifications are only added to the “flat_template.Rmd” file, which then is inflated to update all packages files</li>
+<strong>Option 1</strong>: Modifications are only added to the
+“flat_template.Rmd” file, which then is inflated to update all packages
+files</li>
 <li>
-<strong>Option 2</strong>: Modifications are realized in the package files directly, and the “flat_template.Rmd” file must be protected from any use.</li>
+<strong>Option 2</strong>: Modifications are realized in the package
+files directly, and the “flat_template.Rmd” file must be protected from
+any use.</li>
 </ul>
-<p>Your first <code><a href="../reference/inflate.html">inflate()</a></code> may not directly work as expected as with any R code that you write. In this case, you can continue to implement your functionality using <strong>Option 1</strong>.</p>
+<p>Your first <code><a href="../reference/inflate.html">inflate()</a></code> may not directly work as expected
+as with any R code that you write. In this case, you can continue to
+implement your functionality using <strong>Option 1</strong>.</p>
 <blockquote>
-<p>Advice 1 : Use Option 1 until you find it too complicated to be used ! I assure you, you will find the moment when you say : ok this is not possible anymore…</p>
+<p>Advice 1 : Use Option 1 until you find it too complicated to be used
+! I assure you, you will find the moment when you say : ok this is not
+possible anymore…</p>
 </blockquote>
 <blockquote>
-<p>Advice 2 : Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place</p>
+<p>Advice 2 : Use git as soon as possible, this will avoid losing your
+work if you made some modifications in the wrong place</p>
 </blockquote>
 <div class="section level3">
 <h3 id="option-1-continue-with-the-flat_template-rmd">Option 1: Continue with the “flat_template.Rmd”<a class="anchor" aria-label="anchor" href="#option-1-continue-with-the-flat_template-rmd"></a>
 </h3>
 <ul>
-<li>(+) This does not require to fully understand the package structure and files to continue building your package, and you continue to develop in a unique file</li>
-<li>(+) You are encouraged to continue documenting and testing all parts of your package</li>
-<li>(-) You need to pay attention to checking and debugging tools that may direct you to the R file directly. This requires to pay attention and always be sure you are modifying code in the flat template file, to be inflated.</li>
+<li>(+) This does not require to fully understand the package structure
+and files to continue building your package, and you continue to develop
+in a unique file</li>
+<li>(+) You are encouraged to continue documenting and testing all parts
+of your package</li>
+<li>(-) You need to pay attention to checking and debugging tools that
+may direct you to the R file directly. This requires to pay attention
+and always be sure you are modifying code in the flat template file, to
+be inflated.</li>
 <li>(-) This may trouble co-developers who already built packages</li>
 </ul>
-<p>=&gt; {fusen} itself is built as is. Each modification is added to the dedicated dev_history file and then inflated</p>
+<p>=&gt; {fusen} itself is built as is. Each modification is added to
+the dedicated dev_history file and then inflated</p>
 </div>
 <div class="section level3">
 <h3 id="option-2-maintain-like-a-classical-package">Option 2: Maintain like a classical package<a class="anchor" aria-label="anchor" href="#option-2-maintain-like-a-classical-package"></a>
 </h3>
 <ul>
-<li>(+) You can use dedicated checking and debugging tools as is, in particular in RStudio. There are built to direct you as quickly as possible to the source of the problem</li>
-<li>(+) This allows collaboration with more advanced developers who are used to debug in the package structure directly</li>
-<li>(-) This requires to understand the structure and files of a package and how they interact each other, and be able to jump from one file to the other, in the correct folder. This may drives you lazy to continue documenting and testing your modifications</li>
-<li>This requires to protect the flat template file, so that you never use it again. <code>&lt;!-- Do not edit by hand--&gt;</code> is the minimum. Then you can add <code>&lt;!-- File used to start new functionalities, do not use anymore, go directly to appropriate files in the package --&gt;</code>, and you can rename the old template with “old-flat_template.Rmd” for instance.</li>
+<li>(+) You can use dedicated checking and debugging tools as is, in
+particular in RStudio. There are built to direct you as quickly as
+possible to the source of the problem</li>
+<li>(+) This allows collaboration with more advanced developers who are
+used to debug in the package structure directly</li>
+<li>(-) This requires to understand the structure and files of a package
+and how they interact each other, and be able to jump from one file to
+the other, in the correct folder. This may drives you lazy to continue
+documenting and testing your modifications</li>
+<li>This requires to protect the flat template file, so that you never
+use it again. <code>&lt;!-- Do not edit by hand--&gt;</code> is the
+minimum. Then you can add
+<code>&lt;!-- File used to start new functionalities, do not use anymore, go directly to appropriate files in the package --&gt;</code>,
+and you can rename the old template with “old-flat_template.Rmd” for
+instance.</li>
 </ul>
-<p>=&gt; This is the way I add new functionalities in packages that started in the old way, and in specific cases where inflating is now too complicated, like for function <code><a href="../reference/inflate.html">inflate()</a></code> and all its unit tests in this very {fusen} package.</p>
+<p>=&gt; This is the way I add new functionalities in packages that
+started in the old way, and in specific cases where inflating is now too
+complicated, like for function <code><a href="../reference/inflate.html">inflate()</a></code> and all its unit
+tests in this very {fusen} package.</p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="what-about-packages-already-built-the-old-way">What about packages already built the old way ?<a class="anchor" aria-label="anchor" href="#what-about-packages-already-built-the-old-way"></a>
 </h2>
-<p>The “flat_template.Rmd” template only modifies files related to functions presented inside the template. <strong>This does not remove or modify previous functions, tests or vignettes, provided that names are different.</strong></p>
+<p>The “flat_template.Rmd” template only modifies files related to
+functions presented inside the template. <strong>This does not remove or
+modify previous functions, tests or vignettes, provided that names are
+different.</strong></p>
 <ul>
-<li>{fusen} itself was started in the classical way before having enough functions to be able to build a package from itself. This does not prevent me at all to use {fusen} to build himself now !</li>
-<li>If you want to modify existing functionalities, you will need to continue maintain your already-built package in the classical way</li>
-<li>If you want to add new functionalities, correctly documented and tested, you can use {fusen}. This will not delete previous work.</li>
-<li>Use the “Option 2” above to continue after the development of your functionality</li>
+<li>{fusen} itself was started in the classical way before having enough
+functions to be able to build a package from itself. This does not
+prevent me at all to use {fusen} to build himself now !</li>
+<li>If you want to modify existing functionalities, you will need to
+continue maintain your already-built package in the classical way</li>
+<li>If you want to add new functionalities, correctly documented and
+tested, you can use {fusen}. This will not delete previous work.</li>
+<li>Use the “Option 2” above to continue after the development of your
+functionality</li>
 </ul>
 <div class="section level3">
 <h3 id="lets-try-to-convince-package-developers-with-an-example">Let’s try to convince package developers with an example<a class="anchor" aria-label="anchor" href="#lets-try-to-convince-package-developers-with-an-example"></a>
@@ -210,10 +252,13 @@ Maintaining such a package requires a choice:</p>
 <ul>
 <li>Install {fusen} : <code>install.packages("fusen")</code>
 </li>
-<li>Open a project for <strong>one of your already existing package</strong>
+<li>Open a project for <strong>one of your already existing
+package</strong>
 <ul>
 <li>Commit your previous state if you are afraid of {fusen}</li>
-<li>If you are not sure enough to do it on an existing package, then follow the guide in <a href="https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html">“How to use fusen”</a>
+<li>If you are not sure enough to do it on an existing package, then
+follow the guide in <a href="https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html">“How
+to use fusen”</a>
 </li>
 </ul>
 </li>
@@ -222,7 +267,8 @@ Maintaining such a package requires a choice:</p>
 <li>A Rmd file appears in “dev/flat_additional.Rmd”. Open it.</li>
 </ul>
 </li>
-<li>Add a new function in the <code>function</code> chunk. For instance:</li>
+<li>Add a new function in the <code>function</code> chunk. For
+instance:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' My median</span></span>
@@ -240,12 +286,14 @@ Maintaining such a package requires a choice:</p>
 <span>  <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">na.rm</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <ul>
-<li>Add a corresponding example in the <code>example</code> chunk. For instance:</li>
+<li>Add a corresponding example in the <code>example</code> chunk. For
+instance:</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">my_median</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span></code></pre></div>
 <ul>
-<li>Add a corresponding unit test in the <code>test</code> chunk. For instance:</li>
+<li>Add a corresponding unit test in the <code>test</code> chunk. For
+instance:</li>
 </ul>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">test_that</span><span class="op">(</span><span class="st">"my_median works properly and show error if needed"</span>, <span class="op">{</span></span>
@@ -253,15 +301,22 @@ Maintaining such a package requires a choice:</p>
 <span>  <span class="fu">expect_error</span><span class="op">(</span><span class="fu">my_median</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <ul>
-<li>Run command of the last chunk: <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd")</code>
+<li>Run command of the last chunk:
+<code>fusen::inflate(flat_file = "dev/flat_additional.Rmd")</code>
 <ul>
-<li>This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", document = FALSE)</code> to avoid that.</li>
-<li>This will also run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>. Use <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", check = FALSE)</code> to avoid that.</li>
+<li>This will run {attachment} behind the scene and may modify the list
+of dependencies in the DESCRIPTION file accordingly. Use
+<code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", document = FALSE)</code>
+to avoid that.</li>
+<li>This will also run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>. Use
+<code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", check = FALSE)</code>
+to avoid that.</li>
 </ul>
 </li>
 </ul>
 <p><strong>That’s it!</strong><br>
-You added a new function in your package, along with example, test and a new vignette:</p>
+You added a new function in your package, along with example, test and a
+new vignette:</p>
 <ul>
 <li>R/my_median.R</li>
 <li>tests/testthat/test-my_median.R</li>
@@ -270,7 +325,8 @@ You added a new function in your package, along with example, test and a new vig
 </div>
 </div>
 <div class="section level2">
-<h2 id="compare-a-classical-way-of-building-packages-with-the-fusen-way">Compare a classical way of building packages with the {fusen} way<a class="anchor" aria-label="anchor" href="#compare-a-classical-way-of-building-packages-with-the-fusen-way"></a>
+<h2 id="compare-a-classical-way-of-building-packages-with-the-fusen-way">Compare a classical way of building packages with the {fusen}
+way<a class="anchor" aria-label="anchor" href="#compare-a-classical-way-of-building-packages-with-the-fusen-way"></a>
 </h2>
 <table class="table">
 <thead><tr>
@@ -284,23 +340,39 @@ With {fusen}
 <tbody>
 <tr>
 <td style="text-align:left;">
-<br>- File &gt; New Project &gt; New directory &gt; Package with devtools<br>  + Or <code><a href="https://devtools.r-lib.org/reference/create.html" class="external-link">devtools::create()</a></code>
+<br>- File &gt; New Project &gt; New directory &gt; Package with
+devtools<br>  + Or <code><a href="https://devtools.r-lib.org/reference/create.html" class="external-link">devtools::create()</a></code>
 </td>
 <td style="text-align:left;">
-<br>- File &gt; New Project &gt; New directory &gt; Package with {fusen}<br> + Or <code><a href="../reference/create_fusen.html">fusen::create_fusen()</a></code>
-</td>
-</tr>
-<tr>
-<td style="text-align:left;">
-<br>- Open “DESCRIPTION” file <br>- Write your information <br>- Run function for the desired license in the console <br>  + <code>usethis::use_*_license()</code>
-</td>
-<td style="text-align:left;">
-<br>- Fill your information in the opened flat file<br>- Execute the chunk <code>description</code>
+<br>- File &gt; New Project &gt; New directory &gt; Package with
+{fusen}<br> + Or <code><a href="../reference/create_fusen.html">fusen::create_fusen()</a></code>
 </td>
 </tr>
 <tr>
 <td style="text-align:left;">
-<br>- Create and open a file for your functions in “R/”<br>   + <code>usethis::use_r("my_fonction")</code> <br>- Write the code of your function <br>- Write a reproducible example for your function <br><br>- Open DESCRIPTION file and fill the list of dependencies required <br><br>- Create and open a new file for your tests in “tests/testthat/” <br>   + <code><a href="https://usethis.r-lib.org/reference/use_testthat.html" class="external-link">usethis::use_testthat()</a></code> <br>   + <code>usethis::use_test("my_fonction")</code> <br>- Write some unit tests for your function <br><br>- Create and open a new file for a vignette in “vignettes/” <br>   + <code>usethis::use_vignette("Vignette title")</code> <br>   <br>- Open DESCRIPTION file and fill the list of “Suggests” dependencies required
+<br>- Open “DESCRIPTION” file <br>- Write your information <br>- Run
+function for the desired license in the console <br>  +
+<code>usethis::use_*_license()</code>
+</td>
+<td style="text-align:left;">
+<br>- Fill your information in the opened flat file<br>- Execute the
+chunk <code>description</code>
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+<br>- Create and open a file for your functions in “R/”<br>   +
+<code>usethis::use_r("my_fonction")</code> <br>- Write the code of your
+function <br>- Write a reproducible example for your
+function <br><br>- Open DESCRIPTION file and fill the list of
+dependencies required <br><br>- Create and open a new file for your
+tests in “tests/testthat/” <br>   +
+<code><a href="https://usethis.r-lib.org/reference/use_testthat.html" class="external-link">usethis::use_testthat()</a></code> <br>   +
+<code>usethis::use_test("my_fonction")</code> <br>- Write some unit
+tests for your function <br><br>- Create and open a new file for a
+vignette in “vignettes/” <br>   +
+<code>usethis::use_vignette("Vignette title")</code> <br>   <br>- Open
+DESCRIPTION file and fill the list of “Suggests” dependencies required
 </td>
 <td style="text-align:left;">
 <br>- Write code, examples and test in the unique opened flat file
@@ -308,10 +380,15 @@ With {fusen}
 </tr>
 <tr>
 <td style="text-align:left;">
-<br>- Generate documentation <br> + Either <code><a href="https://thinkr-open.github.io/attachment/reference/att_amend_desc.html" class="external-link">attachment::att_amend_desc()</a></code> <br> + Or <code><a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link">roxygen2::roxygenise()</a></code> <br> <br>- Check the package <br> + <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> =&gt; <code>0 errors, 0 warnings, 0 notes</code>
+<br>- Generate documentation <br> + Either
+<code><a href="https://thinkr-open.github.io/attachment/reference/att_amend_desc.html" class="external-link">attachment::att_amend_desc()</a></code> <br> + Or
+<code><a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link">roxygen2::roxygenise()</a></code> <br> <br>- Check the
+package <br> + <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> =&gt;
+<code>0 errors, 0 warnings, 0 notes</code>
 </td>
 <td style="text-align:left;">
-<br>- Inflate your flat file<br> + Execute <code><a href="../reference/inflate.html">fusen::inflate()</a></code> in the last “development” chunk
+<br>- Inflate your flat file<br> + Execute
+<code><a href="../reference/inflate.html">fusen::inflate()</a></code> in the last “development” chunk
 </td>
 </tr>
 <tr>
@@ -339,7 +416,7 @@ With {fusen}
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
 <div class="author">

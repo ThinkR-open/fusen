@@ -118,7 +118,7 @@
 
       
 
-      </header><script src="tips-and-tricks_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>Tips and tricks</h1>
@@ -138,45 +138,64 @@
 <li>Chunk short names are possible:
 <ul>
 <li>
-<code>function</code> can be named <code>fun-</code> or <code>fun_</code> or <code>fun-my_function_name</code>
+<code>function</code> can be named <code>fun-</code> or
+<code>fun_</code> or <code>fun-my_function_name</code>
 </li>
 <li>
-<code>example</code> can be named <code>ex-</code> or <code>ex_</code> or <code>ex-my_function_name</code>
+<code>example</code> can be named <code>ex-</code> or
+<code>ex_</code> or <code>ex-my_function_name</code>
 </li>
 <li>
-<code>tests</code> can be named <code>test-</code> or <code>test-my_function_name</code>
+<code>tests</code> can be named <code>test-</code> or
+<code>test-my_function_name</code>
 </li>
 <li>
-<code>development</code> can be named <code>dev-</code> or <code>dev_</code> or <code>dev-my_function_name</code>
+<code>development</code> can be named <code>dev-</code> or
+<code>dev_</code> or <code>dev-my_function_name</code>
 </li>
 </ul>
 </li>
-<li>There are wrappers around <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> for lazy developpers: <code><a href="../reference/add_flat_template.html">add_additional()</a></code>, <code><a href="../reference/add_flat_template.html">add_full()</a></code>, <code><a href="../reference/add_flat_template.html">add_minimal()</a></code>
+<li>There are wrappers around <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> for lazy
+developpers: <code><a href="../reference/add_flat_template.html">add_additional()</a></code>, <code><a href="../reference/add_flat_template.html">add_full()</a></code>,
+<code><a href="../reference/add_flat_template.html">add_minimal()</a></code>
 </li>
 </ul>
 </div>
 <div class="section level2">
 <h2 id="can-i-knit-the-content-of-the-flat-template">Can I knit the content of the flat template ?<a class="anchor" aria-label="anchor" href="#can-i-knit-the-content-of-the-flat-template"></a>
 </h2>
-<p>Yes. Although this is not the real goal, the flat template can be filled and run like any other Rmarkdown file.<br>
-However, you need to keep in mind that this will be transformed as a R package, which requires some specific attention.</p>
+<p>Yes. Although this is not the real goal, the flat template can be
+filled and run like any other Rmarkdown file.<br>
+However, you need to keep in mind that this will be transformed as a R
+package, which requires some specific attention.</p>
 <ul>
-<li>Use a <code>development</code> chunk at the beginning of your flat template to declare all packages that you will need to explore your code</li>
+<li>Use a <code>development</code> chunk at the beginning of your flat
+template to declare all packages that you will need to explore your
+code</li>
 </ul>
 <pre><code>```{r dev}
 library(glue)
 library(stringi)
 ```</code></pre>
-<p><em>Note that this will not be used anywhere in the package. A <code>development</code> chunk is only there for your code exploration, during development.</em></p>
+<p><em>Note that this will not be used anywhere in the package. A
+<code>development</code> chunk is only there for your code exploration,
+during development.</em></p>
 <ul>
-<li><p>Remember that in the package structure, examples and tests code will be run independently. Thus, <code>examples</code> and <code>tests</code> chunk need to have all code required to run independently.</p></li>
-<li><p>The <code>development</code> chunk that contains the <code><a href="../reference/inflate.html">inflate()</a></code> call need to have <code>eval=FALSE</code> parameter to avoid side effects if you knit the flat file.</p></li>
+<li><p>Remember that in the package structure, examples and tests code
+will be run independently. Thus, <code>examples</code> and
+<code>tests</code> chunk need to have all code required to run
+independently.</p></li>
+<li><p>The <code>development</code> chunk that contains the
+<code><a href="../reference/inflate.html">inflate()</a></code> call need to have <code>eval=FALSE</code>
+parameter to avoid side effects if you knit the flat file.</p></li>
 </ul>
 </div>
 <div class="section level2">
-<h2 id="how-to-declare-packages-with-library-for-the-future-vignette">How to declare packages with <code>library()</code> for the future vignette ?<a class="anchor" aria-label="anchor" href="#how-to-declare-packages-with-library-for-the-future-vignette"></a>
+<h2 id="how-to-declare-packages-with-library-for-the-future-vignette">How to declare packages with <code>library()</code> for the future
+vignette ?<a class="anchor" aria-label="anchor" href="#how-to-declare-packages-with-library-for-the-future-vignette"></a>
 </h2>
-<p>If you use a classical chunk, without any specific name, it will be copied as is in the vignette.</p>
+<p>If you use a classical chunk, without any specific name, it will be
+copied as is in the vignette.</p>
 <pre><code>```{r}
 library(glue)
 library(stringi)
@@ -185,10 +204,14 @@ library(stringi)
 <div class="section level2">
 <h2 id="how-to-include-examples-that-cannot-be-run">How to include examples that cannot be run ?<a class="anchor" aria-label="anchor" href="#how-to-include-examples-that-cannot-be-run"></a>
 </h2>
-<p>I created a chunk <code>example</code> but I do not want the example to be run in the function example and I do not want it to be run in the vignette.</p>
+<p>I created a chunk <code>example</code> but I do not want the example
+to be run in the function example and I do not want it to be run in the
+vignette.</p>
 <ul>
-<li>Use <code>eval=FALSE</code> in the chunk options, so that it wont be run in the vignette</li>
-<li>Use <code>#' \dontrun{}</code> syntax, with <code>#'</code> before so that examples in the function example will not be run</li>
+<li>Use <code>eval=FALSE</code> in the chunk options, so that it wont be
+run in the vignette</li>
+<li>Use <code>#' \dontrun{}</code> syntax, with <code>#'</code> before
+so that examples in the function example will not be run</li>
 </ul>
 <pre><code>```{r function-myfunction}
 myfunction &lt;- function(x) {x}
@@ -209,10 +232,14 @@ myfunction(12)
 ```</code></pre>
 </div>
 <div class="section level2">
-<h2 id="document-your-internal-datasets-in-a-function-chunk-as-usual">Document your internal datasets in a <code>function</code> chunk as usual<a class="anchor" aria-label="anchor" href="#document-your-internal-datasets-in-a-function-chunk-as-usual"></a>
+<h2 id="document-your-internal-datasets-in-a-function-chunk-as-usual">Document your internal datasets in a <code>function</code> chunk as
+usual<a class="anchor" aria-label="anchor" href="#document-your-internal-datasets-in-a-function-chunk-as-usual"></a>
 </h2>
-<p>To document datasets, pkgdoc, special R files, you can write them as is in the <code>function</code> chunk.<br>
-If {fusen} does not detect the keyword <code>function()</code> or <code>R6Class()</code> in the <code>function</code> chunk code, then the chunk is copied as is in a “R/” file.</p>
+<p>To document datasets, pkgdoc, special R files, you can write them as
+is in the <code>function</code> chunk.<br>
+If {fusen} does not detect the keyword <code>function()</code> or
+<code>R6Class()</code> in the <code>function</code> chunk code, then the
+chunk is copied as is in a “R/” file.</p>
 <pre><code>```{r function-cars}
 #' cars
 #'
@@ -230,8 +257,10 @@ If {fusen} does not detect the keyword <code>function()</code> or <code>R6Class(
 <div class="section level2">
 <h2 id="how-to-ignore-some-chunks">How to ignore some chunks ?<a class="anchor" aria-label="anchor" href="#how-to-ignore-some-chunks"></a>
 </h2>
-<p>All chunks named <code>dev</code> or <code>development</code> will not be used in the package.<br>
-Use them for your exploration that you do not want to keep at the end of the process.<br>
+<p>All chunks named <code>dev</code> or <code>development</code> will
+not be used in the package.<br>
+Use them for your exploration that you do not want to keep at the end of
+the process.<br>
 This won’t affect your package.</p>
 <pre><code>```{r dev}
 # Some code exploration
@@ -240,7 +269,9 @@ This won’t affect your package.</p>
 <div class="section level2">
 <h2 id="how-to-create-a-vignette-with-different-title-and-index-entry">How to create a vignette with different title and Index Entry?<a class="anchor" aria-label="anchor" href="#how-to-create-a-vignette-with-different-title-and-index-entry"></a>
 </h2>
-<p>You can use <code>inflate(vignette_name = c("Super title" = "01-Super Slug"))</code> for vignette title different from vignette Entry</p>
+<p>You can use
+<code>inflate(vignette_name = c("Super title" = "01-Super Slug"))</code>
+for vignette title different from vignette Entry</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>vignette_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Super title"</span> <span class="op">=</span> <span class="st">"01-Super Vignette Index Entry"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -248,8 +279,10 @@ This won’t affect your package.</p>
 <h2 id="how-not-to-create-a-vignette">How not to create a vignette?<a class="anchor" aria-label="anchor" href="#how-not-to-create-a-vignette"></a>
 </h2>
 <ul>
-<li>If I only build internal functions, I may not want to inflate the flat file as a vignette.</li>
-<li>The flat file is the developer’s documentation and that may be enough</li>
+<li>If I only build internal functions, I may not want to inflate the
+flat file as a vignette.</li>
+<li>The flat file is the developer’s documentation and that may be
+enough</li>
 </ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span>vignette_name <span class="op">=</span> <span class="cn">NA</span><span class="op">)</span></span></code></pre></div>
@@ -259,19 +292,29 @@ This won’t affect your package.</p>
 </h2>
 <p>If it is the first function of the flat template:</p>
 <ul>
-<li>you can create the template with <code>add_flat_template("minimal", flat_name = "my_function_name")</code>. In this case, the template will be pre-filled with your function name: chunk names, function calls.</li>
-<li>You can also use the RStudio Addin “Add {fusen} flat template” to create a new template in your “dev/” directory. You will be prompt for the template type and the function name</li>
+<li>you can create the template with
+<code>add_flat_template("minimal", flat_name = "my_function_name")</code>.
+In this case, the template will be pre-filled with your function name:
+chunk names, function calls.</li>
+<li>You can also use the RStudio Addin “Add {fusen} flat template” to
+create a new template in your “dev/” directory. You will be prompt for
+the template type and the function name</li>
 </ul>
 <p>If this is the second function inside an existing template:</p>
 <ul>
-<li>Position your prompt where you want to add the new function and use the RStudio Addin: “Add {fusen} chunks”. You will be asked for the function name.</li>
-<li>The Addin uses <code>add_fusen_chunks("my_function_name")</code>
+<li>Position your prompt where you want to add the new function and use
+the RStudio Addin: “Add {fusen} chunks”. You will be asked for the
+function name.</li>
+<li>The Addin uses
+<code>add_fusen_chunks("my_function_name")</code>
 </li>
 </ul>
 <div class="section level3">
 <h3 id="how-to-pre-fill-multiple-functions-in-one-template">How to pre-fill multiple functions in one template<a class="anchor" aria-label="anchor" href="#how-to-pre-fill-multiple-functions-in-one-template"></a>
 </h3>
-<p>This can be added in the “dev_history.Rmd”, and will replace a place holder in your flat rmd (<code>HERE</code> in this case) with proper fusen chunks for all your future functions to be.</p>
+<p>This can be added in the “dev_history.Rmd”, and will replace a place
+holder in your flat rmd (<code>HERE</code> in this case) with proper
+fusen chunks for all your future functions to be.</p>
 <ul>
 <li>Add a line with <code>HERE</code> in your flat file</li>
 </ul>
@@ -309,165 +352,173 @@ This won’t affect your package.</p>
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file1.Rmd"</span><span class="op">)</span></span>
 <span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file2.Rmd"</span><span class="op">)</span></span>
 <span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file3.Rmd"</span><span class="op">)</span></span></code></pre></div>
-<p>If the main “dev_history.Rmd” file does not exists, you can create it with <code>add_flat_template("dev_history")</code></p>
+<p>If the main “dev_history.Rmd” file does not exists, you can create it
+with <code>add_flat_template("dev_history")</code></p>
 </div>
 <div class="section level2">
 <h2 id="how-to-store-multiple-functions-in-a-unique-r-file">How to store multiple functions in a unique R file ?<a class="anchor" aria-label="anchor" href="#how-to-store-multiple-functions-in-a-unique-r-file"></a>
 </h2>
-<p>There are multiple ways of doing it. Choose one of: use the section title structure, use roxygen tags or use chunk parameter.</p>
+<p>There are multiple ways of doing it. Choose one of: use the section
+title structure, use roxygen tags or use chunk parameter.</p>
 <div class="section level3">
 <h3 id="all-functions-under-one-title-section">All functions under one title section<a class="anchor" aria-label="anchor" href="#all-functions-under-one-title-section"></a>
 </h3>
-<p>Use the 3-set of chunks (<code>fun</code>, <code>example</code>, <code>test</code>) twice, under the same title section of the Rmd</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1"></a><span class="fu"># One title for both groups of chunk</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a></span>
-<span id="cb10-3"><a href="#cb10-3"></a>The code and tests for the first function</span>
-<span id="cb10-4"><a href="#cb10-4"></a></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="bn">```{r function-fun1}</span></span>
-<span id="cb10-6"><a href="#cb10-6"></a><span class="bn">```</span></span>
-<span id="cb10-7"><a href="#cb10-7"></a></span>
-<span id="cb10-8"><a href="#cb10-8"></a><span class="bn">```{r example-fun1}</span></span>
-<span id="cb10-9"><a href="#cb10-9"></a><span class="bn">```</span></span>
-<span id="cb10-10"><a href="#cb10-10"></a></span>
-<span id="cb10-11"><a href="#cb10-11"></a><span class="bn">```{r test-fun1}</span></span>
-<span id="cb10-12"><a href="#cb10-12"></a><span class="bn">```</span></span>
-<span id="cb10-13"><a href="#cb10-13"></a></span>
-<span id="cb10-14"><a href="#cb10-14"></a>The code and tests for the second function</span>
-<span id="cb10-15"><a href="#cb10-15"></a></span>
-<span id="cb10-16"><a href="#cb10-16"></a><span class="bn">```{r function-fun2}</span></span>
-<span id="cb10-17"><a href="#cb10-17"></a><span class="bn">```</span></span>
-<span id="cb10-18"><a href="#cb10-18"></a></span>
-<span id="cb10-19"><a href="#cb10-19"></a><span class="bn">```{r example-fun2}</span></span>
-<span id="cb10-20"><a href="#cb10-20"></a><span class="bn">```</span></span>
-<span id="cb10-21"><a href="#cb10-21"></a></span>
-<span id="cb10-22"><a href="#cb10-22"></a><span class="bn">```{r test-fun2}</span></span>
-<span id="cb10-23"><a href="#cb10-23"></a><span class="bn">```</span></span></code></pre></div>
+<p>Use the 3-set of chunks (<code>fun</code>, <code>example</code>,
+<code>test</code>) twice, under the same title section of the Rmd</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># One title for both groups of chunk</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>The code and tests for the first function</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="in">```{r function-fun1}</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="in">```{r example-fun1}</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="in">```{r test-fun1}</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>The code and tests for the second function</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="in">```{r function-fun2}</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r example-fun2}</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{r test-fun2}</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="use-same-rdname-in-function-roxygen">Use same <code>@rdname</code> in function roxygen<a class="anchor" aria-label="anchor" href="#use-same-rdname-in-function-roxygen"></a>
 </h3>
-<div class="sourceCode" id="cb11"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu"># Title 1 for function 1</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a></span>
-<span id="cb11-3"><a href="#cb11-3"></a><span class="bn">```{r function-fun_rdname1}</span></span>
-<span id="cb11-4"><a href="#cb11-4"></a><span class="bn">#' My fun_rdname1</span></span>
-<span id="cb11-5"><a href="#cb11-5"></a><span class="bn">#'</span></span>
-<span id="cb11-6"><a href="#cb11-6"></a><span class="bn">#' @param x Vector of Numeric values</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a><span class="bn">#' @inheritParams stats::median</span></span>
-<span id="cb11-8"><a href="#cb11-8"></a><span class="bn">#'</span></span>
-<span id="cb11-9"><a href="#cb11-9"></a><span class="bn">#' @rdname same_rdname</span></span>
-<span id="cb11-10"><a href="#cb11-10"></a><span class="bn">#' @return</span></span>
-<span id="cb11-11"><a href="#cb11-11"></a><span class="bn">#' Median of vector x</span></span>
-<span id="cb11-12"><a href="#cb11-12"></a><span class="bn">#' @export</span></span>
-<span id="cb11-13"><a href="#cb11-13"></a><span class="bn">#'</span></span>
-<span id="cb11-14"><a href="#cb11-14"></a><span class="bn">#' @examples</span></span>
-<span id="cb11-15"><a href="#cb11-15"></a><span class="bn">#' my_fun_rdname1(2:20)</span></span>
-<span id="cb11-16"><a href="#cb11-16"></a><span class="bn">my_fun_rdname1 &lt;- function(x, na.rm = TRUE) {</span></span>
-<span id="cb11-17"><a href="#cb11-17"></a><span class="bn">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
-<span id="cb11-18"><a href="#cb11-18"></a><span class="bn">  stats::median(x, na.rm = na.rm)</span></span>
-<span id="cb11-19"><a href="#cb11-19"></a><span class="bn">}</span></span>
-<span id="cb11-20"><a href="#cb11-20"></a><span class="bn">```</span></span>
-<span id="cb11-21"><a href="#cb11-21"></a></span>
-<span id="cb11-22"><a href="#cb11-22"></a><span class="fu"># Title  2 for function 2</span></span>
-<span id="cb11-23"><a href="#cb11-23"></a></span>
-<span id="cb11-24"><a href="#cb11-24"></a><span class="bn">```{r function-fun_rdname2}</span></span>
-<span id="cb11-25"><a href="#cb11-25"></a><span class="bn">#' My fun_rdname2</span></span>
-<span id="cb11-26"><a href="#cb11-26"></a><span class="bn">#'</span></span>
-<span id="cb11-27"><a href="#cb11-27"></a><span class="bn">#' @param x Vector of Numeric values</span></span>
-<span id="cb11-28"><a href="#cb11-28"></a><span class="bn">#' @inheritParams stats::median</span></span>
-<span id="cb11-29"><a href="#cb11-29"></a><span class="bn">#'</span></span>
-<span id="cb11-30"><a href="#cb11-30"></a><span class="bn">#' @rdname same_rdname</span></span>
-<span id="cb11-31"><a href="#cb11-31"></a><span class="bn">#' @return</span></span>
-<span id="cb11-32"><a href="#cb11-32"></a><span class="bn">#' Median of vector x</span></span>
-<span id="cb11-33"><a href="#cb11-33"></a><span class="bn">#' @export</span></span>
-<span id="cb11-34"><a href="#cb11-34"></a><span class="bn">#'</span></span>
-<span id="cb11-35"><a href="#cb11-35"></a><span class="bn">#' @examples</span></span>
-<span id="cb11-36"><a href="#cb11-36"></a><span class="bn">#' my_fun_rdname2(2:20)</span></span>
-<span id="cb11-37"><a href="#cb11-37"></a><span class="bn">my_fun_rdname2 &lt;- function(x, na.rm = TRUE) {</span></span>
-<span id="cb11-38"><a href="#cb11-38"></a><span class="bn">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
-<span id="cb11-39"><a href="#cb11-39"></a><span class="bn">  stats::median(x, na.rm = na.rm)</span></span>
-<span id="cb11-40"><a href="#cb11-40"></a><span class="bn">}</span></span>
-<span id="cb11-41"><a href="#cb11-41"></a><span class="bn">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Title 1 for function 1</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="in">```{r function-fun_rdname1}</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="in">#' My fun_rdname1</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="in">#' @param x Vector of Numeric values</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="in">#' @inheritParams stats::median</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="in">#' @rdname same_rdname</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="in">#' @return</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="in">#' Median of vector x</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="in">#' @export</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="in">#' @examples</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="in">#' my_fun_rdname1(2:20)</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="in">my_fun_rdname1 &lt;- function(x, na.rm = TRUE) {</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="fu"># Title  2 for function 2</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{r function-fun_rdname2}</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a><span class="in">#' My fun_rdname2</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="in">#' @param x Vector of Numeric values</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="in">#' @inheritParams stats::median</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="in">#' @rdname same_rdname</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="in">#' @return</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a><span class="in">#' Median of vector x</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a><span class="in">#' @export</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a><span class="in">#' @examples</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a><span class="in">#' my_fun_rdname2(2:20)</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a><span class="in">my_fun_rdname2 &lt;- function(x, na.rm = TRUE) {</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="use-same-filename-in-function-roxygen">Use same <code>@filename</code> in function roxygen<a class="anchor" aria-label="anchor" href="#use-same-filename-in-function-roxygen"></a>
 </h3>
-<p><code>@filename</code> is recognized only by {fusen} as a proper roxygen tag to merge multiple functions in the same “R/” and “tests/” files.<br>
-This code line is removed in the resulting “R/” files to avoid any interference with Roxygenize.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1"></a><span class="fu"># Title 1 for function 1</span></span>
-<span id="cb12-2"><a href="#cb12-2"></a></span>
-<span id="cb12-3"><a href="#cb12-3"></a><span class="bn">```{r function-fun_filename1}</span></span>
-<span id="cb12-4"><a href="#cb12-4"></a><span class="bn">#' My fun_filename1</span></span>
-<span id="cb12-5"><a href="#cb12-5"></a><span class="bn">#'</span></span>
-<span id="cb12-6"><a href="#cb12-6"></a><span class="bn">#' @param x Vector of Numeric values</span></span>
-<span id="cb12-7"><a href="#cb12-7"></a><span class="bn">#' @inheritParams stats::median</span></span>
-<span id="cb12-8"><a href="#cb12-8"></a><span class="bn">#'</span></span>
-<span id="cb12-9"><a href="#cb12-9"></a><span class="bn">#' @filename same_filename</span></span>
-<span id="cb12-10"><a href="#cb12-10"></a><span class="bn">#' @return</span></span>
-<span id="cb12-11"><a href="#cb12-11"></a><span class="bn">#' Median of vector x</span></span>
-<span id="cb12-12"><a href="#cb12-12"></a><span class="bn">#' @export</span></span>
-<span id="cb12-13"><a href="#cb12-13"></a><span class="bn">#'</span></span>
-<span id="cb12-14"><a href="#cb12-14"></a><span class="bn">#' @examples</span></span>
-<span id="cb12-15"><a href="#cb12-15"></a><span class="bn">#' my_fun_filename1(2:20)</span></span>
-<span id="cb12-16"><a href="#cb12-16"></a><span class="bn">my_fun_filename1 &lt;- function(x, na.rm = TRUE) {</span></span>
-<span id="cb12-17"><a href="#cb12-17"></a><span class="bn">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
-<span id="cb12-18"><a href="#cb12-18"></a><span class="bn">  stats::median(x, na.rm = na.rm)</span></span>
-<span id="cb12-19"><a href="#cb12-19"></a><span class="bn">}</span></span>
-<span id="cb12-20"><a href="#cb12-20"></a><span class="bn">```</span></span>
-<span id="cb12-21"><a href="#cb12-21"></a></span>
-<span id="cb12-22"><a href="#cb12-22"></a><span class="fu"># Title  2 for function 2</span></span>
-<span id="cb12-23"><a href="#cb12-23"></a></span>
-<span id="cb12-24"><a href="#cb12-24"></a><span class="bn">```{r function-fun_filename2}</span></span>
-<span id="cb12-25"><a href="#cb12-25"></a><span class="bn">#' My fun_filename2</span></span>
-<span id="cb12-26"><a href="#cb12-26"></a><span class="bn">#'</span></span>
-<span id="cb12-27"><a href="#cb12-27"></a><span class="bn">#' @param x Vector of Numeric values</span></span>
-<span id="cb12-28"><a href="#cb12-28"></a><span class="bn">#' @inheritParams stats::median</span></span>
-<span id="cb12-29"><a href="#cb12-29"></a><span class="bn">#'</span></span>
-<span id="cb12-30"><a href="#cb12-30"></a><span class="bn">#' @filename same_filename</span></span>
-<span id="cb12-31"><a href="#cb12-31"></a><span class="bn">#' @return</span></span>
-<span id="cb12-32"><a href="#cb12-32"></a><span class="bn">#' Median of vector x</span></span>
-<span id="cb12-33"><a href="#cb12-33"></a><span class="bn">#' @export</span></span>
-<span id="cb12-34"><a href="#cb12-34"></a><span class="bn">#'</span></span>
-<span id="cb12-35"><a href="#cb12-35"></a><span class="bn">#' @examples</span></span>
-<span id="cb12-36"><a href="#cb12-36"></a><span class="bn">#' my_fun_filename2(2:20)</span></span>
-<span id="cb12-37"><a href="#cb12-37"></a><span class="bn">my_fun_filename2 &lt;- function(x, na.rm = TRUE) {</span></span>
-<span id="cb12-38"><a href="#cb12-38"></a><span class="bn">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
-<span id="cb12-39"><a href="#cb12-39"></a><span class="bn">  stats::median(x, na.rm = na.rm)</span></span>
-<span id="cb12-40"><a href="#cb12-40"></a><span class="bn">}</span></span>
-<span id="cb12-41"><a href="#cb12-41"></a><span class="bn">```</span></span></code></pre></div>
+<p><code>@filename</code> is recognized only by {fusen} as a proper
+roxygen tag to merge multiple functions in the same “R/” and “tests/”
+files.<br>
+This code line is removed in the resulting “R/” files to avoid any
+interference with Roxygenize.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Title 1 for function 1</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="in">```{r function-fun_filename1}</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="in">#' My fun_filename1</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="in">#' @param x Vector of Numeric values</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="in">#' @inheritParams stats::median</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="in">#' @filename same_filename</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="in">#' @return</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="in">#' Median of vector x</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="in">#' @export</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="in">#' @examples</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="in">#' my_fun_filename1(2:20)</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="in">my_fun_filename1 &lt;- function(x, na.rm = TRUE) {</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a><span class="fu"># Title  2 for function 2</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a><span class="in">```{r function-fun_filename2}</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a><span class="in">#' My fun_filename2</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a><span class="in">#' @param x Vector of Numeric values</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="in">#' @inheritParams stats::median</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a><span class="in">#' @filename same_filename</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a><span class="in">#' @return</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a><span class="in">#' Median of vector x</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a><span class="in">#' @export</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a><span class="in">#' @examples</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="in">#' my_fun_filename2(2:20)</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a><span class="in">my_fun_filename2 &lt;- function(x, na.rm = TRUE) {</span></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="use-chunk-param-filename-the_comon_filename">Use chunk param <code>filename = "the_comon_filename"</code><a class="anchor" aria-label="anchor" href="#use-chunk-param-filename-the_comon_filename"></a>
 </h3>
 <p>Add it in the <code>function</code> chunk only</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu"># Title 1 for function 1</span></span>
-<span id="cb13-2"><a href="#cb13-2"></a></span>
-<span id="cb13-3"><a href="#cb13-3"></a><span class="bn">```{r function-fun_chunk1, filename = "fun_chunk1"}</span></span>
-<span id="cb13-4"><a href="#cb13-4"></a><span class="bn">#' The code of your function 1</span></span>
-<span id="cb13-5"><a href="#cb13-5"></a><span class="bn">```</span></span>
-<span id="cb13-6"><a href="#cb13-6"></a></span>
-<span id="cb13-7"><a href="#cb13-7"></a><span class="bn">```{r example-fun_chunk1}</span></span>
-<span id="cb13-8"><a href="#cb13-8"></a><span class="bn">```</span></span>
-<span id="cb13-9"><a href="#cb13-9"></a></span>
-<span id="cb13-10"><a href="#cb13-10"></a><span class="bn">```{r test-fun_chunk1}</span></span>
-<span id="cb13-11"><a href="#cb13-11"></a><span class="bn">```</span></span>
-<span id="cb13-12"><a href="#cb13-12"></a></span>
-<span id="cb13-13"><a href="#cb13-13"></a><span class="fu"># Title 2 for function 2</span></span>
-<span id="cb13-14"><a href="#cb13-14"></a></span>
-<span id="cb13-15"><a href="#cb13-15"></a><span class="bn">```{r function-fun_chunk2, filename = "fun_chunk1"}</span></span>
-<span id="cb13-16"><a href="#cb13-16"></a><span class="bn">#' The code of your function 2</span></span>
-<span id="cb13-17"><a href="#cb13-17"></a><span class="bn">```</span></span>
-<span id="cb13-18"><a href="#cb13-18"></a></span>
-<span id="cb13-19"><a href="#cb13-19"></a><span class="bn">```{r example-fun_chunk2}</span></span>
-<span id="cb13-20"><a href="#cb13-20"></a><span class="bn">```</span></span>
-<span id="cb13-21"><a href="#cb13-21"></a></span>
-<span id="cb13-22"><a href="#cb13-22"></a><span class="bn">```{r test-fun_chunk2}</span></span>
-<span id="cb13-23"><a href="#cb13-23"></a><span class="bn">```</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode md"><code class="sourceCode markdown"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># Title 1 for function 1</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="in">```{r function-fun_chunk1, filename = "fun_chunk1"}</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="in">#' The code of your function 1</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="in">```{r example-fun_chunk1}</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="in">```{r test-fun_chunk1}</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="fu"># Title 2 for function 2</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="in">```{r function-fun_chunk2, filename = "fun_chunk1"}</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="in">#' The code of your function 2</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="in">```{r example-fun_chunk2}</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="in">```{r test-fun_chunk2}</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
-<h2 id="how-to-read-dataset-that-i-usually-put-in-teststestthat-for-my-unit-tests">How to read dataset that I usually put in “tests/testthat/” for my unit tests?<a class="anchor" aria-label="anchor" href="#how-to-read-dataset-that-i-usually-put-in-teststestthat-for-my-unit-tests"></a>
+<h2 id="how-to-read-dataset-that-i-usually-put-in-teststestthat-for-my-unit-tests">How to read dataset that I usually put in “tests/testthat/” for my
+unit tests?<a class="anchor" aria-label="anchor" href="#how-to-read-dataset-that-i-usually-put-in-teststestthat-for-my-unit-tests"></a>
 </h2>
-<p>During checks, the tests are run relative to the “tests/testthat/” directory.<br>
+<p>During checks, the tests are run relative to the “tests/testthat/”
+directory.<br>
 You will need to anticipate the two ways of reading the data:</p>
 <ul>
 <li>One from within the flat file, which needs to be modified</li>
@@ -485,25 +536,37 @@ You will need to anticipate the two ways of reading the data:</p>
 <span><span class="va">my_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">the_file</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="can-i-load-all-functions-of-the-current-flat-file-during-development-without-having-to-inflate">Can I load all functions of the current flat file during development without having to <code>inflate()</code>?<a class="anchor" aria-label="anchor" href="#can-i-load-all-functions-of-the-current-flat-file-during-development-without-having-to-inflate"></a>
+<h2 id="can-i-load-all-functions-of-the-current-flat-file-during-development-without-having-to-inflate">Can I load all functions of the current flat file during development
+without having to <code>inflate()</code>?<a class="anchor" aria-label="anchor" href="#can-i-load-all-functions-of-the-current-flat-file-during-development-without-having-to-inflate"></a>
 </h2>
-<p>Yes. You can run and load <code>function</code> chunks only in the currently opened flat file with <code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code>.<br>
-With long flat file currently in development, and before <code><a href="../reference/inflate.html">inflate()</a></code>, it is sometimes difficult to run all chunks needed after multiple modifications. This can also be useful when you start again your development the day after.</p>
-<p><code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code> is like a <code>load_all()</code> for a flat file, although it does not account for dependencies.</p>
+<p>Yes. You can run and load <code>function</code> chunks only in the
+currently opened flat file with
+<code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code>.<br>
+With long flat file currently in development, and before
+<code><a href="../reference/inflate.html">inflate()</a></code>, it is sometimes difficult to run all chunks
+needed after multiple modifications. This can also be useful when you
+start again your development the day after.</p>
+<p><code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code> is like a <code>load_all()</code>
+for a flat file, although it does not account for dependencies.</p>
 <p>In the console, run:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/load_flat_functions.html">load_flat_functions</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>You can also run <code>function</code> chunks of a specific flat file with:</p>
+<p>You can also run <code>function</code> chunks of a specific flat file
+with:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/load_flat_functions.html">load_flat_functions</a></span><span class="op">(</span>flat_file <span class="op">=</span> <span class="st">"dev/flat_full.Rmd"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="can-i-inflate-a-quarto-qmd-file">Can I inflate a Quarto qmd file?<a class="anchor" aria-label="anchor" href="#can-i-inflate-a-quarto-qmd-file"></a>
 </h2>
-<p>Yes you can. As long as what you include in your qmd flat file is good for a R package vignette, you can use the qmd format.<br>
-This will not really change the output of anything as the flat file is not meant to be rendered.<br>
-The vignette created from this flat file will still be a Rmd file. But why not!?</p>
-<p>Hence, you can add a flat file and change its extension to “.qmd” if you like.</p>
+<p>Yes you can. As long as what you include in your qmd flat file is
+good for a R package vignette, you can use the qmd format.<br>
+This will not really change the output of anything as the flat file is
+not meant to be rendered.<br>
+The vignette created from this flat file will still be a Rmd file. But
+why not!?</p>
+<p>Hence, you can add a flat file and change its extension to “.qmd” if
+you like.</p>
 </div>
   </div>
 
@@ -519,7 +582,7 @@ The vignette created from this flat file will still be a Rmd file. But why not!?
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
 <div class="author">
