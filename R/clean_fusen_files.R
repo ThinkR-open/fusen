@@ -180,7 +180,7 @@ clean_fusen_files <- function() {
 #' or a csv file path as issued from `[check_not_registered_files()]`
 #' or nothing (and it will take the csv file in "dev/")
 #' @param flat_file_path Character. Usually `"keep"` or the name of the origin flat file, although inflating the flat file should have the same result.
-#' @param state. Character. Whether if the flat file is active or deprecated.
+#' @param state. Character. Whether if the flat file is `active` or `deprecated`.
 #' @param force Logical. Whether to force writing the configuration file even with potential errors.
 #'
 #' @importFrom stats setNames
@@ -210,8 +210,9 @@ clean_fusen_files <- function() {
 #' \dontrun{
 #' df_to_config(my_files_to_protect)
 #' }
-df_to_config <- function(df_files, flat_file_path = "keep", state = "active", force = FALSE) {
+df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", "deprecated"), force = FALSE) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
+  state <- match.arg(state, several.ok = FALSE)
   
   # User entry verifications
   if (missing(df_files)) {

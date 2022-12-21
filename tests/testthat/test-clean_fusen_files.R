@@ -26,19 +26,53 @@ test_that("register_all_to_config works", {
   expect_true(inherits(register_all_to_config, "function")) 
   
   usethis::with_project(dummypackage, {
-    browser()
     
     expect_error(
       out_path <- register_all_to_config(dummypackage), regexp = NA)
-        expect_equal(out_path, file.path("dev", "config_fusen.yaml"))
-        
-    # What happens if everything is already registered?
-        expect_message(
+    expect_equal(out_path, file.path("dev", "config_fusen.yaml"))
+    
+    # What happens if everything is already registered? ----
+    expect_message(
       out_path <- register_all_to_config(dummypackage), regexp = "There is no file to register")
-            
-        expect_equal(out_path, file.path("dev", "config_fusen.yaml"))
-
+    
+    expect_equal(out_path, file.path("dev", "config_fusen.yaml"))
+    
+    # Add a new file to register from a new flat file ----
+    
+    add_flat_template(template = 'add', flat_name = "new_one", open = FALSE)
+    # Without vignette first
+    inflate(pkg = dummypackage, flat_file = "dev/flat_new_one.Rmd", vignette_name = NA, check = FALSE, open_vignette = FALSE)
+    
+    expect_error(
+      out_path <- register_all_to_config(dummypackage), regexp = NA)
+  
+# TODO - Problem: second path deletes previously registered file from the same flat file
+        browser()
+    debugonce(register_all_to_config)
+    
+   # With vignette then
+      inflate(pkg = dummypackage, flat_file = "dev/flat_new_one.Rmd", vignette_name = "new_one", check = FALSE, open_vignette = FALSE)
+    
+    expect_error(
+      out_path <- register_all_to_config(dummypackage), regexp = NA)
+    
   })
+  
+   # yaml::read_yaml(out_path)
+})
+
+test_that("config file is correctly built after half register", {
+  out_actual <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+  # To update
+  # file.copy(file.path(dummypackage, "dev", "config_fusen.yaml"), here::here("tests/testthat/config_fusen_register.yaml"))
+  if (file.exists("config_fusen_register.yaml")) {
+    out_expected <- yaml::read_yaml("config_fusen_register.yaml")
+  } else {
+    # during dev in root directory
+    out_expected <- yaml::read_yaml( here::here("tests/testthat/config_fusen_register.yaml"))
+  }
+  
+  expect_equal(out_actual, out_expected)
 })
 
 # Test df_to_config with custom config file path ----

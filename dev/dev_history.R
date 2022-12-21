@@ -99,6 +99,9 @@ fusen::inflate(flat_file = "dev/flat_addins.Rmd",
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 fusen::inflate(flat_file = "dev/flat_create_flat.Rmd",
                check = FALSE, vignette_name = NA, document = FALSE)
+fusen::inflate(flat_file = "dev/flat_clean_fusen_files.Rmd",
+               vignette_name = "Clean {fusen} files", check = FALSE,
+               overwrite = TRUE, open_vignette = FALSE)
 
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")

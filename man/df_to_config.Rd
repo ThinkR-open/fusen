@@ -7,7 +7,7 @@
 df_to_config(
   df_files,
   flat_file_path = "keep",
-  state = "active",
+  state = c("active", "deprecated"),
   force = FALSE
 )
 }
@@ -20,7 +20,7 @@ or nothing (and it will take the csv file in "dev/")}
 
 \item{force}{Logical. Whether to force writing the configuration file even with potential errors.}
 
-\item{state.}{Character. Whether if the flat file is active or deprecated.}
+\item{state.}{Character. Whether if the flat file is \code{active} or \code{deprecated}.}
 }
 \value{
 Config file path.
