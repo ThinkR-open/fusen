@@ -1,21 +1,30 @@
-# fusen (development version)
+# fusen 0.5.0.9000
 
 ## New features
 
+### Publish your package website on GitHub
+
 - Publish your {fusen} project on a GitHub website with one command: `init_share_on_github()`
+
+### List all files created with an `inflate()` in a config file
+
+- `inflate()` creates a "dev/config_fusen.yaml" file to register all files created while inflating the corresponding flat file (First steps in #24)
+- Migrate from a non-fusen package or a previous version of {fusen} use with `register_all_to_config()`
+- Create or update the config file from a data.frame to list legitimate scripts (even if not associated with a flat file)
+
+### Others
+
+- Allow multiple examples for the same function (#149)
 
 ## Bug fixes
 
-- Fix using `function(` in documentation (#174, @FlorenceMounier)
+- Fix for when using word "`function(`" in documentation (#174, @FlorenceMounier)
 
 # fusen 0.4.1
 
 ## New features
 
-- Migrate from a non-fusen package or a previous version of {fusen} use with `register_all_to_config()`
-- Create or update the config file from a data.frame to list legitimate scripts
 - Load all `function` chunks of the flat file currently opened with `load_flat_functions()` (Like a `load_all()` for a flat file)
-- Allow multiple examples for the same function (#149)
 - Allow to `inflate()` a Quarto ".qmd" flat file (#160)
 
 ## Minor

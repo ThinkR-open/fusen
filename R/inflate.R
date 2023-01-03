@@ -30,6 +30,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #'
 #' @importFrom parsermd parse_rmd as_tibble
 #' @importFrom utils getFromNamespace
+#' @importFrom glue glue
 #'
 #' @return
 #' Package structure. Return path to current package.
@@ -221,7 +222,9 @@ inflate <- function(pkg = ".", flat_file,
 
   # Get flat file path relative to package root
   # To be inserted in "DO NOT EDIT" comments
-  relative_flat_file <- sub(normalize_path_winslash(pkg), "", normalize_path_winslash(flat_file))
+  relative_flat_file <- gsub("^/", "",
+    sub(normalize_path_winslash(pkg), "", normalize_path_winslash(flat_file))
+  )
 
   # Check if there are functions ----
   fun_code <- get_functions_tests(parsed_tbl)
@@ -231,7 +234,7 @@ inflate <- function(pkg = ".", flat_file,
     script_files <- create_functions_all(parsed_tbl, fun_code, pkg, relative_flat_file)
   } else {
     message("No chunks named 'function-xx' or 'fun-xx' were found in the Rmarkdown file: ", flat_file)
-    script_files <- tibble::tibble(type = character(0), files = character(0))
+    script_files <- tibble::tibble(type = character(0), path = character(0))
   }
 
   # Create vignette ----
@@ -246,7 +249,7 @@ inflate <- function(pkg = ".", flat_file,
 
     all_files <- rbind(
       script_files,
-      tibble::tibble(type = "vignette", files = vignette_file)
+      tibble::tibble(type = "vignette", path = vignette_file)
     )
   } else {
     all_files <- script_files
@@ -260,8 +263,25 @@ inflate <- function(pkg = ".", flat_file,
   the_desc$set(`Config/fusen/version` = version)
   the_desc$write(file = desc_file)
 
-  # TODO config file store ----
-  # df_to_config(df_files = all_files, flat_file_path = flat_file_path)
+  # config file store ----
+  # browser()
+  cli::cat_rule(glue("Updating config file for ", relative_flat_file))
+  config_file <- df_to_config(
+    df_files = all_files,
+    flat_file_path = relative_flat_file,
+    clean = TRUE,
+    state = "active",
+    # TODO - Set to force = FALSE when there is a possibility to clean the config
+    # when there are manually deleted file ----
+    force = TRUE)
+  cli::cli_alert_info(glue("config file created: ", config_file))
+
+  # TODO - Propose to clean all files with 'clean_fusen_files()' ----
+
+  # if (check_for_obsolete) {
+  #   clean_fusen_files()
+  # }
+
 
   # Run attachment
   if (isTRUE(document)) {
@@ -352,7 +372,7 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
     type =
       c(rep("R", length(r_files)),
         rep("test", length(test_files))),
-    files = c(r_files, test_files)
+    path = c(r_files, test_files)
   )
 
   return(script_files)

@@ -5,6 +5,7 @@ flat_addins.Rmd:
   vignettes: []
 flat_clean_fusen_files.Rmd:
   path: dev/flat_clean_fusen_files.Rmd
+  state: active
   R: R/clean_fusen_files.R
   tests: tests/testthat/test-clean_fusen_files.R
   vignettes: vignettes/clean-fusen-files.Rmd
