@@ -172,7 +172,7 @@ get_list_paths <- function(config_list) {
 #' @examples
 #' clean_fusen_files()
 clean_fusen_files <- function() {
-
+  message("This does nothing for now")
 }
 
 #' Add a tibble of files and types to the 'fusen' config file
@@ -180,8 +180,9 @@ clean_fusen_files <- function() {
 #' or a csv file path as issued from `[check_not_registered_files()]`
 #' or nothing (and it will take the csv file in "dev/")
 #' @param flat_file_path Character. Usually `"keep"` or the name of the origin flat file, although inflating the flat file should have the same result.
-#' @param state. Character. Whether if the flat file is `active` or `deprecated`.
-#' @param force Logical. Whether to force writing the configuration file even with potential errors.
+#' @param state Character. Whether if the flat file is `active` or `deprecated`.
+#' @param force Logical. Whether to force writing the configuration file even is some files do not exist.
+#' @param clean Logical. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during `inflate()` of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with `register_to_config()` so that it can be run twice on the package when migrating from an old version of {fusen}. This could be set to FALSE with a direct use of `df_to_config()` too.
 #'
 #' @importFrom stats setNames
 #' @importFrom utils read.csv
@@ -210,7 +211,7 @@ clean_fusen_files <- function() {
 #' \dontrun{
 #' df_to_config(my_files_to_protect)
 #' }
-df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", "deprecated"), force = FALSE) {
+df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", "deprecated"), force = FALSE, clean = TRUE) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
   state <- match.arg(state, several.ok = FALSE)
   
@@ -349,7 +350,8 @@ df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", 
     seq_along(each_flat_file_path), 
     function(x) update_one_group_yaml(
       df_files, complete_yaml,
-      each_flat_file_path[x], state = state[x])) %>%
+      each_flat_file_path[x], state = state[x],
+      clean = clean)) %>%
     setNames(basename(each_flat_file_path))
 
   all_modified <- names(complete_yaml)[names(complete_yaml) %in% names(all_groups_list)]
@@ -405,23 +407,54 @@ files_list_to_vector <- function(list_of_files) {
 #' @param complete_yaml The list as output of config_yaml file
 #' @param flat_file_path The group to update
 #' @param state Character. "active" or "deprecated"
+#' @param clean Logical. See `df_to_config()`. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during `inflate()` of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with `register_to_config()` so that it can be run twice on the package when migrating from an old version of {fusen}. This could be set to FALSE with a direct use of `df_to_config()` too.
 #' @noRd
-update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state = c("active", "deprecated")) {
+update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state = c("active", "deprecated"), clean = TRUE) {
   
   state <- match.arg(state, several.ok = FALSE)
   all_keep_before <- complete_yaml[[basename(flat_file_path)]]
-
+  
+  # Only files from df_files will be listed
   df_files_filtered <- df_files[df_files[["origin"]] == flat_file_path,]
   
-  this_group_list <- list(
-    path = flat_file_path,
-    state = state,
-    R = c(df_files_filtered[["path"]][grepl("^R$|^r$", df_files_filtered[["type"]])]),
-    tests = c(df_files_filtered[["path"]][grepl("^test$|^tests$", df_files_filtered[["type"]])]),
-    vignettes = c(df_files_filtered[["path"]][grepl("^vignette$|^vignettes$", df_files_filtered[["type"]])])
-  )
-
-  # All these will be deleted
+  # All already in the list will be deleted except if clean is FALSE
+  if (isTRUE(clean)) {
+    this_group_list <- list(
+      path = flat_file_path,
+      state = state,
+      R = c(df_files_filtered[["path"]][
+        grepl("^R$|^r$", df_files_filtered[["type"]])]),
+      tests = c(df_files_filtered[["path"]][
+        grepl("^test$|^tests$", df_files_filtered[["type"]])]),
+      vignettes = c(df_files_filtered[["path"]][
+        grepl("^vignette$|^vignettes$", df_files_filtered[["type"]])])
+    )
+  } else {
+    this_group_list <- list(
+      path = flat_file_path,
+      state = state,
+      R = c(
+        # new ones
+        df_files_filtered[["path"]][
+          grepl("^R$|^r$", df_files_filtered[["type"]])],
+        # previous ones
+        unlist(all_keep_before[["R"]])
+      ),
+      tests = c(
+        # new ones
+        df_files_filtered[["path"]][
+          grepl("^test$|^tests$", df_files_filtered[["type"]])],
+        # previous ones
+        unlist(all_keep_before[["tests"]])
+      ),
+      vignettes = c(
+        # new ones
+        df_files_filtered[["path"]][grepl("^vignette$|^vignettes$", df_files_filtered[["type"]])],
+        # previous ones
+        unlist(all_keep_before[["vignettes"]])
+      )
+    )
+  }
 
   # Those removed
   those_removed <- setdiff(
@@ -450,6 +483,7 @@ update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state
 #' Helps transition from non-fusen packages
 #' 
 #' @param pkg Path to the package from which to add file to configuration file
+#' @inheritParams df_to_config
 #' @return Path to configuration file
 #' 
 #' @export
@@ -484,7 +518,7 @@ update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state
 #'   yaml::read_yaml(out_path)
 #' })
 #' 
-register_all_to_config <- function(pkg = ".") {
+register_all_to_config <- function(pkg = ".", clean = FALSE) {
   # Use the fonction to check the list of files
   out_df <- check_not_registered_files(pkg, to_csv = FALSE)
   
@@ -495,7 +529,7 @@ register_all_to_config <- function(pkg = ".") {
   
   w.keep <- grep("No existing source path found", out_df[["origin"]])
   out_df[["origin"]][w.keep] <- "keep"
-  out_config <- df_to_config(df_files = out_df)
+  out_config <- df_to_config(df_files = out_df, clean = clean)
   # rstudioapi::navigateToFile(file.path(pkg, "dev", "config_fusen.yaml"))
   return(invisible(out_config))
 }

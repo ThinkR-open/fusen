@@ -22,7 +22,7 @@ usethis::with_project(dummypackage, {
 cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
 
 
-test_that("register_all_to_config works", {
+test_that("register_all_to_config can be run twice", {
   expect_true(inherits(register_all_to_config, "function")) 
   
   usethis::with_project(dummypackage, {
@@ -38,23 +38,19 @@ test_that("register_all_to_config works", {
     expect_equal(out_path, file.path("dev", "config_fusen.yaml"))
     
     # Add a new file to register from a new flat file ----
-    
     add_flat_template(template = 'add', flat_name = "new_one", open = FALSE)
     # Without vignette first
     inflate(pkg = dummypackage, flat_file = "dev/flat_new_one.Rmd", vignette_name = NA, check = FALSE, open_vignette = FALSE)
     
     expect_error(
       out_path <- register_all_to_config(dummypackage), regexp = NA)
-  
-# TODO - Problem: second path deletes previously registered file from the same flat file
-        browser()
-    debugonce(register_all_to_config)
-    
+
    # With vignette then
       inflate(pkg = dummypackage, flat_file = "dev/flat_new_one.Rmd", vignette_name = "new_one", check = FALSE, open_vignette = FALSE)
     
     expect_error(
-      out_path <- register_all_to_config(dummypackage), regexp = NA)
+      out_path <- register_all_to_config(dummypackage),
+      regexp = NA)
     
   })
   

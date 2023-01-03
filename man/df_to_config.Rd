@@ -8,7 +8,8 @@ df_to_config(
   df_files,
   flat_file_path = "keep",
   state = c("active", "deprecated"),
-  force = FALSE
+  force = FALSE,
+  clean = TRUE
 )
 }
 \arguments{
@@ -18,9 +19,11 @@ or nothing (and it will take the csv file in "dev/")}
 
 \item{flat_file_path}{Character. Usually \code{"keep"} or the name of the origin flat file, although inflating the flat file should have the same result.}
 
-\item{force}{Logical. Whether to force writing the configuration file even with potential errors.}
+\item{state}{Character. Whether if the flat file is \code{active} or \code{deprecated}.}
 
-\item{state.}{Character. Whether if the flat file is \code{active} or \code{deprecated}.}
+\item{force}{Logical. Whether to force writing the configuration file even is some files do not exist.}
+
+\item{clean}{Logical. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during \code{inflate()} of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with \code{register_to_config()} so that it can be run twice on the package when migrating from an old version of {fusen}. This could be set to FALSE with a direct use of \code{df_to_config()} too.}
 }
 \value{
 Config file path.
