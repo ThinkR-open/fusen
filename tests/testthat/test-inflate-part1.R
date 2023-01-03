@@ -10,7 +10,6 @@ dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = T
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
-
   # More complicated example for tests
   testfile <- "tests-templates/dev-template-tests.Rmd"
   file.copy(
@@ -28,14 +27,15 @@ usethis::with_project(dummypackage, {
   )
 
   test_that("inflate() worked correctly", {
-
     # Description with version
     expect_true(file.exists(file.path(dummypackage, "DESCRIPTION")))
     desc <- desc::desc(file.path(dummypackage, "DESCRIPTION"))
     version_line <- desc$get("Config/fusen/version")
     expect_equal(length(version_line), 1)
-    expect_equal(as.character(version_line),
-                 as.character(utils::packageVersion(pkg = "fusen")))
+    expect_equal(
+      as.character(version_line),
+      as.character(utils::packageVersion(pkg = "fusen"))
+    )
 
     # Number of files
     expect_equal(length(list.files(file.path(dummypackage, "R"))), 11)
@@ -198,7 +198,6 @@ usethis::with_project(dummypackage, {
       expect_true(length(check_out[["notes"]]) == 0)
     }
   })
-
 })
 
 # Clean R, tests and vignettes

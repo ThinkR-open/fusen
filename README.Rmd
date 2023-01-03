@@ -54,10 +54,11 @@ You can install the development version of {fusen} from GitHub:
 ```{r, eval=FALSE}
 # From r-universe.dev (No need for GITHUB_PAT)
 options(repos = c(
-  thinkropen = 'https://thinkr-open.r-universe.dev',
-  CRAN = 'https://cloud.r-project.org'))
+  thinkropen = "https://thinkr-open.r-universe.dev",
+  CRAN = "https://cloud.r-project.org"
+))
 # Download and install {fusen} in R
-install.packages('fusen')
+install.packages("fusen")
 
 # With {remotes} using GitHub API - Need for GITHUB_PAT
 # install.packages("remotes")

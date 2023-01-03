@@ -41,9 +41,9 @@ usethis::with_project(dummypackage, {
       open_vignette = FALSE
     )
   )
-  
+
   out_path <- register_all_to_config(dummypackage)
-  
+
   # Look at the output
   yaml::read_yaml(out_path)
 })

@@ -102,5 +102,5 @@ add_flat_template("add")
 
 # add new flat template for teaching (a reduced full template)
 add_flat_template("teaching")
-#'}
+}
 }

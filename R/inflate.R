@@ -92,22 +92,25 @@ inflate <- function(pkg = ".", flat_file,
 
   # If flat_file empty
   if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
-      rstudioapi::hasFun("documentPath") ) {
+    rstudioapi::hasFun("documentPath")) {
     current_file <- rstudioapi::documentPath()
     if (!is.null(current_file) && grepl("^flat.*[.](R|r|q)md$", basename(current_file))) {
       if (overwrite == "ask") {
-        sure <- paste0("You did not specify parameter 'flat_file'. The current file will be inflated:\n",
-                      current_file, ".\n",
-                      "With vignette name: ", vignette_name, "\n",
-                      "Are you sure this is what you planned? (y/n)\n")
+        sure <- paste0(
+          "You did not specify parameter 'flat_file'. The current file will be inflated:\n",
+          current_file, ".\n",
+          "With vignette name: ", vignette_name, "\n",
+          "Are you sure this is what you planned? (y/n)\n"
+        )
         do_it <- readline(sure) == "y"
-      }
-      else {
+      } else {
         do_it <- isTRUE(overwrite)
       }
       if (do_it) {
-        message("The current file will be inflated: ",
-                current_file)
+        message(
+          "The current file will be inflated: ",
+          current_file
+        )
         flat_file <- current_file
       }
     }
@@ -222,7 +225,8 @@ inflate <- function(pkg = ".", flat_file,
 
   # Get flat file path relative to package root
   # To be inserted in "DO NOT EDIT" comments
-  relative_flat_file <- gsub("^/", "",
+  relative_flat_file <- gsub(
+    "^/", "",
     sub(normalize_path_winslash(pkg), "", normalize_path_winslash(flat_file))
   )
 
@@ -273,7 +277,8 @@ inflate <- function(pkg = ".", flat_file,
     state = "active",
     # TODO - Set to force = FALSE when there is a possibility to clean the config
     # when there are manually deleted file ----
-    force = TRUE)
+    force = TRUE
+  )
   cli::cli_alert_info(glue("config file created: ", config_file))
 
   # TODO - Propose to clean all files with 'clean_fusen_files()' ----
@@ -360,7 +365,7 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
       dir.create(R_dir)
     }
 
-   r_files <- create_r_files(fun_code, pkg, relative_flat_file)
+    r_files <- create_r_files(fun_code, pkg, relative_flat_file)
   } else {
     r_files <- character(0)
   }
@@ -370,8 +375,10 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
 
   script_files <- tibble::tibble(
     type =
-      c(rep("R", length(r_files)),
-        rep("test", length(test_files))),
+      c(
+        rep("R", length(r_files)),
+        rep("test", length(test_files))
+      ),
     path = c(r_files, test_files)
   )
 
@@ -467,7 +474,6 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
 
   # If there is at least one test
   if (nrow(rmd_test) != 0) {
-
     # Stop for tests chunks not having file_name
     if (any(is.na(rmd_test[["file_name"]]) | rmd_test[["file_name"]] == "")) {
       stop(
@@ -500,14 +506,15 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
       if (!dir.exists(test_dir)) {
         dir.create(test_dir)
         dir.create(file.path(test_dir, "testthat"))
-        cat(enc2utf8(c(
-          "library(testthat)",
-          paste0("library(", project_name, ")"),
-          "",
-          paste0('test_check("', project_name, '")')
-        )),
-        sep = "\n",
-        file = file.path(test_dir, "testthat.R")
+        cat(
+          enc2utf8(c(
+            "library(testthat)",
+            paste0("library(", project_name, ")"),
+            "",
+            paste0('test_check("', project_name, '")')
+          )),
+          sep = "\n",
+          file = file.path(test_dir, "testthat.R")
         )
       }
 

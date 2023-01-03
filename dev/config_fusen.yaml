@@ -11,6 +11,7 @@ flat_clean_fusen_files.Rmd:
   vignettes: vignettes/clean-fusen-files.Rmd
 flat_create_flat.Rmd:
   path: dev/flat_create_flat.Rmd
+  state: active
   R: R/add_flat_template.R
   tests: tests/testthat/test-add_flat_template.R
   vignettes: []

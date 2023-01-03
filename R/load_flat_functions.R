@@ -14,7 +14,7 @@
 #' }
 load_flat_functions <- function(flat_file, envir = globalenv()) {
   if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
-      rstudioapi::hasFun("documentPath") ) {
+    rstudioapi::hasFun("documentPath")) {
     current_file <- rstudioapi::documentPath()
     if (!is.null(current_file) && grepl("^flat.*[.](R|r|q)md$", basename(current_file))) {
       flat_file <- current_file
@@ -24,7 +24,7 @@ load_flat_functions <- function(flat_file, envir = globalenv()) {
   parsed_flat_file <- parse_rmd(flat_file)
   parsed_tbl <- as_tibble(parsed_flat_file)
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-                              grepl(regex_functions, parsed_tbl$label))
+    grepl(regex_functions, parsed_tbl$label))
 
   if (nrow(parsed_tbl) > 0) {
     # to_source <- tempfile()

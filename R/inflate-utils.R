@@ -115,7 +115,6 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
 #' @importFrom stats na.omit
 #' @noRd
 add_names_to_parsed <- function(parsed_tbl, fun_code) {
-
   # Which parts were functions
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
     grepl(regex_functions, parsed_tbl$label))
@@ -254,7 +253,6 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
 #' @importFrom parsermd rmd_node_code
 #' @noRd
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
-
   # Example in separate chunk
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
     grepl(regex_example, parsed_tbl$label))
@@ -299,8 +297,9 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 
   if (nrow(rmd_ex) != 0) {
     # Group rmd_ex for the same function
-    rmd_ex$rmd_ex_code <- lapply(1:nrow(rmd_ex), function(x)
-      rmd_node_code(rmd_ex[x, ][["ast"]]))
+    rmd_ex$rmd_ex_code <- lapply(1:nrow(rmd_ex), function(x) {
+      rmd_node_code(rmd_ex[x, ][["ast"]])
+    })
     rmd_ex_group <- group_code(df = rmd_ex, group_col = "fun_name", code_col = "rmd_ex_code")
 
     # Get example code
@@ -557,4 +556,3 @@ asciify_name <- function(name, to_pkg = FALSE) {
 #' A flavor of normalizePath() that unixifies all its output
 #' @noRd
 normalize_path_winslash <- function(...) normalizePath(..., winslash = "/")
-
