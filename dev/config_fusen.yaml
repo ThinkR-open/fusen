@@ -1,5 +1,6 @@
 flat_addins.Rmd:
   path: dev/flat_addins.Rmd
+  state: active
   R: R/build_fusen_chunks.R
   tests: tests/testthat/test-build_fusen_chunks.R
   vignettes: []

@@ -74,7 +74,7 @@ fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
 #' @examples
 init_share_on_github <- function() {
   pkg <- "."
-  
+
   # Init git if not already initiated
   repo <- tryCatch(gert::git_find(pkg), error = function(e) NULL)
   if (!is.null(repo)) {
@@ -83,8 +83,10 @@ init_share_on_github <- function() {
     to_init <- TRUE
   }
   if (to_init) {
-    sure <- paste0("git is not initiated yet\n",
-                   "Do you want to init and commit the current state? (y/n)\n")
+    sure <- paste0(
+      "git is not initiated yet\n",
+      "Do you want to init and commit the current state? (y/n)\n"
+    )
     do_it <- readline(sure) == "y"
     if (do_it) {
       cli::cat_rule("Init Git Repository with first commit")
@@ -105,46 +107,48 @@ init_share_on_github <- function() {
   if (nrow(info_git) == 0) {
     usethis::use_github()
   } else if (grepl("github", info_git[info_git$name == "origin", "url"])) {
-    message("Your repository is already connected to a remote GitHub repository: ",
-            info_git[info_git$name == "origin", "url"])
+    message(
+      "Your repository is already connected to a remote GitHub repository: ",
+      info_git[info_git$name == "origin", "url"]
+    )
   } else {
     stop("Your repository is not connected to a GitHub repository: ", info_git[info_git$name == "origin", "url"])
   }
-  
+
   msg <- character(0)
-  
+
   # Add a DESCRIPTION if not exists
   if (!file.exists("DESCRIPTION")) {
     cli::cat_rule("Add DESCRIPTION")
     fill_description(pkg = pkg)
     msg <- c(msg, "You need to fill your DESCRIPTION file. See `?fusen::fill_description`.")
   }
-  
+
   # Add a NEWS if not exists
   if (!file.exists("NEWS.md")) {
     cli::cat_rule("Add NEWS")
     usethis::use_news_md()
   }
-  
+
   # Add a Readme if not exists
   if (!file.exists("README.Rmd")) {
     cli::cat_rule("Add Readme")
     usethis::use_readme_rmd()
   }
-  
+
   # Add GitHub Actions with pkgdown
   cli::cat_rule("Init GitHub Actions")
   usethis::use_github_action_check_standard()
   usethis::use_github_action("pkgdown")
   usethis::use_github_action("test-coverage")
-  
+
   # Get info for website
   github_url <- gert::git_remote_info()$url
   github_url_no_git <- gsub("[.]git$", "", github_url)
   username <- gsub("https://github.com/(.*)/.*$", "\\1", github_url_no_git)
   projname <- gsub(paste0("https://github.com/", username, "/(.*)$"), "\\1", github_url_no_git)
   url_pages <- paste0("https://", username, ".github.io/", projname)
-    
+
   # Knit the Readme file
   cli::cat_rule("Update and Knit the Readme file")
   readme_lines <- readLines("README.Rmd")
@@ -158,34 +162,37 @@ init_share_on_github <- function() {
   cat(readme_lines, file = "README.Rmd", sep = "\n")
   knitr::knit("README.Rmd")
   msg <- c(msg, "You will want to update your README.Rmd file. And then `knit()` it.")
-  
+
   # Push to the repository
   cli::cat_rule("Push to GitHub and wait for publication")
   gert::git_add(".")
   gert::git_commit_all(message = "chore: Init Actions and website")
   gert::git_push()
-  
+
   # Message website
   cli::cat_rule("Make sure GitHub is set for your website publication")
-  url_setting_pages <- paste0(github_url_no_git, '/settings/pages')
-  url_actions <- paste0(github_url_no_git, '/actions/workflows/pkgdown.yaml')
+  url_setting_pages <- paste0(github_url_no_git, "/settings/pages")
+  url_actions <- paste0(github_url_no_git, "/actions/workflows/pkgdown.yaml")
   # usethis::ui_todo(
   # cli::cli_warn(
   cat(
     cli::cli_text("1 - Wait for the 'pkgdown' Actions 'chore: Init Actions and website' to finish on: {.url {url_actions}}."),
-    
     cli::cli_text("2 - Once the 'gh-pages' branch is created, you need to tell GitHub to follow it."),
     cli::cli_text("Go to: {.url  {url_setting_pages}} and choose 'gh-pages' in the 'Branch' drop-down menu, instead of 'None'."),
     cli::cli_text("You may need to wait for it to be created by GitHub Actions."),
-    
+
     # browseURL(paste0(github_url_no_git, "/settings/pages"))
     cli::cli_text("3 - In a few seconds, you'll be able to see your project website at: {.url {url_pages}}"),
     cli::cli_text("Now it's time to continue your project: fill the flat file, inflate, push to GitHub."),
     cli::cli_text("> Infos: ", paste(msg, collapse = " - ")),
-    {if (!dir.exists("R")) cli::cli_text("> Note: The Action 'R-CMD-check' may fail as you do not have any function in your package yet. Inflate your flat file with a function once, and it should be good.")},
-    {if (!dir.exists("tests")) cli::cli_text("> Note: The Action 'test-coverage' may fail as you do not have any test in your package yet. Inflate your flat file with a unit test once, and it should be good.")}
+    {
+      if (!dir.exists("R")) cli::cli_text("> Note: The Action 'R-CMD-check' may fail as you do not have any function in your package yet. Inflate your flat file with a function once, and it should be good.")
+    },
+    {
+      if (!dir.exists("tests")) cli::cli_text("> Note: The Action 'test-coverage' may fail as you do not have any test in your package yet. Inflate your flat file with a unit test once, and it should be good.")
+    }
   )
-  
+
   return(url_pages)
 }
 ```
@@ -202,12 +209,11 @@ Each time you push new commits to the main branch on GitHub, your website will b
 
 ```{r tests-init_share_on_github}
 test_that("init_share_on_github works", {
-  
   skip_if_not(interactive())
-  
+
   if (Sys.getenv("FUSEN_TEST_PUBLISH", unset = "FALSE") == "TRUE") {
     # Only create the project if specifically asked by maintainers
-    path_project <- file.path(tempdir(), paste0("fusen.github.", packageVersion("fusen"))) 
+    path_project <- file.path(tempdir(), paste0("fusen.github.", packageVersion("fusen")))
     # path_project <- tempfile("fusen.github.proj")
     the_devs <- create_fusen(path = path_project, template = "minimal", with_git = TRUE, open = FALSE)
     the_flat <- the_devs[grep("flat", the_devs)]
@@ -225,23 +231,22 @@ test_that("init_share_on_github works", {
       )
       # Define License with use_*_license()
       usethis::use_mit_license("John Doe")
-      
+
       # Inflate ?
       # inflate(flat_file = the_flat, vignette_name = "Get started", open_vignette = FALSE)
     })
-    
+
     usethis::with_project(path_project, {
       # Share on GitHub
       website_url <- init_share_on_github()
     }) # End of with_project
-  
+
     do_it <- readline("Does pkgdown website exists after following instructions? (y/n)") == "y"
     expect_true(do_it)
-    
+
     # Clean state
     unlink(path_project, recursive = TRUE)
   }
-
 })
 ```
 

@@ -117,6 +117,8 @@ attachment::att_amend_desc(
 
 # Clean style
 styler::style_pkg()
+styler::style_file(list.files("dev", pattern = "[.](Rmd|qmd|rmd)$", full.names = TRUE)
+)
 
 # Description and Bibliography
 chameleon::create_pkg_desc_file(out.dir = "inst", source = c("archive"), to = "html")

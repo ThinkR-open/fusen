@@ -17,11 +17,11 @@
 #' out_csv <- check_not_registered_files()
 #' out_csv
 #' }
-#' 
+#'
 #' # Or you can try on the reproducible example
 #' dummypackage <- tempfile("clean")
 #' dir.create(dummypackage)
-#' 
+#'
 #' # {fusen} steps
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 #' dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
@@ -35,10 +35,10 @@
 #'       open_vignette = FALSE
 #'     )
 #'   )
-#' 
+#'
 #'   # Add a not registered file to the package
 #'   cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
-#'   
+#'
 #'   # Use the fonction to check the list of files
 #'   out_csv <- check_not_registered_files(dummypackage)
 #'   out_csv
@@ -50,7 +50,7 @@
 #'   # Here I change the line to simulate what you manually did above
 #'   content_csv[content_csv[["path"]] == "R/to_keep.R", "origin"] <- "keep"
 #'   write.csv(content_csv, out_csv)
-#'   
+#'
 #'   out_config <- df_to_config(df_files = out_csv)
 #'   out_config
 #'   # Open the out_config file to see what's going on
@@ -82,7 +82,7 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
   }
 
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
-  
+
   if (file.exists(config_file)) {
     # Read config file, and remove those already there
     config_list <- yaml::read_yaml(config_file)
@@ -108,12 +108,13 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
     res_new$origin <- "keep"
   }
 
-    # TODO go back to relative path
+  # TODO go back to relative path
   res_new$path <- gsub(paste0(getwd(), "/"), "", normalize_path_winslash(res_new$path, mustWork = TRUE))
 
   # config_file may not exist already
   csv_file <- file.path(
-    gsub(paste0(getwd(), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE))), "config_not_registered.csv")
+    gsub(paste0(getwd(), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE))), "config_not_registered.csv"
+  )
 
   # Save for manual modification
   if (isTRUE(to_csv)) {
@@ -142,7 +143,7 @@ guess_flat_origin <- function(path) {
     ".* from\\s*(/){0,1}(.+[.].{1}md).*", "\\2",
     lines[grep("(G|g)enerated by \\{fusen\\} from", lines)][1]
   )
-  
+
   guess_path <- normalizePath(guess_path, mustWork = FALSE, winslash = "/")
   if (file.exists(guess_path)) {
     guess_path <- gsub(paste0(getwd(), "/"), "", normalizePath(guess_path, mustWork = FALSE, winslash = "/"))
@@ -208,14 +209,14 @@ clean_fusen_files <- function() {
 #'   "test", "tests/testthat/test-zaza.R",
 #'   "vignette", "vignettes/my-zaza-vignette.Rmd"
 #' )
-#' 
+#'
 #' \dontrun{
 #' df_to_config(my_files_to_protect)
 #' }
 df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", "deprecated"), force = FALSE, clean = TRUE) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
   state <- match.arg(state, several.ok = FALSE)
-  
+
   # User entry verifications
   if (missing(df_files)) {
     df_files <- file.path(dirname(config_file), "config_not_registered.csv")
@@ -231,8 +232,8 @@ df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", 
   if (!all(c("type", "path") %in% names(df_files))) {
     stop("df_files should contains two columns named: 'type' and 'path'")
   }
-  
-  
+
+
 
   if (!"origin" %in% names(df_files)) {
     df_files[["origin"]] <- flat_file_path
@@ -288,7 +289,7 @@ df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", 
     }
   }
 
-  # Remove common part between config_file and all path 
+  # Remove common part between config_file and all path
   # to get relative paths to project
 
   # TODO - When path does not exists, normalizePath does not correctly
@@ -297,15 +298,17 @@ df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", 
   df_files$path <- gsub(
     paste0(normalize_path_winslash("."), "/"),
     "",
-    normalize_path_winslash(df_files$path, mustWork = TRUE))
-  
+    normalize_path_winslash(df_files$path, mustWork = TRUE)
+  )
+
   # All origin path should exist, if not "keep"
   df_files$origin[df_files$origin != "keep"] <- gsub(
     paste0(normalize_path_winslash("."), "/"),
     "",
-    normalize_path_winslash(df_files$origin[df_files$origin != "keep"], mustWork = TRUE))
+    normalize_path_winslash(df_files$origin[df_files$origin != "keep"], mustWork = TRUE)
+  )
 
-  
+
   if (any(duplicated(df_files$path))) {
     msg <- paste("Some paths appear multiple times in df_files. Please remove duplicated rows: ", paste(unique(df_files$path[duplicated(df_files$path)]), collapse = ", "))
 
@@ -348,11 +351,16 @@ df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", 
     state <- rep(state, length.out = length(each_flat_file_path))
   }
   all_groups_list <- lapply(
-    seq_along(each_flat_file_path), 
-    function(x) update_one_group_yaml(
-      df_files, complete_yaml,
-      each_flat_file_path[x], state = state[x],
-      clean = clean)) %>%
+    seq_along(each_flat_file_path),
+    function(x) {
+      update_one_group_yaml(
+        df_files, complete_yaml,
+        each_flat_file_path[x],
+        state = state[x],
+        clean = clean
+      )
+    }
+  ) %>%
     setNames(basename(each_flat_file_path))
 
   all_modified <- names(complete_yaml)[names(complete_yaml) %in% names(all_groups_list)]
@@ -411,24 +419,26 @@ files_list_to_vector <- function(list_of_files) {
 #' @param clean Logical. See `df_to_config()`. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during `inflate()` of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with `register_to_config()` so that it can be run twice on the package when migrating from an old version of {fusen}. This could be set to FALSE with a direct use of `df_to_config()` too.
 #' @noRd
 update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state = c("active", "deprecated"), clean = TRUE) {
-  
   state <- match.arg(state, several.ok = FALSE)
   all_keep_before <- complete_yaml[[basename(flat_file_path)]]
-  
+
   # Only files from df_files will be listed
-  df_files_filtered <- df_files[df_files[["origin"]] == flat_file_path,]
-  
+  df_files_filtered <- df_files[df_files[["origin"]] == flat_file_path, ]
+
   # All already in the list will be deleted except if clean is FALSE
   if (isTRUE(clean)) {
     this_group_list <- list(
       path = flat_file_path,
       state = state,
       R = c(df_files_filtered[["path"]][
-        grepl("^R$|^r$", df_files_filtered[["type"]])]),
+        grepl("^R$|^r$", df_files_filtered[["type"]])
+      ]),
       tests = c(df_files_filtered[["path"]][
-        grepl("^test$|^tests$", df_files_filtered[["type"]])]),
+        grepl("^test$|^tests$", df_files_filtered[["type"]])
+      ]),
       vignettes = c(df_files_filtered[["path"]][
-        grepl("^vignette$|^vignettes$", df_files_filtered[["type"]])])
+        grepl("^vignette$|^vignettes$", df_files_filtered[["type"]])
+      ])
     )
   } else {
     this_group_list <- list(
@@ -437,14 +447,16 @@ update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state
       R = c(
         # new ones
         df_files_filtered[["path"]][
-          grepl("^R$|^r$", df_files_filtered[["type"]])],
+          grepl("^R$|^r$", df_files_filtered[["type"]])
+        ],
         # previous ones
         unlist(all_keep_before[["R"]])
       ),
       tests = c(
         # new ones
         df_files_filtered[["path"]][
-          grepl("^test$|^tests$", df_files_filtered[["type"]])],
+          grepl("^test$|^tests$", df_files_filtered[["type"]])
+        ],
         # previous ones
         unlist(all_keep_before[["tests"]])
       ),
@@ -480,13 +492,13 @@ update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state
 }
 
 #' Include all existing package files in the config file
-#' 
+#'
 #' Helps transition from non-fusen packages
-#' 
+#'
 #' @param pkg Path to the package from which to add file to configuration file
 #' @inheritParams df_to_config
 #' @return Path to configuration file
-#' 
+#'
 #' @export
 #' @examples
 #' \dontrun{
@@ -494,11 +506,11 @@ update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state
 #' # Note: running this will write "dev/config_fusen.yaml" in your working directory
 #' register_all_to_config()
 #' }
-#' 
+#'
 #' # Or you can try on the reproducible example
 #' dummypackage <- tempfile("register")
 #' dir.create(dummypackage)
-#' 
+#'
 #' # {fusen} steps
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 #' dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
@@ -512,22 +524,21 @@ update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state
 #'       open_vignette = FALSE
 #'     )
 #'   )
-#'   
+#'
 #'   out_path <- register_all_to_config(dummypackage)
-#'   
+#'
 #'   # Look at the output
 #'   yaml::read_yaml(out_path)
 #' })
-#' 
 register_all_to_config <- function(pkg = ".", clean = FALSE) {
   # Use the fonction to check the list of files
   out_df <- check_not_registered_files(pkg, to_csv = FALSE)
-  
+
   if (is.null(out_df)) {
     message("There is no file to register or everything was already registered")
     return(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
   }
-  
+
   w.keep <- grep("No existing source path found", out_df[["origin"]])
   out_df[["origin"]][w.keep] <- "keep"
   out_config <- df_to_config(df_files = out_df, clean = clean)

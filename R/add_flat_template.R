@@ -2,53 +2,53 @@
 
 #' @rdname add_flat_template
 #' @export
-add_additional <- function(
-    pkg = ".",
-    dev_dir = "dev",
-    flat_name = "additional",
-    overwrite = FALSE,
-    open = TRUE) {
+add_additional <- function(pkg = ".",
+                           dev_dir = "dev",
+                           flat_name = "additional",
+                           overwrite = FALSE,
+                           open = TRUE) {
   add_flat_template(
     template = "additional",
     pkg = pkg,
     dev_dir = dev_dir,
     flat_name = flat_name,
     overwrite = overwrite,
-    open = open)
+    open = open
+  )
 }
 
 #' @rdname add_flat_template
 #' @export
-add_minimal <- function(
-    pkg = ".",
-    dev_dir = "dev",
-    flat_name = "minimal",
-    overwrite = FALSE,
-    open = TRUE) {
+add_minimal <- function(pkg = ".",
+                        dev_dir = "dev",
+                        flat_name = "minimal",
+                        overwrite = FALSE,
+                        open = TRUE) {
   add_flat_template(
     template = "minimal",
     pkg = pkg,
     dev_dir = dev_dir,
     flat_name = flat_name,
     overwrite = overwrite,
-    open = open)
+    open = open
+  )
 }
 
 #' @rdname add_flat_template
 #' @export
-add_full <- function(
-    pkg = ".",
-    dev_dir = "dev",
-    flat_name = "full",
-    overwrite = FALSE,
-    open = TRUE) {
+add_full <- function(pkg = ".",
+                     dev_dir = "dev",
+                     flat_name = "full",
+                     overwrite = FALSE,
+                     open = TRUE) {
   add_flat_template(
     template = "full",
     pkg = pkg,
     dev_dir = dev_dir,
     flat_name = flat_name,
     overwrite = overwrite,
-    open = open)
+    open = open
+  )
 }
 
 #' Add flat Rmd file that drives package development
@@ -109,35 +109,39 @@ add_full <- function(
 #' # add new flat template for teaching (a reduced full template)
 #' add_flat_template("teaching")
 #' }
-add_flat_template <- function(
-    template = c("full", "minimal", "additional", "teaching", "dev_history"),
-    pkg = ".",
-    dev_dir = "dev",
-    flat_name = template,
-    overwrite = FALSE,
-    open = TRUE) {
-
+add_flat_template <- function(template = c("full", "minimal", "additional", "teaching", "dev_history"),
+                              pkg = ".",
+                              dev_dir = "dev",
+                              flat_name = template,
+                              overwrite = FALSE,
+                              open = TRUE) {
   project_name <- get_pkg_name(pkg = pkg)
 
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
-    stop("Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
-         "` as a package name should only contain letters, numbers and dots.")
+    stop(
+      "Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
+      "` as a package name should only contain letters, numbers and dots."
+    )
   }
 
   template <- match.arg(template)
-  if (!template %in% c("full", "teaching", "dev_history")
-      & !flat_name %in% c("minimal", "additional")) {
+  if (!template %in% c("full", "teaching", "dev_history") &
+    !flat_name %in% c("minimal", "additional")) {
     fun_name <- gsub("-", "_", asciify_name(flat_name))
   } else {
     fun_name <- NA
   }
-  flat_name <- paste0("flat_",
-                      asciify_name(gsub("[.]Rmd$", "", flat_name[1])), ".Rmd")
+  flat_name <- paste0(
+    "flat_",
+    asciify_name(gsub("[.]Rmd$", "", flat_name[1])), ".Rmd"
+  )
 
   pkg <- normalizePath(pkg)
   full_dev_dir <- file.path(pkg, dev_dir)
-  if (!dir.exists(full_dev_dir)) {dir.create(full_dev_dir)}
-  dev_file_path <- file.path(full_dev_dir, flat_name) #"dev_history.Rmd")
+  if (!dir.exists(full_dev_dir)) {
+    dir.create(full_dev_dir)
+  }
+  dev_file_path <- file.path(full_dev_dir, flat_name) # "dev_history.Rmd")
 
   # Which template ----
   if (template == "dev_history") {
@@ -160,24 +164,32 @@ add_flat_template <- function(
     lines_template <- readLines(template_file)
 
     lines_template[grepl("<my_package_name>", lines_template)] <-
-      gsub("<my_package_name>", project_name,
-           lines_template[grepl("<my_package_name>", lines_template)])
+      gsub(
+        "<my_package_name>", project_name,
+        lines_template[grepl("<my_package_name>", lines_template)]
+      )
 
     # Change flat_template file name
     # _inflate
     lines_template[grepl("dev/flat_template.Rmd", lines_template)] <-
-      gsub("dev/flat_template.Rmd", file.path(dev_dir, dev_name),
-           lines_template[grepl("dev/flat_template.Rmd", lines_template)])
+      gsub(
+        "dev/flat_template.Rmd", file.path(dev_dir, dev_name),
+        lines_template[grepl("dev/flat_template.Rmd", lines_template)]
+      )
     # _title
     lines_template[grepl("flat_template.Rmd", lines_template)] <-
-      gsub("flat_template.Rmd", dev_name,
-           lines_template[grepl("flat_template.Rmd", lines_template)])
+      gsub(
+        "flat_template.Rmd", dev_name,
+        lines_template[grepl("flat_template.Rmd", lines_template)]
+      )
 
     # Change my_fun to fun_name
     if (!is.na(fun_name)) {
       lines_template[grepl("my_fun", lines_template)] <-
-        gsub("my_fun", fun_name,
-             lines_template[grepl("my_fun", lines_template)])
+        gsub(
+          "my_fun", fun_name,
+          lines_template[grepl("my_fun", lines_template)]
+        )
     }
 
     cat(enc2utf8(lines_template), file = dev_file_path, sep = "\n")
@@ -187,8 +199,10 @@ add_flat_template <- function(
   if (template %in% c("full", "minimal", "dev_history")) {
     dev_file <- file.path(full_dev_dir, "0-dev_history.Rmd")
     if (file.exists(dev_file) & !isTRUE(overwrite)) {
-      message("'0-dev_history.Rmd' already exists. It was not overwritten. ",
-              "Set `add_flat_template(overwrite = TRUE)` if you want to do so.")
+      message(
+        "'0-dev_history.Rmd' already exists. It was not overwritten. ",
+        "Set `add_flat_template(overwrite = TRUE)` if you want to do so."
+      )
     } else {
       copy <- file.copy(
         system.file("the-dev-history.Rmd", package = "fusen"),
@@ -200,7 +214,6 @@ add_flat_template <- function(
       }
       dev_file_path <- c(dev_file_path, dev_file)
     }
-
   }
 
   # Add data for the full template exemple
@@ -253,7 +266,9 @@ add_flat_template <- function(
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
     here::set_here(pkg)
   }
-  if (isTRUE(open) & interactive()) {usethis::edit_file(dev_file_path)}
+  if (isTRUE(open) & interactive()) {
+    usethis::edit_file(dev_file_path)
+  }
 
   dev_file_path
 }
