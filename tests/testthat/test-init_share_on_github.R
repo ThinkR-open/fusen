@@ -7,7 +7,7 @@ test_that("init_share_on_github works", {
     # Only create the project if specifically asked by maintainers
     path_project <- file.path(tempdir(), paste0("fusen.github.", packageVersion("fusen")))
     # path_project <- tempfile("fusen.github.proj")
-    the_devs <- create_fusen(path = path_project, template = "minimal", with_git = TRUE, open = FALSE)
+    the_devs <- create_fusen(path = path_project, template = "teaching", with_git = TRUE, open = FALSE)
     the_flat <- the_devs[grep("flat", the_devs)]
     # Follow the "dev/0-dev_history.Rmd"
     usethis::with_project(path_project, {
@@ -25,7 +25,7 @@ test_that("init_share_on_github works", {
       usethis::use_mit_license("John Doe")
 
       # Inflate ?
-      # inflate(flat_file = the_flat, vignette_name = "Get started", open_vignette = FALSE)
+      inflate(flat_file = the_flat, vignette_name = "Get started", open_vignette = FALSE)
     })
 
     usethis::with_project(path_project, {
