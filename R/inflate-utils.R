@@ -115,7 +115,6 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
 #' @importFrom stats na.omit
 #' @noRd
 add_names_to_parsed <- function(parsed_tbl, fun_code) {
-
   # Which parts were functions
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
     grepl(regex_functions, parsed_tbl$label))
@@ -137,7 +136,8 @@ add_names_to_parsed <- function(parsed_tbl, fun_code) {
     df <- data.frame(
       sec_title = parsed_tbl[["sec_title"]][which_parsed_fun],
       sec_fun_name = parsed_tbl[["fun_name"]][which_parsed_fun],
-      fake = NA
+      fake = NA,
+      stringsAsFactors = FALSE
     )
     sec_title_name <- group_code(df, group_col = "sec_title", code_col = "fake")
 
@@ -244,7 +244,7 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
   )
   write_utf8(path = test_file, lines = lines)
 
-  return(file_name)
+  return(test_file)
 }
 
 #' Add examples in function code
@@ -253,7 +253,6 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
 #' @importFrom parsermd rmd_node_code
 #' @noRd
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
-
   # Example in separate chunk
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
     grepl(regex_example, parsed_tbl$label))
@@ -297,13 +296,21 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]), ]
 
   if (nrow(rmd_ex) != 0) {
+    # Group rmd_ex for the same function
+    rmd_ex$rmd_ex_code <- lapply(1:nrow(rmd_ex), function(x) {
+      rmd_node_code(rmd_ex[x, ][["ast"]])
+    })
+    rmd_ex_group <- group_code(df = rmd_ex, group_col = "fun_name", code_col = "rmd_ex_code")
+
+    # Get example code
     example_code <- lapply(
-      seq_len(nrow(rmd_ex)),
+      seq_len(nrow(rmd_ex_group)),
       function(x) {
         tibble::tibble(
-          fun_name = rmd_ex[x, ][["fun_name"]],
+          fun_name = rmd_ex_group[x, ][["fun_name"]],
           # example_chunk = list(paste("#'", rmd_get_chunk(rmd_ex[x, ])$code))
-          example_chunk = list(paste("#'", unlist(rmd_node_code(rmd_ex[x, ][["ast"]]))))
+          # example_chunk = list(paste("#'", unlist(rmd_node_code(rmd_ex[x, ][["ast"]]))))
+          example_chunk = list(paste("#'", unlist(rmd_ex_group[x, ][["rmd_ex_code"]])))
         )
       }
     ) %>% do.call("rbind", .)

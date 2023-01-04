@@ -91,7 +91,7 @@ usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
 usethis::use_coverage()
 usethis::use_build_ignore("_pkgdown.yml")
-usethis::use_github_action(url = "https://github.com/DavisVaughan/extrachecks-html5/blob/main/R-CMD-check-HTML5.yaml")
+# usethis::use_github_action(url = "https://github.com/DavisVaughan/extrachecks-html5/blob/main/R-CMD-check-HTML5.yaml")
 
 # Inflates ----
 fusen::inflate(flat_file = "dev/flat_addins.Rmd",
@@ -99,6 +99,9 @@ fusen::inflate(flat_file = "dev/flat_addins.Rmd",
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 fusen::inflate(flat_file = "dev/flat_create_flat.Rmd",
                check = FALSE, vignette_name = NA, document = FALSE)
+fusen::inflate(flat_file = "dev/flat_clean_fusen_files.Rmd",
+               vignette_name = "Clean {fusen} files", check = FALSE,
+               overwrite = TRUE, open_vignette = FALSE)
 
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")
@@ -114,6 +117,8 @@ attachment::att_amend_desc(
 
 # Clean style
 styler::style_pkg()
+styler::style_file(list.files("dev", pattern = "[.](Rmd|qmd|rmd)$", full.names = TRUE)
+)
 
 # Description and Bibliography
 chameleon::create_pkg_desc_file(out.dir = "inst", source = c("archive"), to = "html")
@@ -180,6 +185,9 @@ testthat::test_file("tests/testthat/test-init_share_on_github.R")
 # pkgload::load_all(export_all = FALSE)
 # remotes::install_github("ropensci-review-tools/autotest")
 # debugonce(autotest:::rm_not_parseable)
+
+# Run examples in interactive mode too
+devtools::run_examples()
 
 local <- utils::fileSnapshot (".", timestamp = tempfile("timestamp"), md5sum = TRUE)
 home <- utils::fileSnapshot ("~", timestamp = tempfile("timestamp"), md5sum = TRUE)

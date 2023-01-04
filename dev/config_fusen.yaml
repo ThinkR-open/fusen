@@ -1,0 +1,58 @@
+flat_addins.Rmd:
+  path: dev/flat_addins.Rmd
+  state: active
+  R: R/build_fusen_chunks.R
+  tests: tests/testthat/test-build_fusen_chunks.R
+  vignettes: []
+flat_clean_fusen_files.Rmd:
+  path: dev/flat_clean_fusen_files.Rmd
+  state: active
+  R: R/clean_fusen_files.R
+  tests: tests/testthat/test-clean_fusen_files.R
+  vignettes: vignettes/clean-fusen-files.Rmd
+flat_create_flat.Rmd:
+  path: dev/flat_create_flat.Rmd
+  state: active
+  R: R/add_flat_template.R
+  tests: tests/testthat/test-add_flat_template.R
+  vignettes: []
+flat_history_core.Rmd:
+  path: dev/flat_history_core.Rmd
+  R:
+  - R/add_dev_history.R
+  - R/fill_description.R
+  - R/inflate.R
+  tests:
+  - tests/testthat/test-add_dev_history.R
+  - tests/testthat/test-fill_description.R
+  - tests/testthat/test-inflate-part1.R
+  - tests/testthat/test-inflate-part2.R
+  vignettes: vignettes/How-to-use-fusen.Rmd
+flat_history_maintain.Rmd:
+  path: dev/flat_history_maintain.Rmd
+  R: []
+  tests: []
+  vignettes: vignettes/Maintain-packages-with-fusen.Rmd
+flat_init_share_on_github.Rmd:
+  path: dev/flat_init_share_on_github.Rmd
+  state: active
+  R: R/init_share_on_github.R
+  tests: tests/testthat/test-init_share_on_github.R
+  vignettes: vignettes/share-on-a-github-website.Rmd
+keep:
+  path: keep
+  R:
+  - R/addins.R
+  - R/create_fusen_rsproject.R
+  - R/fusen-package.R
+  - R/globals.R
+  - R/inflate-utils.R
+  - R/load_flat_functions.R
+  - R/utils-pipe.R
+  tests:
+  - tests/testthat/test-create_fusen_rsproject.R
+  - tests/testthat/test-inflate_qmd.R
+  - tests/testthat/test-inflate_utils.R
+  - tests/testthat/test-load_flat_functions.R
+  - tests/testthat/test-skeleton.R
+  vignettes: vignettes/tips-and-tricks.Rmd

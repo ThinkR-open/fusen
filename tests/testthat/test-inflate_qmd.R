@@ -28,7 +28,6 @@ usethis::with_project(dummypackage, {
   )
 
   test_that("inflate() worked correctly with quarto qmd file", {
-
     # Number of files
     expect_equal(length(list.files(file.path(dummypackage, "R"))), 11)
     expect_equal(length(list.files(file.path(dummypackage, "vignettes"))), 1)

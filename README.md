@@ -9,9 +9,8 @@
 badge](https://thinkr-open.r-universe.dev/badges/fusen)](https://thinkr-open.r-universe.dev)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/fusen)](https://CRAN.R-project.org/package=fusen)
-[![R build
-status](https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg)](https://github.com/ThinkR-open/fusen/actions)
-[![codecov](https://codecov.io/gh/ThinkR-open/fusen/branch/main/graph/badge.svg?token=V0HOSAY8WW)](https://codecov.io/gh/ThinkR-open/fusen)
+[![R-CMD-check](https://github.com/ThinkR-open/fusen/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ThinkR-open/fusen/actions/workflows/R-CMD-check.yaml)
+[![codecov](https://app.codecov.io/gh/ThinkR-open/fusen/branch/main/graph/badge.svg?token=V0HOSAY8WW)](https://app.codecov.io/gh/ThinkR-open/fusen)
 [![](https://cranlogs.r-pkg.org/badges/fusen)](https://cran.r-project.org/package=fusen)
 <!-- badges: end -->
 
@@ -54,10 +53,11 @@ You can install the development version of {fusen} from GitHub:
 ``` r
 # From r-universe.dev (No need for GITHUB_PAT)
 options(repos = c(
-  thinkropen = 'https://thinkr-open.r-universe.dev',
-  CRAN = 'https://cloud.r-project.org'))
+  thinkropen = "https://thinkr-open.r-universe.dev",
+  CRAN = "https://cloud.r-project.org"
+))
 # Download and install {fusen} in R
-install.packages('fusen')
+install.packages("fusen")
 
 # With {remotes} using GitHub API - Need for GITHUB_PAT
 # install.packages("remotes")

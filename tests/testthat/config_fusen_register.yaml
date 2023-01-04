@@ -1,0 +1,22 @@
+flat_full.Rmd:
+  path: dev/flat_full.Rmd
+  state: active
+  R:
+  - R/my_median.R
+  - R/my_other_median.R
+  tests:
+  - tests/testthat/test-my_median.R
+  - tests/testthat/test-my_other_median.R
+  vignettes: vignettes/get-started.Rmd
+flat_new_one.Rmd:
+  path: dev/flat_new_one.Rmd
+  state: active
+  R: R/new_one.R
+  tests: tests/testthat/test-new_one.R
+  vignettes: vignettes/new_one.Rmd
+keep:
+  path: keep
+  state: active
+  R: R/to_keep.R
+  tests: []
+  vignettes: []
