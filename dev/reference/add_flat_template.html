@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.1.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9000</span>
       </span>
     </div>
 
@@ -51,6 +51,9 @@
     </li>
     <li>
       <a href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
+    </li>
+    <li>
+      <a href="../articles/clean-fusen-files.html">Clean {fusen} files</a>
     </li>
     <li>
       <a href="../articles/share-on-a-github-website.html">Share on a GitHub website</a>
@@ -175,7 +178,32 @@ However, <code><a href="add_dev_history.html">add_dev_history()</a></code> is a 
 
     <div id="ref-examples">
     <h2>Examples</h2>
-    
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Create a new project</span></span></span>
+<span class="r-in"><span><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># Add</span></span></span>
+<span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span>template <span class="op">=</span> <span class="st">"teaching"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/Rtmp4oiB1k/dummypackage224537bfe578 . Please start a new R session in the new project directory.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp4oiB1k/dummypackage224537bfe578/dev/flat_teaching.Rmd"</span>
+<span class="r-in"><span><span class="co"># Delete dummy package</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># For classical use in your package</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="co"># first time ever using 'fusen'</span></span></span>
+<span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"full"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># first time in your new package</span></span></span>
+<span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"minimal"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># add new flat file for new functions</span></span></span>
+<span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"add"</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># add new flat template for teaching (a reduced full template)</span></span></span>
+<span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"teaching"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
+</code></pre></div>
     </div>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">

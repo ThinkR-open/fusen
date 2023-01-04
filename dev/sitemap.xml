@@ -19,6 +19,9 @@
     <loc>https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html</loc>
   </url>
   <url>
+    <loc>https://thinkr-open.github.io/fusen/articles/clean-fusen-files.html</loc>
+  </url>
+  <url>
     <loc>https://thinkr-open.github.io/fusen/articles/index.html</loc>
   </url>
   <url>
@@ -46,7 +49,16 @@
     <loc>https://thinkr-open.github.io/fusen/reference/add_fusen_chunks.html</loc>
   </url>
   <url>
+    <loc>https://thinkr-open.github.io/fusen/reference/check_not_registered_files.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/reference/clean_fusen_files.html</loc>
+  </url>
+  <url>
     <loc>https://thinkr-open.github.io/fusen/reference/create_fusen.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/reference/df_to_config.html</loc>
   </url>
   <url>
     <loc>https://thinkr-open.github.io/fusen/reference/fill_description.html</loc>
@@ -68,5 +80,8 @@
   </url>
   <url>
     <loc>https://thinkr-open.github.io/fusen/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/reference/register_all_to_config.html</loc>
   </url>
 </urlset>

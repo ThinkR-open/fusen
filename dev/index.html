@@ -64,7 +64,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.4.1.9000</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9000</span>
       </span>
     </div>
 
@@ -85,6 +85,9 @@
     </li>
     <li>
       <a href="articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
+    </li>
+    <li>
+      <a href="articles/clean-fusen-files.html">Clean {fusen} files</a>
     </li>
     <li>
       <a href="articles/share-on-a-github-website.html">Share on a GitHub website</a>
@@ -154,10 +157,11 @@ After that, your {pkgdown} documentation website is one command away to be share
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># From r-universe.dev (No need for GITHUB_PAT)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
-<span>  thinkropen <span class="op">=</span> <span class="st">'https://thinkr-open.r-universe.dev'</span>,</span>
-<span>  CRAN <span class="op">=</span> <span class="st">'https://cloud.r-project.org'</span><span class="op">)</span><span class="op">)</span></span>
+<span>  thinkropen <span class="op">=</span> <span class="st">"https://thinkr-open.r-universe.dev"</span>,</span>
+<span>  CRAN <span class="op">=</span> <span class="st">"https://cloud.r-project.org"</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="co"># Download and install {fusen} in R</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">'fusen'</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"fusen"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># With {remotes} using GitHub API - Need for GITHUB_PAT</span></span>
 <span><span class="co"># install.packages("remotes")</span></span>
@@ -377,8 +381,8 @@ Click here to fold your {fusen}…
 <ul class="list-unstyled">
 <li><a href="https://thinkr-open.r-universe.dev" class="external-link"><img src="https://thinkr-open.r-universe.dev/badges/fusen" alt="fusen status badge"></a></li>
 <li><a href="https://CRAN.R-project.org/package=fusen" class="external-link"><img src="https://www.r-pkg.org/badges/version/fusen" alt="CRAN status"></a></li>
-<li><a href="https://github.com/ThinkR-open/fusen/actions" class="external-link"><img src="https://github.com/ThinkR-open/fusen/workflows/R-CMD-check/badge.svg" alt="R build status"></a></li>
-<li><a href="https://codecov.io/gh/ThinkR-open/fusen" class="external-link"><img src="https://codecov.io/gh/ThinkR-open/fusen/branch/main/graph/badge.svg?token=V0HOSAY8WW" alt="codecov"></a></li>
+<li><a href="https://github.com/ThinkR-open/fusen/actions/workflows/R-CMD-check.yaml" class="external-link"><img src="https://github.com/ThinkR-open/fusen/actions/workflows/R-CMD-check.yaml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://app.codecov.io/gh/ThinkR-open/fusen" class="external-link"><img src="https://app.codecov.io/gh/ThinkR-open/fusen/branch/main/graph/badge.svg?token=V0HOSAY8WW" alt="codecov"></a></li>
 <li><a href="https://cran.r-project.org/package=fusen" class="external-link"><img src="https://cranlogs.r-pkg.org/badges/fusen"></a></li>
 </ul>
 </div>
