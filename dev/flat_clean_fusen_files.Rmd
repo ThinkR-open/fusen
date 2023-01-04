@@ -792,6 +792,7 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
 #' Guess flat file of origin of a script
 #'
 #' @param path Path of the script to test
+#' @noRd
 guess_flat_origin <- function(path) {
   lines <- readLines(path)
 

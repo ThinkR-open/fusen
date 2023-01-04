@@ -237,8 +237,11 @@ test_that("init_share_on_github works", {
   
     do_it <- readline("Does pkgdown website exists after following instructions? (y/n)") == "y"
     expect_true(do_it)
+    
+    # Clean state
+    unlink(path_project, recursive = TRUE)
   }
-  unlink(path_project, recursive = TRUE)
+
 })
 ```
 

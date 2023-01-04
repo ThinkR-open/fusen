@@ -46,7 +46,7 @@ usethis::with_project(dummypackage, {
 
   # Add a not registered file to the package
   cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
-
+  
   # Use the fonction to check the list of files
   out_csv <- check_not_registered_files(dummypackage)
   out_csv
@@ -58,7 +58,7 @@ usethis::with_project(dummypackage, {
   # Here I change the line to simulate what you manually did above
   content_csv[content_csv[["path"]] == "R/to_keep.R", "origin"] <- "keep"
   write.csv(content_csv, out_csv)
-
+  
   out_config <- df_to_config(df_files = out_csv)
   out_config
   # Open the out_config file to see what's going on
