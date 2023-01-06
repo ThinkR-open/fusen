@@ -91,10 +91,10 @@ The "flat_template.Rmd" template only modifies files related to functions presen
 - Install {fusen} : `install.packages("fusen")`
 - Open a project for **one of your already existing package**
   + Commit your previous state if you are afraid of {fusen}
-  + If you are not sure enough to do it on an existing package, then follow the guide in ["How to use fusen"](https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html)
+  + If you are not confident enough to try it on an existing package, then create a new package while following the guide in ["How to use fusen"](https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html)
 - Run in the Console : `fusen::add_flat_template("add")`
   + A Rmd file appears in "dev/flat_additional.Rmd". Open it.
-- Add a new function in the `function` chunk. For instance:  
+- Write a new function in the `function` chunk. For instance:  
 ```{r, eval=FALSE}
 #' My median
 #'
@@ -113,7 +113,8 @@ my_median <- function(x, na.rm = TRUE) {
   stats::median(x, na.rm = na.rm)
 }
 ```
-- Add a corresponding example in the `example` chunk. For instance:  
+- Add a corresponding example in the `example` chunk.
+  + If you're looking for an equivalent of `load_all()` but for all functions inside this flat file before inflating, you can use `fusen::load_flat_functions()`
 ```{r, eval=FALSE}
 my_median(1:12)
 ```
@@ -124,9 +125,10 @@ test_that("my_median works properly and show error if needed", {
   expect_error(my_median("text"))
 })
 ```
-- Run command of the last chunk: `fusen::inflate(flat_file = "dev/flat_additional.Rmd")`
+- Run the command of the last chunk of the flat file: `fusen::inflate(flat_file = "dev/flat_additional.Rmd")`
   + This will run {attachment} behind the scene and may modify the list of dependencies in the DESCRIPTION file accordingly. Use `fusen::inflate(flat_file = "dev/flat_additional.Rmd", document = FALSE)` to avoid that.
   + This will also run `devtools::check()`. Use `fusen::inflate(flat_file = "dev/flat_additional.Rmd", check = FALSE)` to avoid that.
+  + This will create a new vignette in your package. You may want to avoid this with `fusen::inflate(flat_file = "dev/flat_additional.Rmd", vignette_name = NA)`
 
 **That's it!**  
 You added a new function in your package, along with example, test and a new vignette:
