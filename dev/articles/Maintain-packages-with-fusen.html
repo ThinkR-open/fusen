@@ -259,8 +259,8 @@ functionality</li>
 package</strong>
 <ul>
 <li>Commit your previous state if you are afraid of {fusen}</li>
-<li>If you are not sure enough to do it on an existing package, then
-follow the guide in <a href="https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html">“How
+<li>If you are not confident enough to try it on an existing package,
+then create a new package while following the guide in <a href="https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html">“How
 to use fusen”</a>
 </li>
 </ul>
@@ -270,7 +270,7 @@ to use fusen”</a>
 <li>A Rmd file appears in “dev/flat_additional.Rmd”. Open it.</li>
 </ul>
 </li>
-<li>Add a new function in the <code>function</code> chunk. For
+<li>Write a new function in the <code>function</code> chunk. For
 instance:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -291,8 +291,14 @@ instance:</li>
 <span>  <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">na.rm</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <ul>
-<li>Add a corresponding example in the <code>example</code> chunk. For
-instance:</li>
+<li>Add a corresponding example in the <code>example</code> chunk.
+<ul>
+<li>If you’re looking for an equivalent of <code>load_all()</code> but
+for all functions inside this flat file before inflating, you can use
+<code><a href="../reference/load_flat_functions.html">fusen::load_flat_functions()</a></code>
+</li>
+</ul>
+</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">my_median</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span></code></pre></div>
@@ -306,7 +312,7 @@ instance:</li>
 <span>  <span class="fu">expect_error</span><span class="op">(</span><span class="fu">my_median</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <ul>
-<li>Run command of the last chunk:
+<li>Run the command of the last chunk of the flat file:
 <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd")</code>
 <ul>
 <li>This will run {attachment} behind the scene and may modify the list
@@ -316,6 +322,10 @@ to avoid that.</li>
 <li>This will also run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>. Use
 <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", check = FALSE)</code>
 to avoid that.</li>
+<li>This will create a new vignette in your package. You may want to
+avoid this with
+<code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", vignette_name = NA)</code>
+</li>
 </ul>
 </li>
 </ul>
