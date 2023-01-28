@@ -86,7 +86,7 @@ knitr::include_graphics("man/figures/create_fusen_rstudio.png")
   + They look like these lines of code:
 ```{r, eval=FALSE}
 fill_description(fields = list(Title = "My Awesome Package"))
-usethis::use_mit_license("Sébastien Rochette")
+usethis::use_mit_license("John Doe")
 ```
 - Write your analysis and functionalities following the Rmd template
   + You probably develop them with a few examples and tests

@@ -91,7 +91,7 @@ remotes::install_github("ThinkR-open/fusen")
 
 ``` r
 fill_description(fields = list(Title = "My Awesome Package"))
-usethis::use_mit_license("Sébastien Rochette")
+usethis::use_mit_license("John Doe")
 ```
 
 - Write your analysis and functionalities following the Rmd template

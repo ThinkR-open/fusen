@@ -10,7 +10,7 @@
 
 ## Minor changes
 
-- replace the maintener's name from `fill_description()` in examples and templates (#155, @FlorenceMounier)
+- replace the maintainer's name from `fill_description()` in examples, templates and tests (#155, @FlorenceMounier)
 
 # fusen 0.4.1
 

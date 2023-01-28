@@ -11,7 +11,7 @@ test_that("fill_description adds DESCRIPTION", {
         Title = "Build a package from Rmarkdown file",
         Description = "Use Rmarkdown First method to build your package. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
         `Authors@R` = c(
-          person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+          person("Jack", "Doe", email = "jack@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0001")),
           person(given = "ThinkR", role = "cph")
         )
       )
@@ -22,6 +22,9 @@ test_that("fill_description adds DESCRIPTION", {
   expect_true(file.exists(file.path(dummypackage, "DESCRIPTION")))
   lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
   expect_true(lines[1] == paste0("Package: ", pkg_name))
+  expect_true(any(grepl("Jack", lines)))
+  expect_false(any(grepl("John", lines)))
+  expect_false(any(grepl("Sébastien", lines)))
 
   # Second launch error and no change
   expect_error(
@@ -53,9 +56,9 @@ test_that("no dot description fails", {
           "Everything can be set from a Rmarkdown file in your project"
         ),
         `Authors@R` = c(
-          person("Sebastien", "Rochette",
-            email = "sebastien@thinkr.fr",
-            role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")
+          person("Jack", "Doe",
+            email = "jack@email.me",
+            role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0001")
           ),
           person(given = "ThinkR", role = "cph")
         )
@@ -91,7 +94,7 @@ test_that("curly bracket in title and description works", {
       Title = "Build a package with {fusen}",
       Description = "Use Rmarkdown First method to build your package with {fusen}.",
       `Authors@R` = c(
-        person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
+        person("Jack", "Doe", email = "jack@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0001")),
         person(given = "ThinkR", role = "cph")
       )
     )

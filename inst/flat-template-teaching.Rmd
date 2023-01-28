@@ -37,7 +37,7 @@ fusen::fill_description(
   )
 )
 # Define License with use_*_license()
-usethis::use_mit_license("Sébastien Rochette")
+usethis::use_mit_license("John Doe")
 ```
 
 # Add one to any value
