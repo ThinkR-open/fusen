@@ -64,7 +64,17 @@ for (pkgname in c("full", "teaching", "minimal")) {
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
     usethis::use_gpl_license()
 
-    test_that(paste("Check returns OK for template", pkgname), {
+    test_that("description is good", {
+      expect_true(file.exists(file.path(path_foosen, "DESCRIPTION")))
+      lines <- readLines(file.path(path_foosen, "DESCRIPTION"))
+      expect_true(lines[1] == paste0("Package: ", basename(path_foosen)))
+      expect_false(any(grepl("Jack", lines)))
+      expect_false(any(grepl("Sébastien", lines)))
+    })
+
+    ok_template <- paste("Check returns OK for template", pkgname)
+    test_that(ok_template, {
+
       # Do not check inside check if on CRAN
       # skip_on_os(os = c("windows", "solaris"))
       skip_on_cran()

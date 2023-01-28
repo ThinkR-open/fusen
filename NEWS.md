@@ -20,6 +20,10 @@
 
 - Fix for when using word "`function(`" in documentation (#174, @FlorenceMounier)
 
+## Minor changes
+
+- replace the maintainer's name from `fill_description()` in examples, templates and tests (#155, @FlorenceMounier)
+
 # fusen 0.4.1
 
 ## New features

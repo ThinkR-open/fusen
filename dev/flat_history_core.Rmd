@@ -50,8 +50,8 @@ fusen::fill_description(
     Title = "Build A Package From Rmarkdown file",
     Description = "Use Rmarkdown First method to build your package. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
     `Authors@R` = c(
-      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
-      person(given = "ThinkR", role = "cph")
+      person("John", "Doe", email = "john@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000")),
+      person(given = "Company", role = "cph")
     )
   )
 )
@@ -378,11 +378,11 @@ fill_description(
       "Everything can be set from a Rmarkdown file in your project."
     ),
     `Authors@R` = c(
-      person("Sebastien", "Rochette",
-        email = "sebastien@thinkr.fr",
-        role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")
+      person("John", "Doe",
+        email = "john@email.me",
+        role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000")
       ),
-      person(given = "ThinkR", role = "cph")
+      person(given = "Company", role = "cph")
     )
   )
 )
@@ -403,8 +403,8 @@ fill_description(
     Title = "Build A Package From Rmarkdown file",
     Description = "Use Rmarkdown First method to build your package. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
     `Authors@R` = c(
-      person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
-      person(given = "ThinkR", role = "cph")
+      person("John", "Doe", email = "john@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000")),
+      person(given = "Company", role = "cph")
     )
   )
 )
@@ -434,7 +434,7 @@ Name the following chunk with `{r development-1, eval=FALSE}`
 
 ```
 # Run but keep eval=FALSE to avoid infinite loop
-usethis::use_mit_license("Sébastien Rochette")
+usethis::use_mit_license("John Doe")
 # Execute in the console directly
 fusen::inflate(flat_file = "dev/dev_history.Rmd")
 ```
