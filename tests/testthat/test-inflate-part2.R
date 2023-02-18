@@ -314,8 +314,6 @@ usethis::with_project(dummypackage, {
     )
   )
 
-  browser()
-
   test_that("inflate() output no error", {
     expect_error(
       suppressMessages(
@@ -1057,6 +1055,7 @@ usethis::with_project(dummypackage, {
     flat_file,
     overwrite = TRUE
   )
+
   suppressMessages(
     inflate(
       pkg = dummypackage, flat_file = flat_file,
@@ -1068,7 +1067,7 @@ usethis::with_project(dummypackage, {
 
     # Check that the functions are saved in a .R with the right name
     the_codes <- file.path(dummypackage, "R")
-    expect_equal(list.files(the_codes), paste0(c("real_name"), 1:9, ".R"))
+    expect_equal(sort(list.files(the_codes)), sort(paste0(c("real_name"), 1:11, ".R")))
 
     # Example is included in .R in the right place for the first 3 functions
     code_fct1 <- readLines(file.path(dummypackage, "R", "real_name1.R"))
@@ -1076,20 +1075,32 @@ usethis::with_project(dummypackage, {
       "#' @examples", "#' real_name1(1)", "real_name1 <-", "  function(x){"
     )))
     code_fct2 <- readLines(file.path(dummypackage, "R", "real_name2.R"))
-    expect_true(all(code_fct2[5:9] == c(
-      "#' @examples", "#' real_name2(2)", "# a comment", "real_name2 <- ", "  function(x){"
+    expect_true(all(code_fct2[5:10] == c(
+      "#' @examples", "#' real_name2(2)", "", "# a comment", "real_name2 <- ", "  function(x){"
     )))
     code_fct3 <- readLines(file.path(dummypackage, "R", "real_name3.R"))
     expect_true(all(code_fct3[5:8] == c(
       "#' @examples", "#' real_name3(3)", "real_name3 <- # a comment", "  function(x){"
     )))
+    code_fct10 <- readLines(file.path(dummypackage, "R", "real_name10.R"))
+    expect_true(all(code_fct10[10:12] == c(
+      "#' @examples", "#' real_name10(2)", "real_name10 <- function(x){"
+    )))
+    code_fct11 <- readLines(file.path(dummypackage, "R", "real_name11.R"))
+    expect_true(all(code_fct11[5:8] == c(
+      "#' @examples", "#' real_name11(1)", "real_name11 <-", "  function(x) {"
+    )))
+
 
     # Example is included in .rd
     the_docs <- file.path(dummypackage, "man")
-    expect_equal(list.files(the_docs), "real_name1.Rd")
+    expect_equal(sort(list.files(the_docs)),
+                 sort(c("real_name1.Rd", "real_name10.Rd", "real_name11.Rd")))
 
     # Number of tests
-    expect_equal(length(list.files(file.path(dummypackage, "tests", "testthat"))), 3)
+    expect_equal(sort(list.files(file.path(dummypackage, "tests", "testthat"))),
+                 sort(c("test-real_name1.R", "test-real_name11.R",
+                        "test-real_name2.R", "test-real_name3.R")))
   })
 })
 

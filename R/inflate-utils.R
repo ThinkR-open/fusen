@@ -1,3 +1,21 @@
+# There is a function (or R6Class)
+regex_isfunction <- paste(
+  # function
+  "function(\\s*)\\(",
+  # R6Class
+  "R6Class(\\s*)\\(",
+  sep = "|"
+)
+
+regex_extract_fun_name <- paste(
+  # function
+  "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)function)",
+  # R6Class
+  "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)R6Class)",
+  # R6::R6Class
+  "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)R6::R6Class)",
+  sep = "|"
+)
 
 #' Parse function code as tibble and get positions
 #' @param x One row out of function parsed tibble
@@ -7,44 +25,44 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
 
   code <- unlist(rmd_node_code(x[["ast"]]))
 
-  # There is a function (or R6Class)
-  regex_isfunction <- paste(
-    # function
-    "function(\\s*)\\(",
-    # R6Class
-    "R6Class(\\s*)\\(",
-    sep = "|"
-  )
-
-  regex_extract_fun_name <- paste(
-    # function
-    "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)function)",
-    # R6Class
-    "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)R6Class)",
-    # R6::R6Class
-    "[\\w[.]]*(?=(\\s*)(<-|=)(\\s*)R6::R6Class)",
-    sep = "|"
-  )
-
-  # stringi::stri_extract_first_regex(
-  #   c("zaza <- function()", "zozo <- R6Class()", "zuzu <- R6::R6Class()"),
-  #   regex_extract_fun_name
-  # )
-
   # Clean extra space between #' and @
   code <- gsub(pattern = "#'\\s*@", "#' @", code)
 
   # Get all #'
   all_hastags <- grep("^#'", code)
 
-  # Get all #
-  all_comments <- grep("^#", code)
+  # Get all lines starting with #, including hastags
+  all_comments <- grep("^\\s*#", code)
 
   # Get all functions
   fun_positions <- setdiff(grep(regex_isfunction, code), all_comments)
 
+  # Get lines before "function" if code on multiple lines
+  # Parse only code and not all the rest
+  code_clean_first_fun <- gsub("\\n", " ",
+    as.character(parse(text = code))
+  )
+  code_clean_first_fun <- code_clean_first_fun[grepl(regex_isfunction, code_clean_first_fun)][1]
+
+  # find function name
+  fun_name <- stringi::stri_extract_first_regex(
+    # code[fun_positions],
+    code_clean_first_fun,
+    regex_extract_fun_name
+  ) %>%
+    gsub(" ", "", .) # remove spaces
+
+  if (!is.na(fun_name)) {
+    # Find fun name positions
+    fun_name_positions <- setdiff(grep(fun_name, code, fixed = TRUE), all_comments)
+    # Get the one above 'function()'
+    fun_name_position <- max(fun_name_positions[fun_name_positions <= min(fun_positions)])
+  } else {
+    fun_name_position <- NA
+  }
   # Find start of function
-  first_function_start <- fun_positions[1]
+  # first_function_start <- fun_positions[1]
+  first_function_start <- fun_name_position[1]
 
   # Get last hastags above first fun
   if (length(all_hastags) != 0) {
@@ -54,72 +72,45 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   }
 
   # Add @noRd if no roxygen doc or no @export before function
-  if (!any(grepl("@export|@noRd", code))) {
+  # TODO deal with empty chunk or non function chunks like datasets
+  # Test ?
+  # if (is.na(first_function_start)) {
+  #   first_function_start <- length(code)
+  # }
+  if (!any(grepl("@export|@noRd", code[1:first_function_start]))) {
     if (!is.na(last_hastags_above_first_fun)) {
       code <- c(
         code[1:last_hastags_above_first_fun],
-        "#' @noRd", # between hastags and function
+        "#' @noRd",
         code[(last_hastags_above_first_fun + 1):length(code)]
       )
+      fun_name_position <- fun_name_position + 1
+      last_hastags_above_first_fun <- last_hastags_above_first_fun + 1
     } else if (all(grepl("^\\s*$", code))) {
       # If all empty
       code <- character(0)
     } else if (!is.na(first_function_start)) {
-      # If there is a function inside
-      code <- c("#' @noRd", code) # at the beginning
+      # If there is only a function inside
+      code <- c("#' @noRd", code)
+      fun_name_position <- fun_name_position + 1
+      last_hastags_above_first_fun <- 1
     }
     # otherwise code stays code
   }
 
-  # Get UPDATED positions after adding (or not) @noRd
-  all_hastags <- grep("^#'", code)  # Get all #'
-  all_comments <- grep("^#", code) # Get all #
-  fun_positions <- setdiff(grep(regex_isfunction, code), all_comments)  # Get all functions
-  first_function_start <- fun_positions[1] # Find start of function
-
-  # Find function name
-  if ( length(fun_positions) != 0 ){
-    if ( length(all_comments) != 0 ) {
-      code_above_first_fun <- c(1:first_function_start)[-all_comments]
-    } else {
-      code_above_first_fun <- c(1:first_function_start)
-    }
-  } else {
-    code_above_first_fun <- NA
-  }
-
-  if (length(code_above_first_fun) > 1){
-    # multiple code lines above function: function name is splitted [the second to last : the last]
-    fun_assign_pos_start <- code_above_first_fun[length(code_above_first_fun)-1]
-    fun_assign_pos_end <- code_above_first_fun[length(code_above_first_fun)]
-    code_fun_assign <- gsub(x = code[c(fun_assign_pos_start, fun_assign_pos_end)], "#.*$", "") # clean inline comment
-  } else if (!is.na(code_above_first_fun)) {
-    # only one code lines above function: function name is the only line of code
-    fun_assign_pos_start <- fun_assign_pos_end <- code_above_first_fun
-    code_fun_assign <- gsub(x = code[fun_assign_pos_start], "#.*$", "") # clean inline comment
-  } else {
-    # no code line above function
-    fun_assign_pos_start <- fun_assign_pos_end <- NA
-    code_fun_assign <- NA
-  }
-
-  fun_name <- stringi::stri_extract_first_regex(
-    paste0(code_fun_assign, collapse = ""),
-    regex_extract_fun_name
-  ) %>%
-    gsub(" ", "", .) # remove spaces
-
-  # example position
-  all_arobase <- grep("^#'\\s*@", code)
-  all_arobase <- union(union(all_arobase, fun_assign_pos_start), fun_assign_pos_end)
-  # all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
+  all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
   example_pos_start <- grep("^#'\\s*@example", code)[1]
-  example_pos_end <- all_arobase[all_arobase > example_pos_start][1] - 1
-  example_pos_end <- ifelse(is.na(example_pos_end),
-                            min(setdiff(all_comments, all_hastags), fun_assign_pos_start) - 1,
-                            example_pos_end)
 
-  # Get @rdname and @filename for groups
+  example_pos_end <- all_arobase[all_arobase > example_pos_start][1] - 1
+  example_pos_end <- ifelse(
+    is.na(example_pos_end),
+    last_hastags_above_first_fun,
+    # fun_name_position - 1,
+    #grep("function(\\s*)\\(", code) - 1,
+    example_pos_end
+  )
+
+  # Get @rdname and @filename for grouping functions
   tag_filename <- gsub(
     "^#'\\s*@filename\\s*", "",
     code[grep("^#'\\s*@filename", code)]
@@ -148,10 +139,9 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
 #' @importFrom stats na.omit
 #' @noRd
 add_names_to_parsed <- function(parsed_tbl, fun_code) {
-
   # Which parts were functions
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-    grepl(regex_functions, parsed_tbl$label))
+                              grepl(regex_functions, parsed_tbl$label))
 
   # From fun_code, we retrieve fun_name & rox_filename
   parsed_tbl[["fun_name"]] <- NA_character_
@@ -170,7 +160,8 @@ add_names_to_parsed <- function(parsed_tbl, fun_code) {
     df <- data.frame(
       sec_title = parsed_tbl[["sec_title"]][which_parsed_fun],
       sec_fun_name = parsed_tbl[["fun_name"]][which_parsed_fun],
-      fake = NA
+      fake = NA,
+      stringsAsFactors = FALSE
     )
     sec_title_name <- group_code(df, group_col = "sec_title", code_col = "fake")
 
@@ -183,7 +174,7 @@ add_names_to_parsed <- function(parsed_tbl, fun_code) {
         sec_title_name[["sec_title"]] == x, "sec_fun_name"
       ]
       parsed_tbl[group, "sec_fun_name"] <- ifelse(length(sec_fun_name) == 0,
-        NA_character_, as.character(sec_fun_name)
+                                                  NA_character_, as.character(sec_fun_name)
       )
       parsed_tbl[group, ] <- tidyr::fill(
         parsed_tbl[group, ],
@@ -212,7 +203,7 @@ add_names_to_parsed <- function(parsed_tbl, fun_code) {
   pkg_filled[["file_name"]] <- NA_character_
   # chunk_filename
   pkg_filled[["file_name"]] <- ifelse(!is.na(pkg_filled[["chunk_filename"]]),
-    pkg_filled[["chunk_filename"]], NA_character_
+                                      pkg_filled[["chunk_filename"]], NA_character_
   )
   # rox_filename
   pkg_filled[["file_name"]] <- ifelse(
@@ -277,7 +268,7 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
   )
   write_utf8(path = test_file, lines = lines)
 
-  return(file_name)
+  return(test_file)
 }
 
 #' Add examples in function code
@@ -286,10 +277,9 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
 #' @importFrom parsermd rmd_node_code
 #' @noRd
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
-
   # Example in separate chunk
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
-    grepl(regex_example, parsed_tbl$label))
+                             grepl(regex_example, parsed_tbl$label))
   rmd_ex <- parsed_tbl[which_parsed_ex, ]
 
   # Get file_name variable
@@ -301,8 +291,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   fun_code <- fun_code[order(fun_code[["order"]]), ]
   # Get file_name for not functions. Only last place where possible
   fun_code[["file_name"]] <- ifelse(is.na(fun_code[["file_name"]]),
-    fun_code[["sec_title"]],
-    fun_code[["file_name"]]
+                                    fun_code[["sec_title"]],
+                                    fun_code[["file_name"]]
   )
 
   #  Example already in skeleton
@@ -330,13 +320,21 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   rmd_ex <- rmd_ex[!is.na(rmd_ex[["fun_name"]]), ]
 
   if (nrow(rmd_ex) != 0) {
+    # Group rmd_ex for the same function
+    rmd_ex$rmd_ex_code <- lapply(1:nrow(rmd_ex), function(x) {
+      rmd_node_code(rmd_ex[x, ][["ast"]])
+    })
+    rmd_ex_group <- group_code(df = rmd_ex, group_col = "fun_name", code_col = "rmd_ex_code")
+
+    # Get example code
     example_code <- lapply(
-      seq_len(nrow(rmd_ex)),
+      seq_len(nrow(rmd_ex_group)),
       function(x) {
         tibble::tibble(
-          fun_name = rmd_ex[x, ][["fun_name"]],
+          fun_name = rmd_ex_group[x, ][["fun_name"]],
           # example_chunk = list(paste("#'", rmd_get_chunk(rmd_ex[x, ])$code))
-          example_chunk = list(paste("#'", unlist(rmd_node_code(rmd_ex[x, ][["ast"]]))))
+          # example_chunk = list(paste("#'", unlist(rmd_node_code(rmd_ex[x, ][["ast"]]))))
+          example_chunk = list(paste("#'", unlist(rmd_ex_group[x, ][["rmd_ex_code"]])))
         )
       }
     ) %>% do.call("rbind", .)
@@ -379,8 +377,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
     }
 
     end_skeleton <- ifelse(is.na(fun_code_x[["example_pos_start"]]),
-      fun_code_x[["example_pos_end"]],
-      fun_code_x[["example_pos_start"]] - 1
+                           fun_code_x[["example_pos_end"]],
+                           fun_code_x[["example_pos_start"]] - 1
     )
 
     all_fun_code <- stats::na.omit(c(
@@ -473,14 +471,14 @@ create_vignette_head <- function(pkg, vignette_name, yaml_options = NULL) {
 title: ".{vignette_title}."
 output: rmarkdown::html_vignette',
       ifelse(length(yaml_options) != 0,
-        glue::glue_collapse(
-          c(
-            "",
-            glue("{names(yaml_options)}: \"{yaml_options}\""), ""
-          ),
-          sep = "\n"
-        ),
-        "\n"
+             glue::glue_collapse(
+               c(
+                 "",
+                 glue("{names(yaml_options)}: \"{yaml_options}\""), ""
+               ),
+               sep = "\n"
+             ),
+             "\n"
       ),
       'vignette: >
   %\\VignetteIndexEntry{.{asciify_name(vignette_name)}.}
@@ -499,7 +497,7 @@ knitr::opts_chunk$set(
 library(.{pkgname}.)
 ```
     ',
-      .open = ".{", .close = "}."
+    .open = ".{", .close = "}."
     )
   )
 }

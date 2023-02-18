@@ -41,6 +41,7 @@ to be checked: function name, 1 example in .R, no .Rd, 1 test
 
 ```{r function-real_name2}
 #' fake_name2
+
 # a comment
 real_name2 <- 
   function(x){
@@ -127,6 +128,8 @@ real_name7 <- function(x){
 
 ```{r function-real_name8}
 sqrt(1)
+
+#' Real name 8
 real_name8 <- function(x){
   x + 8
 }
@@ -140,6 +143,48 @@ real_name9 <- function(x){
 }
 ```
 
+## Multiple lines for details to detect example position
+
+```{r function-real_name10}
+#' fakename10
+#' 
+#' @param x x
+#' @export
+#' @details 
+#' Multiple lines for
+#' details
+real_name10 <- function(x){
+  x + 9
+}
+```
+
+```{r example-real_name10}
+real_name10(2)
+```
+
+## Two functions in the same chunck and line breaks
+
+```{r function-real_name11}
+#' real_name11
+#' @export
+real_name11 <-
+  function(x) {
+    sub_real <- function(y) {y + 2}
+    sub_real(x) + 1
+  }
+
+sub_real2 <- function(z) {z * 2}
+```
+  
+```{r example-real_name11}
+real_name11(1)
+```
+  
+```{r tests-real_name11}
+test_that("real_name11 works", {
+  expect_true(inherits(real_name11, "function")) 
+})
+```
 
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
