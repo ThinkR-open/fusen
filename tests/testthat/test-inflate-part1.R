@@ -49,6 +49,10 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(my_other_median_file))
     my_third_median_file <- file.path(dummypackage, "R", "my_third_median.R")
     expect_true(file.exists(my_third_median_file))
+    my_fourth_median_file <- file.path(dummypackage, "R", "my_fourth_median.R")
+    expect_true(file.exists(my_fourth_median_file))
+    my_fifth_median_file <- file.path(dummypackage, "R", "my_fifth_median.R")
+    expect_true(file.exists(my_fifth_median_file))
     my_sixth_median_file <- file.path(dummypackage, "R", "my-sixth-median_function.R")
     expect_true(file.exists(my_sixth_median_file))
     myuppercasefunctionfile <- file.path(dummypackage, "R", "myuppercasefunction.R")
@@ -78,9 +82,17 @@ usethis::with_project(dummypackage, {
       "#' @examples", "#' my_other_median(1:12)",
       "#' my_other_median(8:20)", "#' my_other_median(20:50)"
     )))
-    my_third_median_lines <- readLines(my_third_median_file)
+    my_fourth_median_lines <- readLines(my_fourth_median_file)
+    expect_true(all(my_fourth_median_lines[11:13] == c(
+      "#' @examples", "#' my_fourth_median(1:12)", "#' my_fourth_median(8:20)"
+    )))
+
     # _no example
+    my_third_median_lines <- readLines(my_third_median_file)
     expect_true(all(!grepl("#' @examples", my_third_median_lines)))
+    my_fifth_median_lines <- readLines(my_fifth_median_file)
+    expect_true(all(!grepl("#' @examples", my_fifth_median_lines)))
+
     # dot in name
     my_sixth_median_lines <- readLines(my_sixth_median_file)
     expect_true(all(my_sixth_median_lines[11:13] == c(

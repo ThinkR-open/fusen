@@ -3,8 +3,8 @@
 test_that("init_share_on_github works", {
   skip_if_not(interactive())
 
+  # Only create the project if specifically asked by maintainers
   if (Sys.getenv("FUSEN_TEST_PUBLISH", unset = "FALSE") == "TRUE") {
-    # Only create the project if specifically asked by maintainers
     path_project <- file.path(tempdir(), paste0("fusen.github.", packageVersion("fusen")))
     # path_project <- tempfile("fusen.github.proj")
     the_devs <- create_fusen(path = path_project, template = "teaching", with_git = TRUE, open = FALSE)

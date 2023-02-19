@@ -67,6 +67,13 @@ the_message <- function() {
 }
 ```
 
+# Internal variables
+
+```{r function-internal}
+colors <- c("#FFFFFF", "#F0F0F0")
+```
+
+
 ```{r development-1, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly

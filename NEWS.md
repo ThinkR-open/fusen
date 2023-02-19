@@ -18,11 +18,13 @@
 
 ## Bug fixes
 
-- Fix for when using word "`function(`" in documentation (#174, @FlorenceMounier)
+- Fix using `function(` in documentation (#174, @FlorenceMounier)
+- Fix using line break after function name in flat files (#142, @FlorenceMounier)
 
 ## Minor changes
 
 - replace the maintainer's name from `fill_description()` in examples, templates and tests (#155, @FlorenceMounier)
+
 
 # fusen 0.4.1
 

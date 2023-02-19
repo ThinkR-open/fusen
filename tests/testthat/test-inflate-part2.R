@@ -331,20 +331,24 @@ usethis::with_project(dummypackage, {
 
     # R files with chunk content - Name after title as function name is NA
     expect_equal(
-      list.files(file.path(dummypackage, "R")),
-      c("my-data-doc.R", "my-pkg-doc.R", "onload.R")
+      sort(list.files(file.path(dummypackage, "R"))),
+      sort(c("internal-variables.R", "my-data-doc.R", "my-pkg-doc.R", "onload.R"))
     )
     pkgdoc <- file.path(dummypackage, "R", "my-pkg-doc.R")
     expect_true(file.exists(pkgdoc))
     pkgdoc_lines <- readLines(pkgdoc)
     expect_equal(length(pkgdoc_lines), 10)
     expect_equal(pkgdoc_lines[4], "\"_PACKAGE\"")
+    expect_true(file.exists(
+      file.path(dummypackage, "man",
+                paste0(basename(dummypackage),"-package.Rd"))))
 
     datadoc <- file.path(dummypackage, "R", "my-data-doc.R")
     expect_true(file.exists(datadoc))
     datadoc_lines <- readLines(datadoc)
     expect_equal(length(datadoc_lines), 13)
     expect_equal(datadoc_lines[13], "\"cars\"")
+    expect_true(file.exists(file.path(dummypackage, "man", "cars.Rd")))
 
     myonloadfile <- file.path(dummypackage, "R", "onload.R")
     expect_true(file.exists(myonloadfile))
@@ -355,6 +359,14 @@ usethis::with_project(dummypackage, {
       "        the_message()",
       "}"
     )))
+    expect_false(file.exists(
+      file.path(dummypackage, "man", "onload.Rd")))
+
+    datavar <- file.path(dummypackage, "R", "internal-variables.R")
+    expect_true(file.exists(datavar))
+    datavar_lines <- readLines(datavar)
+    expect_equal(length(datavar_lines), 3)
+    expect_equal(datavar_lines[3], "colors <- c(\"#FFFFFF\", \"#F0F0F0\")")
 
     # No tests
     expect_false(file.exists(file.path(dummypackage, "tests")))
@@ -1051,7 +1063,7 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
 
-  usethis::use_mit_license("Statnmap")
+    usethis::use_mit_license("Statnmap")
 
   test_that("Deal with 2 examples for one function", {
     # No error
@@ -1090,3 +1102,74 @@ usethis::with_project(dummypackage, {
 
 # Clean
 unlink(dummypackage, recursive = TRUE)
+
+
+# Test function name recognized with linebreaks between it and the function ----
+# Create a new project
+dummypackage <- tempfile("inflate.fun.in.roxygen")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-function-name-linebreak.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = NA, check = FALSE
+    )
+  )
+
+  test_that("inflate() worked correctly with linebreaks", {
+
+    # Check that the functions are saved in a .R with the right name
+    the_codes <- file.path(dummypackage, "R")
+    expect_equal(sort(list.files(the_codes)), sort(paste0(c("real_name"), 1:11, ".R")))
+
+    # Example is included in .R in the right place for the first 3 functions
+    code_fct1 <- readLines(file.path(dummypackage, "R", "real_name1.R"))
+    expect_true(all(code_fct1[5:8] == c(
+      "#' @examples", "#' real_name1(1)", "real_name1 <-", "  function(x){"
+    )))
+    code_fct2 <- readLines(file.path(dummypackage, "R", "real_name2.R"))
+    expect_true(all(code_fct2[5:10] == c(
+      "#' @examples", "#' real_name2(2)", "", "# a comment", "real_name2 <- ", "  function(x){"
+    )))
+    code_fct3 <- readLines(file.path(dummypackage, "R", "real_name3.R"))
+    expect_true(all(code_fct3[5:8] == c(
+      "#' @examples", "#' real_name3(3)", "real_name3 <- # a comment", "  function(x){"
+    )))
+    code_fct10 <- readLines(file.path(dummypackage, "R", "real_name10.R"))
+    expect_true(all(code_fct10[10:12] == c(
+      "#' @examples", "#' real_name10(2)", "real_name10 <- function(x){"
+    )))
+    code_fct11 <- readLines(file.path(dummypackage, "R", "real_name11.R"))
+    expect_true(all(code_fct11[5:8] == c(
+      "#' @examples", "#' real_name11(1)", "real_name11 <-", "  function(x) {"
+    )))
+
+
+    # Example is included in .rd
+    the_docs <- file.path(dummypackage, "man")
+    expect_equal(sort(list.files(the_docs)),
+                 sort(c("real_name1.Rd", "real_name10.Rd", "real_name11.Rd")))
+
+    # Number of tests
+    expect_equal(sort(list.files(file.path(dummypackage, "tests", "testthat"))),
+                 sort(c("test-real_name1.R", "test-real_name11.R",
+                        "test-real_name2.R", "test-real_name3.R")))
+  })
+})
+
+# Clean
+  unlink(dummypackage, recursive = TRUE)
