@@ -307,13 +307,6 @@ usethis::with_project(dummypackage, {
   # Add cars data
   usethis::use_data(cars)
 
-  suppressMessages(
-    inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = NA, check = FALSE
-    )
-  )
-
   test_that("inflate() output no error", {
     expect_error(
       suppressMessages(
@@ -328,20 +321,24 @@ usethis::with_project(dummypackage, {
 
     # R files with chunk content - Name after title as function name is NA
     expect_equal(
-      list.files(file.path(dummypackage, "R")),
-      c("my-data-doc.R", "my-pkg-doc.R", "onload.R")
+      sort(list.files(file.path(dummypackage, "R"))),
+      sort(c("internal-variables.R", "my-data-doc.R", "my-pkg-doc.R", "onload.R"))
     )
     pkgdoc <- file.path(dummypackage, "R", "my-pkg-doc.R")
     expect_true(file.exists(pkgdoc))
     pkgdoc_lines <- readLines(pkgdoc)
     expect_equal(length(pkgdoc_lines), 10)
     expect_equal(pkgdoc_lines[4], "\"_PACKAGE\"")
+    expect_true(file.exists(
+      file.path(dummypackage, "man",
+                paste0(basename(dummypackage),"-package.Rd"))))
 
     datadoc <- file.path(dummypackage, "R", "my-data-doc.R")
     expect_true(file.exists(datadoc))
     datadoc_lines <- readLines(datadoc)
     expect_equal(length(datadoc_lines), 13)
     expect_equal(datadoc_lines[13], "\"cars\"")
+    expect_true(file.exists(file.path(dummypackage, "man", "cars.Rd")))
 
     myonloadfile <- file.path(dummypackage, "R", "onload.R")
     expect_true(file.exists(myonloadfile))
@@ -352,6 +349,14 @@ usethis::with_project(dummypackage, {
       "        the_message()",
       "}"
     )))
+    expect_false(file.exists(
+      file.path(dummypackage, "man", "onload.Rd")))
+
+    datavar <- file.path(dummypackage, "R", "internal-variables.R")
+    expect_true(file.exists(datavar))
+    datavar_lines <- readLines(datavar)
+    expect_equal(length(datavar_lines), 3)
+    expect_equal(datavar_lines[3], "colors <- c(\"#FFFFFF\", \"#F0F0F0\")")
 
     # No tests
     expect_false(file.exists(file.path(dummypackage, "tests")))

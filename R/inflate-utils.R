@@ -61,7 +61,6 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
     fun_name_position <- NA
   }
   # Find start of function
-  # first_function_start <- fun_positions[1]
   first_function_start <- fun_name_position[1]
 
   # Get last hastags above first fun
@@ -71,13 +70,14 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
     last_hastags_above_first_fun <- NA
   }
 
-  # Add @noRd if no roxygen doc or no @export before function
+
   # TODO deal with empty chunk or non function chunks like datasets
-  # Test ?
-  # if (is.na(first_function_start)) {
-  #   first_function_start <- length(code)
-  # }
-  if (!any(grepl("@export|@noRd", code[1:first_function_start]))) {
+  # Add @noRd if no roxygen doc or no @export before function
+  if (all(grepl("^\\s*$", code))) {
+    # If chunk all empty
+    code <- character(0)
+  } else if (!is.na(first_function_start) &&
+             !any(grepl("@export|@noRd", code[1:first_function_start]))) {
     if (!is.na(last_hastags_above_first_fun)) {
       code <- c(
         code[1:last_hastags_above_first_fun],
@@ -86,16 +86,17 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
       )
       fun_name_position <- fun_name_position + 1
       last_hastags_above_first_fun <- last_hastags_above_first_fun + 1
-    } else if (all(grepl("^\\s*$", code))) {
-      # If all empty
-      code <- character(0)
-    } else if (!is.na(first_function_start)) {
+    # } else if (all(grepl("^\\s*$", code))) {
+    #   # If all empty
+    #   code <- character(0)
+    } else {
       # If there is only a function inside
       code <- c("#' @noRd", code)
       fun_name_position <- fun_name_position + 1
       last_hastags_above_first_fun <- 1
     }
     # otherwise code stays code
+    # For data documentation for instance
   }
 
   all_arobase <- grep("^#'\\s*@|function(\\s*)\\(", code)
