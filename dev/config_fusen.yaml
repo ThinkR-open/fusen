@@ -33,6 +33,16 @@ flat_history_maintain.Rmd:
   R: []
   tests: []
   vignettes: vignettes/Maintain-packages-with-fusen.Rmd
+flat_inflate_a_single_rmd.Rmd:
+  path: dev/flat_inflate_a_single_rmd.Rmd
+  state: active
+  R:
+  - R/get_inflate_parameters.R
+  - R/list_all_inflate_parameters.R
+  tests:
+  - tests/testthat/test-get_inflate_parameters.R
+  - tests/testthat/test-list_all_inflate_parameters.R
+  vignettes: vignettes/inflate-a-single-rmd.Rmd
 flat_init_share_on_github.Rmd:
   path: dev/flat_init_share_on_github.Rmd
   state: active

@@ -1,0 +1,14 @@
+|
+  title: flat_minimal.Rmd empty
+  output: html_document
+  editor_options:
+    chunk_output_type: console
+  fusen:
+    pkg: '.'
+    open_vignette: yes
+    check: yes
+    document: yes
+    overwrite: ask
+    flat_file: '"dev/flat_minimal.Rmd"'
+    vignette_name: '"Minimal"'
+    toto: '"bibi"'

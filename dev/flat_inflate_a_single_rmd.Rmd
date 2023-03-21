@@ -1,0 +1,285 @@
+---
+title: "flat_inflate_a_single_rmd.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+library(parsermd)
+library(stringr)
+library(dplyr)
+library(purrr)
+library(yaml)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+
+# partie get_inflate_parameters
+rmd_tbl <- parsermd::parse_rmd("dev/flat_file_to_parse.Rmd") %>% 
+  as_tibble()
+
+# keep only code chunks
+chunks_only <- rmd_tbl %>% 
+  rmd_select(has_type("rmd_chunk"))
+
+chunks_content <- chunks_only[["ast"]] %>% 
+  as_document()
+chunks_with_inflate <- chunks_content[sapply(chunks_content, function(chunk) grepl(pattern = "inflate\\(", x = chunk))]
+# it will be needed to deal with multiple inflate call in one rmd ...
+
+parameters_defined_in_chunks <-  gsub(pattern = "fusen::", replacement = "", x = chunks_with_inflate) %>% 
+  gsub(pattern = "inflate\\(", replacement = "", x= .) %>% 
+  gsub(pattern = "\\)", replacement = "", x= .) %>% 
+  str_split(string = ., pattern = ",", simplify = TRUE) %>%
+  as.data.frame()
+
+parameters_defined_in_chunks <- map_dfr(parameters_defined_in_chunks, ~data.frame(str_split(string = .x, pattern = "=", simplify = TRUE))) %>% 
+  as_tibble() %>% 
+  mutate(across(everything(), ~str_trim(.x)))
+names(parameters_defined_in_chunks) <- c("parameter", "value")
+# it will be needed to deal with the case when no parameters are defined
+
+
+
+# partie list_all_inflate_parameters
+parameters_expected <- formals(fusen::inflate) %>% 
+  as.list()
+
+parameters_missing <- !(names(parameters_expected) %in% parameters_defined_in_chunks[["parameter"]])
+
+parameters_expected_not_filled <- parameters_expected %>% 
+  keep(parameters_missing) %>% 
+  discard(names(.) == "...")
+
+
+parameters_defined_in_chunks_as_list <- as.list(parameters_defined_in_chunks[["value"]])
+names(parameters_defined_in_chunks_as_list) <- parameters_defined_in_chunks[["parameter"]]
+
+
+parameters_to_put_in_rmd_yml <- c(
+  parameters_expected_not_filled,
+  parameters_defined_in_chunks_as_list
+)
+
+
+# yml header
+current_yml <- rmd_tbl %>% 
+  filter(type == "rmd_yaml_list") %>%
+  pull(ast) %>%
+  as.yaml() %>%
+  read_yaml(text = .)
+
+yml_to_add <- list("fusen" = parameters_to_put_in_rmd_yml)
+
+new_yaml <- c(current_yml[[1]], 
+              yml_to_add) %>% 
+  as.yaml()
+
+# si on ne fait pas il rajoute un saut de ligne à la fin du yaml
+new_yaml <- str_sub(new_yaml, 1, nchar(new_yaml)-1)
+
+# new_yaml %>% write_yaml("bibi.yml")
+
+not_yaml <- rmd_tbl %>% 
+  filter(type != "rmd_yaml_list") %>% 
+  as_document()
+
+new_rmd_file <- c("---", 
+                  new_yaml, 
+                  "---\n",
+                  not_yaml)
+
+writeLines(new_rmd_file, con = "output.Rmd")
+
+
+# il va falloir une fonction pour détecter des éléments fusen dans un yaml
+# il va falloir une fonction pour détruire des éléments fusen dans un yaml (quand on relance inflate avec des nouveaux arguments)
+
+
+# la future fonction inflate va devoir :
+
+# 1 : lire dans le rmd les paramètres rentrés : OK
+# 2 : lire dans le yaml si il existe des paramètres fusen, les appliquer si rien n'a été mis dans l'appel à fusen::inflate dans le console
+# 3 : écraser dans le yaml les éléments relatifs à fusen si on met de nouveaux paramètres dans l'appel à fusen::inflate dans la console
+
+```
+
+# get_inflate_parameters
+
+```{r function-get_inflate_parameters}
+#' Returns the parameters used in an `inflate()` call in some flat Rmd file 
+#' 
+#' @param rmd_flat_file flat file to parse
+#' @return a tibble with 2 columns `parameter` and `value`
+#' returns NULL if no parameter are provided in the `inflate()` call
+#' @export
+#' 
+#' @importFrom parsermd parse_rmd rmd_select has_type as_document
+#' @importFrom stringr str_split str_trim
+#' @importFrom tibble as_tibble tibble
+#' @importFrom purrr map_dfr
+#' @importFrom dplyr mutate across 
+#' @importFrom tidyselect everything
+#'
+#' @examples
+get_inflate_parameters <- function(rmd_flat_file) {
+  
+  if(!file.exists(rmd_flat_file)) stop("The flat file does not exist")
+  
+  rmd_tbl <- parse_rmd(rmd_flat_file) %>% 
+    as_tibble()
+  
+  # keep only code chunks
+  chunks_only <- rmd_tbl %>% 
+    rmd_select(has_type("rmd_chunk"))
+  
+  chunks_content <- chunks_only[["ast"]] %>% 
+    as_document()
+  chunks_with_inflate <- chunks_content[sapply(chunks_content, function(chunk) grepl(pattern = "inflate\\(", x = chunk))]
+  # it will be needed to deal with multiple inflate call in one rmd ...
+  
+  parameters_defined_in_chunks <-  gsub(pattern = "fusen::", replacement = "", x = chunks_with_inflate) %>% 
+    gsub(pattern = "inflate\\(", replacement = "", x= .) %>% 
+    gsub(pattern = "\\)", replacement = "", x= .) %>% 
+    str_split(string = ., pattern = ",", simplify = TRUE) %>%
+    as.data.frame()
+  
+  if(parameters_defined_in_chunks$V1 == "") {
+    message("The inflate call does not have any parameters")
+    return(tibble(
+      "parameter" = "flat_file",
+      "value" = paste0("dev/", basename(rmd_flat_file))
+    )
+    )
+  }
+  
+  parameters_defined_in_chunks <- map_dfr(parameters_defined_in_chunks, ~data.frame(str_split(string = .x, pattern = "=", simplify = TRUE))) %>% 
+    as_tibble() %>% 
+    mutate(across(everything(), ~str_trim(.x)))
+  names(parameters_defined_in_chunks) <- c("parameter", "value")
+  # it will be needed to deal with the case when no parameters are defined
+  
+  parameters_defined_in_chunks
+  
+}
+```
+
+```{r examples-get_inflate_parameters}
+get_inflate_parameters(rmd_flat_file = system.file("files_to_parse", "flat_file_to_parse_with_extra_param.Rmd", package = "fusen"))
+
+get_inflate_parameters(rmd_flat_file = system.file("files_to_parse", "flat_file_to_parse_with_no_param.Rmd", package = "fusen"))
+
+```
+
+```{r tests-get_inflate_parameters}
+test_that("get_inflate_parameters works", {
+  
+  # function raised an error if the file does not exist
+  expect_error(
+    get_inflate_parameters(rmd_flat_file = system.file("files_to_parse", "flat_file_missing.Rmd", package = "fusen"))
+  )
+  
+  # returns NULL if the inflate call does not have any parameter
+  expect_equal(
+    get_inflate_parameters(rmd_flat_file = system.file("files_to_parse", "flat_file_to_parse_with_no_param.Rmd", package = "fusen")),
+    structure(list(parameter = "flat_file", value = "dev/flat_file_to_parse_with_no_param.Rmd"), class = c("tbl_df", 
+                                                                                                           "tbl", "data.frame"), row.names = c(NA, -1L))
+  )
+  
+  expect_equal(
+    get_inflate_parameters(rmd_flat_file = system.file("files_to_parse", "flat_file_to_parse_with_extra_param.Rmd", package = "fusen")),
+    structure(list(parameter = c("flat_file", "vignette_name", "extra_param"
+    ), value = c("\"dev/flat_minimal.Rmd\"", "\"Minimal\"", "\"bibi\""
+    )), row.names = c(NA, -3L), class = c("tbl_df", "tbl", "data.frame"
+    ))
+  )
+  
+})
+```
+
+
+# list_all_inflate_parameters
+
+```{r function-list_all_inflate_parameters}
+#' Title
+#' 
+#' Description
+#' 
+#' @return
+#' @importFrom purrr keep discard
+#' 
+#' @export
+list_all_inflate_parameters <- function(parameters_already_in_the_flat_file){
+  
+  parameters_expected <- formals(fusen::inflate) %>% 
+    as.list()
+  
+  parameters_missing <- !(names(parameters_expected) %in% parameters_already_in_the_flat_file[["parameter"]])
+  
+  parameters_expected_not_filled <- parameters_expected %>% 
+    keep(parameters_missing) %>% 
+    discard(names(.) == "...")
+  
+  
+  parameters_already_in_the_flat_file_as_list <- as.list(parameters_already_in_the_flat_file[["value"]])
+  names(parameters_already_in_the_flat_file_as_list) <- parameters_already_in_the_flat_file[["parameter"]]
+  
+  
+  parameters_to_put_in_rmd_yml <- c(
+    parameters_expected_not_filled,
+    parameters_already_in_the_flat_file_as_list
+  )
+  
+  parameters_to_put_in_rmd_yml
+  
+}
+```
+
+```{r example-list_all_inflate_parameters}
+
+inflate_parameters_already_in_flat_file <- get_inflate_parameters(
+  rmd_flat_file = system.file("files_to_parse", "flat_file_to_parse_with_extra_param.Rmd", package = "fusen"))
+
+list_all_inflate_parameters(inflate_parameters_already_in_flat_file)
+
+```
+
+
+```{r tests-list_all_inflate_parameters}
+test_that("list_all_inflate_parameters works", {
+  expect_true(inherits(list_all_inflate_parameters, "function")) 
+  
+  inflate_parameters_already_in_flat_file <- get_inflate_parameters(
+    rmd_flat_file = system.file("files_to_parse", "flat_file_to_parse_with_extra_param.Rmd", package = "fusen"))
+  
+  expect_equal(list_all_inflate_parameters(inflate_parameters_already_in_flat_file),
+               list(pkg = ".", open_vignette = TRUE, check = TRUE, document = TRUE, 
+                    overwrite = "ask", flat_file = "\"dev/flat_minimal.Rmd\"", 
+                    vignette_name = "\"Minimal\"", extra_param = "\"bibi\"")
+  )
+  
+  
+  
+})
+```
+
+
+
+
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/flat_inflate_a_single_rmd.Rmd", 
+               vignette_name = "Inflate a single rmd",
+               check = FALSE,
+               document = TRUE,
+               open_vignette = FALSE,
+               overwrite = TRUE)
+```
+
