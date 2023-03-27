@@ -5,6 +5,8 @@
 \title{Include all existing package files in the config file}
 \usage{
 register_all_to_config(pkg = ".", clean = FALSE)
+
+register_all_to_config(pkg = ".", clean = FALSE)
 }
 \arguments{
 \item{pkg}{Path to the package from which to add file to configuration file}
@@ -13,8 +15,12 @@ register_all_to_config(pkg = ".", clean = FALSE)
 }
 \value{
 Path to configuration file
+
+Path to configuration file
 }
 \description{
+Helps transition from non-fusen packages
+
 Helps transition from non-fusen packages
 }
 \examples{
@@ -23,7 +29,6 @@ Helps transition from non-fusen packages
 # Note: running this will write "dev/config_fusen.yaml" in your working directory
 register_all_to_config()
 }
-
 # Or you can try on the reproducible example
 dummypackage <- tempfile("register")
 dir.create(dummypackage)
@@ -41,9 +46,8 @@ usethis::with_project(dummypackage, {
       open_vignette = FALSE
     )
   )
-
   out_path <- register_all_to_config(dummypackage)
-
+  
   # Look at the output
   yaml::read_yaml(out_path)
 })

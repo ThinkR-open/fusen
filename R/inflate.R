@@ -277,6 +277,13 @@ inflate <- function(pkg = ".", flat_file,
 
   inflate_dots_parameters <- list(...)
 
+  if(length(inflate_dots_parameters) > 0) {
+    inflate_default_parameters <- c(inflate_default_parameters,inflate_dots_parameters)
+  }
+
+  # inflate_parameters <- list(inflate_parameters) %>%
+  #   setNames(relative_flat_file)
+
   cli::cat_rule(glue("Updating config file for ", relative_flat_file))
   config_file <- df_to_config(
     df_files = all_files,
@@ -286,7 +293,7 @@ inflate <- function(pkg = ".", flat_file,
     # TODO - Set to force = FALSE when there is a possibility to clean the config
     # when there are manually deleted file ----
     force = TRUE,
-    inflate_parameters = c(inflate_default_parameters,inflate_dots_parameters)
+    inflate_parameters = inflate_default_parameters
   )
   cli::cli_alert_info(glue("config file created: ", config_file))
 

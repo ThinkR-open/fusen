@@ -10,7 +10,7 @@ df_to_config(
   state = c("active", "deprecated"),
   force = FALSE,
   clean = TRUE,
-  inflate_parameters
+  inflate_parameters = NULL
 )
 }
 \arguments{
