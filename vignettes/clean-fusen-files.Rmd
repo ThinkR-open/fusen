@@ -167,7 +167,9 @@ my_files_to_protect <- tibble::tribble(
 )
 
 #' \dontrun{
-df_to_config(my_files_to_protect)
+inflate_parameters <- formals(fusen::inflate)
+df_to_config(my_files_to_protect,
+             inflate_parameters = inflate_parameters)
 #' }
 ```
 

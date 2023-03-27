@@ -88,8 +88,10 @@ test_that("df_to_config fails when appropriate", {
       "test", "test-zaza.R"
     )
 
+    inflate_parameters <- formals(fusen::inflate)
+
     expect_error(
-      df_to_config(all_files, flat_file_path = "keep"),
+      df_to_config(all_files, flat_file_path = "keep", inflate_parameters = inflate_parameters),
       "df_files should contains two columns named: 'type' and 'path'"
     )
 
@@ -101,7 +103,7 @@ test_that("df_to_config fails when appropriate", {
     )
 
     expect_error(
-      df_to_config(all_files),
+      df_to_config(all_files, inflate_parameters = inflate_parameters),
       "Some 'path' in df_files do not exist: row 1- R: zaza.R, row 2- R: zozo.R, row 3- test: test-zaza.R"
     )
   })
@@ -117,14 +119,19 @@ test_that("df_to_config works", {
   withr::with_dir(dir_tmp, {
     withr::with_options(list(fusen.config_file = config_file_path), {
       # Use full path
+
       all_files <- tibble::tribble(
         ~type, ~path,
         "R", "zaza.R",
         "R", "zozo.R",
         "test", "test-zaza.R"
       )
+      
+      inflate_parameters <- formals(fusen::inflate)
 
-      expect_message(config_file_out <- df_to_config(all_files))
+      expect_message(config_file_out <- df_to_config(all_files, 
+                                                     inflate_parameters = inflate_parameters)
+      )
     })
 
     expect_equal(config_file_out, config_file_path)
@@ -153,9 +160,12 @@ file.create(file.path(dir_tmp, c("tata.R", "toto.R", "test-tata.R", "tata_vignet
 test_that("df_to_config works after 2nd run", {
   withr::with_dir(dir_tmp, {
     withr::with_options(list(fusen.config_file = config_file_path), {
+      
+inflate_parameters <- formals(fusen::inflate)
+
       # debugonce(df_to_config)
       expect_message(
-        config_file <- df_to_config(all_files),
+        config_file <- df_to_config(all_files, inflate_parameters = inflate_parameters),
         regexp = "Some files group already existed and were overwritten: keep"
       ) # "keep" is default
     })
@@ -175,6 +185,7 @@ file.create(file.path(dir_tmp, "vignettes", "my-vignette.Rmd"))
 test_that("df_to_config works with files having no content", {
   withr::with_options(list(fusen.config_file = config_file_path), {
     withr::with_dir(dir_tmp, {
+
       # Use relative path
       all_files <- tibble::tribble(
         ~type, ~path,
@@ -183,8 +194,10 @@ test_that("df_to_config works with files having no content", {
         "test", "test-zaza.R",
         "vignette", file.path("vignettes", "my-vignette.Rmd")
       )
+      
+      inflate_parameters <- formals(fusen::inflate)
 
-      expect_message(config_file_out <- df_to_config(all_files))
+      expect_message(config_file_out <- df_to_config(all_files, inflate_parameters = inflate_parameters))
     })
 
     expect_equal(config_file_out, config_file_path)
@@ -205,6 +218,7 @@ file.remove(file.path(dir_tmp, c("zaza.R")))
 test_that("df_to_config works with files having no content", {
   withr::with_options(list(fusen.config_file = config_file_path), {
     withr::with_dir(dir_tmp, {
+
       # Use relative path
       all_files <- tibble::tribble(
         ~type, ~path,
@@ -213,8 +227,10 @@ test_that("df_to_config works with files having no content", {
         "test", "test-zaza.R",
         "vignette", file.path("vignettes", "my-vignette.Rmd")
       )
+      
+      inflate_parameters <- formals(fusen::inflate)
 
-      expect_error(config_file_out <- df_to_config(all_files), regexp = "zaza.R")
+      expect_error(config_file_out <- df_to_config(all_files, inflate_parameters = inflate_parameters), regexp = "zaza.R")
     })
   })
 })

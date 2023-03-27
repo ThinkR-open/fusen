@@ -212,7 +212,9 @@ clean_fusen_files <- function() {
 #' )
 #' 
 #' \dontrun{
-#' df_to_config(my_files_to_protect)
+#' inflate_parameters <- formals(fusen::inflate)
+#' df_to_config(my_files_to_protect,
+#'              inflate_parameters = inflate_parameters)
 #' }
 df_to_config <- function(df_files, 
                          flat_file_path = "keep",
