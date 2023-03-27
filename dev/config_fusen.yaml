@@ -39,6 +39,20 @@ flat_init_share_on_github.Rmd:
   R: R/init_share_on_github.R
   tests: tests/testthat/test-init_share_on_github.R
   vignettes: vignettes/share-on-a-github-website.Rmd
+flat_my_fun.Rmd:
+  path: dev/flat_my_fun.Rmd
+  state: active
+  R: R/my_fun.R
+  tests: tests/testthat/test-my_fun.R
+  vignettes: vignettes/bobo-rmd.Rmd
+  inflate:
+    pkg: /home/yohann/opensource/fusen
+    flat_file: /home/yohann/opensource/fusen/dev/flat_my_fun.Rmd
+    vignette_name: bobo.Rmd
+    open_vignette: yes
+    check: no
+    document: yes
+    overwrite: 'yes'
 keep:
   path: keep
   R:

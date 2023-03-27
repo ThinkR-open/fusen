@@ -268,7 +268,15 @@ inflate <- function(pkg = ".", flat_file,
   the_desc$write(file = desc_file)
 
   # config file store ----
-  # browser()
+
+  inflate_default_parameters <- formalArgs(fusen::inflate)
+  inflate_default_parameters <- inflate_default_parameters[which(inflate_default_parameters != "...")]
+
+  inflate_default_parameters <- lapply(inflate_default_parameters, function(param) get(param)) %>%
+    setNames(inflate_default_parameters)
+
+  inflate_dots_parameters <- list(...)
+
   cli::cat_rule(glue("Updating config file for ", relative_flat_file))
   config_file <- df_to_config(
     df_files = all_files,
@@ -277,7 +285,8 @@ inflate <- function(pkg = ".", flat_file,
     state = "active",
     # TODO - Set to force = FALSE when there is a possibility to clean the config
     # when there are manually deleted file ----
-    force = TRUE
+    force = TRUE,
+    inflate_parameters = c(inflate_default_parameters,inflate_dots_parameters)
   )
   cli::cli_alert_info(glue("config file created: ", config_file))
 
