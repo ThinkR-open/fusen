@@ -31,6 +31,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @importFrom parsermd parse_rmd as_tibble
 #' @importFrom utils getFromNamespace
 #' @importFrom glue glue
+#' @importFrom methods formalArgs
 #'
 #' @return
 #' Package structure. Return path to current package.
@@ -277,12 +278,9 @@ inflate <- function(pkg = ".", flat_file,
 
   inflate_dots_parameters <- list(...)
 
-  if(length(inflate_dots_parameters) > 0) {
-    inflate_default_parameters <- c(inflate_default_parameters,inflate_dots_parameters)
+  if (length(inflate_dots_parameters) > 0) {
+    inflate_default_parameters <- c(inflate_default_parameters, inflate_dots_parameters)
   }
-
-  # inflate_parameters <- list(inflate_parameters) %>%
-  #   setNames(relative_flat_file)
 
   cli::cat_rule(glue("Updating config file for ", relative_flat_file))
   config_file <- df_to_config(

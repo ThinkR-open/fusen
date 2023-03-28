@@ -5,8 +5,6 @@
 \title{Show in a table files that are not already registered in the yaml config file}
 \usage{
 check_not_registered_files(path = ".", guess = TRUE, to_csv = TRUE)
-
-check_not_registered_files(path = ".", guess = TRUE, to_csv = TRUE)
 }
 \arguments{
 \item{path}{Path to package to check for not registered files}
@@ -17,12 +15,8 @@ check_not_registered_files(path = ".", guess = TRUE, to_csv = TRUE)
 }
 \value{
 Path to csv file if \code{to_csv} is TRUE. \code{dput()} of the dataframe otherwise.
-
-Path to csv file if \code{to_csv} is TRUE. \code{dput()} of the dataframe otherwise.
 }
 \description{
-If user start their package without 'fusen' or with version < 0.4, they need to create the config file, with already existing functions.
-
 If user start their package without 'fusen' or with version < 0.4, they need to create the config file, with already existing functions.
 }
 \examples{
@@ -31,6 +25,7 @@ If user start their package without 'fusen' or with version < 0.4, they need to 
 out_csv <- check_not_registered_files()
 out_csv
 }
+
 # Or you can try on the reproducible example
 dummypackage <- tempfile("clean")
 dir.create(dummypackage)
