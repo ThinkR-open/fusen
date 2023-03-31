@@ -70,7 +70,7 @@ They are visible to users as soon as they start using {fusen} >= 0.5, even if th
 The recommended process for a migration is:  
 
 - Run `register_all_to_config()` in your current package to create the "dev/config_fusen.yaml" that registers all your existing files. 
-+ You will note a "keep" section, which lists all files for which the source was not guessed. You can clean it up if you want.
+  + You will note a "keep" section, which lists all files for which the source was not guessed. You can clean it up if you want.
 - You're good to go with the new version of {fusen}
 
 
@@ -82,10 +82,10 @@ If you are more familiar with ".csv" file than with the ".yaml" file above, or i
 
 - Run `check_not_registered_files()` on your package
 - Open the "dev/config_not_registered.csv" file
-+ The csv contains all existing "R/", "tests/" and "vignettes/" files
-+ If you used earlier version of {fusen}, the csv may list the flat file of origin
+  + The csv contains all existing "R/", "tests/" and "vignettes/" files
+  + If you used earlier version of {fusen}, the csv may list the flat file of origin
 - Clean or modify the csv file
-+ Let `origin = "keep"` for files to keep, that are not coming from a flat file
+  + Let `origin = "keep"` for files to keep, that are not coming from a flat file
 - Run `df_to_config()`
 - You're good to go with the new version of {fusen}
 
@@ -162,23 +162,22 @@ my_files_to_protect <- tibble::tribble(
 df_to_config(my_files_to_protect)
 #' }
 
-# Provide a list of `inflate()` parameters if you them to
-# added in the dev/config_fusen.yaml file
+# Provide a list of `inflate()` parameters if you wish them
+# to be added in the dev/config_fusen.yaml file
 
 #' \dontrun{
 df_to_config(my_files_to_protect,
-             inflate_parameters = list(
-               pkg = ".",
-               flat_file = "dev/my_flat.Rmd",
-               vignette_name = "My new vignette",
-               open_vignette = FALSE,
-               check = FALSE,
-               document = TRUE,
-               overwrite = "yes"
-             )
+  inflate_parameters = list(
+    pkg = ".",
+    flat_file = "dev/my_flat.Rmd",
+    vignette_name = "My new vignette",
+    open_vignette = FALSE,
+    check = FALSE,
+    document = TRUE,
+    overwrite = "yes"
+  )
 )
 #' }
-
 ```
 
 ## List files that are not registered in config

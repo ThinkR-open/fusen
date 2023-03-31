@@ -58,8 +58,8 @@ my_files_to_protect <- tibble::tribble(
 df_to_config(my_files_to_protect)
 }
 
-# Provide a list of `inflate()` parameters if you them to
-# added in the dev/config_fusen.yaml file
+# Provide a list of `inflate()` parameters if you wish them
+# to be added in the dev/config_fusen.yaml file
 
 \dontrun{
 df_to_config(my_files_to_protect,

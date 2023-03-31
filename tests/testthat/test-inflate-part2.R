@@ -74,7 +74,6 @@ for (pkgname in c("full", "teaching", "minimal")) {
 
     ok_template <- paste("Check returns OK for template", pkgname)
     test_that(ok_template, {
-
       # Do not check inside check if on CRAN
       # skip_on_os(os = c("windows", "solaris"))
       skip_on_cran()
@@ -1135,7 +1134,6 @@ usethis::with_project(dummypackage, {
   )
 
   test_that("inflate() worked correctly with linebreaks", {
-
     # Check that the functions are saved in a .R with the right name
     the_codes <- file.path(dummypackage, "R")
     expect_equal(sort(list.files(the_codes)), sort(paste0(c("real_name"), 1:11, ".R")))

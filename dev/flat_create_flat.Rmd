@@ -604,7 +604,6 @@ add_full <- function(pkg = ".",
 ```
 
 ```{r example-add_additional}
-
 ```
 
 ```{r tests-add_additional}

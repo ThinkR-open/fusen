@@ -17,11 +17,11 @@
 #' out_csv <- check_not_registered_files()
 #' out_csv
 #' }
-#' 
+#'
 #' # Or you can try on the reproducible example
 #' dummypackage <- tempfile("clean")
 #' dir.create(dummypackage)
-#' 
+#'
 #' # {fusen} steps
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 #' dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
@@ -35,10 +35,10 @@
 #'       open_vignette = FALSE
 #'     )
 #'   )
-#' 
+#'
 #'   # Add a not registered file to the package
 #'   cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
-#' 
+#'
 #'   # Use the fonction to check the list of files
 #'   out_csv <- check_not_registered_files(dummypackage)
 #'   out_csv
@@ -216,28 +216,28 @@ clean_fusen_files <- function() {
 #'   "test", "tests/testthat/test-zaza.R",
 #'   "vignette", "vignettes/my-zaza-vignette.Rmd"
 #' )
-#' 
+#'
 #' \dontrun{
 #' df_to_config(my_files_to_protect)
 #' }
-#' 
-#' # Provide a list of `inflate()` parameters if you them to
-#' # added in the dev/config_fusen.yaml file
-#' 
+#'
+#' # Provide a list of `inflate()` parameters if you wish them
+#' # to be added in the dev/config_fusen.yaml file
+#'
 #' \dontrun{
 #' df_to_config(my_files_to_protect,
-#'              inflate_parameters = list(
-#'                pkg = ".",
-#'                flat_file = "dev/my_flat.Rmd",
-#'                vignette_name = "My new vignette",
-#'                open_vignette = FALSE,
-#'                check = FALSE,
-#'                document = TRUE,
-#'                overwrite = "yes"
-#'              )
+#'   inflate_parameters = list(
+#'     pkg = ".",
+#'     flat_file = "dev/my_flat.Rmd",
+#'     vignette_name = "My new vignette",
+#'     open_vignette = FALSE,
+#'     check = FALSE,
+#'     document = TRUE,
+#'     overwrite = "yes"
+#'   )
 #' )
 #' }
-#' 
+#'
 df_to_config <- function(df_files,
                          flat_file_path = "keep",
                          state = c("active", "deprecated"),
@@ -547,11 +547,11 @@ update_one_group_yaml <- function(df_files,
 #' # Note: running this will write "dev/config_fusen.yaml" in your working directory
 #' register_all_to_config()
 #' }
-#' 
+#'
 #' # Or you can try on the reproducible example
 #' dummypackage <- tempfile("register")
 #' dir.create(dummypackage)
-#' 
+#'
 #' # {fusen} steps
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 #' dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
@@ -566,7 +566,7 @@ update_one_group_yaml <- function(df_files,
 #'     )
 #'   )
 #'   out_path <- register_all_to_config(dummypackage)
-#' 
+#'
 #'   # Look at the output
 #'   yaml::read_yaml(out_path)
 #' })
