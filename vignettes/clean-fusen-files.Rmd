@@ -134,7 +134,7 @@ usethis::with_project(dummypackage, {
     )
   )
   out_path <- register_all_to_config(dummypackage)
-  
+
   # Look at the output
   yaml::read_yaml(out_path)
 })
@@ -161,6 +161,24 @@ my_files_to_protect <- tibble::tribble(
 #' \dontrun{
 df_to_config(my_files_to_protect)
 #' }
+
+# Provide a list of `inflate()` parameters if you them to
+# added in the dev/config_fusen.yaml file
+
+#' \dontrun{
+df_to_config(my_files_to_protect,
+             inflate_parameters = list(
+               pkg = ".",
+               flat_file = "dev/my_flat.Rmd",
+               vignette_name = "My new vignette",
+               open_vignette = FALSE,
+               check = FALSE,
+               document = TRUE,
+               overwrite = "yes"
+             )
+)
+#' }
+
 ```
 
 ## List files that are not registered in config
@@ -201,10 +219,10 @@ usethis::with_project(dummypackage, {
       open_vignette = FALSE
     )
   )
-  
+
   # Add a not registered file to the package
   cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
-  
+
   # Use the fonction to check the list of files
   out_csv <- check_not_registered_files(dummypackage)
   out_csv
@@ -216,12 +234,14 @@ usethis::with_project(dummypackage, {
   # Here I change the line to simulate what you manually did above
   content_csv[content_csv[["path"]] == "R/to_keep.R", "origin"] <- "keep"
   write.csv(content_csv, out_csv)
-  out_config <- df_to_config(df_files = out_csv,
-                             inflate_parameters = list(
-                               pkg = dummypackage, flat_file = flat_file,
-                               vignette_name = "Get started", check = FALSE,
-                               open_vignette = FALSE
-                             ))
+  out_config <- df_to_config(
+    df_files = out_csv,
+    inflate_parameters = list(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
   out_config
   # Open the out_config file to see what's going on
   yaml::read_yaml(out_config)

@@ -116,7 +116,7 @@ test_that("df_to_config fails when appropriate", {
     )
 
     expect_error(
-      df_to_config(all_files), # , inflate_parameters = inflate_parameters),
+      df_to_config(all_files),
       "Some 'path' in df_files do not exist: row 1- R: zaza.R, row 2- R: zozo.R, row 3- test: test-zaza.R"
     )
   })
@@ -169,7 +169,7 @@ test_that("df_to_config works after 2nd run", {
   withr::with_dir(dir_tmp, {
     withr::with_options(list(fusen.config_file = config_file_path), {
       expect_message(
-        config_file <- df_to_config(all_files), # , inflate_parameters = inflate_parameters),
+        config_file <- df_to_config(all_files),
         regexp = "Some files group already existed and were overwritten: keep"
       ) # "keep" is default
     })

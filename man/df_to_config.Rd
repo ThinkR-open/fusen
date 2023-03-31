@@ -57,4 +57,22 @@ my_files_to_protect <- tibble::tribble(
 \dontrun{
 df_to_config(my_files_to_protect)
 }
+
+# Provide a list of `inflate()` parameters if you them to
+# added in the dev/config_fusen.yaml file
+
+\dontrun{
+df_to_config(my_files_to_protect,
+             inflate_parameters = list(
+               pkg = ".",
+               flat_file = "dev/my_flat.Rmd",
+               vignette_name = "My new vignette",
+               open_vignette = FALSE,
+               check = FALSE,
+               document = TRUE,
+               overwrite = "yes"
+             )
+)
+}
+
 }

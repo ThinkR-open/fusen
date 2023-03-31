@@ -583,6 +583,24 @@ my_files_to_protect <- tibble::tribble(
 #' \dontrun{
 df_to_config(my_files_to_protect)
 #' }
+
+# Provide a list of `inflate()` parameters if you them to
+# added in the dev/config_fusen.yaml file
+
+#' \dontrun{
+df_to_config(my_files_to_protect,
+             inflate_parameters = list(
+               pkg = ".",
+               flat_file = "dev/my_flat.Rmd",
+               vignette_name = "My new vignette",
+               open_vignette = FALSE,
+               check = FALSE,
+               document = TRUE,
+               overwrite = "yes"
+             )
+)
+#' }
+
 ```
 
 ```{r tests-df_to_config}
@@ -611,7 +629,7 @@ test_that("df_to_config fails when appropriate", {
     )
 
     expect_error(
-      df_to_config(all_files), # , inflate_parameters = inflate_parameters),
+      df_to_config(all_files),
       "Some 'path' in df_files do not exist: row 1- R: zaza.R, row 2- R: zozo.R, row 3- test: test-zaza.R"
     )
   })
@@ -664,7 +682,7 @@ test_that("df_to_config works after 2nd run", {
   withr::with_dir(dir_tmp, {
     withr::with_options(list(fusen.config_file = config_file_path), {
       expect_message(
-        config_file <- df_to_config(all_files), # , inflate_parameters = inflate_parameters),
+        config_file <- df_to_config(all_files),
         regexp = "Some files group already existed and were overwritten: keep"
       ) # "keep" is default
     })

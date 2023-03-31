@@ -42,7 +42,7 @@ usethis::with_project(dummypackage, {
     )
   )
   out_path <- register_all_to_config(dummypackage)
-  
+
   # Look at the output
   yaml::read_yaml(out_path)
 })
