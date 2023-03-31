@@ -85,15 +85,15 @@ inflate <- function(pkg = ".", flat_file,
   # Save all open files
   if (
     requireNamespace("rstudioapi") &&
-      rstudioapi::isAvailable() &&
-      rstudioapi::hasFun("documentSaveAll")
+    rstudioapi::isAvailable() &&
+    rstudioapi::hasFun("documentSaveAll")
   ) {
     rstudioapi::documentSaveAll()
   }
 
   # If flat_file empty
   if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
-    rstudioapi::hasFun("documentPath")) {
+      rstudioapi::hasFun("documentPath")) {
     current_file <- rstudioapi::documentPath()
     if (!is.null(current_file) && grepl("^flat.*[.](R|r|q)md$", basename(current_file))) {
       if (overwrite == "ask") {
@@ -207,15 +207,15 @@ inflate <- function(pkg = ".", flat_file,
       parsed_tbl[["options"]],
       function(x) {
         ifelse(is.null(x[["filename"]]),
-          NA_character_, gsub('"', "", x[["filename"]])
+               NA_character_, gsub('"', "", x[["filename"]])
         )
       }
     )
   )
   # Define sec_title to group functions in same R file
   sec_title <- paste(parsed_tbl[["sec_h1"]],
-    parsed_tbl[["sec_h2"]],
-    sep = "-"
+                     parsed_tbl[["sec_h2"]],
+                     sep = "-"
   )
 
   if (length(sec_title) != 0) {
@@ -281,6 +281,14 @@ inflate <- function(pkg = ".", flat_file,
   if (length(inflate_dots_parameters) > 0) {
     inflate_default_parameters <- c(inflate_default_parameters, inflate_dots_parameters)
   }
+
+  inflate_default_parameters[["pkg"]] <- basename(
+    normalizePath(
+      inflate_default_parameters[["pkg"]]
+    )
+  )
+
+  inflate_default_parameters[["flat_file"]] <- relative_flat_file
 
   cli::cat_rule(glue("Updating config file for ", relative_flat_file))
   config_file <- df_to_config(
@@ -362,7 +370,7 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
       "please rename chunks with 'examples-fun_name' for instance.\n",
       "Duplicates: ",
       paste(labels_in_vignette[duplicated(labels_in_vignette)],
-        collapse = ", "
+            collapse = ", "
       )
     )
   }
@@ -405,9 +413,9 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
 #' @noRd
 get_functions_tests <- function(parsed_tbl) {
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-    grepl(regex_functions, parsed_tbl$label))
+                              grepl(regex_functions, parsed_tbl$label))
   which_parsed_tests <- which(!is.na(parsed_tbl$label) &
-    grepl(regex_tests, parsed_tbl$label))
+                                grepl(regex_tests, parsed_tbl$label))
 
   rmd_fun <- parsed_tbl[which_parsed_fun, ]
 
@@ -484,7 +492,7 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
   project_name <- get_pkg_name(pkg = pkg)
 
   rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
-    grepl(regex_tests, parsed_tbl$label), ]
+                           grepl(regex_tests, parsed_tbl$label), ]
 
   # If there is at least one test
   if (nrow(rmd_test) != 0) {
@@ -493,7 +501,7 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
       stop(
         "Some `test` chunks can not be handled: ",
         paste(rmd_test[["label"]][!is.na(rmd_test[["file_name"]])],
-          collapse = ", "
+              collapse = ", "
         ),
         ". Please associate these `test` chunks with a `function` chunk, ",
         "under a section title or with a `filename='mytestfile.R'` chunk option."
@@ -576,7 +584,7 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
     ), collapse = "|")
   vignette_tbl <- parsed_tbl[
     !(grepl(not_in_vignette, parsed_tbl[["label"]]) |
-      grepl("rmd_yaml_list", parsed_tbl[["type"]])),
+        grepl("rmd_yaml_list", parsed_tbl[["type"]])),
   ]
 
   flat_yaml <- parsed_tbl[grepl("rmd_yaml_list", parsed_tbl[["type"]]), ]

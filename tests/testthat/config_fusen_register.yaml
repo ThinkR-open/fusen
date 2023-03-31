@@ -9,8 +9,8 @@ flat_full.Rmd:
   - tests/testthat/test-my_other_median.R
   vignettes: vignettes/get-started.Rmd
   inflate:
-    pkg: /tmp/Rtmp1s3iAv/register5e31774e10a7
-    flat_file: /tmp/Rtmp1s3iAv/register5e31774e10a7/dev/flat_full.Rmd
+    pkg: fusentest
+    flat_file: dev/flat_full.Rmd
     vignette_name: Get started
     open_vignette: no
     check: no
@@ -23,8 +23,8 @@ flat_new_one.Rmd:
   tests: tests/testthat/test-new_one.R
   vignettes: vignettes/new_one.Rmd
   inflate:
-    pkg: /tmp/Rtmp1s3iAv/register5e31774e10a7
-    flat_file: /tmp/Rtmp1s3iAv/register5e31774e10a7/dev/flat_new_one.Rmd
+    pkg: fusentest
+    flat_file: dev/flat_new_one.Rmd
     vignette_name: new_one
     open_vignette: no
     check: no
