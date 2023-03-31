@@ -191,7 +191,7 @@ clean_fusen_files <- function() {
 #' @param state Character. Whether if the flat file is `active` or `deprecated`.
 #' @param force Logical. Whether to force writing the configuration file even is some files do not exist.
 #' @param clean Logical. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during `inflate()` of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with `register_to_config()` so that it can be run twice on the package when migrating from an old version of {fusen}. This could be set to FALSE with a direct use of `df_to_config()` too.
-#' @param inflate_parameters list of parameters passed to the `inflate()` call
+#' @param inflate_parameters list of parameters passed through a call to `inflate()`
 
 #' @importFrom stats setNames
 #' @importFrom utils read.csv

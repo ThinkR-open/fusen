@@ -26,7 +26,7 @@ or nothing (and it will take the csv file in "dev/")}
 
 \item{clean}{Logical. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during \code{inflate()} of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with \code{register_to_config()} so that it can be run twice on the package when migrating from an old version of {fusen}. This could be set to FALSE with a direct use of \code{df_to_config()} too.}
 
-\item{inflate_parameters}{list of parameters passed to the \code{inflate()} call}
+\item{inflate_parameters}{list of parameters passed through a call to \code{inflate()}}
 }
 \value{
 Config file path.
