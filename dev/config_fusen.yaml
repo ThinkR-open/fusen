@@ -45,14 +45,6 @@ flat_read_inflate_params.Rmd:
   R: R/read_inflate_params.R
   tests: tests/testthat/test-read_inflate_params.R
   vignettes: vignettes/inflate-all-your-flat-files.Rmd
-  inflate:
-    pkg: fusen
-    flat_file: dev/flat_read_inflate_params.Rmd
-    vignette_name: Inflate all your flat files
-    open_vignette: no
-    check: no
-    document: yes
-    overwrite: 'yes'
 keep:
   path: keep
   R:

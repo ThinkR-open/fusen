@@ -13,7 +13,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' config_fusen <- system.file("tests-templates/config_fusen_with_inflate_parameters.yaml", package = "fusen")
+#' config_fusen <- system.file("inflate_all/config_fusen_with_inflate_parameters.yaml", package = "fusen")
 #' read_inflate_params(config_fusen = config_fusen)
 #' }
 #' @noRd
