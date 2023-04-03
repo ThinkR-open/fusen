@@ -1,0 +1,120 @@
+---
+title: "flat_read_inflate_params.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+Vignette to be completed ...
+
+Should the vignette gather all inflate_all()-related functions ?
+
+# read_inflate_params
+
+#' Include all existing package files in the config file
+#'
+#' Helps transition from non-fusen packages
+#'
+#' @param pkg Path to the package from which to add file to configuration file
+#' @inheritParams df_to_config
+#' @return Path to configuration file
+
+```{r function-read_inflate_params}
+#' Read inflate-related parameters in config_fusen.yaml
+#'
+#' Internal function used in `inflate_all()`
+#'
+#' @return a named list with the flat files listed in config_fusen.yaml
+#' and the parameters used to inflate them
+#'
+#' @importFrom glue glue
+#' @importFrom yaml read_yaml
+#'
+#'
+#' @examples
+read_inflate_params <- function(config_fusen) {
+  if (!file.exists(config_fusen)) {
+    stop(glue("The config_fusen file does not exist"))
+  }
+  config_file <- read_yaml(config_fusen)
+  flat_files_names <- names(config_file)
+  flat_files_names <- flat_files_names[!flat_files_names %in% "keep"]
+
+  if (length(flat_files_names) == 0) {
+    return(NULL)
+  }
+
+  # inflate-related parameters are at level 2 of the list
+  inflate_params <- lapply(flat_files_names, function(flat) {
+    config_file[[flat]][["inflate"]]
+  }) %>% setNames(flat_files_names)
+
+  inflate_params
+}
+```
+
+```{r examples-read_inflate_params, eval=FALSE}
+#' \dontrun{
+config_fusen <- system.file("tests-templates/config_fusen_with_inflate_parameters.yaml", package = "fusen")
+read_inflate_params(config_fusen = config_fusen)
+#' }
+```
+
+```{r tests-read_inflate_params}
+test_that("read_inflate_params works", {
+  config_fusen_not_existing <- system.file("tests-templates/fake.yaml", package = "fusen")
+  expect_error(
+    read_inflate_params(config_fusen = config_fusen_not_existing)
+  )
+
+  config_fusen_existing <- system.file("tests-templates/config_fusen_with_inflate_parameters.yaml", package = "fusen")
+
+  inflate_params <- read_inflate_params(config_fusen = config_fusen_existing)
+
+  expect_equal(
+    names(inflate_params),
+    c("flat_full.Rmd", "flat_new_one.Rmd", "flat_no_inflate_params.Rmd")
+  )
+
+  expect_equal(
+    inflate_params[["flat_full.Rmd"]],
+    list(
+      pkg = "fusentest", flat_file = "dev/flat_full.Rmd", vignette_name = "Get started",
+      open_vignette = FALSE, check = FALSE, document = TRUE, overwrite = "ask"
+    )
+  )
+
+  expect_equal(
+    inflate_params[["flat_new_one.Rmd"]],
+    list(
+      pkg = "fusentest", flat_file = "dev/flat_new_one.Rmd", vignette_name = "new_one",
+      open_vignette = FALSE, check = FALSE, document = TRUE, overwrite = "ask"
+    )
+  )
+
+  expect_null(inflate_params[["flat_no_inflate_params.Rmd"]])
+})
+```
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_read_inflate_params.Rmd",
+  vignette_name = "Inflate all your flat files",
+  check = FALSE,
+  overwrite = TRUE,
+  open_vignette = FALSE
+)
+rstudioapi::navigateToFile("dev/dev_history.R", line = 105)
+```

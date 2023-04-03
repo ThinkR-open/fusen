@@ -102,7 +102,7 @@ fusen::fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package
 usethis::with_project(dummypackage, {
   # Define License with use_*_license()
   usethis::use_mit_license("John Doe")
-  
+
   # You may need to execute inflate() in the console directly
   fusen::inflate(
     pkg = dummypackage,

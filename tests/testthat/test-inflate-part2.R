@@ -74,7 +74,6 @@ for (pkgname in c("full", "teaching", "minimal")) {
 
     ok_template <- paste("Check returns OK for template", pkgname)
     test_that(ok_template, {
-
       # Do not check inside check if on CRAN
       # skip_on_os(os = c("windows", "solaris"))
       skip_on_cran()
@@ -340,8 +339,11 @@ usethis::with_project(dummypackage, {
     expect_equal(length(pkgdoc_lines), 10)
     expect_equal(pkgdoc_lines[4], "\"_PACKAGE\"")
     expect_true(file.exists(
-      file.path(dummypackage, "man",
-                paste0(basename(dummypackage),"-package.Rd"))))
+      file.path(
+        dummypackage, "man",
+        paste0(basename(dummypackage), "-package.Rd")
+      )
+    ))
 
     datadoc <- file.path(dummypackage, "R", "my-data-doc.R")
     expect_true(file.exists(datadoc))
@@ -360,7 +362,8 @@ usethis::with_project(dummypackage, {
       "}"
     )))
     expect_false(file.exists(
-      file.path(dummypackage, "man", "onload.Rd")))
+      file.path(dummypackage, "man", "onload.Rd")
+    ))
 
     datavar <- file.path(dummypackage, "R", "internal-variables.R")
     expect_true(file.exists(datavar))
@@ -1063,7 +1066,7 @@ usethis::with_project(dummypackage, {
     overwrite = TRUE
   )
 
-    usethis::use_mit_license("Statnmap")
+  usethis::use_mit_license("Statnmap")
 
   test_that("Deal with 2 examples for one function", {
     # No error
@@ -1131,7 +1134,6 @@ usethis::with_project(dummypackage, {
   )
 
   test_that("inflate() worked correctly with linebreaks", {
-
     # Check that the functions are saved in a .R with the right name
     the_codes <- file.path(dummypackage, "R")
     expect_equal(sort(list.files(the_codes)), sort(paste0(c("real_name"), 1:11, ".R")))
@@ -1161,15 +1163,21 @@ usethis::with_project(dummypackage, {
 
     # Example is included in .rd
     the_docs <- file.path(dummypackage, "man")
-    expect_equal(sort(list.files(the_docs)),
-                 sort(c("real_name1.Rd", "real_name10.Rd", "real_name11.Rd")))
+    expect_equal(
+      sort(list.files(the_docs)),
+      sort(c("real_name1.Rd", "real_name10.Rd", "real_name11.Rd"))
+    )
 
     # Number of tests
-    expect_equal(sort(list.files(file.path(dummypackage, "tests", "testthat"))),
-                 sort(c("test-real_name1.R", "test-real_name11.R",
-                        "test-real_name2.R", "test-real_name3.R")))
+    expect_equal(
+      sort(list.files(file.path(dummypackage, "tests", "testthat"))),
+      sort(c(
+        "test-real_name1.R", "test-real_name11.R",
+        "test-real_name2.R", "test-real_name3.R"
+      ))
+    )
   })
 })
 
 # Clean
-  unlink(dummypackage, recursive = TRUE)
+unlink(dummypackage, recursive = TRUE)
