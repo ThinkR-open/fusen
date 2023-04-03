@@ -236,87 +236,121 @@ dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 flat_file <- dev_file[grepl("flat_", dev_file)]
-# Inflate once
-usethis::with_project(dummypackage, {
-  suppressMessages(
-    inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
-      open_vignette = FALSE,
-      extra_param = "toto"
+
+test_that("inflate parameters are put into config_fusen.yaml", {
+  # Inflate once
+  usethis::with_project(dummypackage, {
+    suppressMessages(
+      inflate(
+        pkg = dummypackage, flat_file = flat_file,
+        vignette_name = "Get started", check = FALSE,
+        open_vignette = FALSE,
+        extra_param = "toto"
+      )
     )
-  )
 
-  config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+    config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
 
-  expect_equal(
-    config_yml[[basename(flat_file)]][["inflate"]][["vignette_name"]],
-    "Get started"
-  )
-
-  expect_false(
-    config_yml[[basename(flat_file)]][["inflate"]][["check"]]
-  )
-
-  expect_false(
-    config_yml[[basename(flat_file)]][["inflate"]][["open_vignette"]]
-  )
-
-  expect_true(
-    config_yml[[basename(flat_file)]][["inflate"]][["document"]]
-  )
-
-  expect_equal(
-    config_yml[[basename(flat_file)]][["inflate"]][["overwrite"]],
-    "ask"
-  )
-
-
-  expect_equal(
-    config_yml[[basename(flat_file)]][["inflate"]][["extra_param"]],
-    "toto"
-  )
-
-  # Let's inflate a second time with different parameters
-
-  suppressMessages(
-    inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started again", check = FALSE,
-      open_vignette = FALSE, overwrite = "yes",
-      extra_param = "tutu", document = FALSE
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["vignette_name"]],
+      "Get started"
     )
-  )
 
-  config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+    expect_false(
+      config_yml[[basename(flat_file)]][["inflate"]][["check"]]
+    )
 
-  expect_equal(
-    config_yml[[basename(flat_file)]][["inflate"]][["vignette_name"]],
-    "Get started again"
-  )
+    expect_false(
+      config_yml[[basename(flat_file)]][["inflate"]][["open_vignette"]]
+    )
 
-  expect_false(
-    config_yml[[basename(flat_file)]][["inflate"]][["check"]]
-  )
+    expect_true(
+      config_yml[[basename(flat_file)]][["inflate"]][["document"]]
+    )
 
-  expect_false(
-    config_yml[[basename(flat_file)]][["inflate"]][["open_vignette"]]
-  )
-
-  expect_false(
-    config_yml[[basename(flat_file)]][["inflate"]][["document"]]
-  )
-
-  expect_equal(
-    config_yml[[basename(flat_file)]][["inflate"]][["overwrite"]],
-    "yes"
-  )
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["overwrite"]],
+      "ask"
+    )
 
 
-  expect_equal(
-    config_yml[[basename(flat_file)]][["inflate"]][["extra_param"]],
-    "tutu"
-  )
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["extra_param"]],
+      "toto"
+    )
+
+    # Let's inflate a second time with different parameters
+
+    suppressMessages(
+      inflate(
+        pkg = dummypackage, flat_file = flat_file,
+        vignette_name = "Get started again", check = FALSE,
+        open_vignette = FALSE, overwrite = "yes",
+        extra_param = "tutu", document = FALSE
+      )
+    )
+
+    config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["vignette_name"]],
+      "Get started again"
+    )
+
+    expect_false(
+      config_yml[[basename(flat_file)]][["inflate"]][["check"]]
+    )
+
+    expect_false(
+      config_yml[[basename(flat_file)]][["inflate"]][["open_vignette"]]
+    )
+
+    expect_false(
+      config_yml[[basename(flat_file)]][["inflate"]][["document"]]
+    )
+
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["overwrite"]],
+      "yes"
+    )
+
+
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["extra_param"]],
+      "tutu"
+    )
+  })
+})
+
+unlink(dummypackage, recursive = TRUE)
+
+
+dummypackage <- tempfile("clean")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+test_that("inflate parameters are put into config_fusen.yaml even if pkg = \".\"", {
+  # Inflate once
+  usethis::with_project(dummypackage, {
+    suppressMessages(
+      inflate(
+        pkg = ".", flat_file = flat_file,
+        vignette_name = "Get started", check = FALSE,
+        open_vignette = FALSE,
+        extra_param = "toto"
+      )
+    )
+    config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["pkg"]],
+      basename(dummypackage)
+    )
+  })
 })
 
 unlink(dummypackage, recursive = TRUE)
@@ -325,7 +359,7 @@ unlink(dummypackage, recursive = TRUE)
 config_file_path <- tempfile(fileext = ".yaml")
 dir_tmp <- tempfile()
 dir.create(dir_tmp)
-file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R", "toto.Rmd")))
+file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
 
 test_that("df_to_config works with inflate_parameters", {
   withr::with_dir(dir_tmp, {

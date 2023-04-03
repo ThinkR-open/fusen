@@ -63,16 +63,15 @@ df_to_config(my_files_to_protect)
 
 \dontrun{
 df_to_config(my_files_to_protect,
-             inflate_parameters = list(
-               pkg = ".",
-               flat_file = "dev/my_flat.Rmd",
-               vignette_name = "My new vignette",
-               open_vignette = FALSE,
-               check = FALSE,
-               document = TRUE,
-               overwrite = "yes"
-             )
+  inflate_parameters = list(
+    pkg = ".",
+    flat_file = "dev/my_flat.Rmd",
+    vignette_name = "My new vignette",
+    open_vignette = FALSE,
+    check = FALSE,
+    document = TRUE,
+    overwrite = "yes"
+  )
 )
 }
-
 }

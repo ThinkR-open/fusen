@@ -237,7 +237,6 @@ clean_fusen_files <- function() {
 #'   )
 #' )
 #' }
-#'
 df_to_config <- function(df_files,
                          flat_file_path = "keep",
                          state = c("active", "deprecated"),
