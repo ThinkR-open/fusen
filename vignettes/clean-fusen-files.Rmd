@@ -70,7 +70,7 @@ They are visible to users as soon as they start using {fusen} >= 0.5, even if th
 The recommended process for a migration is:  
 
 - Run `register_all_to_config()` in your current package to create the "dev/config_fusen.yaml" that registers all your existing files. 
-+ You will note a "keep" section, which lists all files for which the source was not guessed. You can clean it up if you want.
+ + You will note a "keep" section, which lists all files for which the source was not guessed. You can clean it up if you want.
 - You're good to go with the new version of {fusen}
 
 
