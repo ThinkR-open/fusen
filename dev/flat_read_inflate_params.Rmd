@@ -22,8 +22,8 @@ Should the vignette gather all inflate_all()-related functions ?
 #' Read inflate-related parameters in config_fusen.yaml
 #'
 #' Internal function used in `inflate_all()`
-#' 
-#' @param config_fusen Character. path of the config_fusen.yaml file 
+#'
+#' @param config_fusen Character. path of the config_fusen.yaml file
 #'
 #' @return a named list with the flat files listed in config_fusen.yaml
 #' and the parameters used to inflate them
@@ -38,9 +38,9 @@ read_inflate_params <- function(config_fusen) {
     stop(glue("The config_fusen file does not exist"))
   }
   config_file <- read_yaml(config_fusen)
-  
+
   config_file <- config_file[sapply(config_file, function(flat) flat[["state"]] == "active")]
-  
+
   flat_files_names <- names(config_file)
   flat_files_names <- flat_files_names[!flat_files_names %in% "keep"]
 
@@ -69,17 +69,20 @@ test_that("read_inflate_params works", {
   config_fusen_not_existing <-
     system.file("inflate_all/fake.yaml", package = "fusen")
   expect_error(read_inflate_params(config_fusen = config_fusen_not_existing))
-  
+
   config_fusen_existing <-
     system.file("inflate_all/config_fusen_with_inflate_parameters.yaml",
-                package = "fusen")
-  
+      package = "fusen"
+    )
+
   inflate_params <-
     read_inflate_params(config_fusen = config_fusen_existing)
-  
-  expect_equal(length(inflate_params),
-               3)
-  
+
+  expect_equal(
+    length(inflate_params),
+    3
+  )
+
   expect_equal(
     names(inflate_params),
     c(
@@ -88,7 +91,7 @@ test_that("read_inflate_params works", {
       "flat_no_inflate_params.Rmd"
     )
   )
-  
+
   expect_equal(
     inflate_params[["flat_full.Rmd"]],
     list(
@@ -101,7 +104,7 @@ test_that("read_inflate_params works", {
       overwrite = "ask"
     )
   )
-  
+
   expect_equal(
     inflate_params[["flat_new_one.Rmd"]],
     list(
@@ -115,23 +118,26 @@ test_that("read_inflate_params works", {
     )
   )
   expect_null(inflate_params[["flat_no_inflate_params.Rmd"]])
-  
+
   # test whether flat files with state = "deprecated" are removed
   config_fusen_with_deprecated <-
     system.file(
       "inflate_all/config_fusen_with_inflate_parameters_and_some_deprecated_files.yaml",
       package = "fusen"
     )
-  
+
   inflate_params <-
     read_inflate_params(config_fusen = config_fusen_with_deprecated)
-  
-  expect_equal(length(inflate_params),
-               2)
-  
-  expect_equal(names(inflate_params),
-               c("flat_new_one.Rmd", "flat_no_inflate_params.Rmd"))
-  
+
+  expect_equal(
+    length(inflate_params),
+    2
+  )
+
+  expect_equal(
+    names(inflate_params),
+    c("flat_new_one.Rmd", "flat_no_inflate_params.Rmd")
+  )
 })
 ```
 

@@ -3,8 +3,8 @@
 #' Read inflate-related parameters in config_fusen.yaml
 #'
 #' Internal function used in `inflate_all()`
-#' 
-#' @param config_fusen Character. path of the config_fusen.yaml file 
+#'
+#' @param config_fusen Character. path of the config_fusen.yaml file
 #'
 #' @return a named list with the flat files listed in config_fusen.yaml
 #' and the parameters used to inflate them
@@ -24,9 +24,9 @@ read_inflate_params <- function(config_fusen) {
     stop(glue("The config_fusen file does not exist"))
   }
   config_file <- read_yaml(config_fusen)
-  
+
   config_file <- config_file[sapply(config_file, function(flat) flat[["state"]] == "active")]
-  
+
   flat_files_names <- names(config_file)
   flat_files_names <- flat_files_names[!flat_files_names %in% "keep"]
 
