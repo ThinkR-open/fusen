@@ -25,22 +25,6 @@ Vignette to be completed ...
 Should the vignette gather all inflate_all()-related functions ?
 
 
-# read_inflate_params
-
-# ' Include all existing package files in the config file
-
-# '
-
-# ' Helps transition from non-fusen packages
-
-# '
-
-# ' @param pkg Path to the package from which to add file to configuration file
-
-# ' @inheritParams df_to_config
-
-# ' @return Path to configuration file
-
 ```{r examples-read_inflate_params, eval = FALSE}
 #' \dontrun{
 config_fusen <- system.file("inflate_all/config_fusen_with_inflate_parameters.yaml", package = "fusen")
