@@ -89,23 +89,23 @@ add_full <- function(pkg = ".",
 #' # Create a new project
 #' dummypackage <- tempfile("dummypackage")
 #' dir.create(dummypackage)
-#'
+#' 
 #' # Add
 #' add_flat_template(template = "teaching", pkg = dummypackage)
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
-#'
+#' 
 #' # For classical use in your package
 #' \dontrun{
 #' # first time ever using 'fusen'
 #' add_flat_template("full")
-#'
+#' 
 #' # first time in your new package
 #' add_flat_template("minimal")
-#'
+#' 
 #' # add new flat file for new functions
 #' add_flat_template("add")
-#'
+#' 
 #' # add new flat template for teaching (a reduced full template)
 #' add_flat_template("teaching")
 #' }
@@ -267,7 +267,7 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
     here::set_here(pkg)
   }
   if (isTRUE(open) & interactive()) {
-    usethis::edit_file(dev_file_path)
+    lapply(dev_file_path, usethis::edit_file)
   }
 
   dev_file_path
