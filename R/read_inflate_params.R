@@ -9,7 +9,6 @@
 #' @return a named list with the flat files listed in config_fusen.yaml
 #' and the parameters used to inflate them
 #'
-#' @importFrom glue glue
 #' @importFrom yaml read_yaml
 #'
 #'
@@ -21,7 +20,7 @@
 #' @noRd
 read_inflate_params <- function(config_fusen) {
   if (!file.exists(config_fusen)) {
-    stop(glue("The config_fusen file does not exist"))
+    stop("The config_fusen file does not exist")
   }
   config_file <- read_yaml(config_fusen)
 
