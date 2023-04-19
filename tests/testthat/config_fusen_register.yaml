@@ -8,12 +8,28 @@ flat_full.Rmd:
   - tests/testthat/test-my_median.R
   - tests/testthat/test-my_other_median.R
   vignettes: vignettes/get-started.Rmd
+  inflate:
+    pkg: fusentest
+    flat_file: dev/flat_full.Rmd
+    vignette_name: Get started
+    open_vignette: no
+    check: no
+    document: yes
+    overwrite: ask
 flat_new_one.Rmd:
   path: dev/flat_new_one.Rmd
   state: active
   R: R/new_one.R
   tests: tests/testthat/test-new_one.R
   vignettes: vignettes/new_one.Rmd
+  inflate:
+    pkg: fusentest
+    flat_file: dev/flat_new_one.Rmd
+    vignette_name: new_one
+    open_vignette: no
+    check: no
+    document: yes
+    overwrite: ask
 keep:
   path: keep
   state: active

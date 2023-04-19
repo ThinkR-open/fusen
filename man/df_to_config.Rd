@@ -9,7 +9,8 @@ df_to_config(
   flat_file_path = "keep",
   state = c("active", "deprecated"),
   force = FALSE,
-  clean = TRUE
+  clean = TRUE,
+  inflate_parameters = NULL
 )
 }
 \arguments{
@@ -24,6 +25,8 @@ or nothing (and it will take the csv file in "dev/")}
 \item{force}{Logical. Whether to force writing the configuration file even is some files do not exist.}
 
 \item{clean}{Logical. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during \code{inflate()} of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with \code{register_to_config()} so that it can be run twice on the package when migrating from an old version of {fusen}. This could be set to FALSE with a direct use of \code{df_to_config()} too.}
+
+\item{inflate_parameters}{list of parameters passed through a call to \code{inflate()}}
 }
 \value{
 Config file path.
@@ -53,5 +56,22 @@ my_files_to_protect <- tibble::tribble(
 
 \dontrun{
 df_to_config(my_files_to_protect)
+}
+
+# Provide a list of `inflate()` parameters if you wish them
+# to be added in the dev/config_fusen.yaml file
+
+\dontrun{
+df_to_config(my_files_to_protect,
+  inflate_parameters = list(
+    pkg = ".",
+    flat_file = "dev/my_flat.Rmd",
+    vignette_name = "My new vignette",
+    open_vignette = FALSE,
+    check = FALSE,
+    document = TRUE,
+    overwrite = "yes"
+  )
+)
 }
 }

@@ -50,8 +50,14 @@
 #'   # Here I change the line to simulate what you manually did above
 #'   content_csv[content_csv[["path"]] == "R/to_keep.R", "origin"] <- "keep"
 #'   write.csv(content_csv, out_csv)
-#'
-#'   out_config <- df_to_config(df_files = out_csv)
+#'   out_config <- df_to_config(
+#'     df_files = out_csv,
+#'     inflate_parameters = list(
+#'       pkg = dummypackage, flat_file = flat_file,
+#'       vignette_name = "Get started", check = FALSE,
+#'       open_vignette = FALSE
+#'     )
+#'   )
 #'   out_config
 #'   # Open the out_config file to see what's going on
 #'   yaml::read_yaml(out_config)
@@ -185,7 +191,8 @@ clean_fusen_files <- function() {
 #' @param state Character. Whether if the flat file is `active` or `deprecated`.
 #' @param force Logical. Whether to force writing the configuration file even is some files do not exist.
 #' @param clean Logical. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during `inflate()` of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with `register_to_config()` so that it can be run twice on the package when migrating from an old version of {fusen}. This could be set to FALSE with a direct use of `df_to_config()` too.
-#'
+#' @param inflate_parameters list of parameters passed through a call to `inflate()`
+
 #' @importFrom stats setNames
 #' @importFrom utils read.csv
 #'
@@ -213,7 +220,29 @@ clean_fusen_files <- function() {
 #' \dontrun{
 #' df_to_config(my_files_to_protect)
 #' }
-df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", "deprecated"), force = FALSE, clean = TRUE) {
+#'
+#' # Provide a list of `inflate()` parameters if you wish them
+#' # to be added in the dev/config_fusen.yaml file
+#'
+#' \dontrun{
+#' df_to_config(my_files_to_protect,
+#'   inflate_parameters = list(
+#'     pkg = ".",
+#'     flat_file = "dev/my_flat.Rmd",
+#'     vignette_name = "My new vignette",
+#'     open_vignette = FALSE,
+#'     check = FALSE,
+#'     document = TRUE,
+#'     overwrite = "yes"
+#'   )
+#' )
+#' }
+df_to_config <- function(df_files,
+                         flat_file_path = "keep",
+                         state = c("active", "deprecated"),
+                         force = FALSE,
+                         clean = TRUE,
+                         inflate_parameters = NULL) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
   state <- match.arg(state, several.ok = FALSE)
 
@@ -325,6 +354,7 @@ df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", 
     complete_yaml <- yaml::read_yaml(config_file)
 
     yaml_paths <- get_list_paths(complete_yaml)
+    yaml_paths <- yaml_paths[!grepl("inflate\\.", names(yaml_paths))]
     all_exists <- file.exists(yaml_paths)
     if (!all(all_exists)) {
       msg <- paste(
@@ -357,7 +387,8 @@ df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", 
         df_files, complete_yaml,
         each_flat_file_path[x],
         state = state[x],
-        clean = clean
+        clean = clean,
+        inflate_parameters = inflate_parameters
       )
     }
   ) %>%
@@ -383,6 +414,7 @@ df_to_config <- function(df_files, flat_file_path = "keep", state = c("active", 
   yaml_paths <- unlist(complete_yaml)
   # Except info on state
   yaml_paths <- yaml_paths[!grepl("[.]state$", names(yaml_paths))]
+  yaml_paths <- yaml_paths[!grepl("inflate\\.", names(yaml_paths))]
 
   if (any(duplicated(yaml_paths))) {
     which_file <- files_list_to_vector(
@@ -417,8 +449,14 @@ files_list_to_vector <- function(list_of_files) {
 #' @param flat_file_path The group to update
 #' @param state Character. "active" or "deprecated"
 #' @param clean Logical. See `df_to_config()`. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during `inflate()` of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with `register_to_config()` so that it can be run twice on the package when migrating from an old version of {fusen}. This could be set to FALSE with a direct use of `df_to_config()` too.
+#' @param inflate_parameters list of parameters passed to the `inflate()` call
 #' @noRd
-update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state = c("active", "deprecated"), clean = TRUE) {
+update_one_group_yaml <- function(df_files,
+                                  complete_yaml,
+                                  flat_file_path,
+                                  state = c("active", "deprecated"),
+                                  clean = TRUE,
+                                  inflate_parameters = NULL) {
   state <- match.arg(state, several.ok = FALSE)
   all_keep_before <- complete_yaml[[basename(flat_file_path)]]
 
@@ -468,6 +506,8 @@ update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state
       )
     )
   }
+
+  if (!is.null(inflate_parameters)) this_group_list <- c(this_group_list, list(inflate = inflate_parameters))
 
   # Those removed
   those_removed <- setdiff(
@@ -524,7 +564,6 @@ update_one_group_yaml <- function(df_files, complete_yaml, flat_file_path, state
 #'       open_vignette = FALSE
 #'     )
 #'   )
-#'
 #'   out_path <- register_all_to_config(dummypackage)
 #'
 #'   # Look at the output

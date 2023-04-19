@@ -26,6 +26,7 @@ Imports:
     glue,
     here (>= 1.0.0),
     magrittr,
+    methods,
     parsermd (>= 0.1.0),
     roxygen2,
     stats,
