@@ -42,9 +42,17 @@ flat_init_share_on_github.Rmd:
 flat_read_inflate_params.Rmd:
   path: dev/flat_read_inflate_params.Rmd
   state: active
-  R: R/read_inflate_params.R
-  tests: tests/testthat/test-read_inflate_params.R
+  R: R/pre_inflate_all_diagnosis.R
+  tests: tests/testthat/test-pre_inflate_all_diagnosis.R
   vignettes: vignettes/inflate-all-your-flat-files.Rmd
+  inflate:
+    pkg: fusen
+    flat_file: dev/flat_read_inflate_params.Rmd
+    vignette_name: Inflate all your flat files
+    open_vignette: no
+    check: no
+    document: yes
+    overwrite: 'yes'
 keep:
   path: keep
   R:
