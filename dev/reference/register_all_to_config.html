@@ -127,7 +127,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># {fusen} steps</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpCoUa38/register1e4630b028a3/DESCRIPTION"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpSgBDoS/register179c720c47a4/DESCRIPTION"</span>
 <span class="r-in"><span><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="add_flat_template.html">add_flat_template</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">dev_file</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"flat_"</span>, <span class="va">dev_file</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="co"># Inflate once</span></span></span>
@@ -139,17 +139,16 @@
 <span class="r-in"><span>      open_vignette <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">out_path</span> <span class="op">&lt;-</span> <span class="fu">register_all_to_config</span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="co"># Look at the output</span></span></span>
 <span class="r-in"><span>  <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpCoUa38/register1e4630b028a3'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpSgBDoS/register179c720c47a4'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── Updating config file for dev/flat_full.Rmd ──────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> There are no unregistered files</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> There is no file to register or everything was already registered</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpCoUa38/dummypackage1e466c73ba0c'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpSgBDoS/dummypackage179c45b02633'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$path</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dev/flat_full.Rmd"</span>
@@ -166,6 +165,29 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$vignettes</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "vignettes/get-started.Rmd"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate$pkg</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "register179c720c47a4"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate$flat_file</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dev/flat_full.Rmd"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate$vignette_name</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "Get started"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate$open_vignette</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate$check</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate$document</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate$overwrite</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "ask"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
