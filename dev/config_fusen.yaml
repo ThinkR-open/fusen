@@ -39,6 +39,12 @@ flat_init_share_on_github.Rmd:
   R: R/init_share_on_github.R
   tests: tests/testthat/test-init_share_on_github.R
   vignettes: vignettes/share-on-a-github-website.Rmd
+flat_read_inflate_params.Rmd:
+  path: dev/flat_read_inflate_params.Rmd
+  state: active
+  R: R/read_inflate_params.R
+  tests: tests/testthat/test-read_inflate_params.R
+  vignettes: vignettes/inflate-all-your-flat-files.Rmd
 keep:
   path: keep
   R:

@@ -1365,7 +1365,6 @@ clean_fusen_files()
 
 
 ```{r tests-clean_fusen_files}
-
 # Test full ----
 # Change options(fusen.config_file = "dev/config_fusen.yaml")
 dummypackage <- tempfile("clean")

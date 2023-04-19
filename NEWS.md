@@ -1,3 +1,10 @@
+# fusen 0.5.0.9001
+
+## New features
+
+- `inflate()` stores its parameters into "dev/config_fusen.yaml" (#198, @ymansiaux)
+
+
 # fusen 0.5.0.9000
 
 ## New features
