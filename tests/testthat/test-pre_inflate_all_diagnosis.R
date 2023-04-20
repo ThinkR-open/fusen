@@ -55,7 +55,7 @@ test_that("pre_inflate_all_diagnosis works", {
           type = c("message", "message")
         ),
         row.names = c(NA, -2L),
-        class = "data.frame"
+        class = c("tbl_df", "tbl", "data.frame")
       )
     )
 
@@ -82,7 +82,7 @@ test_that("pre_inflate_all_diagnosis works", {
           type = c("message", "message")
         ),
         row.names = c(NA, -2L),
-        class = "data.frame"
+        class = c("tbl_df", "tbl", "data.frame")
       )
     )
 
@@ -110,7 +110,7 @@ test_that("pre_inflate_all_diagnosis works", {
           type = c("warning", "message")
         ),
         row.names = c(NA, -2L),
-        class = "data.frame"
+        class = c("tbl_df", "tbl", "data.frame")
       )
     )
 
@@ -138,7 +138,7 @@ test_that("pre_inflate_all_diagnosis works", {
           type = c("stop", "message")
         ),
         row.names = c(NA, -2L),
-        class = "data.frame"
+        class = c("tbl_df", "tbl", "data.frame")
       )
     )
 
@@ -169,7 +169,10 @@ test_that("pre_inflate_all_diagnosis works", {
           )
         ),
         row.names = c(NA, -3L),
-        class = "data.frame"
+        class = c(
+          "tbl_df", "tbl",
+          "data.frame"
+        )
       )
     )
 
@@ -182,7 +185,6 @@ test_that("pre_inflate_all_diagnosis works", {
 })
 
 unlink(dummypackage, recursive = TRUE)
-
 
 test_that("read_inflate_params works", {
   config_fusen_not_existing <-

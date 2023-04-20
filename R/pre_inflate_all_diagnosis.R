@@ -8,6 +8,7 @@
 #' @param pkg Character. Path of the current package
 #'
 #' @importFrom glue glue
+#' @importFrom tibble tibble
 #'
 #' @return
 #'
@@ -109,27 +110,27 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
     if (flat %in% names(config_yml) &&
       "inflate" %in% names(config_yml[[flat]]) &&
       config_yml[[flat]][["state"]] == "active") {
-      return(data.frame(
+      return(tibble(
         flat = flat,
         status = glue("The flat file {flat} was inflated"),
         type = "message"
       ))
     } else if (flat %in% names(config_yml) &&
       config_yml[[flat]][["state"]] != "active") {
-      return(data.frame(
+      return(tibble(
         flat = flat,
         status = glue("The flat file {flat} was not inflated because it is \"inactive or deprecated\""),
         type = "message"
       ))
     } else if (!flat %in% names(config_yml)) {
-      return(data.frame(
+      return(tibble(
         flat = flat,
         status = glue("The flat file {flat} was not inflated because it is absent from the config file. Please inflate() from the flat once"),
         type = "warning"
       ))
     } else if (flat %in% names(config_yml) &&
       is.null(config_yml[[flat]][["inflate"]])) {
-      return(data.frame(
+      return(tibble(
         flat = flat,
         status = glue("The flat file {flat} was not inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version"),
         type = "stop"
@@ -144,7 +145,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
   if (length(files_in_config_yml_but_missing_in_dev_folder) > 0) {
     flat_files_status <- rbind(
       flat_files_status,
-      data.frame(
+      tibble(
         flat = files_in_config_yml_but_missing_in_dev_folder,
         status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} was not inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
         type = "stop"
