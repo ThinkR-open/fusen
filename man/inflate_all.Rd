@@ -2,15 +2,18 @@
 % Please edit documentation in R/inflate_all.R
 \name{inflate_all}
 \alias{inflate_all}
-\title{Title}
+\title{Inflate all your flat files}
 \usage{
 inflate_all(pkg = ".")
+}
+\arguments{
+\item{pkg}{Path to package}
 }
 \value{
 side effect. Inflates all your flat files that can be inflated.
 }
 \description{
-Description
+Inflate all the flat files stored in dev/ and starting with "flat_"
 }
 \examples{
 \dontrun{

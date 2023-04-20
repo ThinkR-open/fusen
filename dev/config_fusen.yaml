@@ -33,32 +33,40 @@ flat_history_maintain.Rmd:
   R: []
   tests: []
   vignettes: vignettes/Maintain-packages-with-fusen.Rmd
+flat_inflate_all_utils.Rmd:
+  path: dev/flat_inflate_all_utils.Rmd
+  state: active
+  R: R/inflate_all_utils.R
+  tests: tests/testthat/test-inflate_all_utils.R
+  vignettes: []
+  inflate:
+    pkg: fusen
+    flat_file: dev/flat_inflate_all_utils.Rmd
+    vignette_name: .na
+    open_vignette: no
+    check: no
+    document: yes
+    overwrite: 'yes'
+flat_inflate_all.Rmd:
+  path: dev/flat_inflate_all.Rmd
+  state: active
+  R: R/inflate_all.R
+  tests: tests/testthat/test-inflate_all.R
+  vignettes: vignettes/inflate-all-your-flat-files.Rmd
+  inflate:
+    pkg: fusen
+    flat_file: dev/flat_inflate_all.Rmd
+    vignette_name: Inflate all your flat files
+    open_vignette: no
+    check: no
+    document: yes
+    overwrite: 'yes'
 flat_init_share_on_github.Rmd:
   path: dev/flat_init_share_on_github.Rmd
   state: active
   R: R/init_share_on_github.R
   tests: tests/testthat/test-init_share_on_github.R
   vignettes: vignettes/share-on-a-github-website.Rmd
-flat_read_inflate_params.Rmd:
-  path: dev/flat_read_inflate_params.Rmd
-  state: active
-  R:
-  - R/inflate_all.R
-  - R/pre_inflate_all_diagnosis.R
-  - R/read_inflate_params.R
-  tests:
-  - tests/testthat/test-pre_inflate_all_diagnosis.R
-  - tests/testthat/test-read_inflate_params.R
-  - tests/testthat/test-inflate_all.R
-  vignettes: vignettes/inflate-all-your-flat-files.Rmd
-  inflate:
-    pkg: fusen
-    flat_file: dev/flat_read_inflate_params.Rmd
-    vignette_name: Inflate all your flat files
-    open_vignette: no
-    check: no
-    document: yes
-    overwrite: 'yes'
 keep:
   path: keep
   R:
