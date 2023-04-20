@@ -324,37 +324,6 @@ test_that("inflate parameters are put into config_fusen.yaml", {
 
 unlink(dummypackage, recursive = TRUE)
 
-
-dummypackage <- tempfile("clean")
-dir.create(dummypackage)
-
-# {fusen} steps
-fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
-flat_file <- dev_file[grepl("flat_", dev_file)]
-
-test_that("inflate parameters are put into config_fusen.yaml even if pkg = \".\"", {
-  # Inflate once
-  usethis::with_project(dummypackage, {
-    suppressMessages(
-      inflate(
-        pkg = ".", flat_file = flat_file,
-        vignette_name = "Get started", check = FALSE,
-        open_vignette = FALSE,
-        extra_param = "toto"
-      )
-    )
-    config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
-
-    expect_equal(
-      config_yml[[basename(flat_file)]][["inflate"]][["pkg"]],
-      basename(dummypackage)
-    )
-  })
-})
-
-unlink(dummypackage, recursive = TRUE)
-
 # Test df_to_config with inflate parameters
 config_file_path <- tempfile(fileext = ".yaml")
 dir_tmp <- tempfile()
@@ -373,7 +342,6 @@ test_that("df_to_config works with inflate_parameters", {
 
       df_to_config(all_files,
         inflate_parameters = list(
-          pkg = ".",
           flat_file = "dev/my_flat.Rmd",
           vignette_name = "My new vignette",
           open_vignette = FALSE,
@@ -384,11 +352,6 @@ test_that("df_to_config works with inflate_parameters", {
       )
 
       config_file <- yaml::read_yaml(config_file_path)
-
-      expect_equal(
-        config_file[["keep"]][["inflate"]][["pkg"]],
-        "."
-      )
 
       expect_equal(
         config_file[["keep"]][["inflate"]][["flat_file"]],
@@ -420,7 +383,6 @@ test_that("df_to_config works with inflate_parameters", {
       # let's call it a second time
       df_to_config(all_files,
         inflate_parameters = list(
-          pkg = ".",
           flat_file = "dev/my_flat.Rmd",
           vignette_name = "My new vignette 2",
           open_vignette = TRUE,
@@ -431,11 +393,6 @@ test_that("df_to_config works with inflate_parameters", {
       )
 
       config_file <- yaml::read_yaml(config_file_path)
-
-      expect_equal(
-        config_file[["keep"]][["inflate"]][["pkg"]],
-        "."
-      )
 
       expect_equal(
         config_file[["keep"]][["inflate"]][["flat_file"]],
@@ -638,7 +595,6 @@ usethis::with_project(dummypackage, {
     )
   })
 })
-
 
 # Test full ----
 # Change options(fusen.config_file = "dev/config_fusen.yaml")

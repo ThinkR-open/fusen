@@ -1,5 +1,5 @@
 ---
-title: "Clean {fusen} files"
+title: "Clean fusen files"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{clean-fusen-files}

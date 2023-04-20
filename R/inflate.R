@@ -272,6 +272,7 @@ inflate <- function(pkg = ".", flat_file,
 
   inflate_default_parameters <- formalArgs(fusen::inflate)
   inflate_default_parameters <- inflate_default_parameters[which(inflate_default_parameters != "...")]
+  inflate_default_parameters <- inflate_default_parameters[which(inflate_default_parameters != "pkg")]
 
   inflate_default_parameters <- lapply(inflate_default_parameters, function(param) get(param)) %>%
     setNames(inflate_default_parameters)
@@ -281,12 +282,6 @@ inflate <- function(pkg = ".", flat_file,
   if (length(inflate_dots_parameters) > 0) {
     inflate_default_parameters <- c(inflate_default_parameters, inflate_dots_parameters)
   }
-
-  inflate_default_parameters[["pkg"]] <- basename(
-    normalizePath(
-      inflate_default_parameters[["pkg"]]
-    )
-  )
 
   inflate_default_parameters[["flat_file"]] <- relative_flat_file
 

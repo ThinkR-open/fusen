@@ -10,6 +10,13 @@ flat_clean_fusen_files.Rmd:
   R: R/clean_fusen_files.R
   tests: tests/testthat/test-clean_fusen_files.R
   vignettes: vignettes/clean-fusen-files.Rmd
+  inflate:
+    flat_file: dev/flat_clean_fusen_files.Rmd
+    vignette_name: Clean fusen files
+    open_vignette: no
+    check: no
+    document: yes
+    overwrite: 'yes'
 flat_create_flat.Rmd:
   path: dev/flat_create_flat.Rmd
   state: active

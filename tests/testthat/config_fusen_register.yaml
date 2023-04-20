@@ -9,7 +9,6 @@ flat_full.Rmd:
   - tests/testthat/test-my_other_median.R
   vignettes: vignettes/get-started.Rmd
   inflate:
-    pkg: fusentest
     flat_file: dev/flat_full.Rmd
     vignette_name: Get started
     open_vignette: no
@@ -23,7 +22,6 @@ flat_new_one.Rmd:
   tests: tests/testthat/test-new_one.R
   vignettes: vignettes/new_one.Rmd
   inflate:
-    pkg: fusentest
     flat_file: dev/flat_new_one.Rmd
     vignette_name: new_one
     open_vignette: no
