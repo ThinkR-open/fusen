@@ -59,12 +59,7 @@ usethis::with_project(dummypackage, {
   content_csv[content_csv[["path"]] == "R/to_keep.R", "origin"] <- "keep"
   write.csv(content_csv, out_csv)
   out_config <- df_to_config(
-    df_files = out_csv,
-    inflate_parameters = list(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
-      open_vignette = FALSE
-    )
+    df_files = out_csv
   )
   out_config
   # Open the out_config file to see what's going on

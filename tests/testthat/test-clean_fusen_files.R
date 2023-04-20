@@ -228,6 +228,105 @@ test_that("df_to_config works with files having no content", {
 unlink(dir_tmp, recursive = TRUE)
 file.remove(config_file_path)
 
+# Test df_to_config with inflate parameters and flat_file_path = "keep"
+config_file_path <- tempfile(fileext = ".yaml")
+dir_tmp <- tempfile()
+dir.create(dir_tmp)
+file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
+
+test_that("df_to_config does not work with inflate_parameters and flat_file_path = \"keep\"", {
+  withr::with_dir(dir_tmp, {
+    withr::with_options(list(fusen.config_file = config_file_path), {
+      all_files <- tibble::tribble(
+        ~type, ~path,
+        "R", "zaza.R",
+        "R", "zozo.R",
+        "test", "test-zaza.R"
+      )
+
+      expect_error(
+        df_to_config(all_files,
+          inflate_parameters = list(
+            flat_file = "dev/my_flat.Rmd",
+            vignette_name = "My new vignette",
+            open_vignette = FALSE,
+            check = FALSE,
+            document = TRUE,
+            overwrite = "yes"
+          )
+        )
+      )
+    })
+  })
+})
+
+unlink(dir_tmp, recursive = TRUE)
+
+# df to config with inflate_parameters
+# unlink(dummypackage, recursive = TRUE)
+dummypackage <- tempfile("dftoconfig")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- (add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+# let's create a flat file
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+dir.create(file.path(dummypackage, "R"))
+file.create(file.path(dummypackage, "R", "my_fun.R"))
+
+dir.create(file.path(dummypackage, "tests"))
+dir.create(file.path(dummypackage, "tests/testthat"))
+file.create(file.path(dummypackage, "tests/testthat", "test-my_fun.R"))
+
+dir.create(file.path(dummypackage, "vignettes"))
+file.create(file.path(dummypackage, "vignettes", "minimal.Rmd"))
+
+test_that("df_to_config works with inflate parameters", {
+  usethis::with_project(dummypackage, {
+    all_files <- structure(list(
+      type = c("R", "test", "vignette"),
+      path = c(
+        file.path(dummypackage, "R", "my_fun.R"),
+        file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
+        "vignettes/minimal.Rmd"
+      )
+    ), row.names = c(NA, -3L), class = c("tbl_df", "tbl", "data.frame"))
+
+    relative_flat_file <- "dev/flat_minimal.Rmd"
+
+    config_file <- df_to_config(
+      df_files = all_files,
+      flat_file_path = relative_flat_file,
+      clean = TRUE,
+      state = "active",
+      force = TRUE,
+      inflate_parameters = list(
+        flat_file = "dev/flat_minimal.Rmd",
+        vignette_name = "My new vignette",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "yes"
+      )
+    )
+
+    config_file_content <- yaml::read_yaml(config_file)
+
+    expect_equal(
+      config_file_content[[basename(flat_file)]][["inflate"]],
+      list(
+        flat_file = "dev/flat_minimal.Rmd",
+        vignette_name = "My new vignette",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "yes"
+      )
+    )
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+
 # Verify df_to_config was run during ìnflate()
 dummypackage <- tempfile("clean")
 dir.create(dummypackage)
@@ -323,109 +422,6 @@ test_that("inflate parameters are put into config_fusen.yaml", {
 })
 
 unlink(dummypackage, recursive = TRUE)
-
-# Test df_to_config with inflate parameters
-config_file_path <- tempfile(fileext = ".yaml")
-dir_tmp <- tempfile()
-dir.create(dir_tmp)
-file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
-
-test_that("df_to_config works with inflate_parameters", {
-  withr::with_dir(dir_tmp, {
-    withr::with_options(list(fusen.config_file = config_file_path), {
-      all_files <- tibble::tribble(
-        ~type, ~path,
-        "R", "zaza.R",
-        "R", "zozo.R",
-        "test", "test-zaza.R"
-      )
-
-      df_to_config(all_files,
-        inflate_parameters = list(
-          flat_file = "dev/my_flat.Rmd",
-          vignette_name = "My new vignette",
-          open_vignette = FALSE,
-          check = FALSE,
-          document = TRUE,
-          overwrite = "yes"
-        )
-      )
-
-      config_file <- yaml::read_yaml(config_file_path)
-
-      expect_equal(
-        config_file[["keep"]][["inflate"]][["flat_file"]],
-        "dev/my_flat.Rmd"
-      )
-
-      expect_equal(
-        config_file[["keep"]][["inflate"]][["vignette_name"]],
-        "My new vignette"
-      )
-
-      expect_false(
-        config_file[["keep"]][["inflate"]][["open_vignette"]]
-      )
-
-      expect_false(
-        config_file[["keep"]][["inflate"]][["check"]]
-      )
-
-      expect_true(
-        config_file[["keep"]][["inflate"]][["document"]]
-      )
-
-      expect_equal(
-        config_file[["keep"]][["inflate"]][["overwrite"]],
-        "yes"
-      )
-
-      # let's call it a second time
-      df_to_config(all_files,
-        inflate_parameters = list(
-          flat_file = "dev/my_flat.Rmd",
-          vignette_name = "My new vignette 2",
-          open_vignette = TRUE,
-          check = TRUE,
-          document = FALSE,
-          overwrite = "no"
-        )
-      )
-
-      config_file <- yaml::read_yaml(config_file_path)
-
-      expect_equal(
-        config_file[["keep"]][["inflate"]][["flat_file"]],
-        "dev/my_flat.Rmd"
-      )
-
-      expect_equal(
-        config_file[["keep"]][["inflate"]][["vignette_name"]],
-        "My new vignette 2"
-      )
-
-      expect_true(
-        config_file[["keep"]][["inflate"]][["open_vignette"]]
-      )
-
-      expect_true(
-        config_file[["keep"]][["inflate"]][["check"]]
-      )
-
-      expect_false(
-        config_file[["keep"]][["inflate"]][["document"]]
-      )
-
-      expect_equal(
-        config_file[["keep"]][["inflate"]][["overwrite"]],
-        "no"
-      )
-    })
-  })
-})
-
-unlink(dir_tmp, recursive = TRUE)
-
 # rstudioapi::navigateToFile(config_file)
 
 dummypackage <- tempfile("registered")
@@ -496,18 +492,13 @@ usethis::with_project(dummypackage, {
     # Include it in df_to_config()
 
     out_config <- df_to_config(
-      df_files = out_csv,
-      inflate_parameters = list(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "Get started", check = FALSE,
-        open_vignette = FALSE
-      )
+      df_files = out_csv
     )
     out_config_content <- yaml::read_yaml(out_config)
     expect_true(names(out_config_content) == "flat_full.Rmd")
     expect_equal(
       names(out_config_content[["flat_full.Rmd"]]),
-      c("path", "state", "R", "tests", "vignettes", "inflate")
+      c("path", "state", "R", "tests", "vignettes")
     )
     expect_equal(
       out_config_content[["flat_full.Rmd"]][["R"]],
@@ -520,11 +511,6 @@ usethis::with_project(dummypackage, {
     expect_equal(
       out_config_content[["flat_full.Rmd"]][["vignettes"]],
       c("vignettes/get-started.Rmd")
-    )
-
-    expect_equal(
-      out_config_content[["flat_full.Rmd"]][["inflate"]][-c(1, 2)],
-      list(vignette_name = "Get started", check = FALSE, open_vignette = FALSE)
     )
 
     # rstudioapi::navigateToFile(out_config)
@@ -547,13 +533,7 @@ usethis::with_project(dummypackage, {
     keep_to_add_to_config <- content_csv[grepl("to_keep.R", content_csv[, "path"]), ]
     keep_to_add_to_config$origin <- "keep"
 
-    out_config <- df_to_config(keep_to_add_to_config,
-      inflate_parameters = list(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "Get started", check = FALSE,
-        open_vignette = FALSE
-      )
-    )
+    out_config <- df_to_config(keep_to_add_to_config)
     # rstudioapi::navigateToFile(out_config)
     out_config_content <- yaml::read_yaml(out_config)
     expect_equal(out_config_content$keep$R, "R/to_keep.R")
@@ -569,13 +549,7 @@ usethis::with_project(dummypackage, {
     keep_to_add_to_config$origin <- "dev/flat_full.Rmd"
 
     expect_error(
-      df_to_config(keep_to_add_to_config,
-        inflate_parameters = list(
-          pkg = dummypackage, flat_file = flat_file,
-          vignette_name = "Get started", check = FALSE,
-          open_vignette = FALSE
-        )
-      ),
+      df_to_config(keep_to_add_to_config),
       "Some paths would appear multiple times in the future config file."
     )
 
@@ -584,13 +558,7 @@ usethis::with_project(dummypackage, {
     keep_to_add_to_config$origin <- "dev/flat_dont_exists.Rmd"
 
     expect_error(
-      df_to_config(keep_to_add_to_config,
-        inflate_parameters = list(
-          pkg = dummypackage, flat_file = flat_file,
-          vignette_name = "Get started", check = FALSE,
-          open_vignette = FALSE
-        )
-      ),
+      df_to_config(keep_to_add_to_config),
       "Some 'origin' in df_files do not exist: row 1: dev/flat_dont_exists.Rmd"
     )
   })

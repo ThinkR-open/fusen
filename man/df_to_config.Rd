@@ -62,10 +62,29 @@ df_to_config(my_files_to_protect)
 # to be added in the dev/config_fusen.yaml file
 
 \dontrun{
-df_to_config(my_files_to_protect,
+my_files_to_protect <- structure(
+  list(
+    type = c("R", "test", "vignette"),
+    path = c(
+      file.path(dummypackage, "R", "my_fun.R"),
+      file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
+      "vignettes/minimal.Rmd"
+    )
+  ),
+  row.names = c(NA, -3L),
+  class = c("tbl_df", "tbl", "data.frame")
+)
+
+relative_flat_file <- "dev/flat_minimal.Rmd"
+
+config_file <- df_to_config(
+  df_files = my_files_to_protect,
+  flat_file_path = relative_flat_file,
+  clean = TRUE,
+  state = "active",
+  force = TRUE,
   inflate_parameters = list(
-    pkg = ".",
-    flat_file = "dev/my_flat.Rmd",
+    flat_file = "dev/flat_minimal.Rmd",
     vignette_name = "My new vignette",
     open_vignette = FALSE,
     check = FALSE,
