@@ -42,8 +42,14 @@ flat_init_share_on_github.Rmd:
 flat_read_inflate_params.Rmd:
   path: dev/flat_read_inflate_params.Rmd
   state: active
-  R: R/pre_inflate_all_diagnosis.R
-  tests: tests/testthat/test-pre_inflate_all_diagnosis.R
+  R:
+  - R/inflate_all.R
+  - R/pre_inflate_all_diagnosis.R
+  - R/read_inflate_params.R
+  tests:
+  - tests/testthat/test-pre_inflate_all_diagnosis.R
+  - tests/testthat/test-read_inflate_params.R
+  - tests/testthat/test-inflate_all.R
   vignettes: vignettes/inflate-all-your-flat-files.Rmd
   inflate:
     pkg: fusen

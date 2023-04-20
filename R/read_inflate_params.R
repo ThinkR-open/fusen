@@ -8,13 +8,12 @@
 #'
 #' @return a named list with the flat files listed in config_fusen.yaml
 #' and the parameters used to inflate them
-#'
+#' @noRd
 #' @examples
 #' \dontrun{
 #' config_yml <- yaml::read_yaml(system.file("inflate_all/config_fusen_with_inflate_parameters.yaml", package = "fusen"))
 #' read_inflate_params(config_yml = config_yml)
 #' }
-#' @noRd
 read_inflate_params <- function(config_yml) {
   config_yml <- config_yml[sapply(config_yml, function(flat) flat[["state"]] == "active")]
 

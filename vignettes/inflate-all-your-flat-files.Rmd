@@ -123,10 +123,29 @@ unlink(dummypackage, recursive = TRUE)
 #' }
 ```
 
+# read_inflate_params
+
 ```{r examples-read_inflate_params, eval = FALSE}
 #' \dontrun{
 config_yml <- yaml::read_yaml(system.file("inflate_all/config_fusen_with_inflate_parameters.yaml", package = "fusen"))
 read_inflate_params(config_yml = config_yml)
 #' }
 ```
+
+# inflate_all
+
+    
+
+  
+
+```{r example-inflate_all, eval = FALSE}
+#' \dontrun{
+inflate_all()
+#' }
+```
+
+  
+
+  
+
 

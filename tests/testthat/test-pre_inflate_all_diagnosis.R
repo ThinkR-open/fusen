@@ -44,8 +44,8 @@ test_that("pre_inflate_all_diagnosis works", {
           flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
           status = structure(
             c(
-              "The flat file flat_minimal.Rmd was inflated",
-              "The flat file flat_minimal_2.Rmd was inflated"
+              "The flat file flat_minimal.Rmd is going to be inflated",
+              "The flat file flat_minimal_2.Rmd is going to be inflated"
             ),
             class = c(
               "glue",
@@ -71,8 +71,8 @@ test_that("pre_inflate_all_diagnosis works", {
           flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
           status = structure(
             c(
-              "The flat file flat_minimal.Rmd was not inflated because it is \"inactive or deprecated\"",
-              "The flat file flat_minimal_2.Rmd was inflated"
+              "The flat file flat_minimal.Rmd is not going to be inflated because it is \"inactive or deprecated\"",
+              "The flat file flat_minimal_2.Rmd is going to be inflated"
             ),
             class = c(
               "glue",
@@ -99,8 +99,8 @@ test_that("pre_inflate_all_diagnosis works", {
           flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
           status = structure(
             c(
-              "The flat file flat_minimal.Rmd was not inflated because it is absent from the config file. Please inflate() from the flat once",
-              "The flat file flat_minimal_2.Rmd was inflated"
+              "The flat file flat_minimal.Rmd is not going to be inflated because it is absent from the config file. Please inflate() from the flat once",
+              "The flat file flat_minimal_2.Rmd is going to be inflated"
             ),
             class = c(
               "glue",
@@ -127,8 +127,8 @@ test_that("pre_inflate_all_diagnosis works", {
           flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
           status = structure(
             c(
-              "The flat file flat_minimal.Rmd was not inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version",
-              "The flat file flat_minimal_2.Rmd was inflated"
+              "The flat file flat_minimal.Rmd is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version",
+              "The flat file flat_minimal_2.Rmd is going to be inflated"
             ),
             class = c(
               "glue",
@@ -157,9 +157,9 @@ test_that("pre_inflate_all_diagnosis works", {
           ),
           status = structure(
             c(
-              "The flat file flat_minimal.Rmd was inflated",
-              "The flat file flat_minimal_2.Rmd was inflated",
-              "The file missing_file.Rmd was not inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"
+              "The flat file flat_minimal.Rmd is going to be inflated",
+              "The flat file flat_minimal_2.Rmd is going to be inflated",
+              "The file missing_file.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"
             ),
             class = c("glue", "character")
           ),
@@ -185,78 +185,3 @@ test_that("pre_inflate_all_diagnosis works", {
 })
 
 unlink(dummypackage, recursive = TRUE)
-
-test_that("read_inflate_params works", {
-  config_fusen_not_existing <-
-    system.file("inflate_all/fake.yaml", package = "fusen")
-  expect_error(read_inflate_params(config_yml = config_fusen_not_existing))
-
-  config_fusen_existing <-
-    yaml::read_yaml(system.file("inflate_all/config_fusen_with_inflate_parameters.yaml",
-      package = "fusen"
-    ))
-
-  inflate_params <-
-    read_inflate_params(config_yml = config_fusen_existing)
-
-  expect_equal(
-    length(inflate_params),
-    3
-  )
-
-  expect_equal(
-    names(inflate_params),
-    c(
-      "flat_full.Rmd",
-      "flat_new_one.Rmd",
-      "flat_no_inflate_params.Rmd"
-    )
-  )
-
-  expect_equal(
-    inflate_params[["flat_full.Rmd"]],
-    list(
-      pkg = "fusentest",
-      flat_file = "dev/flat_full.Rmd",
-      vignette_name = "Get started",
-      open_vignette = FALSE,
-      check = FALSE,
-      document = TRUE,
-      overwrite = "ask"
-    )
-  )
-
-  expect_equal(
-    inflate_params[["flat_new_one.Rmd"]],
-    list(
-      pkg = "fusentest",
-      flat_file = "dev/flat_new_one.Rmd",
-      vignette_name = "new_one",
-      open_vignette = FALSE,
-      check = FALSE,
-      document = TRUE,
-      overwrite = "ask"
-    )
-  )
-  expect_null(inflate_params[["flat_no_inflate_params.Rmd"]])
-
-  # test whether flat files with state = "deprecated" are removed
-  config_fusen_with_deprecated <-
-    yaml::read_yaml(system.file(
-      "inflate_all/config_fusen_with_inflate_parameters_and_some_deprecated_files.yaml",
-      package = "fusen"
-    ))
-
-  inflate_params <-
-    read_inflate_params(config_yml = config_fusen_with_deprecated)
-
-  expect_equal(
-    length(inflate_params),
-    2
-  )
-
-  expect_equal(
-    names(inflate_params),
-    c("flat_new_one.Rmd", "flat_no_inflate_params.Rmd")
-  )
-})

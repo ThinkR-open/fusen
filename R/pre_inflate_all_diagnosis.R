@@ -10,8 +10,7 @@
 #' @importFrom glue glue
 #' @importFrom tibble tibble
 #'
-#' @return
-#'
+#' @return a tibble with the ability to each flat file to be inflated by inflate_all()
 #' @noRd
 #' @examples
 #' \dontrun{
@@ -112,27 +111,27 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       config_yml[[flat]][["state"]] == "active") {
       return(tibble(
         flat = flat,
-        status = glue("The flat file {flat} was inflated"),
+        status = glue("The flat file {flat} is going to be inflated"),
         type = "message"
       ))
     } else if (flat %in% names(config_yml) &&
       config_yml[[flat]][["state"]] != "active") {
       return(tibble(
         flat = flat,
-        status = glue("The flat file {flat} was not inflated because it is \"inactive or deprecated\""),
+        status = glue("The flat file {flat} is not going to be inflated because it is \"inactive or deprecated\""),
         type = "message"
       ))
     } else if (!flat %in% names(config_yml)) {
       return(tibble(
         flat = flat,
-        status = glue("The flat file {flat} was not inflated because it is absent from the config file. Please inflate() from the flat once"),
+        status = glue("The flat file {flat} is not going to be inflated because it is absent from the config file. Please inflate() from the flat once"),
         type = "warning"
       ))
     } else if (flat %in% names(config_yml) &&
       is.null(config_yml[[flat]][["inflate"]])) {
       return(tibble(
         flat = flat,
-        status = glue("The flat file {flat} was not inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version"),
+        status = glue("The flat file {flat} is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version"),
         type = "stop"
       ))
     }
@@ -147,45 +146,11 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       flat_files_status,
       tibble(
         flat = files_in_config_yml_but_missing_in_dev_folder,
-        status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} was not inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
+        status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
         type = "stop"
       )
     )
   }
 
   return(invisible(flat_files_status))
-}
-
-#' Read inflate-related parameters in config_fusen.yaml
-#'
-#' Internal function used in `inflate_all()`
-#'
-#' @param config_yml List. Content of the fusen config_file
-#'
-#' @return a named list with the flat files listed in config_fusen.yaml
-#' and the parameters used to inflate them
-#'
-#' @examples
-#' \dontrun{
-#' config_yml <- yaml::read_yaml(system.file("inflate_all/config_fusen_with_inflate_parameters.yaml", package = "fusen"))
-#' read_inflate_params(config_yml = config_yml)
-#' }
-#' @noRd
-read_inflate_params <- function(config_yml) {
-  config_yml <- config_yml[sapply(config_yml, function(flat) flat[["state"]] == "active")]
-
-  flat_files_names <- names(config_yml)
-
-  flat_files_names <- flat_files_names[!flat_files_names %in% "keep"]
-
-  if (length(flat_files_names) == 0) {
-    return(NULL)
-  }
-
-  # inflate-related parameters are at level 2 of the list
-  inflate_params <- lapply(flat_files_names, function(flat) {
-    config_yml[[flat]][["inflate"]]
-  }) %>% setNames(flat_files_names)
-
-  inflate_params
 }
