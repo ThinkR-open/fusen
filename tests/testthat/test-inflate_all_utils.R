@@ -14,7 +14,7 @@ test_that("pre_inflate_all_diagnosis works", {
   expect_true(inherits(pre_inflate_all_diagnosis, "function"))
 
   usethis::with_project(dummypackage, {
-    browser()
+
     # We inflate both flat files
     suppressMessages(
       inflate(

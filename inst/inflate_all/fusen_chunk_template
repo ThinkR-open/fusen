@@ -5,7 +5,7 @@
 #'
 #' Description
 #'
-#' @return
+#' @return 2
 #'
 #' @export
 new_fun2 <- function(){

@@ -69,7 +69,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version"),
         type = "stop",
-        params = NA
+        params = "call. = FALSE"
       ))
     }
   })
@@ -85,7 +85,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
         flat = files_in_config_yml_but_missing_in_dev_folder,
         status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
         type = "stop",
-        params = NA
+        params = "call. = FALSE"
       )
     )
   }
@@ -198,7 +198,7 @@ test_that("pre_inflate_all_diagnosis works", {
   expect_true(inherits(pre_inflate_all_diagnosis, "function"))
 
   usethis::with_project(dummypackage, {
-    browser()
+
     # We inflate both flat files
     suppressMessages(
       inflate(
