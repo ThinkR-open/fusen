@@ -119,16 +119,16 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       config_yml[[flat]][["state"]] != "active") {
       return(tibble(
         flat = flat,
-        status = glue("The flat file {flat} is not going to be inflated because it is \"inactive or deprecated\""),
+        status = glue("The flat file {flat} is not going to be inflated because it is 'inactive or deprecated'"),
         type = "cli::cli_alert_warning",
         params = NA
       ))
     } else if (!flat %in% names(config_yml)) {
       return(tibble(
         flat = flat,
-        status = glue("The flat file {flat} is not going to be inflated because it is absent from the config file. Please inflate() from the flat once"),
+        status = glue("The flat file {flat} is not going to be inflated because it is absent from the config file. Please inflate() from the flat once if needed or set it with status inactive."),
         type = "cli::cli_alert_danger",
-        params = "call. = FALSE"
+        params = NA
       ))
     } else if (flat %in% names(config_yml) &&
       is.null(config_yml[[flat]][["inflate"]])) {
@@ -158,7 +158,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
   }
 
   # reorder with stops first
-  
+
   return(invisible(flat_files_status))
 }
 

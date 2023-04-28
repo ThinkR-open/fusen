@@ -50,8 +50,12 @@ flat_history_maintain.Rmd:
 flat_inflate_all_utils.Rmd:
   path: dev/flat_inflate_all_utils.Rmd
   state: active
-  R: R/inflate_all_utils.R
-  tests: tests/testthat/test-inflate_all_utils.R
+  R:
+  - R/inflate_all_utils.R
+  - R/pre_inflate_all_diagnosis_eval.R
+  tests:
+  - tests/testthat/test-pre_inflate_all_diagnosis_eval.R
+  - tests/testthat/test-inflate_all_utils.R
   vignettes: []
   inflate:
     flat_file: dev/flat_inflate_all_utils.Rmd
