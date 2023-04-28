@@ -45,7 +45,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is going to be inflated"),
-        type = "message",
+        type = "cli::cli_alert_success",
         params = NA
       ))
     } else if (flat %in% names(config_yml) &&
@@ -53,14 +53,14 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because it is \"inactive or deprecated\""),
-        type = "message",
+        type = "cli::cli_alert_warning",
         params = NA
       ))
     } else if (!flat %in% names(config_yml)) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because it is absent from the config file. Please inflate() from the flat once"),
-        type = "warning",
+        type = "cli::cli_alert_danger",
         params = "call. = FALSE"
       ))
     } else if (flat %in% names(config_yml) &&
@@ -90,6 +90,8 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
     )
   }
 
+  # reorder with stops first
+  
   return(invisible(flat_files_status))
 }
 ```
@@ -199,6 +201,7 @@ test_that("pre_inflate_all_diagnosis works", {
 
   usethis::with_project(dummypackage, {
 
+    browser()
     # We inflate both flat files
     suppressMessages(
       inflate(
@@ -505,6 +508,51 @@ test_that("read_inflate_params works", {
 })
 ```
 
+# pre_inflate_all_diagnosis_eval
+    
+```{r function-pre_inflate_all_diagnosis_eval}
+#' Title
+#' 
+#' Description
+#' 
+#' @return Side effect: messages, or errors
+#' 
+#' @noRd
+ pre_inflate_all_diagnosis_eval <- function(diag) {
+    if (nrow(diag) == O) {stop("No file to inflate")}
+    for (flat_file_diag in 1:nrow(diag)) {
+      # do.call(
+      #   diag[["type"]][flat_file_diag],
+      #   list(diag[["status"]][flat_file_diag])
+      # )
+      params <- diag[["params"]][flat_file_diag]
+      if (is.na(params)) {
+        status_text <- paste0(
+          diag[["type"]][flat_file_diag],
+          "(\"", diag[["status"]][flat_file_diag], "\")")
+      } else {
+        status_text <- paste0(
+          diag[["type"]][flat_file_diag],
+          "(\"", diag[["status"]][flat_file_diag], "\", ",
+          diag[["params"]][flat_file_diag],
+          ")")
+      }
+      
+      eval(parse(text = status_text))
+    }
+  }
+```
+  
+```{r example-pre_inflate_all_diagnosis_eval}
+pre_inflate_all_diagnosis_eval()
+```
+  
+```{r tests-pre_inflate_all_diagnosis_eval}
+test_that("pre_inflate_all_diagnosis_eval works", {
+  expect_true(inherits(pre_inflate_all_diagnosis_eval, "function")) 
+})
+```
+  
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly

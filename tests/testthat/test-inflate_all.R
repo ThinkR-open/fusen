@@ -10,11 +10,13 @@ dev_file <- (add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 test_that("inflate_all works", {
+
   expect_true(inherits(inflate_all, "function"))
 
   usethis::with_project(dummypackage, {
+
     # if no config file exists, we raise an error
-    expect_error(inflate_all())
+    expect_error(inflate_all(), regexp = "There is no fusen[.]config_file in your package[.]")
 
     # we inflate the flat file
     suppressMessages(
@@ -49,7 +51,10 @@ test_that("inflate_all works", {
     expect_message(inflate_all(),
       regexp = glue::glue("The flat file {basename(flat_file)} is going to be inflated")
     )
-    expect_warning(inflate_all())
+
+    if (packageVersion("attachment") >= "0.4.0") {
+      expect_warning(inflate_all())
+    }
 
     # Let's remove the inflate parameters from config_fusen.yml
     unlink(flat_file2)

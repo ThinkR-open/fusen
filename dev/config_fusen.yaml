@@ -4,6 +4,13 @@ flat_addins.Rmd:
   R: R/build_fusen_chunks.R
   tests: tests/testthat/test-build_fusen_chunks.R
   vignettes: []
+  inflate:
+    flat_file: dev/flat_addins.Rmd
+    vignette_name: .na
+    open_vignette: yes
+    check: no
+    document: no
+    overwrite: ask
 flat_clean_fusen_files.Rmd:
   path: dev/flat_clean_fusen_files.Rmd
   state: active

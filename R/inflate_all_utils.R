@@ -112,7 +112,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is going to be inflated"),
-        type = "message",
+        type = "cli::cli_alert_success",
         params = NA
       ))
     } else if (flat %in% names(config_yml) &&
@@ -120,14 +120,14 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because it is \"inactive or deprecated\""),
-        type = "message",
+        type = "cli::cli_alert_warning",
         params = NA
       ))
     } else if (!flat %in% names(config_yml)) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because it is absent from the config file. Please inflate() from the flat once"),
-        type = "warning",
+        type = "cli::cli_alert_danger",
         params = "call. = FALSE"
       ))
     } else if (flat %in% names(config_yml) &&
@@ -136,7 +136,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version"),
         type = "stop",
-        params = NA
+        params = "call. = FALSE"
       ))
     }
   })
@@ -152,11 +152,13 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
         flat = files_in_config_yml_but_missing_in_dev_folder,
         status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
         type = "stop",
-        params = NA
+        params = "call. = FALSE"
       )
     )
   }
 
+  # reorder with stops first
+  
   return(invisible(flat_files_status))
 }
 

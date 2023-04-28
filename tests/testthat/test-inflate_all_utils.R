@@ -38,7 +38,7 @@ test_that("pre_inflate_all_diagnosis works", {
     config_yml <- config_yml_ref
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
-    
+
     diag_expected <- structure(
       list(
         flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
@@ -62,12 +62,12 @@ test_that("pre_inflate_all_diagnosis works", {
       diag[sort(diag$flat),],
       diag_expected[sort(diag_expected$flat),]
     )
-    
+
     #  "not inflated because "inactive or deprecated" (message) : a file is present in config_yml but its state is not 'active'
     config_yml <- config_yml_ref
     config_yml[[1]][["state"]] <- "deprecated"
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
-    
+
     diag_expected <- structure(
       list(
         flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
@@ -87,13 +87,13 @@ test_that("pre_inflate_all_diagnosis works", {
       row.names = c(NA, -2L),
       class = c("tbl_df", "tbl", "data.frame")
     )
-    
+
     expect_equal(
       diag[sort(diag$flat),],
       diag_expected[sort(diag_expected$flat),]
     )
-    
-    
+
+
     #  "not inflated because not in config file please inflate() from the flat once" (warning) : a file is missing from config_yml
     config_yml <- config_yml_ref
     config_yml[[1]] <- NULL
@@ -122,8 +122,8 @@ test_that("pre_inflate_all_diagnosis works", {
       diag[sort(diag$flat),],
       diag_expected[sort(diag_expected$flat),]
     )
-    
-    
+
+
 
     #  "not inflated because in config, but without parameters, please inflate() again from the flat with this new 'fusen' version" (stop) : a file is is config_yml but has not inflate parameters
     config_yml <- config_yml_ref
@@ -148,8 +148,8 @@ test_that("pre_inflate_all_diagnosis works", {
       ),
       row.names = c(NA, -2L),
       class = c("tbl_df", "tbl", "data.frame")
-    ) 
-    
+    )
+
     expect_equal(
       diag[sort(diag$flat),],
       diag_expected[sort(diag_expected$flat),]
@@ -186,13 +186,13 @@ test_that("pre_inflate_all_diagnosis works", {
         "data.frame"
       )
     )
-    
+
     expect_equal(
       diag[sort(diag$flat),],
       diag_expected[sort(diag_expected$flat),]
     )
 
-    
+
     # error if we dont have any flat file in dev/
     config_yml <- config_yml_ref
     unlink(flat_file)
