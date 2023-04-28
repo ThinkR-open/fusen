@@ -45,27 +45,31 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is going to be inflated"),
-        type = "message"
+        type = "message",
+        params = NA
       ))
     } else if (flat %in% names(config_yml) &&
       config_yml[[flat]][["state"]] != "active") {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because it is \"inactive or deprecated\""),
-        type = "message"
+        type = "message",
+        params = NA
       ))
     } else if (!flat %in% names(config_yml)) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because it is absent from the config file. Please inflate() from the flat once"),
-        type = "warning"
+        type = "warning",
+        params = "call. = FALSE"
       ))
     } else if (flat %in% names(config_yml) &&
       is.null(config_yml[[flat]][["inflate"]])) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version"),
-        type = "stop"
+        type = "stop",
+        params = NA
       ))
     }
   })
@@ -80,7 +84,8 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       tibble(
         flat = files_in_config_yml_but_missing_in_dev_folder,
         status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
-        type = "stop"
+        type = "stop",
+        params = NA
       )
     )
   }
@@ -193,6 +198,7 @@ test_that("pre_inflate_all_diagnosis works", {
   expect_true(inherits(pre_inflate_all_diagnosis, "function"))
 
   usethis::with_project(dummypackage, {
+    browser()
     # We inflate both flat files
     suppressMessages(
       inflate(
@@ -216,109 +222,121 @@ test_that("pre_inflate_all_diagnosis works", {
     config_yml <- config_yml_ref
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
-    expect_equal(
-      diag,
-      structure(
-        list(
-          flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
-          status = structure(
-            c(
-              "The flat file flat_minimal.Rmd is going to be inflated",
-              "The flat file flat_minimal_2.Rmd is going to be inflated"
-            ),
-            class = c(
-              "glue",
-              "character"
-            )
+    
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is going to be inflated",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
-          type = c("message", "message")
+          class = c(
+            "glue",
+            "character"
+          )
         ),
-        row.names = c(NA, -2L),
-        class = c("tbl_df", "tbl", "data.frame")
-      )
+        type = c("message", "message"),
+        params = c(NA, NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
     )
-
+    expect_equal(
+      diag[sort(diag$flat),],
+      diag_expected[sort(diag_expected$flat),]
+    )
+    
     #  "not inflated because "inactive or deprecated" (message) : a file is present in config_yml but its state is not 'active'
     config_yml <- config_yml_ref
     config_yml[[1]][["state"]] <- "deprecated"
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
-
-    expect_equal(
-      diag,
-      structure(
-        list(
-          flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
-          status = structure(
-            c(
-              "The flat file flat_minimal.Rmd is not going to be inflated because it is \"inactive or deprecated\"",
-              "The flat file flat_minimal_2.Rmd is going to be inflated"
-            ),
-            class = c(
-              "glue",
-              "character"
-            )
+    
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is not going to be inflated because it is \"inactive or deprecated\"",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
-          type = c("message", "message")
+          class = c(
+            "glue",
+            "character"
+          )
         ),
-        row.names = c(NA, -2L),
-        class = c("tbl_df", "tbl", "data.frame")
-      )
+        type = c("message", "message"),
+        params = c(NA, NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
     )
-
-
+    
+    expect_equal(
+      diag[sort(diag$flat),],
+      diag_expected[sort(diag_expected$flat),]
+    )
+    
+    
     #  "not inflated because not in config file please inflate() from the flat once" (warning) : a file is missing from config_yml
     config_yml <- config_yml_ref
     config_yml[[1]] <- NULL
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
-    expect_equal(
-      diag,
-      structure(
-        list(
-          flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
-          status = structure(
-            c(
-              "The flat file flat_minimal.Rmd is not going to be inflated because it is absent from the config file. Please inflate() from the flat once",
-              "The flat file flat_minimal_2.Rmd is going to be inflated"
-            ),
-            class = c(
-              "glue",
-              "character"
-            )
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is not going to be inflated because it is absent from the config file. Please inflate() from the flat once",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
-          type = c("warning", "message")
+          class = c(
+            "glue",
+            "character"
+          )
         ),
-        row.names = c(NA, -2L),
-        class = c("tbl_df", "tbl", "data.frame")
-      )
+        type = c("warning", "message"),
+        params = c("call. = FALSE", NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
     )
-
+    expect_equal(
+      diag[sort(diag$flat),],
+      diag_expected[sort(diag_expected$flat),]
+    )
+    
+    
 
     #  "not inflated because in config, but without parameters, please inflate() again from the flat with this new 'fusen' version" (stop) : a file is is config_yml but has not inflate parameters
     config_yml <- config_yml_ref
     config_yml[[1]][["inflate"]] <- NULL
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
-    expect_equal(
-      diag,
-      structure(
-        list(
-          flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
-          status = structure(
-            c(
-              "The flat file flat_minimal.Rmd is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version",
-              "The flat file flat_minimal_2.Rmd is going to be inflated"
-            ),
-            class = c(
-              "glue",
-              "character"
-            )
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
-          type = c("stop", "message")
+          class = c(
+            "glue",
+            "character"
+          )
         ),
-        row.names = c(NA, -2L),
-        class = c("tbl_df", "tbl", "data.frame")
-      )
+        type = c("stop", "message"),
+        params = c(NA, NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
+    ) 
+    
+    expect_equal(
+      diag[sort(diag$flat),],
+      diag_expected[sort(diag_expected$flat),]
     )
 
     # a file is in config.yml but missing from dev/
@@ -326,40 +344,44 @@ test_that("pre_inflate_all_diagnosis works", {
     config_yml[["missing_file.Rmd"]] <- config_yml[[1]]
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
-    expect_equal(
-      diag,
-      structure(
-        list(
-          flat = c(
-            "flat_minimal.Rmd", "flat_minimal_2.Rmd",
-            "missing_file.Rmd"
-          ),
-          status = structure(
-            c(
-              "The flat file flat_minimal.Rmd is going to be inflated",
-              "The flat file flat_minimal_2.Rmd is going to be inflated",
-              "The file missing_file.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"
-            ),
-            class = c("glue", "character")
-          ),
-          type = c(
-            "message", "message",
-            "stop"
-          )
+    diag_expected <- structure(
+      list(
+        flat = c(
+          "flat_minimal.Rmd", "flat_minimal_2.Rmd",
+          "missing_file.Rmd"
         ),
-        row.names = c(NA, -3L),
-        class = c(
-          "tbl_df", "tbl",
-          "data.frame"
-        )
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is going to be inflated",
+            "The flat file flat_minimal_2.Rmd is going to be inflated",
+            "The file missing_file.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"
+          ),
+          class = c("glue", "character")
+        ),
+        type = c(
+          "message", "message",
+          "stop"
+        ),
+        params = c(NA, NA, NA)
+      ),
+      row.names = c(NA, -3L),
+      class = c(
+        "tbl_df", "tbl",
+        "data.frame"
       )
     )
+    
+    expect_equal(
+      diag[sort(diag$flat),],
+      diag_expected[sort(diag_expected$flat),]
+    )
 
+    
     # error if we dont have any flat file in dev/
     config_yml <- config_yml_ref
     unlink(flat_file)
     unlink(flat_file2)
-    expect_error(pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage))
+    expect_error(pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage), regexp = "There are no flat files")
   })
 })
 

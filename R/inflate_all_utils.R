@@ -36,7 +36,7 @@
 #'   to = flat_file2,
 #'   overwrite = TRUE
 #' )
-#'
+#' 
 #' # let's inflate them to have dev/config_fusen.yml
 #' suppressMessages(
 #'   inflate(
@@ -47,7 +47,7 @@
 #'     open_vignette = FALSE
 #'   )
 #' )
-#'
+#' 
 #' suppressMessages(
 #'   inflate(
 #'     pkg = dummypackage,
@@ -57,44 +57,44 @@
 #'     open_vignette = FALSE
 #'   )
 #' )
-#'
+#' 
 #' config_yml_ref <-
 #'   yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
-#'
+#' 
 #' # all files can be inflated with inflate_all()
 #' config_yml <- config_yml_ref
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' # let's consider the first flat file is deprecated
 #' config_yml <- config_yml_ref
 #' config_yml[[1]][["state"]] <- "deprecated"
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' # let's consider the first flat file is missing from config_fusen.yaml
 #' config_yml <- config_yml_ref
 #' config_yml[[1]] <- NULL
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' # let's consider that the first flat file has not inflate related params in config_fusen.yaml
 #' config_yml <- config_yml_ref
 #' config_yml[[1]][["inflate"]] <- NULL
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' # let's consider a file is in config.yml but missing from dev/
 #' config_yml <- config_yml_ref
 #' config_yml[["missing_file.Rmd"]] <- config_yml[[1]]
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' unlink(dummypackage, recursive = TRUE)
 #' }
 pre_inflate_all_diagnosis <- function(config_yml, pkg) {
@@ -112,27 +112,31 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is going to be inflated"),
-        type = "message"
+        type = "message",
+        params = NA
       ))
     } else if (flat %in% names(config_yml) &&
       config_yml[[flat]][["state"]] != "active") {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because it is \"inactive or deprecated\""),
-        type = "message"
+        type = "message",
+        params = NA
       ))
     } else if (!flat %in% names(config_yml)) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because it is absent from the config file. Please inflate() from the flat once"),
-        type = "warning"
+        type = "warning",
+        params = "call. = FALSE"
       ))
     } else if (flat %in% names(config_yml) &&
       is.null(config_yml[[flat]][["inflate"]])) {
       return(tibble(
         flat = flat,
         status = glue("The flat file {flat} is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version"),
-        type = "stop"
+        type = "stop",
+        params = NA
       ))
     }
   })
@@ -147,7 +151,8 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       tibble(
         flat = files_in_config_yml_but_missing_in_dev_folder,
         status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
-        type = "stop"
+        type = "stop",
+        params = NA
       )
     )
   }
