@@ -36,10 +36,10 @@ test_that("pre_inflate_all_diagnosis_eval works", {
   )
 
   expect_message(
-      pre_inflate_all_diagnosis_eval(diagnostic, type_stop = FALSE),
-      regexp = "The flat file flat_minimal[.]Rmd is going to be inflated"
-    )
-  
+    pre_inflate_all_diagnosis_eval(diagnostic, type_stop = FALSE),
+    regexp = "The flat file flat_minimal[.]Rmd is going to be inflated"
+  )
+
   expect_message(
     pre_inflate_all_diagnosis_eval(diagnostic, type_stop = FALSE),
     regexp = "The flat file flat_minimal2[.]Rmd is not going to be inflated"

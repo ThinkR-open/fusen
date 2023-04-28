@@ -30,7 +30,9 @@ add_fusen_chunks <- function(function_name = NULL,
     if (is.null(function_name)) {
       if (rstudioapi::hasFun("showPrompt")) {
         function_name <- rstudioapi::showPrompt("{fusen}", "Enter the function name")
-        if (is.null(function_name)) {return(NULL)}
+        if (is.null(function_name)) {
+          return(NULL)
+        }
       } else {
         function_name <- readline("Enter the function name: ")
       }

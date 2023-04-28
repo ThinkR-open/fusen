@@ -15,7 +15,6 @@ test_that("pre_inflate_all_diagnosis is a function", {
 })
 
 usethis::with_project(dummypackage, {
-  
   # We inflate both flat files
   suppressMessages(
     inflate(
@@ -199,16 +198,16 @@ usethis::with_project(dummypackage, {
       diag_expected[sort(diag_expected$flat), ]
     )
   })
-  
-    test_that("messages show properly", {
+
+  test_that("messages show properly", {
     config_yml <- config_yml_ref
     config_yml[["missing_file.Rmd"]] <- config_yml[[1]]
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
-    
+
     expect_error(
       pre_inflate_all_diagnosis_eval(diag, type_stop = TRUE),
     )
-       expect_message(
+    expect_message(
       pre_inflate_all_diagnosis_eval(diag, type_stop = FALSE),
     )
   })
@@ -222,8 +221,6 @@ usethis::with_project(dummypackage, {
       regexp = "There are no flat files"
     )
   })
-  
-
 })
 
 unlink(dummypackage, recursive = TRUE)

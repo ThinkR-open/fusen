@@ -36,7 +36,7 @@
 #'   to = flat_file2,
 #'   overwrite = TRUE
 #' )
-#' 
+#'
 #' # let's inflate them to have dev/config_fusen.yml
 #' suppressMessages(
 #'   inflate(
@@ -47,7 +47,7 @@
 #'     open_vignette = FALSE
 #'   )
 #' )
-#' 
+#'
 #' suppressMessages(
 #'   inflate(
 #'     pkg = dummypackage,
@@ -57,44 +57,44 @@
 #'     open_vignette = FALSE
 #'   )
 #' )
-#' 
+#'
 #' config_yml_ref <-
 #'   yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
-#' 
+#'
 #' # all files can be inflated with inflate_all()
 #' config_yml <- config_yml_ref
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' # let's consider the first flat file is deprecated
 #' config_yml <- config_yml_ref
 #' config_yml[[1]][["state"]] <- "deprecated"
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' # let's consider the first flat file is missing from config_fusen.yaml
 #' config_yml <- config_yml_ref
 #' config_yml[[1]] <- NULL
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' # let's consider that the first flat file has not inflate related params in config_fusen.yaml
 #' config_yml <- config_yml_ref
 #' config_yml[[1]][["inflate"]] <- NULL
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' # let's consider a file is in config.yml but missing from dev/
 #' config_yml <- config_yml_ref
 #' config_yml[["missing_file.Rmd"]] <- config_yml[[1]]
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' unlink(dummypackage, recursive = TRUE)
 #' }
 pre_inflate_all_diagnosis <- function(config_yml, pkg) {

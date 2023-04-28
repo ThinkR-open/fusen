@@ -2,12 +2,26 @@
 % Please edit documentation in R/inflate_all.R
 \name{inflate_all}
 \alias{inflate_all}
+\alias{inflate_all_no_check}
 \title{Inflate all your flat files}
 \usage{
-inflate_all(pkg = ".")
+inflate_all(pkg = ".", document = TRUE, check = TRUE, overwrite = TRUE, ...)
+
+inflate_all_no_check(pkg = ".", document = TRUE, overwrite = TRUE, ...)
 }
 \arguments{
 \item{pkg}{Path to package}
+
+\item{document}{Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}}
+
+\item{check}{Logical. Whether to check package after Rmd inflating}
+
+\item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no).
+Whether to overwrite vignette and functions if already exists.}
+
+\item{...}{Arguments passed to \code{rcmdcheck::rcmdcheck()}.
+For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is
+passed to \code{rcmdcheck::rcmdcheck()}.}
 }
 \value{
 side effect. Inflates all your flat files that can be inflated.
@@ -17,16 +31,23 @@ Inflate all the flat files stored in dev/ and starting with "flat_"
 }
 \examples{
 \dontrun{
+# Usually, in the current package run inflate_all() directly
+# This function has an impact on the current user workspace
+inflate_all()
+}
+
+# You can also inflate_all flats of another package as follows
+# A dummy package with a flat file
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <-
-  (add_minimal(
-    pkg = dummypackage,
-    overwrite = TRUE,
-    open = FALSE
-  ))
+dev_file <- add_minimal(
+  pkg = dummypackage,
+  overwrite = TRUE,
+  open = FALSE
+)
 
+# Inflate the flat file once
 usethis::with_project(dummypackage, {
   # if you are starting from a brand new package, inflate_all() will crash
   # it's because of the absence of a fusen config file
@@ -46,50 +67,14 @@ usethis::with_project(dummypackage, {
   # your config file has been created
   config_yml_ref <-
     yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
+})
 
+# Next time, you can run inflate_all() directly
+usethis::with_project(dummypackage, {
   # now you can run inflate_all()
   inflate_all()
-
-  # Let's deprecate our flat file : inflate_all() won't like it and will tell you
-  config_yml_deprecated <- config_yml_ref
-  config_yml_deprecated[[1]][["state"]] <- "deprecated"
-  yaml::write_yaml(config_yml_deprecated, file = "dev/config_fusen.yaml")
-  inflate_all()
-
-  # If you add a new flat file, absent from config_fusen.yml, inflate_all() will warn you
-  yaml::write_yaml(config_yml_ref, file = "dev/config_fusen.yaml")
-  flat_file2 <-
-    gsub(
-      x = flat_file,
-      pattern = "flat_minimal.Rmd",
-      replacement = "flat_minimal_2.Rmd"
-    )
-  file.copy(
-    from = flat_file,
-    to = flat_file2,
-    overwrite = TRUE
-  )
-  inflate_all()
-  unlink(flat_file2)
-
-  # Let's remove the inflate parameters from config_fusen.yml
-  # If you used fusen and inflate() prior to v0.5.0.9001 your config_fusen.yml does not contain
-  # the inflate parameters. You must inflate it again before being able to use inflate_all()
-  config_yml_no_inflate_params <- config_yml_ref
-  config_yml_no_inflate_params[[1]][["inflate"]] <- NULL
-  yaml::write_yaml(config_yml_no_inflate_params, file = "dev/config_fusen.yaml")
-  # inflate_all() will raise an error
-  inflate_all()
-
-
-  # Let's add a flat file in in config_fusen.yml not present in dev/
-  config_yml_file_absent_in_dev <- config_yml_ref
-  config_yml_file_absent_in_dev[["missing_file.Rmd"]] <-
-    config_yml_file_absent_in_dev[[1]]
-  yaml::write_yaml(config_yml_file_absent_in_dev, file = "dev/config_fusen.yaml")
-  # inflate_all() will raise an error
-  inflate_all()
 })
+
+# Clean the temporary directory
 unlink(dummypackage, recursive = TRUE)
-}
 }

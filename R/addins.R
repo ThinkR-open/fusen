@@ -12,7 +12,9 @@ addin_add_template <- function() {
         message = "e.g. add = additional; min = minimal;",
         default = "additional"
       )
-      if (is.null(template)) {return(NULL)}
+      if (is.null(template)) {
+        return(NULL)
+      }
     } else {
       template <- readline("Enter the flat template type: ")
     }
@@ -22,7 +24,9 @@ addin_add_template <- function() {
         message = "Name is used to pre-fill the template",
         default = "my_fun"
       )
-      if (is.null(flat_name)) {return(NULL)}
+      if (is.null(flat_name)) {
+        return(NULL)
+      }
     } else {
       flat_name <- readline("Enter the function name: ")
     }

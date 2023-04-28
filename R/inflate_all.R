@@ -5,6 +5,7 @@
 #' Inflate all the flat files stored in dev/ and starting with "flat_"
 #'
 #' @param pkg Path to package
+#' @inheritParams inflate
 #'
 #' @importFrom yaml read_yaml
 #'
@@ -13,21 +14,28 @@
 #' @export
 #' @examples
 #' \dontrun{
+#' # Usually, in the current package run inflate_all() directly
+#' # This function has an impact on the current user workspace
+#' inflate_all()
+#' }
+#'
+#' # You can also inflate_all flats of another package as follows
+#' # A dummy package with a flat file
 #' dummypackage <- tempfile("inflateall")
 #' dir.create(dummypackage)
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-#' dev_file <-
-#'   (add_minimal(
-#'     pkg = dummypackage,
-#'     overwrite = TRUE,
-#'     open = FALSE
-#'   ))
-#' 
+#' dev_file <- add_minimal(
+#'   pkg = dummypackage,
+#'   overwrite = TRUE,
+#'   open = FALSE
+#' )
+#'
+#' # Inflate the flat file once
 #' usethis::with_project(dummypackage, {
 #'   # if you are starting from a brand new package, inflate_all() will crash
 #'   # it's because of the absence of a fusen config file
 #'   # inflate_all()
-#' 
+#'
 #'   # you need to inflate manually your flat file first
 #'   inflate(
 #'     pkg = dummypackage,
@@ -38,57 +46,21 @@
 #'     document = TRUE,
 #'     overwrite = "yes"
 #'   )
-#' 
+#'
 #'   # your config file has been created
 #'   config_yml_ref <-
 #'     yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
-#' 
+#' })
+#'
+#' # Next time, you can run inflate_all() directly
+#' usethis::with_project(dummypackage, {
 #'   # now you can run inflate_all()
 #'   inflate_all()
-#' 
-#'   # Let's deprecate our flat file : inflate_all() won't like it and will tell you
-#'   config_yml_deprecated <- config_yml_ref
-#'   config_yml_deprecated[[1]][["state"]] <- "deprecated"
-#'   yaml::write_yaml(config_yml_deprecated, file = "dev/config_fusen.yaml")
-#'   inflate_all()
-#' 
-#'   # If you add a new flat file, absent from config_fusen.yml, inflate_all() will warn you
-#'   yaml::write_yaml(config_yml_ref, file = "dev/config_fusen.yaml")
-#'   flat_file2 <-
-#'     gsub(
-#'       x = flat_file,
-#'       pattern = "flat_minimal.Rmd",
-#'       replacement = "flat_minimal_2.Rmd"
-#'     )
-#'   file.copy(
-#'     from = flat_file,
-#'     to = flat_file2,
-#'     overwrite = TRUE
-#'   )
-#'   inflate_all()
-#'   unlink(flat_file2)
-#' 
-#'   # Let's remove the inflate parameters from config_fusen.yml
-#'   # If you used fusen and inflate() prior to v0.5.0.9001 your config_fusen.yml does not contain
-#'   # the inflate parameters. You must inflate it again before being able to use inflate_all()
-#'   config_yml_no_inflate_params <- config_yml_ref
-#'   config_yml_no_inflate_params[[1]][["inflate"]] <- NULL
-#'   yaml::write_yaml(config_yml_no_inflate_params, file = "dev/config_fusen.yaml")
-#'   # inflate_all() will raise an error
-#'   inflate_all()
-#' 
-#' 
-#'   # Let's add a flat file in in config_fusen.yml not present in dev/
-#'   config_yml_file_absent_in_dev <- config_yml_ref
-#'   config_yml_file_absent_in_dev[["missing_file.Rmd"]] <-
-#'     config_yml_file_absent_in_dev[[1]]
-#'   yaml::write_yaml(config_yml_file_absent_in_dev, file = "dev/config_fusen.yaml")
-#'   # inflate_all() will raise an error
-#'   inflate_all()
 #' })
+#'
+#' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
-#' }
-inflate_all <- function(pkg = ".") {
+inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TRUE, ...) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
@@ -102,41 +74,61 @@ inflate_all <- function(pkg = ".") {
   config_yml <- read_yaml(config_file)
 
   diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = pkg)
+  # Run stop first only
+  pre_inflate_all_diagnosis_eval(diag, type_stop = TRUE)
+  # If message or warnings about flat files, show at the end of the process
+  # => Is going to be
+  pre_inflate_all_diagnosis_eval(diag, type_stop = FALSE)
 
-  for (flat_file_diag in 1:nrow(diag)) {
-    # do.call(
-    #   diag[["type"]][flat_file_diag],
-    #   list(diag[["status"]][flat_file_diag])
-    # )
-    params <- diag[["params"]][flat_file_diag]
-    if (is.na(params)) {
-      status_text <- paste0(
-        diag[["type"]][flat_file_diag],
-        "('", diag[["status"]][flat_file_diag], "')")
-    } else {
-      status_text <- paste0(
-        diag[["type"]][flat_file_diag],
-        "('", diag[["status"]][flat_file_diag], "', ",
-        diag[["params"]][flat_file_diag],
-        ")")
-    }
-    
-    eval(parse(text = status_text))
-  }
-  
   inflate_params <- read_inflate_params(config_yml = config_yml)
 
   if (length(inflate_params) == 0) {
     message("No flat files were inflated")
   } else {
-    invisible(
-      lapply(inflate_params, function(flat_file) {
-        # TO BE REMOVED WHEN "pkg" wont be stored anymore in config_fusen
-        flat_file$pkg <- pkg
-        # should we keep that?
-        flat_file$overwrite <- TRUE
-        suppressMessages(do.call(inflate, flat_file))
-      })
-    )
+    apply_inflate <- function(inflate_params, overwrite) {
+      config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
+      # Change config option temporary, to be able to modify it on the fly
+      config_file_tmp <- tempfile(pattern = "tempconfig")
+      on.exit(file.remove(config_file_tmp))
+      file.copy(config_file, to = config_file_tmp)
+      options("fusen.config_file" = config_file_tmp)
+      on.exit(options("fusen.config_file" = config_file))
+
+      invisible(
+        lapply(inflate_params, function(flat_file) {
+          # TO BE REMOVED WHEN "pkg" wont be stored anymore in config_fusen
+          flat_file$pkg <- pkg
+          # should we keep that?
+          flat_file$overwrite <- overwrite
+          flat_file$document <- FALSE
+          flat_file$check <- FALSE
+          suppressMessages(do.call(inflate, flat_file))
+        })
+      )
+    }
+
+    apply_inflate(inflate_params, overwrite)
+
+    # Attachment + check like in inflate()
+    # Run attachment
+    if (isTRUE(document)) {
+      attachment::att_amend_desc(path = pkg)
+    }
+
+    # Check
+    if (isTRUE(check)) {
+      cli::cat_rule("Launching check()")
+      res <- devtools::check(
+        pkg,
+        ...
+      )
+      print(res)
+    }
   }
+}
+
+#' @rdname inflate_all
+#' @export
+inflate_all_no_check <- function(pkg = ".", document = TRUE, overwrite = TRUE, ...) {
+  inflate_all(pkg = pkg, document = document, check = FALSE, overwrite = overwrite, ...)
 }

@@ -4,75 +4,93 @@
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- (add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
-test_that("inflate_all works", {
-
+test_that("inflate_all is a function", {
   expect_true(inherits(inflate_all, "function"))
+})
 
-  usethis::with_project(dummypackage, {
-
+usethis::with_project(dummypackage, {
+  browser()
+  test_that("error if no config file exists", {
     # if no config file exists, we raise an error
     expect_error(inflate_all(), regexp = "There is no fusen[.]config_file in your package[.]")
+  })
 
-    # we inflate the flat file
-    suppressMessages(
-      inflate(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "Get started", check = FALSE,
-        open_vignette = FALSE, document = TRUE,
-        overwrite = "yes"
-      )
+  # we inflate the flat file
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE, document = TRUE,
+      overwrite = "yes"
     )
+  )
+  config_yml_ref <- yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
 
-    config_yml_ref <- yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
-
+  test_that("inflate_all says which is going to be inflated", {
     expect_message(inflate_all(),
       regexp = glue::glue("The flat file {basename(flat_file)} is going to be inflated")
     )
+  })
 
+  test_that("deprecated is detected and not inflated", {
     # Let's deprecate our flat file
     config_yml_deprecated <- config_yml_ref
     config_yml_deprecated[[1]][["state"]] <- "deprecated"
+    config_yml_deprecated[[1]][["R"]] <- ""
     yaml::write_yaml(config_yml_deprecated, file = "dev/config_fusen.yaml")
 
+    # And remove R file to verify it is not rebuilt
+    fun_file <- file.path("R", "my_fun.R")
+    expect_true(file.exists(fun_file))
+    file.remove(fun_file)
+
     expect_message(inflate_all(),
-      regexp = glue::glue('The flat file {basename(flat_file)} is not going to be inflated because it is "inactive or deprecated"')
+      regexp = glue::glue("The flat file {basename(flat_file)} is not going to be inflated because it is 'inactive or deprecated'")
     )
 
+    expect_false(file.exists(fun_file))
+  })
+
+  test_that("new flat file, absent from config_fusen.yml works", {
     # Let's add a new flat file, absent from config_fusen.yml
-    yaml::write_yaml(config_yml_ref, file = "dev/config_fusen.yaml")
     flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
 
     expect_message(inflate_all(),
-      regexp = glue::glue("The flat file {basename(flat_file)} is going to be inflated")
+      regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated because it is absent from the config file")
     )
 
     if (packageVersion("attachment") >= "0.4.0") {
       expect_warning(inflate_all())
     }
 
-    # Let's remove the inflate parameters from config_fusen.yml
     unlink(flat_file2)
+  })
 
+  test_that("error when remove params", {
+    # Let's remove the inflate parameters from config_fusen.yml
     config_yml_no_inflate_params <- config_yml_ref
     config_yml_no_inflate_params[[1]][["inflate"]] <- NULL
     yaml::write_yaml(config_yml_no_inflate_params, file = "dev/config_fusen.yaml")
 
-    expect_error(inflate_all())
+    expect_error(inflate_all(), regexp = "The flat file flat_minimal[.]Rmd is not going to be inflated because although present in the config file, it has no inflate\\(\\) parameters")
+  })
 
-
+  test_that("flat file in in config_fusen.yml not present in dev", {
     # Let's add a flat file in in config_fusen.yml not present in dev/
     config_yml_file_absent_in_dev <- config_yml_ref
     config_yml_file_absent_in_dev[["missing_file.Rmd"]] <- config_yml_file_absent_in_dev[[1]]
     yaml::write_yaml(config_yml_file_absent_in_dev, file = "dev/config_fusen.yaml")
 
-    expect_error(inflate_all())
+    expect_error(inflate_all(), regexp = "The file missing_file[.]Rmd is not going to be inflated because it was not found")
+  })
 
+  test_that("inflate all really inflates all", {
     # Now let's take the ability of inflate_all() to inflate all our files !
     # We start from a clean place
     yaml::write_yaml(config_yml_ref, file = "dev/config_fusen.yaml")
@@ -99,7 +117,9 @@ test_that("inflate_all works", {
     expect_true(file.exists(file.path(dummypackage, "R", "my_fun.R")))
     expect_true(file.exists(file.path(dummypackage, "man", "my_fun.Rd")))
     expect_true(file.exists(file.path(dummypackage, "tests/testthat", "test-my_fun.R")))
+  })
 
+  test_that("add a function in our flat file works", {
     # what happens if we add a function in our flat file
     flat_content <- readLines(flat_file)
     function_template <- readLines(system.file("inflate_all/fusen_chunk_template", package = "fusen"))
@@ -122,8 +142,9 @@ test_that("inflate_all works", {
       list.files(file.path(dummypackage, "tests/testthat")),
       c("test-my_fun.R", "test-new_fun2.R")
     )
+  })
 
-
+  test_that("A second flat file works", {
     # let's add a second flat
     flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
@@ -177,8 +198,9 @@ test_that("inflate_all works", {
       list.files(file.path(dummypackage, "vignettes/")),
       c("get-started.Rmd", "get-started_2.Rmd")
     )
+  })
 
-
+  test_that("inflate_all deals with vignette name", {
     # Let's check a other way to choose the vignette name
     suppressMessages(
       inflate(
@@ -202,3 +224,6 @@ test_that("inflate_all works", {
 })
 
 unlink(dummypackage, recursive = TRUE)
+
+# TODO
+# Test inflate_all_no_check
