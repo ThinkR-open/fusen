@@ -3,6 +3,7 @@ title: "flat_df_to_config.Rmd empty"
 output: html_document
 editor_options: 
   chunk_output_type: console
+inflate_state: active
 ---
 
 ```{r development, include=FALSE}
@@ -173,7 +174,7 @@ usethis::with_project(dummypackage_fixed, {
   )
 })
 # Add a not registered file to the package
-cat("# test R file", file = file.path(dummypackage_fixed, "R", "to_keep.R"))
+cat("# test R file\n", file = file.path(dummypackage_fixed, "R", "to_keep.R"))
 
 
 test_that("register_all_to_config can be run twice", {
@@ -197,7 +198,13 @@ test_that("register_all_to_config can be run twice", {
     # Add a new file to register from a new flat file ----
     add_flat_template(template = "add", flat_name = "new_one", open = FALSE)
     # Without vignette first
-    inflate(pkg = dummypackage_fixed, flat_file = "dev/flat_new_one.Rmd", vignette_name = NA, check = FALSE, open_vignette = FALSE)
+    suppressMessages(
+      inflate(
+        pkg = dummypackage_fixed,
+        flat_file = "dev/flat_new_one.Rmd", vignette_name = NA,
+        check = FALSE, open_vignette = FALSE
+      )
+    )
 
     expect_error(
       out_path <- register_all_to_config(dummypackage_fixed),
@@ -205,7 +212,14 @@ test_that("register_all_to_config can be run twice", {
     )
 
     # With vignette then
-    inflate(pkg = dummypackage_fixed, flat_file = "dev/flat_new_one.Rmd", vignette_name = "new_one", check = FALSE, open_vignette = FALSE)
+    suppressMessages(
+      inflate(
+        pkg = dummypackage_fixed,
+        flat_file = "dev/flat_new_one.Rmd",
+        vignette_name = "new_one",
+        check = FALSE, open_vignette = FALSE
+      )
+    )
 
     expect_error(
       out_path <- register_all_to_config(dummypackage_fixed),
@@ -1051,7 +1065,8 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
   } else {
     # return a `dput()` to allow to add to `df_to_config()`
     # dput()
-    return(dput(res_new))
+    # return(dput(res_new, file = nullfile()))
+    return(res_new)
   }
 }
 
@@ -1118,7 +1133,7 @@ usethis::with_project(dummypackage, {
   )
 
   # Add a not registered file to the package
-  cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
+  cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
   # Use the fonction to check the list of files
   out_csv <- check_not_registered_files(dummypackage)
@@ -1236,7 +1251,7 @@ usethis::with_project(dummypackage, {
   })
 
   # Test add a R file manually and include in "keep" after `check_not_registered_files()`
-  cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
+  cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
   test_that("check_not_registered_files can help manually fill config", {
     expect_message(out_csv <- check_not_registered_files(), "Wrote not registered files")
@@ -1340,5 +1355,5 @@ usethis::with_project(dummypackage, {
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(flat_file = "dev/flat_clean_fusen_files.Rmd", vignette_name = "Clean fusen files", check = FALSE, overwrite = TRUE, open_vignette = FALSE)
-rstudioapi::navigateToFile("dev/dev_history.R", line = 105)
+# rstudioapi::navigateToFile("dev/dev_history.R", line = 105)
 ```

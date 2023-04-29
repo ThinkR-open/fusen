@@ -21,7 +21,7 @@ usethis::with_project(dummypackage_fixed, {
   )
 })
 # Add a not registered file to the package
-cat("# test R file", file = file.path(dummypackage_fixed, "R", "to_keep.R"))
+cat("# test R file\n", file = file.path(dummypackage_fixed, "R", "to_keep.R"))
 
 
 test_that("register_all_to_config can be run twice", {
@@ -45,7 +45,13 @@ test_that("register_all_to_config can be run twice", {
     # Add a new file to register from a new flat file ----
     add_flat_template(template = "add", flat_name = "new_one", open = FALSE)
     # Without vignette first
-    inflate(pkg = dummypackage_fixed, flat_file = "dev/flat_new_one.Rmd", vignette_name = NA, check = FALSE, open_vignette = FALSE)
+    suppressMessages(
+      inflate(
+        pkg = dummypackage_fixed,
+        flat_file = "dev/flat_new_one.Rmd", vignette_name = NA,
+        check = FALSE, open_vignette = FALSE
+      )
+    )
 
     expect_error(
       out_path <- register_all_to_config(dummypackage_fixed),
@@ -53,7 +59,14 @@ test_that("register_all_to_config can be run twice", {
     )
 
     # With vignette then
-    inflate(pkg = dummypackage_fixed, flat_file = "dev/flat_new_one.Rmd", vignette_name = "new_one", check = FALSE, open_vignette = FALSE)
+    suppressMessages(
+      inflate(
+        pkg = dummypackage_fixed,
+        flat_file = "dev/flat_new_one.Rmd",
+        vignette_name = "new_one",
+        check = FALSE, open_vignette = FALSE
+      )
+    )
 
     expect_error(
       out_path <- register_all_to_config(dummypackage_fixed),
@@ -517,7 +530,7 @@ usethis::with_project(dummypackage, {
   })
 
   # Test add a R file manually and include in "keep" after `check_not_registered_files()`
-  cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
+  cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
   test_that("check_not_registered_files can help manually fill config", {
     expect_message(out_csv <- check_not_registered_files(), "Wrote not registered files")

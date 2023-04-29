@@ -37,7 +37,7 @@
 #'   )
 #'
 #'   # Add a not registered file to the package
-#'   cat("# test R file", file = file.path(dummypackage, "R", "to_keep.R"))
+#'   cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 #'
 #'   # Use the fonction to check the list of files
 #'   out_csv <- check_not_registered_files(dummypackage)
@@ -129,7 +129,8 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
   } else {
     # return a `dput()` to allow to add to `df_to_config()`
     # dput()
-    return(dput(res_new))
+    # return(dput(res_new, file = nullfile()))
+    return(res_new)
   }
 }
 

@@ -263,7 +263,8 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
     cat(enc2utf8(all), file = gitfile, sep = "\n")
   }
 
-  if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
+  if (length(list.files(pkg, pattern = "[.]Rproj")) == 0 &
+    !any(grepl("^[.]here$", list.files(pkg, all.files = TRUE)))) {
     here::set_here(pkg)
   }
   if (isTRUE(open) & interactive()) {

@@ -14,6 +14,9 @@ test_that("inflate_all is a function", {
 })
 
 usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
   browser()
   test_that("error if no config file exists", {
     # if no config file exists, we raise an error

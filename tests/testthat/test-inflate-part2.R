@@ -494,24 +494,28 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 test_that("rmd and name are deprecated works", {
   usethis::with_project(dummypackage, {
     expect_warning(
-      inflate(
-        pkg = ".",
-        # flat_file = flat_file,
-        rmd = flat_file,
-        vignette_name = "Get started",
-        check = FALSE, document = TRUE,
-        overwrite = TRUE, open_vignette = FALSE
+      suppressMessages(
+        inflate(
+          pkg = ".",
+          # flat_file = flat_file,
+          rmd = flat_file,
+          vignette_name = "Get started",
+          check = FALSE, document = TRUE,
+          overwrite = TRUE, open_vignette = FALSE
+        )
       ),
       regexp = "The `rmd` argument"
     )
     expect_warning(
-      inflate(
-        pkg = ".",
-        flat_file = flat_file,
-        # vignette_name = "Get started",
-        name = "Get started",
-        check = FALSE, document = TRUE,
-        overwrite = TRUE, open_vignette = FALSE
+      suppressMessages(
+        inflate(
+          pkg = ".",
+          flat_file = flat_file,
+          # vignette_name = "Get started",
+          name = "Get started",
+          check = FALSE, document = TRUE,
+          overwrite = TRUE, open_vignette = FALSE
+        )
       ),
       regexp = "The `name` argument"
     )

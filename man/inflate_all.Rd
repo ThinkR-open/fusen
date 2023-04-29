@@ -41,18 +41,21 @@ inflate_all()
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_minimal(
+flat_files <- add_minimal(
   pkg = dummypackage,
   overwrite = TRUE,
   open = FALSE
 )
-
+flat_file <- flat_files[grep("flat", basename(flat_files))]
 # Inflate the flat file once
 usethis::with_project(dummypackage, {
   # if you are starting from a brand new package, inflate_all() will crash
   # it's because of the absence of a fusen config file
   # inflate_all()
 
+  # Add licence
+  usethis::use_mit_license("John Doe")
+  
   # you need to inflate manually your flat file first
   inflate(
     pkg = dummypackage,
@@ -72,7 +75,7 @@ usethis::with_project(dummypackage, {
 # Next time, you can run inflate_all() directly
 usethis::with_project(dummypackage, {
   # now you can run inflate_all()
-  inflate_all()
+  inflate_all(check = TRUE, document = TRUE)
 })
 
 # Clean the temporary directory
