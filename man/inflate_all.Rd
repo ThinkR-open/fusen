@@ -55,7 +55,7 @@ usethis::with_project(dummypackage, {
 
   # Add licence
   usethis::use_mit_license("John Doe")
-  
+
   # you need to inflate manually your flat file first
   inflate(
     pkg = dummypackage,

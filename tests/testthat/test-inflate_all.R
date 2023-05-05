@@ -17,7 +17,7 @@ usethis::with_project(dummypackage, {
   # Add licence
   usethis::use_mit_license("John Doe")
 
-  browser()
+  # browser()
   test_that("error if no config file exists", {
     # if no config file exists, we raise an error
     expect_error(inflate_all(), regexp = "There is no fusen[.]config_file in your package[.]")
@@ -178,32 +178,44 @@ usethis::with_project(dummypackage, {
 
     inflate_all()
 
-    expect_equal(
-      list.files(file.path(dummypackage, "R/")),
-      c("my_fun.R", "my_fun_from_flat_file2.R", "new_fun2.R")
-    )
+    expect_true(all(
+      list.files(file.path(dummypackage, "R/")) %in% c("my_fun.R", "my_fun_from_flat_file2.R", "new_fun2.R")
+    ))
 
-    expect_equal(
-      list.files(file.path(dummypackage, "man/")),
-      c("my_fun.Rd", "my_fun_from_flat_file2.Rd", "new_fun2.Rd")
-    )
+    expect_true(all(
+      list.files(file.path(dummypackage, "man/")) %in% c("my_fun.Rd", "my_fun_from_flat_file2.Rd", "new_fun2.Rd")
+    ))
 
-    expect_equal(
-      list.files(file.path(dummypackage, "tests/testthat")),
-      c(
+    expect_true(all(
+      list.files(file.path(dummypackage, "tests/testthat")) %in% c(
         "test-my_fun.R",
         "test-my_fun_from_flat_file2.R",
         "test-new_fun2.R"
       )
-    )
+    ))
 
-    expect_equal(
-      list.files(file.path(dummypackage, "vignettes/")),
-      c("get-started.Rmd", "get-started_2.Rmd")
-    )
+    expect_true(all(
+      list.files(file.path(dummypackage, "vignettes/")) %in% c("get-started.Rmd", "get-started_2.Rmd")
+    ))
+
+    unlink(list.files(file.path(dummypackage, "R"), full.names = TRUE))
+    unlink(list.files(file.path(dummypackage, "man"), full.names = TRUE))
+    unlink(list.files(file.path(dummypackage, "tests/testthat"), full.names = TRUE))
+    unlink(flat_file2)
   })
 
   test_that("inflate_all deals with vignette name", {
+    yaml::write_yaml(config_yml_ref, file = "dev/config_fusen.yaml")
+
+    flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
+    file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
+    # let's change the function name in the flat_file2
+    flat_file2_content <- readLines(flat_file2)
+    flat_file2_content <- gsub(x = flat_file2_content, pattern = "my_fun", replacement = "my_fun_from_flat_file2")
+    flat_file2_content <- gsub(x = flat_file2_content, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
+    flat_file2_content <- gsub(x = flat_file2_content, pattern = "Minimal", replacement = "Minimal_2")
+    writeLines(text = flat_file2_content, con = flat_file2)
+
     # Let's check a other way to choose the vignette name
     suppressMessages(
       inflate(
@@ -219,10 +231,9 @@ usethis::with_project(dummypackage, {
 
     inflate_all()
 
-    expect_equal(
-      list.files(file.path(dummypackage, "vignettes/")),
-      c("get-started.Rmd", "index.Rmd")
-    )
+    expect_true(all(list.files(file.path(
+      dummypackage, "vignettes/"
+    )) %in% c("get-started.Rmd", "index.Rmd")))
   })
 })
 

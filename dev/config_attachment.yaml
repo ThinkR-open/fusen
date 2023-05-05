@@ -1,22 +1,23 @@
+path: '.'
 path.n: NAMESPACE
 path.d: DESCRIPTION
 dir.r: R
 dir.v: vignettes
 dir.t: tests
 extra.suggests:
-  - testthat
-  - pkgload
-  - rstudioapi
-  - rmarkdown
-  - knitr
+- testthat
+- pkgload
+- rstudioapi
+- rmarkdown
+- knitr
 pkg_ignore:
-  - testthat
-  - dummypackage
-  - rstudioapi
-  - nknitr
-  - knitr
-  - rmarkdown
-  - R6
+- testthat
+- dummypackage
+- rstudioapi
+- nknitr
+- knitr
+- rmarkdown
+- R6
 document: yes
 normalize: yes
 inside_rmd: no
