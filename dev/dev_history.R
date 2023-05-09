@@ -110,7 +110,7 @@ attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi",
                  "nknitr", "knitr", "rmarkdown", "R6"),
   extra.suggests = c("testthat", "pkgload", "rstudioapi",
-                     "rmarkdown", "knitr"),
+                     "rmarkdown", "knitr", "MASS"),
   # "MASS", "lattice", "Matrix")
   update.config = TRUE # attachment in dev.
 )

@@ -10,6 +10,7 @@ extra.suggests:
 - rstudioapi
 - rmarkdown
 - knitr
+- MASS
 pkg_ignore:
 - testthat
 - dummypackage

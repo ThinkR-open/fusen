@@ -39,6 +39,7 @@ Imports:
     yaml
 Suggests: 
     knitr,
+    MASS,
     pkgload,
     rcmdcheck,
     rmarkdown,
