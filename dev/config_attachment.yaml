@@ -11,6 +11,7 @@ extra.suggests:
 - rmarkdown
 - knitr
 - MASS
+- lattice
 pkg_ignore:
 - testthat
 - dummypackage

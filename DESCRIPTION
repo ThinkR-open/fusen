@@ -39,6 +39,7 @@ Imports:
     yaml
 Suggests: 
     knitr,
+    lattice,
     MASS,
     pkgload,
     rcmdcheck,
