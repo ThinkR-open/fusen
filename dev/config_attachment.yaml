@@ -12,6 +12,7 @@ extra.suggests:
 - knitr
 - MASS
 - lattice
+- Matrix
 pkg_ignore:
 - testthat
 - dummypackage
