@@ -182,7 +182,9 @@ usethis::with_project(dummypackage, {
   # Add licence
   usethis::use_mit_license("John Doe")
 
-  # browser()
+  # Keep
+  browser()
+
   test_that("error if no config file exists", {
     # if no config file exists, we raise an error
     expect_error(inflate_all(), regexp = "There is no fusen[.]config_file in your package[.]")
@@ -313,7 +315,6 @@ usethis::with_project(dummypackage, {
   })
 
   test_that("A second flat file works", {
-    
     # let's add a second flat
     flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)

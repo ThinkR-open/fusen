@@ -212,6 +212,28 @@ usethis::with_project(dummypackage, {
     )
   })
 
+  test_that("files listed in 'keep' are ignored", {
+    config_yml <- config_yml_ref
+
+    file.create(file.path(dummypackage, "R/zaza.R"))
+
+    my_files_to_protect <- tibble::tribble(
+      ~type, ~path,
+      "R", "R/zaza.R"
+    )
+
+    df_to_config(my_files_to_protect, force = TRUE)
+
+    config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    expect_false(
+      "keep" %in% diag[["flat"]]
+    )
+  })
+
+
   test_that("error if we dont have any flat file", {
     # error if we dont have any flat file in dev/
     config_yml <- config_yml_ref
@@ -225,38 +247,64 @@ usethis::with_project(dummypackage, {
 
 unlink(dummypackage, recursive = TRUE)
 
-test_that("read_inflate_params works", {
+dummypackage <- tempfile("readinflateparams")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+
+# let's create 2 flat files
+flat_file <- dev_file[grepl("flat_", dev_file)]
+flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
+file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
+
+test_that("read_inflate_params is a function", {
+  expect_true(inherits(read_inflate_params, "function"))
+})
+
+test_that("read_inflate_params doesnt work if config fusen does not exist", {
   config_fusen_not_existing <-
     system.file("inflate_all/fake.yaml", package = "fusen")
   expect_error(read_inflate_params(config_yml = config_fusen_not_existing))
+})
 
-  config_fusen_existing <-
-    yaml::read_yaml(system.file("inflate_all/config_fusen_with_inflate_parameters.yaml",
-      package = "fusen"
-    ))
 
-  inflate_params <-
-    read_inflate_params(config_yml = config_fusen_existing)
 
-  expect_equal(
-    length(inflate_params),
-    3
-  )
-
-  expect_equal(
-    names(inflate_params),
-    c(
-      "flat_full.Rmd",
-      "flat_new_one.Rmd",
-      "flat_no_inflate_params.Rmd"
+usethis::with_project(dummypackage, {
+  # We inflate both flat files
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
     )
   )
 
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file2,
+      vignette_name = "Get started2", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  config_yml_ref <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+
+  inflate_params <-
+    read_inflate_params(config_yml = config_yml_ref)
+
   expect_equal(
-    inflate_params[["flat_full.Rmd"]],
+    length(inflate_params),
+    2
+  )
+
+  expect_true(
+    all(names(inflate_params) %in% c("flat_minimal_2.Rmd", "flat_minimal.Rmd"))
+  )
+
+  expect_equal(
+    inflate_params[["flat_minimal.Rmd"]],
     list(
-      pkg = "fusentest",
-      flat_file = "dev/flat_full.Rmd",
+      flat_file = "dev/flat_minimal.Rmd",
       vignette_name = "Get started",
       open_vignette = FALSE,
       check = FALSE,
@@ -266,36 +314,47 @@ test_that("read_inflate_params works", {
   )
 
   expect_equal(
-    inflate_params[["flat_new_one.Rmd"]],
+    inflate_params[["flat_minimal_2.Rmd"]],
     list(
-      pkg = "fusentest",
-      flat_file = "dev/flat_new_one.Rmd",
-      vignette_name = "new_one",
+      flat_file = "dev/flat_minimal_2.Rmd",
+      vignette_name = "Get started2",
       open_vignette = FALSE,
       check = FALSE,
       document = TRUE,
       overwrite = "ask"
     )
   )
-  expect_null(inflate_params[["flat_no_inflate_params.Rmd"]])
 
-  # test whether flat files with state = "deprecated" are removed
-  config_fusen_with_deprecated <-
-    yaml::read_yaml(system.file(
-      "inflate_all/config_fusen_with_inflate_parameters_and_some_deprecated_files.yaml",
-      package = "fusen"
-    ))
+  # what happens if we deprecate a file
+  config_yml_ref[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
 
   inflate_params <-
-    read_inflate_params(config_yml = config_fusen_with_deprecated)
+    read_inflate_params(config_yml = config_yml_ref)
+
+  expect_null(inflate_params[["flat_minimal.Rmd"]])
 
   expect_equal(
     length(inflate_params),
-    2
+    1
   )
 
-  expect_equal(
-    names(inflate_params),
-    c("flat_new_one.Rmd", "flat_no_inflate_params.Rmd")
+  # what happens if we add a file in the "keep" section
+  file.create(file.path(dummypackage, "R/zaza.R"))
+
+  my_files_to_protect <- tibble::tribble(
+    ~type, ~path,
+    "R", "R/zaza.R"
   )
+
+  df_to_config(my_files_to_protect, force = TRUE)
+
+  config_yml <-
+    yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+
+  inflate_params <-
+    read_inflate_params(config_yml = config_yml)
+
+  expect_false("keep" %in% names(inflate_params))
 })
+
+unlink(dummypackage, recursive = TRUE)

@@ -20,7 +20,7 @@
 #' # This function has an impact on the current user workspace
 #' inflate_all()
 #' }
-#' 
+#'
 #' # You can also inflate_all flats of another package as follows
 #' # A dummy package with a flat file
 #' dummypackage <- tempfile("inflateall")
@@ -37,10 +37,10 @@
 #'   # if you are starting from a brand new package, inflate_all() will crash
 #'   # it's because of the absence of a fusen config file
 #'   # inflate_all()
-#' 
+#'
 #'   # Add licence
 #'   usethis::use_mit_license("John Doe")
-#' 
+#'
 #'   # you need to inflate manually your flat file first
 #'   inflate(
 #'     pkg = dummypackage,
@@ -51,18 +51,18 @@
 #'     document = TRUE,
 #'     overwrite = "yes"
 #'   )
-#' 
+#'
 #'   # your config file has been created
 #'   config_yml_ref <-
 #'     yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
 #' })
-#' 
+#'
 #' # Next time, you can run inflate_all() directly
 #' usethis::with_project(dummypackage, {
 #'   # now you can run inflate_all()
 #'   inflate_all(check = TRUE, document = TRUE)
 #' })
-#' 
+#'
 #' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
 inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TRUE, ...) {

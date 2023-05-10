@@ -25,18 +25,13 @@ Imports:
     gert,
     glue,
     here (>= 1.0.0),
-    knitr,
     magrittr,
     methods,
     parsermd (>= 0.1.0),
-    R6,
     rcmdcheck,
-    rmarkdown,
     roxygen2,
-    rstudioapi,
     stats,
     stringi,
-    testthat (>= 3.0.0),
     tibble,
     tidyr,
     tools,
@@ -44,6 +39,11 @@ Imports:
     utils,
     yaml
 Suggests: 
+    knitr,
+    pkgload,
+    rmarkdown,
+    rstudioapi,
+    testthat (>= 3.0.0),
     withr
 VignetteBuilder: 
     knitr

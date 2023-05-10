@@ -143,7 +143,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
 
   flat_files_status <- do.call(rbind, flat_files_status)
 
-  files_in_config_yml_but_missing_in_dev_folder <- names(config_yml)[!names(config_yml) %in% flat_files_in_dev_folder]
+  files_in_config_yml_but_missing_in_dev_folder <- names(config_yml)[!names(config_yml) %in% c(flat_files_in_dev_folder, "keep")]
 
   if (length(files_in_config_yml_but_missing_in_dev_folder) > 0) {
     flat_files_status <- rbind(
