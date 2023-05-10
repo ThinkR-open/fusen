@@ -13,6 +13,7 @@ extra.suggests:
 - MASS
 - lattice
 - Matrix
+- nlme
 pkg_ignore:
 - testthat
 - dummypackage

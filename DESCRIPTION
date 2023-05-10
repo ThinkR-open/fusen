@@ -42,6 +42,7 @@ Suggests:
     lattice,
     MASS,
     Matrix,
+    nlme,
     pkgload,
     rcmdcheck,
     rmarkdown,
