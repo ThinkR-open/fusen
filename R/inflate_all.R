@@ -8,6 +8,8 @@
 #' @inheritParams inflate
 #'
 #' @importFrom yaml read_yaml
+#' @importFrom cli cat_rule
+#' @importFrom rcmdcheck rcmdcheck
 #'
 #' @return side effect. Inflates all your flat files that can be inflated.
 #'
@@ -18,7 +20,7 @@
 #' # This function has an impact on the current user workspace
 #' inflate_all()
 #' }
-#'
+#' 
 #' # You can also inflate_all flats of another package as follows
 #' # A dummy package with a flat file
 #' dummypackage <- tempfile("inflateall")
@@ -35,10 +37,10 @@
 #'   # if you are starting from a brand new package, inflate_all() will crash
 #'   # it's because of the absence of a fusen config file
 #'   # inflate_all()
-#'
+#' 
 #'   # Add licence
 #'   usethis::use_mit_license("John Doe")
-#'
+#' 
 #'   # you need to inflate manually your flat file first
 #'   inflate(
 #'     pkg = dummypackage,
@@ -49,18 +51,18 @@
 #'     document = TRUE,
 #'     overwrite = "yes"
 #'   )
-#'
+#' 
 #'   # your config file has been created
 #'   config_yml_ref <-
 #'     yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
 #' })
-#'
+#' 
 #' # Next time, you can run inflate_all() directly
 #' usethis::with_project(dummypackage, {
 #'   # now you can run inflate_all()
 #'   inflate_all(check = TRUE, document = TRUE)
 #' })
-#'
+#' 
 #' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
 inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TRUE, ...) {
@@ -69,10 +71,6 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
   if (!file.exists(config_file)) {
     stop("There is no fusen.config_file in your package. Your flat files must be inflated at least once manually before you can use `inflate_all()`. If you were using a fusen prior to v0.5.0.9000 you must inflate all your flat files manually once again.")
   }
-
-  # current_warn_option <- getOption("warn")
-  # options(warn = 1)
-  # on.exit(options(warn = current_warn_option))
 
   config_yml <- read_yaml(config_file)
 
@@ -99,9 +97,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
 
       invisible(
         lapply(inflate_params, function(flat_file) {
-          # TO BE REMOVED WHEN "pkg" wont be stored anymore in config_fusen
           flat_file$pkg <- pkg
-          # should we keep that?
           flat_file$overwrite <- overwrite
           flat_file$document <- FALSE
           flat_file$check <- FALSE
@@ -120,14 +116,14 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
 
     # Check
     if (isTRUE(check)) {
-      cli::cat_rule("Launching check()")
-      res <- devtools::check(
-        pkg,
+      cat_rule("Launching check()")
+      res <- rcmdcheck(
+        path = pkg,
         ...
       )
-      print(res)
     }
   }
+  pkg
 }
 
 #' @rdname inflate_all

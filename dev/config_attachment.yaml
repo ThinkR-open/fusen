@@ -10,10 +10,6 @@ extra.suggests:
 - rstudioapi
 - rmarkdown
 - knitr
-- MASS
-- lattice
-- Matrix
-- nlme
 pkg_ignore:
 - testthat
 - dummypackage

@@ -148,6 +148,7 @@ usethis::with_project(dummypackage, {
   })
 
   test_that("A second flat file works", {
+    
     # let's add a second flat
     flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)

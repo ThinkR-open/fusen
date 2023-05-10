@@ -37,6 +37,8 @@ If you are already familiar to `config_fusen.yml` but were working with a dev ve
 #' @inheritParams inflate
 #'
 #' @importFrom yaml read_yaml
+#' @importFrom cli cat_rule
+#' @importFrom rcmdcheck rcmdcheck
 #'
 #' @return side effect. Inflates all your flat files that can be inflated.
 #'
@@ -47,10 +49,6 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
   if (!file.exists(config_file)) {
     stop("There is no fusen.config_file in your package. Your flat files must be inflated at least once manually before you can use `inflate_all()`. If you were using a fusen prior to v0.5.0.9000 you must inflate all your flat files manually once again.")
   }
-
-  # current_warn_option <- getOption("warn")
-  # options(warn = 1)
-  # on.exit(options(warn = current_warn_option))
 
   config_yml <- read_yaml(config_file)
 
@@ -77,9 +75,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
 
       invisible(
         lapply(inflate_params, function(flat_file) {
-          # TO BE REMOVED WHEN "pkg" wont be stored anymore in config_fusen
           flat_file$pkg <- pkg
-          # should we keep that?
           flat_file$overwrite <- overwrite
           flat_file$document <- FALSE
           flat_file$check <- FALSE
@@ -98,14 +94,14 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
 
     # Check
     if (isTRUE(check)) {
-      cli::cat_rule("Launching check()")
-      res <- devtools::check(
-        pkg,
+      cat_rule("Launching check()")
+      res <- rcmdcheck(
+        path = pkg,
         ...
       )
-      print(res)
     }
   }
+  pkg
 }
 
 #' @rdname inflate_all
@@ -317,6 +313,7 @@ usethis::with_project(dummypackage, {
   })
 
   test_that("A second flat file works", {
+    
     # let's add a second flat
     flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
