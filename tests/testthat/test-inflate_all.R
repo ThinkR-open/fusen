@@ -17,9 +17,6 @@ usethis::with_project(dummypackage, {
   # Add licence
   usethis::use_mit_license("John Doe")
 
-  # Keep
-  browser()
-
   test_that("error if no config file exists", {
     # if no config file exists, we raise an error
     expect_error(inflate_all(), regexp = "There is no fusen[.]config_file in your package[.]")
