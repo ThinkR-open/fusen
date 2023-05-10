@@ -405,6 +405,58 @@ unlink(dummypackage, recursive = TRUE)
 
 # TODO
 # Test inflate_all_no_check
+dummypackage <- tempfile("inflateall")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+
+# let's create a flat file
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+test_that("inflate_all_no_check is a function", {
+  expect_true(inherits(inflate_all_no_check, "function"))
+})
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "toto",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+  )
+  # check
+  utils::capture.output(inflate_all(),
+    file = file.path(dummypackage, "dev/inflate_all_check.txt")
+  )
+  # no check
+  utils::capture.output(inflate_all_no_check(),
+    file = file.path(dummypackage, "dev/inflate_all_nocheck.txt")
+  )
+
+  expect_true(any(grepl(
+    pattern = "R CMD check",
+    x = readLines(file.path(
+      dummypackage, "dev/inflate_all_check.txt"
+    ))
+  )))
+
+  expect_false(any(grepl(
+    pattern = "R CMD check",
+    x = readLines(file.path(
+      dummypackage, "dev/inflate_all_nocheck.txt"
+    ))
+  )))
+})
+
+unlink(dummypackage, recursive = TRUE)
 ```
 
 ```{r development-inflate, eval=FALSE}
