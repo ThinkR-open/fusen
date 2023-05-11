@@ -304,21 +304,13 @@ inflate <- function(pkg = ".", flat_file,
   #   clean_fusen_files()
   # }
 
+  # Document and check package
+  document_and_check_pkg(
+    pkg = pkg,
+    check = check,
+    document = document
+  )
 
-  # Run attachment
-  if (isTRUE(document)) {
-    attachment::att_amend_desc(path = pkg)
-  }
-
-  # Check
-  if (isTRUE(check)) {
-    cli::cat_rule("Launching check()")
-    res <- devtools::check(
-      pkg,
-      ...
-    )
-    print(res)
-  }
 
   # Restart RStudio
   if (needs_restart) {

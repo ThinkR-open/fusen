@@ -582,3 +582,29 @@ asciify_name <- function(name, to_pkg = FALSE) {
 #' A flavor of normalizePath() that unixifies all its output
 #' @noRd
 normalize_path_winslash <- function(...) normalizePath(..., winslash = "/")
+
+
+#' Document and check current package
+#' @param pkg Path to package
+#' @param ... extra params to be used in rcmdcheck
+#' @inheritParams inflate
+#' @importFrom attachment att_amend_desc
+#' @importFrom rcmdcheck rcmdcheck
+#' @importFrom cli cat_rule
+#' @noRd
+#'
+document_and_check_pkg <- function(pkg = ".", document = TRUE, check = TRUE, ...) {
+  # Document
+  if (isTRUE(document)) {
+    att_amend_desc(path = pkg)
+  }
+
+  # Check
+  if (isTRUE(check)) {
+    cat_rule("Launching check()")
+    res <- rcmdcheck(
+      path = pkg,
+      ...
+    )
+  }
+}

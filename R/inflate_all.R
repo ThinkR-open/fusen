@@ -108,20 +108,12 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
 
     apply_inflate(inflate_params, overwrite)
 
-    # Attachment + check like in inflate()
-    # Run attachment
-    if (isTRUE(document)) {
-      attachment::att_amend_desc(path = pkg)
-    }
-
-    # Check
-    if (isTRUE(check)) {
-      cat_rule("Launching check()")
-      res <- rcmdcheck(
-        path = pkg,
-        ...
-      )
-    }
+    # Document and check package
+    document_and_check_pkg(
+      pkg = pkg,
+      check = check,
+      document = document
+    )
   }
   pkg
 }

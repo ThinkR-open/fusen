@@ -21,7 +21,6 @@ Imports:
     attachment,
     cli,
     desc,
-    devtools,
     gert,
     glue,
     here (>= 1.0.0),
@@ -39,6 +38,7 @@ Imports:
     utils,
     yaml
 Suggests: 
+    devtools,
     knitr,
     pkgload,
     rmarkdown,
