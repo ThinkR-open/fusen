@@ -19,9 +19,9 @@ inflate_all_no_check(pkg = ".", document = TRUE, overwrite = TRUE, ...)
 \item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 Whether to overwrite vignette and functions if already exists.}
 
-\item{...}{Arguments passed to \code{rcmdcheck::rcmdcheck()}.
+\item{...}{Arguments passed to \code{devtools::check()}.
 For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is
-passed to \code{rcmdcheck::rcmdcheck()}.}
+passed to \code{devtools::check()}.}
 }
 \value{
 side effect. Inflates all your flat files that can be inflated.

@@ -108,7 +108,7 @@ fusen::inflate(flat_file = "dev/flat_clean_fusen_files.Rmd",
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi",
-                 "nknitr", "knitr", "rmarkdown", "R6"),
+                 "knitr", "rmarkdown", "R6"),
   extra.suggests = c("testthat", "pkgload", "rstudioapi",
                      "rmarkdown", "knitr"),
   # "MASS", "lattice", "Matrix")
@@ -177,6 +177,7 @@ pkgload::load_all()
 testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate-part1.R")
 testthat::test_file("tests/testthat/test-inflate-part2.R")
+testthat::test_file("tests/testthat/test-inflate_all.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
 
 Sys.setenv("FUSEN_TEST_PUBLISH" = "TRUE")

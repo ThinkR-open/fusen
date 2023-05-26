@@ -34,7 +34,7 @@ usethis::with_project(dummypackage, {
   config_yml_ref <- yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
 
   test_that("inflate_all says which is going to be inflated", {
-    expect_message(inflate_all(),
+    expect_message(inflate_all(check = FALSE),
       regexp = glue::glue("The flat file {basename(flat_file)} is going to be inflated")
     )
   })
@@ -51,7 +51,7 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(fun_file))
     file.remove(fun_file)
 
-    expect_message(inflate_all(),
+    expect_message(inflate_all(check = FALSE),
       regexp = glue::glue("The flat file {basename(flat_file)} is not going to be inflated because it is 'inactive or deprecated'")
     )
 
@@ -63,12 +63,12 @@ usethis::with_project(dummypackage, {
     flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
 
-    expect_message(inflate_all(),
+    expect_message(inflate_all(check = FALSE),
       regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated because it is absent from the config file")
     )
 
     if (packageVersion("attachment") >= "0.4.0") {
-      expect_warning(inflate_all())
+      expect_warning(inflate_all(check = FALSE))
     }
 
     unlink(flat_file2)
@@ -80,7 +80,7 @@ usethis::with_project(dummypackage, {
     config_yml_no_inflate_params[[1]][["inflate"]] <- NULL
     yaml::write_yaml(config_yml_no_inflate_params, file = "dev/config_fusen.yaml")
 
-    expect_error(inflate_all(), regexp = "The flat file flat_minimal[.]Rmd is not going to be inflated because although present in the config file, it has no inflate\\(\\) parameters")
+    expect_error(inflate_all(check = FALSE), regexp = "The flat file flat_minimal[.]Rmd is not going to be inflated because although present in the config file, it has no inflate\\(\\) parameters")
   })
 
   test_that("flat file in in config_fusen.yml not present in dev", {
@@ -89,7 +89,7 @@ usethis::with_project(dummypackage, {
     config_yml_file_absent_in_dev[["missing_file.Rmd"]] <- config_yml_file_absent_in_dev[[1]]
     yaml::write_yaml(config_yml_file_absent_in_dev, file = "dev/config_fusen.yaml")
 
-    expect_error(inflate_all(), regexp = "The file missing_file[.]Rmd is not going to be inflated because it was not found")
+    expect_error(inflate_all(check = FALSE), regexp = "The file missing_file[.]Rmd is not going to be inflated because it was not found")
   })
 
   test_that("inflate all really inflates all", {
@@ -114,7 +114,7 @@ usethis::with_project(dummypackage, {
     expect_false(file.exists(file.path(dummypackage, "man", "my_fun.Rd")))
     expect_false(file.exists(file.path(dummypackage, "tests/testthat", "test-my_fun.R")))
 
-    inflate_all()
+    inflate_all(check = FALSE)
 
     expect_true(file.exists(file.path(dummypackage, "R", "my_fun.R")))
     expect_true(file.exists(file.path(dummypackage, "man", "my_fun.Rd")))
@@ -128,7 +128,7 @@ usethis::with_project(dummypackage, {
 
     writeLines(c(flat_content, function_template), con = flat_file)
 
-    inflate_all()
+    inflate_all(check = FALSE)
 
     expect_equal(
       list.files(file.path(dummypackage, "R/")),
@@ -175,7 +175,7 @@ usethis::with_project(dummypackage, {
     expect_true(length(list.files(file.path(dummypackage, "man"), full.names = TRUE)) == 0)
     expect_true(length(list.files(file.path(dummypackage, "tests/testthat"), full.names = TRUE)) == 0)
 
-    inflate_all()
+    inflate_all(check = FALSE)
 
     expect_true(all(
       list.files(file.path(dummypackage, "R/")) %in% c("my_fun.R", "my_fun_from_flat_file2.R", "new_fun2.R")
@@ -228,7 +228,7 @@ usethis::with_project(dummypackage, {
     unlink(list.files(file.path(dummypackage, "vignettes"), full.names = TRUE))
     expect_true(length(list.files(file.path(dummypackage, "vignettes"), full.names = TRUE)) == 0)
 
-    inflate_all()
+    inflate_all(check = FALSE)
 
     expect_true(all(list.files(file.path(
       dummypackage, "vignettes/"
@@ -238,8 +238,7 @@ usethis::with_project(dummypackage, {
 
 unlink(dummypackage, recursive = TRUE)
 
-# TODO
-# Test inflate_all_no_check
+# Test inflate_all_no_check vs inflate_all with check
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
@@ -267,28 +266,41 @@ usethis::with_project(dummypackage, {
       overwrite = "yes"
     )
   )
-  # check
-  utils::capture.output(inflate_all(),
-    file = file.path(dummypackage, "dev/inflate_all_check.txt")
-  )
-  # no check
-  utils::capture.output(inflate_all_no_check(),
-    file = file.path(dummypackage, "dev/inflate_all_nocheck.txt")
-  )
 
-  expect_true(any(grepl(
-    pattern = "R CMD check",
-    x = readLines(file.path(
-      dummypackage, "dev/inflate_all_check.txt"
-    ))
-  )))
+  test_that("when check = FALSE we ensure no check has been performed", {
+    # no check
+    utils::capture.output(inflate_all_no_check(),
+      file = file.path(dummypackage, "dev/inflate_all_nocheck.txt")
+    )
 
-  expect_false(any(grepl(
-    pattern = "R CMD check",
-    x = readLines(file.path(
-      dummypackage, "dev/inflate_all_nocheck.txt"
-    ))
-  )))
+    expect_false(any(grepl(
+      pattern = "R CMD check",
+      x = readLines(file.path(
+        dummypackage, "dev/inflate_all_nocheck.txt"
+      ))
+    )))
+  })
+
+  test_that("rmdcheck does not raise errors on the created package", {
+    check_out <- rcmdcheck::rcmdcheck(dummypackage,
+      quiet = TRUE,
+      args = c("--no-manual")
+    )
+    expect_true(length(check_out[["errors"]]) == 0)
+  })
+
+  # run check on interactive mode only
+  test_that("inflate_all with check = TRUE works", {
+    skip_if_not(interactive())
+    inflate_all(
+      check = TRUE,
+      quiet = TRUE,
+      args = c("--no-manual", "--no-build-vignettes"),
+      check_dir = file.path(dummypackage, "dev/")
+    )
+    check_lines <- readLines(file.path(dummypackage, "dev/", paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
+    expect_equal(check_lines[length(check_lines)], "Status: OK")
+  })
 })
 
 unlink(dummypackage, recursive = TRUE)

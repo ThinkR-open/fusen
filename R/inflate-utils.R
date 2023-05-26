@@ -586,10 +586,10 @@ normalize_path_winslash <- function(...) normalizePath(..., winslash = "/")
 
 #' Document and check current package
 #' @param pkg Path to package
-#' @param ... extra params to be used in rcmdcheck
+#' @param ... extra params to be used in devtools::check
 #' @inheritParams inflate
 #' @importFrom attachment att_amend_desc
-#' @importFrom rcmdcheck rcmdcheck
+#' @importFrom devtools check
 #' @importFrom cli cat_rule
 #' @noRd
 #'
@@ -602,8 +602,8 @@ document_and_check_pkg <- function(pkg = ".", document = TRUE, check = TRUE, ...
   # Check
   if (isTRUE(check)) {
     cat_rule("Launching check()")
-    res <- rcmdcheck(
-      path = pkg,
+    res <- check(
+      pkg = pkg,
       ...
     )
   }

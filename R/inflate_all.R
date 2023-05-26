@@ -9,7 +9,7 @@
 #'
 #' @importFrom yaml read_yaml
 #' @importFrom cli cat_rule
-#' @importFrom rcmdcheck rcmdcheck
+#' @importFrom devtools check
 #'
 #' @return side effect. Inflates all your flat files that can be inflated.
 #'
@@ -112,7 +112,8 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
     document_and_check_pkg(
       pkg = pkg,
       check = check,
-      document = document
+      document = document,
+      ...
     )
   }
   pkg
