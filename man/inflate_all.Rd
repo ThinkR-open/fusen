@@ -75,7 +75,7 @@ usethis::with_project(dummypackage, {
 # Next time, you can run inflate_all() directly
 usethis::with_project(dummypackage, {
   # now you can run inflate_all()
-  inflate_all(check = TRUE, document = TRUE)
+  inflate_all(check = FALSE, document = TRUE)
 })
 
 # Clean the temporary directory
