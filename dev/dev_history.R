@@ -86,7 +86,7 @@ chameleon::build_pkgdown(
 )
 
 # Doc
-usethis::use_github_action_check_standard()
+usethis::use_github_action("check-standard")
 usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
 usethis::use_coverage()
