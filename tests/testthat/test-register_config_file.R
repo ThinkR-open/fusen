@@ -120,12 +120,12 @@ test_that("df_to_config fails when appropriate", {
       df_to_config(all_files),
       "Some 'path' in df_files do not exist: row 1- R: zaza.R, row 2- R: zozo.R, row 3- test: test-zaza.R"
     )
-    
+
     expect_error(
       config_file_out <- df_to_config(all_files, force = TRUE),
       regexp = NA
     )
-    
+
     expect_equal(config_file_out, config_file_path)
     all_keep <- yaml::read_yaml(config_file_out)
     expect_equal(names(all_keep), "keep")

@@ -241,7 +241,7 @@ This is important if you started to develop without {fusen}, and start using a f
 
 ```{r function-df_to_config, filename="register_config_file"}
 #' Add a tibble of files and types to add to the 'fusen' config file along with inflate parameters
-#' 
+#'
 #' @param df_files A data.frame with 'type' and 'path' columns
 #' or a csv file path as issued from `[check_not_registered_files()]`
 #' or nothing (and it will take the csv file in "dev/")
@@ -361,7 +361,7 @@ df_to_config <- function(df_files,
   }
 
   # All origin path should exist, if not "keep"
-  if (!isTRUE(force)|| isTRUE(all(file.exists(df_files$origin[df_files$origin != "keep"])))) {
+  if (!isTRUE(force) || isTRUE(all(file.exists(df_files$origin[df_files$origin != "keep"])))) {
     df_files$origin[df_files$origin != "keep"] <- gsub(
       paste0(normalize_path_winslash("."), "/"),
       "",
@@ -595,7 +595,7 @@ df_to_config(my_files_to_protect)
 
 # Provide a list of `inflate()` parameters if you wish them
 # to be added in the dev/config_fusen.yaml file
-# This is usually for {fusen} internal use during `inflate()`. 
+# This is usually for {fusen} internal use during `inflate()`.
 
 # This example proposes to write all output parameters
 # of a specific flat file in the config file:
@@ -663,12 +663,12 @@ test_that("df_to_config fails when appropriate", {
       df_to_config(all_files),
       "Some 'path' in df_files do not exist: row 1- R: zaza.R, row 2- R: zozo.R, row 3- test: test-zaza.R"
     )
-    
+
     expect_error(
       config_file_out <- df_to_config(all_files, force = TRUE),
       regexp = NA
     )
-    
+
     expect_equal(config_file_out, config_file_path)
     all_keep <- yaml::read_yaml(config_file_out)
     expect_equal(names(all_keep), "keep")
