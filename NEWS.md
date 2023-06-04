@@ -1,11 +1,4 @@
-# fusen 0.5.0.9001
-
-## New features
-
-- `inflate()` stores its parameters into "dev/config_fusen.yaml" (#198, @ymansiaux)
-
-
-# fusen 0.5.0.9000
+# fusen (development)
 
 ## New features
 
@@ -15,9 +8,13 @@
 
 ### List all files created with an `inflate()` in a config file
 
-- `inflate()` creates a "dev/config_fusen.yaml" file to register all files created while inflating the corresponding flat file (First steps in #24)
+- `inflate()` creates a configuration file "dev/config_fusen.yaml" to register all files created while inflating the corresponding flat file (#198, @ymansiaux)
 - Migrate from a non-fusen package or a previous version of {fusen} use with `register_all_to_config()`
-- Create or update the config file from a data.frame to list legitimate scripts (even if not associated with a flat file)
+- Create or update the config file from a data.frame with `df_to_config()` to list legitimate scripts (even if not associated with a flat file)
+
+### Inflate all active flat file
+
+- `inflate_all()` uses the configuration file to inflate all your flat files at once. `document` and `check` options are thus only run once for all flat files. (#204, @ymansiaux)
 
 ### Others
 
