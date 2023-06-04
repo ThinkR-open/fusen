@@ -112,7 +112,7 @@ attachment::att_amend_desc(
   extra.suggests = c("testthat", "pkgload", "rstudioapi",
                      "rmarkdown", "knitr"),
   # "MASS", "lattice", "Matrix")
-  update.config = TRUE # attachment in dev.
+  update.config = TRUE # attachment >= 0.4.0.
 )
 # attachment::create_dependencies_file()
 

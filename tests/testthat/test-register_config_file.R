@@ -122,7 +122,7 @@ test_that("df_to_config fails when appropriate", {
     )
     
     expect_error(
-      df_to_config(all_files, force = TRUE),
+      config_file_out <- df_to_config(all_files, force = TRUE),
       regexp = NA
     )
     
@@ -137,7 +137,7 @@ test_that("df_to_config fails when appropriate", {
     expect_equal(all_keep$keep$vignettes, list())
   })
 })
-rm(config_file_path)
+file.remove(config_file_path)
 
 # Create files, even empty
 dir_tmp <- tempfile()

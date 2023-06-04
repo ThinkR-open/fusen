@@ -337,19 +337,22 @@ df_to_config <- function(df_files,
   # TODO - When path does not exists, normalizePath does not correctly
   # use path.expand.
   # All path should exists. It is tested above.
-  df_files$path <- gsub(
-    paste0(normalize_path_winslash("."), "/"),
-    "",
-    normalize_path_winslash(df_files$path, mustWork = TRUE)
-  )
+  if (!isTRUE(force) || isTRUE(all(file.exists(df_files$path)))) {
+    df_files$path <- gsub(
+      paste0(normalize_path_winslash("."), "/"),
+      "",
+      normalize_path_winslash(df_files$path, mustWork = TRUE)
+    )
+  }
 
   # All origin path should exist, if not "keep"
-  df_files$origin[df_files$origin != "keep"] <- gsub(
-    paste0(normalize_path_winslash("."), "/"),
-    "",
-    normalize_path_winslash(df_files$origin[df_files$origin != "keep"], mustWork = TRUE)
-  )
-
+  if (!isTRUE(force)|| isTRUE(all(file.exists(df_files$origin[df_files$origin != "keep"])))) {
+    df_files$origin[df_files$origin != "keep"] <- gsub(
+      paste0(normalize_path_winslash("."), "/"),
+      "",
+      normalize_path_winslash(df_files$origin[df_files$origin != "keep"], mustWork = TRUE)
+    )
+  }
 
   if (any(duplicated(df_files$path))) {
     msg <- paste("Some paths appear multiple times in df_files. Please remove duplicated rows: ", paste(unique(df_files$path[duplicated(df_files$path)]), collapse = ", "))
