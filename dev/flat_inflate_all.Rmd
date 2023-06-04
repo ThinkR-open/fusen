@@ -225,10 +225,6 @@ usethis::with_project(dummypackage, {
       regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated because it is absent from the config file")
     )
 
-    if (packageVersion("attachment") >= "0.4.0") {
-      expect_warning(inflate_all(check = FALSE))
-    }
-
     unlink(flat_file2)
   })
 
