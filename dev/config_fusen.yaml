@@ -11,19 +11,6 @@ flat_addins.Rmd:
     check: false
     document: false
     overwrite: ask
-flat_clean_fusen_files.Rmd:
-  path: dev/flat_clean_fusen_files.Rmd
-  state: active
-  R: R/clean_fusen_files.R
-  tests: tests/testthat/test-clean_fusen_files.R
-  vignettes: vignettes/clean-fusen-files.Rmd
-  inflate:
-    flat_file: dev/flat_clean_fusen_files.Rmd
-    vignette_name: Clean fusen files
-    open_vignette: false
-    check: false
-    document: true
-    overwrite: 'yes'
 flat_create_flat.Rmd:
   path: dev/flat_create_flat.Rmd
   state: active
@@ -83,6 +70,19 @@ flat_init_share_on_github.Rmd:
   R: R/init_share_on_github.R
   tests: tests/testthat/test-init_share_on_github.R
   vignettes: vignettes/share-on-a-github-website.Rmd
+flat_register_config_file.Rmd:
+  path: dev/flat_register_config_file.Rmd
+  state: active
+  R: R/register_config_file.R
+  tests: tests/testthat/test-register_config_file.R
+  vignettes: vignettes/register-files-in-config.Rmd
+  inflate:
+    flat_file: dev/flat_register_config_file.Rmd
+    vignette_name: Register files in config
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
 keep:
   path: keep
   R:
