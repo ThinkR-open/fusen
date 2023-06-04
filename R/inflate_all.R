@@ -17,12 +17,12 @@
 #' @examples
 #' \dontrun{
 #' # Usually, in the current package run inflate_all() directly
-#' # This function has an impact on the current user workspace
+#' # This function changes the current user workspace
 #' inflate_all()
 #' }
 #'
 #' # You can also inflate_all flats of another package as follows
-#' # A dummy package with a flat file
+#' # Example with a dummy package with a flat file
 #' dummypackage <- tempfile("inflateall")
 #' dir.create(dummypackage)
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
@@ -36,7 +36,8 @@
 #' usethis::with_project(dummypackage, {
 #'   # if you are starting from a brand new package, inflate_all() will crash
 #'   # it's because of the absence of a fusen config file
-#'   # inflate_all()
+#'   #
+#'   # inflate_all() # will crash
 #'
 #'   # Add licence
 #'   usethis::use_mit_license("John Doe")

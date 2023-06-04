@@ -57,7 +57,7 @@ df_to_config(my_files_to_protect)
 
 # Provide a list of `inflate()` parameters if you wish them
 # to be added in the dev/config_fusen.yaml file
-# This is usually for {fusen} internal use during `inflate()`. 
+# This is usually for {fusen} internal use during `inflate()`.
 
 # This example proposes to write all output parameters
 # of a specific flat file in the config file:

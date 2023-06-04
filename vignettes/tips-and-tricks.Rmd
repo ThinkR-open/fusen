@@ -176,15 +176,14 @@ writeLines(flat_rmd, path_flat_rmd)
 
 # How to Inflate multiple flat files ?
 
-- Add an entry in your main "dev_history.Rmd" file
+- Use `inflate_all()`
 
-```r
-fusen::inflate("dev/flat_file1.Rmd")
-fusen::inflate("dev/flat_file2.Rmd")
-fusen::inflate("dev/flat_file3.Rmd")
+Read the dedicated vignette "inflate-all-your-flat-files"
+
+```
+vignette("inflate-all-your-flat-files", package = "fusen")
 ```
 
-If the main "dev_history.Rmd" file does not exists, you can create it with `add_flat_template("dev_history")`
 
 # How to store multiple functions in a unique R file ?
 
