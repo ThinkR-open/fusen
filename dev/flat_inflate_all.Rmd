@@ -29,6 +29,8 @@ Indeed, `inflate_all()` requires the existence of a complete {fusen} configurati
 
 - If you are already familiar with "dev/config_fusen.yaml" but were working with a dev version of {fusen} prior to v0.6.0, your "dev/config_fusen.yaml" file does not contain inflate-related parameters. You will have to inflate again you flat files in order to complete the configuration file with the proper `inflate()` parameters.
 
+There is a wrapper named `inflate_all_no_check()` that will prevent running `check()`. This is a short version of `inflate_all(check = FALSE)`.
+
 ```{r function-inflate_all}
 #' Inflate all your flat files
 #'
@@ -96,7 +98,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
       ...
     )
   }
-  invisble(pkg)
+  invisible(pkg)
 }
 
 #' @rdname inflate_all
@@ -109,8 +111,10 @@ inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FAL
 ```{r example-inflate_all, eval=FALSE}
 #' \dontrun{
 # Usually, in the current package run inflate_all() directly
-# This function changes the current user workspace
+# These functions changes the current user workspace
 inflate_all()
+# Or inflate_all_no_check() to prevent checks to run
+inflate_all_no_check()
 #' }
 
 # You can also inflate_all flats of another package as follows

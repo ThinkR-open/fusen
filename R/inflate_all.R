@@ -17,8 +17,10 @@
 #' @examples
 #' \dontrun{
 #' # Usually, in the current package run inflate_all() directly
-#' # This function changes the current user workspace
+#' # These functions changes the current user workspace
 #' inflate_all()
+#' # Or inflate_all_no_check() to prevent checks to run
+#' inflate_all_no_check()
 #' }
 #' 
 #' # You can also inflate_all flats of another package as follows
@@ -118,7 +120,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
       ...
     )
   }
-  invisble(pkg)
+  invisible(pkg)
 }
 
 #' @rdname inflate_all
