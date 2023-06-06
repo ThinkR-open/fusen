@@ -51,7 +51,7 @@ flat_file <- flat_files[grep("flat", basename(flat_files))]
 usethis::with_project(dummypackage, {
   # if you are starting from a brand new package, inflate_all() will crash
   # it's because of the absence of a fusen config file
-  # 
+  #
   # inflate_all() # will crash
 
   # Add licence

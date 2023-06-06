@@ -198,12 +198,12 @@ usethis::with_project(dummypackage, {
       regexp = glue::glue("The flat file {basename(flat_file)} is going to be inflated")
     )
   })
-
+  
   test_that("deprecated is detected and not inflated", {
     # Let's deprecate our flat file
     config_yml_deprecated <- config_yml_ref
-    config_yml_deprecated[[1]][["state"]] <- "deprecated"
-    config_yml_deprecated[[1]][["R"]] <- ""
+    config_yml_deprecated[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
+    config_yml_deprecated[["flat_minimal.Rmd"]][["R"]] <- ""
     yaml::write_yaml(config_yml_deprecated, file = "dev/config_fusen.yaml")
 
     # And remove R file to verify it is not rebuilt
@@ -212,7 +212,7 @@ usethis::with_project(dummypackage, {
     file.remove(fun_file)
 
     expect_message(inflate_all(check = FALSE),
-      regexp = glue::glue("The flat file {basename(flat_file)} is not going to be inflated because it is 'inactive or deprecated'")
+      regexp = glue::glue("The flat file {basename(flat_file)} is not going to be inflated because it is in state 'inactive or deprecated'")
     )
 
     expect_false(file.exists(fun_file))
@@ -233,7 +233,7 @@ usethis::with_project(dummypackage, {
   test_that("error when remove params", {
     # Let's remove the inflate parameters from config_fusen.yml
     config_yml_no_inflate_params <- config_yml_ref
-    config_yml_no_inflate_params[[1]][["inflate"]] <- NULL
+    config_yml_no_inflate_params[["flat_minimal.Rmd"]][["inflate"]] <- NULL
     yaml::write_yaml(config_yml_no_inflate_params, file = "dev/config_fusen.yaml")
 
     expect_error(inflate_all(check = FALSE), regexp = "The flat file flat_minimal[.]Rmd is not going to be inflated because although present in the config file, it has no inflate\\(\\) parameters")
@@ -242,7 +242,7 @@ usethis::with_project(dummypackage, {
   test_that("flat file in in config_fusen.yml not present in dev", {
     # Let's add a flat file in in config_fusen.yml not present in dev/
     config_yml_file_absent_in_dev <- config_yml_ref
-    config_yml_file_absent_in_dev[["missing_file.Rmd"]] <- config_yml_file_absent_in_dev[[1]]
+    config_yml_file_absent_in_dev[["missing_file.Rmd"]] <- config_yml_file_absent_in_dev[["flat_minimal.Rmd"]]
     yaml::write_yaml(config_yml_file_absent_in_dev, file = "dev/config_fusen.yaml")
 
     expect_error(inflate_all(check = FALSE), regexp = "The file missing_file[.]Rmd is not going to be inflated because it was not found")

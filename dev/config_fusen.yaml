@@ -34,6 +34,19 @@ flat_history_maintain.Rmd:
   R: []
   tests: []
   vignettes: vignettes/Maintain-packages-with-fusen.Rmd
+flat_inflate_all.Rmd:
+  path: dev/flat_inflate_all.Rmd
+  state: active
+  R: R/inflate_all.R
+  tests: tests/testthat/test-inflate_all.R
+  vignettes: vignettes/inflate-all-your-flat-files.Rmd
+  inflate:
+    flat_file: dev/flat_inflate_all.Rmd
+    vignette_name: Inflate all your flat files
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
 flat_inflate_all_utils.Rmd:
   path: dev/flat_inflate_all_utils.Rmd
   state: active
@@ -47,19 +60,6 @@ flat_inflate_all_utils.Rmd:
   inflate:
     flat_file: dev/flat_inflate_all_utils.Rmd
     vignette_name: .na
-    open_vignette: false
-    check: false
-    document: true
-    overwrite: 'yes'
-flat_inflate_all.Rmd:
-  path: dev/flat_inflate_all.Rmd
-  state: active
-  R: R/inflate_all.R
-  tests: tests/testthat/test-inflate_all.R
-  vignettes: vignettes/inflate-all-your-flat-files.Rmd
-  inflate:
-    flat_file: dev/flat_inflate_all.Rmd
-    vignette_name: Inflate all your flat files
     open_vignette: false
     check: false
     document: true

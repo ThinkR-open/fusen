@@ -60,15 +60,15 @@ usethis::with_project(dummypackage, {
       class = c("tbl_df", "tbl", "data.frame")
     )
     expect_equal(
-      diag[sort(diag$flat), ],
-      diag_expected[sort(diag_expected$flat), ]
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
     )
   })
 
   test_that("not inflated because 'inactive or deprecated' (message) works", {
     #  "not inflated because 'inactive or deprecated' (message) : a file is present in config_yml but its state is not 'active'
     config_yml <- config_yml_ref
-    config_yml[[1]][["state"]] <- "deprecated"
+    config_yml[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
     diag_expected <- structure(
@@ -76,7 +76,7 @@ usethis::with_project(dummypackage, {
         flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
         status = structure(
           c(
-            "The flat file flat_minimal.Rmd is not going to be inflated because it is 'inactive or deprecated'",
+            "The flat file flat_minimal.Rmd is not going to be inflated because it is in state 'inactive or deprecated'",
             "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
           class = c(
@@ -92,15 +92,15 @@ usethis::with_project(dummypackage, {
     )
 
     expect_equal(
-      diag[sort(diag$flat), ],
-      diag_expected[sort(diag_expected$flat), ]
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
     )
   })
 
   test_that("not inflated because not in config file please inflate()  warning", {
     #  "not inflated because not in config file please inflate() from the flat once" (warning) : a file is missing from config_yml
     config_yml <- config_yml_ref
-    config_yml[[1]] <- NULL
+    config_yml[["flat_minimal.Rmd"]] <- NULL
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
     diag_expected <- structure(
@@ -108,7 +108,7 @@ usethis::with_project(dummypackage, {
         flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
         status = structure(
           c(
-            "The flat file flat_minimal.Rmd is not going to be inflated because it is absent from the config file. Please inflate() from the flat once",
+            "The flat file flat_minimal.Rmd is not going to be inflated because it is absent from the config file. Please inflate() from the flat once if needed or set it manually with status 'inactive'.",
             "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
           class = c(
@@ -123,15 +123,15 @@ usethis::with_project(dummypackage, {
       class = c("tbl_df", "tbl", "data.frame")
     )
     expect_equal(
-      diag[sort(diag$flat), ],
-      diag_expected[sort(diag_expected$flat), ]
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
     )
   })
 
-  test_that("not inflated because in config, but without parameters - stop", {
-    #  "not inflated because in config, but without parameters, please inflate() again from the flat with this new 'fusen' version" (stop) : a file is is config_yml but has not inflate parameters
+    test_that("not inflated because in config but no state -  warning", {
+
     config_yml <- config_yml_ref
-    config_yml[[1]][["inflate"]] <- NULL
+    config_yml[["flat_minimal.Rmd"]][["state"]] <- NULL
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
     diag_expected <- structure(
@@ -139,7 +139,38 @@ usethis::with_project(dummypackage, {
         flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
         status = structure(
           c(
-            "The flat file flat_minimal.Rmd is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat with this 'fusen' version",
+            "The flat file flat_minimal.Rmd is not going to be inflated because there is no 'state' in the configuration file. Please add 'state: active' or 'state: inactive' under the flat name.",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
+          ),
+          class = c(
+            "glue",
+            "character"
+          )
+        ),
+        type = c("cli::cli_alert_warning", "cli::cli_alert_success"),
+        params = c(NA, NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+    expect_equal(
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
+    )
+  })
+    
+  test_that("not inflated because in config, but without parameters - stop", {
+    #  "not inflated because in config, but without parameters, please inflate() again from the flat with this new 'fusen' version" (stop) : a file is is config_yml but has not inflate parameters
+    config_yml <- config_yml_ref
+    config_yml[["flat_minimal.Rmd"]][["inflate"]] <- NULL
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat file with this 'fusen' version",
             "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
           class = c(
@@ -155,15 +186,17 @@ usethis::with_project(dummypackage, {
     )
 
     expect_equal(
-      diag[sort(diag$flat), ],
-      diag_expected[sort(diag_expected$flat), ]
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
     )
   })
 
+  
+  
   test_that("a file is in config.yml but missing", {
     # a file is in config.yml but missing from dev/
     config_yml <- config_yml_ref
-    config_yml[["missing_file.Rmd"]] <- config_yml[[1]]
+    config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
     diag_expected <- structure(
@@ -194,14 +227,14 @@ usethis::with_project(dummypackage, {
     )
 
     expect_equal(
-      diag[sort(diag$flat), ],
-      diag_expected[sort(diag_expected$flat), ]
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
     )
   })
 
   test_that("messages show properly", {
     config_yml <- config_yml_ref
-    config_yml[["missing_file.Rmd"]] <- config_yml[[1]]
+    config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
     expect_error(

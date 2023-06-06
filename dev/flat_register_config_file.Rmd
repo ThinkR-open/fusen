@@ -439,7 +439,9 @@ df_to_config <- function(df_files,
 
   # Combine with complete_yaml
   complete_yaml <- c(complete_yaml, all_groups_list)
-  complete_yaml <- complete_yaml[sort(names(complete_yaml))]
+  # order according to name without path so that flat_2 is after flat.Rmd
+  complete_yaml <- complete_yaml[order(
+    sub("(?<!^|[.]|/)[.][^.]+$", "", names(complete_yaml), perl = TRUE))]
 
   # Get duplicated paths after update
   yaml_paths <- unlist(complete_yaml)

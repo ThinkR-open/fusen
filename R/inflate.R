@@ -285,7 +285,7 @@ inflate <- function(pkg = ".", flat_file,
 
   inflate_default_parameters[["flat_file"]] <- relative_flat_file
 
-  cli::cat_rule(glue("Updating config file for ", relative_flat_file))
+  cli::cat_rule(glue("config file for {relative_flat_file}"))
   config_file <- df_to_config(
     df_files = all_files,
     flat_file_path = relative_flat_file,
@@ -296,7 +296,6 @@ inflate <- function(pkg = ".", flat_file,
     force = TRUE,
     inflate_parameters = inflate_default_parameters
   )
-  cli::cli_alert_info(glue("config file created: ", config_file))
 
   # TODO - Propose to clean all files with 'clean_fusen_files()' ----
 
