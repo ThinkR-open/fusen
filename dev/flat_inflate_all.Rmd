@@ -469,7 +469,7 @@ unlink(dummypackage, recursive = TRUE)
 fusen::inflate(
   flat_file = "dev/flat_inflate_all.Rmd",
   vignette_name = "Inflate all your flat files",
-  check = FALSE,
+  check = TRUE, #args = c("--no-manual", "--no-tests"),
   overwrite = TRUE,
   open_vignette = FALSE
 )

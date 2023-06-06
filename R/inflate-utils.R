@@ -606,5 +606,6 @@ document_and_check_pkg <- function(pkg = ".", document = TRUE, check = TRUE, ...
       pkg = pkg,
       ...
     )
+    print(res)
   }
 }

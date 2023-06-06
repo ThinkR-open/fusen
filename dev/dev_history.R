@@ -96,6 +96,7 @@ usethis::use_build_ignore("_pkgdown.yml")
 # Inflates ----
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 fusen::inflate_all()
+fusen::inflate_all(args = c("--no-manual", "--no-tests"))
 fusen::inflate_all_no_check()
 
 # Dependencies ----
