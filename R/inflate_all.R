@@ -118,7 +118,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
       ...
     )
   }
-  pkg
+  invisble(pkg)
 }
 
 #' @rdname inflate_all

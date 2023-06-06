@@ -317,7 +317,7 @@ inflate <- function(pkg = ".", flat_file,
     cli::cat_rule("RStudio restart needed")
     getFromNamespace("restart_rstudio", "usethis")("A restart of RStudio is required to activate the Build pane")
   }
-  pkg
+  invisible(pkg)
 }
 
 
