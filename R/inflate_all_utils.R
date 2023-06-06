@@ -195,7 +195,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
 #' read_inflate_params(config_yml = config_yml)
 #' }
 read_inflate_params <- function(config_yml) {
-  config_yml <- config_yml[sapply(config_yml, function(flat) flat[["state"]] == "active")]
+  config_yml <- config_yml[sapply(config_yml, function(flat) isTRUE(flat[["state"]] == "active"))]
 
   flat_files_names <- names(config_yml)
 

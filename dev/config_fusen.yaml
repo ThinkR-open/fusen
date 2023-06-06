@@ -7,9 +7,9 @@ flat_addins.Rmd:
   inflate:
     flat_file: dev/flat_addins.Rmd
     vignette_name: .na
-    open_vignette: true
-    check: false
-    document: false
+    open_vignette: yes
+    check: no
+    document: no
     overwrite: ask
 flat_create_flat.Rmd:
   path: dev/flat_create_flat.Rmd
@@ -20,9 +20,9 @@ flat_create_flat.Rmd:
   inflate:
     flat_file: dev/flat_create_flat.Rmd
     vignette_name: .na
-    open_vignette: true
-    check: false
-    document: false
+    open_vignette: yes
+    check: no
+    document: no
     overwrite: ask
 flat_history_core.Rmd:
   path: dev/flat_history_core.Rmd
@@ -43,19 +43,6 @@ flat_history_maintain.Rmd:
   R: []
   tests: []
   vignettes: vignettes/Maintain-packages-with-fusen.Rmd
-flat_inflate_all.Rmd:
-  path: dev/flat_inflate_all.Rmd
-  state: active
-  R: R/inflate_all.R
-  tests: tests/testthat/test-inflate_all.R
-  vignettes: vignettes/inflate-all-your-flat-files.Rmd
-  inflate:
-    flat_file: dev/flat_inflate_all.Rmd
-    vignette_name: Inflate all your flat files
-    open_vignette: false
-    check: false
-    document: true
-    overwrite: 'yes'
 flat_inflate_all_utils.Rmd:
   path: dev/flat_inflate_all_utils.Rmd
   state: active
@@ -67,11 +54,25 @@ flat_inflate_all_utils.Rmd:
   - tests/testthat/test-inflate_all_utils.R
   vignettes: []
   inflate:
+    pkg: fusen
     flat_file: dev/flat_inflate_all_utils.Rmd
     vignette_name: .na
-    open_vignette: false
-    check: false
-    document: true
+    open_vignette: no
+    check: no
+    document: yes
+    overwrite: 'yes'
+flat_inflate_all.Rmd:
+  path: dev/flat_inflate_all.Rmd
+  state: active
+  R: R/inflate_all.R
+  tests: tests/testthat/test-inflate_all.R
+  vignettes: vignettes/inflate-all-your-flat-files.Rmd
+  inflate:
+    flat_file: dev/flat_inflate_all.Rmd
+    vignette_name: Inflate all your flat files
+    open_vignette: no
+    check: no
+    document: yes
     overwrite: 'yes'
 flat_init_share_on_github.Rmd:
   path: dev/flat_init_share_on_github.Rmd
@@ -82,9 +83,9 @@ flat_init_share_on_github.Rmd:
   inflate:
     flat_file: dev/flat_init_share_on_github.Rmd
     vignette_name: Share on a GitHub website
-    open_vignette: true
-    check: false
-    document: true
+    open_vignette: yes
+    check: no
+    document: yes
     overwrite: 'yes'
 flat_register_config_file.Rmd:
   path: dev/flat_register_config_file.Rmd
@@ -95,9 +96,9 @@ flat_register_config_file.Rmd:
   inflate:
     flat_file: dev/flat_register_config_file.Rmd
     vignette_name: Register files in config
-    open_vignette: false
-    check: false
-    document: true
+    open_vignette: no
+    check: no
+    document: yes
     overwrite: 'yes'
 keep:
   path: keep

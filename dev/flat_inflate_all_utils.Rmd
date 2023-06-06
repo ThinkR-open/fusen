@@ -602,7 +602,7 @@ unlink(dummypackage, recursive = TRUE)
 #' @noRd
 #' @examples
 read_inflate_params <- function(config_yml) {
-  config_yml <- config_yml[sapply(config_yml, function(flat) flat[["state"]] == "active")]
+  config_yml <- config_yml[sapply(config_yml, function(flat) isTRUE(flat[["state"]] == "active"))]
 
   flat_files_names <- names(config_yml)
 
@@ -670,73 +670,89 @@ usethis::with_project(dummypackage, {
   )
 
   config_yml_ref <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
-
-  inflate_params <-
-    read_inflate_params(config_yml = config_yml_ref)
-
-  expect_equal(
-    length(inflate_params),
-    2
-  )
-
-  expect_true(
-    all(names(inflate_params) %in% c("flat_minimal_2.Rmd", "flat_minimal.Rmd"))
-  )
-
-  expect_equal(
-    inflate_params[["flat_minimal.Rmd"]],
-    list(
-      flat_file = "dev/flat_minimal.Rmd",
-      vignette_name = "Get started",
-      open_vignette = FALSE,
-      check = FALSE,
-      document = TRUE,
-      overwrite = "ask"
+  
+  test_that("read_inflate_params work properly", {
+    inflate_params <-
+      read_inflate_params(config_yml = config_yml_ref)
+    
+    expect_equal(
+      length(inflate_params),
+      2
     )
-  )
-
-  expect_equal(
-    inflate_params[["flat_minimal_2.Rmd"]],
-    list(
-      flat_file = "dev/flat_minimal_2.Rmd",
-      vignette_name = "Get started2",
-      open_vignette = FALSE,
-      check = FALSE,
-      document = TRUE,
-      overwrite = "ask"
+    
+    expect_true(
+      all(names(inflate_params) %in% c("flat_minimal_2.Rmd", "flat_minimal.Rmd"))
     )
-  )
-
+    
+    expect_equal(
+      inflate_params[["flat_minimal.Rmd"]],
+      list(
+        flat_file = "dev/flat_minimal.Rmd",
+        vignette_name = "Get started",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "ask"
+      )
+    )
+    
+    expect_equal(
+      inflate_params[["flat_minimal_2.Rmd"]],
+      list(
+        flat_file = "dev/flat_minimal_2.Rmd",
+        vignette_name = "Get started2",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "ask"
+      )
+    )
+  })
+  
   # what happens if we deprecate a file
-  config_yml_ref[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
-
-  inflate_params <-
-    read_inflate_params(config_yml = config_yml_ref)
-
-  expect_null(inflate_params[["flat_minimal.Rmd"]])
-
-  expect_equal(
-    length(inflate_params),
-    1
-  )
-
+  test_that("read_inflate_params work properly with deprecated", {
+    config_yml_ref[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
+    
+    inflate_params <-
+      read_inflate_params(config_yml = config_yml_ref)
+    
+    expect_null(inflate_params[["flat_minimal.Rmd"]])
+    
+    expect_equal(
+      length(inflate_params),
+      1
+    )
+  })
+  
   # what happens if we add a file in the "keep" section
-  file.create(file.path(dummypackage, "R/zaza.R"))
-
-  my_files_to_protect <- tibble::tribble(
-    ~type, ~path,
-    "R", "R/zaza.R"
-  )
-
-  df_to_config(my_files_to_protect, force = TRUE)
-
-  config_yml <-
-    yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
-
-  inflate_params <-
-    read_inflate_params(config_yml = config_yml)
-
-  expect_false("keep" %in% names(inflate_params))
+  test_that("read_inflate_params work properly with keep section", {
+    file.create(file.path(dummypackage, "R/zaza.R"))
+    
+    my_files_to_protect <- tibble::tribble(
+      ~type, ~path,
+      "R", "R/zaza.R"
+    )
+    
+    df_to_config(my_files_to_protect, force = TRUE)
+    
+    config_yml <-
+      yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+    
+    inflate_params <-
+      read_inflate_params(config_yml = config_yml)
+    
+    expect_false("keep" %in% names(inflate_params))
+    
+    # Old version with no state for "keep" section should work too
+    config_yml[["keep"]][["state"]] <- NULL
+    
+    expect_error(
+      inflate_params <-
+        read_inflate_params(config_yml = config_yml), regexp = NA
+    )
+    
+    expect_false("keep" %in% names(inflate_params))
+  })
 })
 
 unlink(dummypackage, recursive = TRUE)
