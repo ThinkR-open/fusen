@@ -16,6 +16,7 @@
 
 ## Minor changes
 
+- Update CONTRIBUTING to speak about flat file in {fusen} itself
 - replace the maintainer's name from `fill_description()` in examples, templates and tests (#155, @FlorenceMounier)
 
 

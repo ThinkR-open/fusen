@@ -692,16 +692,9 @@ unlink(dummypackage, recursive = TRUE)
 
 
 ```{r development-inflate, eval=FALSE}
-# Got to dev_history.R
-rstudioapi::navigateToFile("dev/dev_history.R", line = 95)
 # # Run but keep eval=FALSE to avoid infinite loop
 # # Execute in the console directly
-# fusen::inflate(flat_file = "dev/flat_create_flat.Rmd", check = FALSE,
-#                vignette_name = NA)
-# # unlink("vignettes/get-started.Rmd")
-# attachment::att_amend_desc(
-#   pkg_ignore = c("testthat", "dummypackage", "rstudioapi"),
-#   extra.suggests = c("testthat", "pkgload", "rstudioapi")
-# )
+fusen::inflate(flat_file = "dev/flat_create_flat.Rmd",
+               check = FALSE, vignette_name = NA, document = FALSE)
 ```
 

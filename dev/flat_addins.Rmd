@@ -320,5 +320,4 @@ fusen::inflate(
   check = FALSE,
   document = FALSE
 )
-rstudioapi::navigateToFile("dev/dev_history.R", line = 102)
 ```

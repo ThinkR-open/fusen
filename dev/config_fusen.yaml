@@ -17,8 +17,16 @@ flat_create_flat.Rmd:
   R: R/add_flat_template.R
   tests: tests/testthat/test-add_flat_template.R
   vignettes: []
+  inflate:
+    flat_file: dev/flat_create_flat.Rmd
+    vignette_name: .na
+    open_vignette: true
+    check: false
+    document: false
+    overwrite: ask
 flat_history_core.Rmd:
   path: dev/flat_history_core.Rmd
+  state: inactive
   R:
   - R/add_dev_history.R
   - R/fill_description.R
@@ -31,6 +39,7 @@ flat_history_core.Rmd:
   vignettes: vignettes/How-to-use-fusen.Rmd
 flat_history_maintain.Rmd:
   path: dev/flat_history_maintain.Rmd
+  state: inactive
   R: []
   tests: []
   vignettes: vignettes/Maintain-packages-with-fusen.Rmd
@@ -70,6 +79,13 @@ flat_init_share_on_github.Rmd:
   R: R/init_share_on_github.R
   tests: tests/testthat/test-init_share_on_github.R
   vignettes: vignettes/share-on-a-github-website.Rmd
+  inflate:
+    flat_file: dev/flat_init_share_on_github.Rmd
+    vignette_name: Share on a GitHub website
+    open_vignette: true
+    check: false
+    document: true
+    overwrite: 'yes'
 flat_register_config_file.Rmd:
   path: dev/flat_register_config_file.Rmd
   state: active
