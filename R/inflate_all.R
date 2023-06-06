@@ -66,7 +66,7 @@
 #' 
 #' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
-inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TRUE, ...) {
+inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette = FALSE, overwrite = TRUE, ...) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
@@ -87,7 +87,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
   if (length(inflate_params) == 0) {
     message("No flat files were inflated")
   } else {
-    apply_inflate <- function(inflate_params, overwrite) {
+    apply_inflate <- function(inflate_params, pkg, overwrite, open_vignette) {
       config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
       # Change config option temporary, to be able to modify it on the fly
       config_file_tmp <- tempfile(pattern = "tempconfig")
@@ -100,6 +100,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
         lapply(inflate_params, function(flat_file) {
           flat_file$pkg <- pkg
           flat_file$overwrite <- overwrite
+          flat_file$open_vignette <- open_vignette
           flat_file$document <- FALSE
           flat_file$check <- FALSE
           suppressMessages(do.call(inflate, flat_file))
@@ -107,7 +108,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
       )
     }
 
-    apply_inflate(inflate_params, overwrite)
+    apply_inflate(inflate_params, pkg = pkg, overwrite = overwrite, open_vignette = open_vignette)
 
     # Document and check package
     document_and_check_pkg(
@@ -122,6 +123,6 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, overwrite = TR
 
 #' @rdname inflate_all
 #' @export
-inflate_all_no_check <- function(pkg = ".", document = TRUE, overwrite = TRUE, ...) {
-  inflate_all(pkg = pkg, document = document, check = FALSE, overwrite = overwrite, ...)
+inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, ...) {
+  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, ...)
 }

@@ -5,9 +5,22 @@
 \alias{inflate_all_no_check}
 \title{Inflate all your flat files}
 \usage{
-inflate_all(pkg = ".", document = TRUE, check = TRUE, overwrite = TRUE, ...)
+inflate_all(
+  pkg = ".",
+  document = TRUE,
+  check = TRUE,
+  open_vignette = FALSE,
+  overwrite = TRUE,
+  ...
+)
 
-inflate_all_no_check(pkg = ".", document = TRUE, overwrite = TRUE, ...)
+inflate_all_no_check(
+  pkg = ".",
+  document = TRUE,
+  open_vignette = FALSE,
+  overwrite = TRUE,
+  ...
+)
 }
 \arguments{
 \item{pkg}{Path to package}
@@ -15,6 +28,8 @@ inflate_all_no_check(pkg = ".", document = TRUE, overwrite = TRUE, ...)
 \item{document}{Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}}
 
 \item{check}{Logical. Whether to check package after Rmd inflating}
+
+\item{open_vignette}{Logical. Whether to open vignette file at the end of the process}
 
 \item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 Whether to overwrite vignette and functions if already exists.}
