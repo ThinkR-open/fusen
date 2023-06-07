@@ -45,6 +45,7 @@ Suggests:
 VignetteBuilder: 
     knitr
 Config/testthat/edition: 3
+Config/Needs/website: ThinkR-open/thinkrtemplate
 Encoding: UTF-8
 Language: en-US
 LazyData: true
