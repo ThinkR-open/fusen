@@ -134,15 +134,18 @@ test_that("pre_inflate_all_diagnosis_eval works", {
 #' @return a tibble with the ability to each flat file to be inflated by inflate_all()
 #' @noRd
 pre_inflate_all_diagnosis <- function(config_yml, pkg) {
-  flat_files_in_dev_folder <- list.files(file.path(pkg, "dev"))
-  flat_files_in_dev_folder <- flat_files_in_dev_folder[grepl(pattern = "^flat_", x = flat_files_in_dev_folder)]
+  
+  flat_file_in_config <- setdiff(names(config_yml), "keep")
+  flat_files_in_dev_folder <- list.files(file.path(pkg, "dev"), pattern = "^flat_.*[.](r|R|q|Q)md$")
 
-  if (length(flat_files_in_dev_folder) == 0) {
-    stop("There are no flat files starting with 'flat_' in the 'dev/' directory")
+  flat_files_to_diag <- unique(c(flat_files_in_dev_folder, flat_file_in_config))
+
+  if (length(flat_files_to_diag) == 0) {
+    stop("There are no flat files listed in config or files starting with 'flat_' in the 'dev/' directory")
   }
 
-  flat_files_status <- lapply(flat_files_in_dev_folder, function(flat) {
-    # flat <- flat_files_in_dev_folder[5]
+  flat_files_status <- lapply(flat_files_to_diag, function(flat) {
+    # flat <- flat_files_to_diag[5]
     if (flat %in% names(config_yml) &&
       "inflate" %in% names(config_yml[[flat]]) &&
       !is.null(config_yml[[flat]][["state"]]) &&
@@ -339,6 +342,8 @@ usethis::with_project(dummypackage, {
     )
   )
 
+  browser()
+  
   config_yml_ref <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
 
   test_that("all files can be inflated with inflate_all()", {

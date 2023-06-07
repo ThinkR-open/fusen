@@ -32,6 +32,8 @@ usethis::with_project(dummypackage, {
     )
   )
 
+  browser()
+  
   config_yml_ref <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
 
   test_that("all files can be inflated with inflate_all()", {
