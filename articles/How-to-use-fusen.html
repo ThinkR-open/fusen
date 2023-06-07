@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.1</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
       </span>
     </div>
 
@@ -114,7 +114,7 @@
 
       
 
-      </header><script src="How-to-use-fusen_files/accessible-code-block-0.0.1/empty-anchor.js"></script><div class="row">
+      </header><div class="row">
   <div class="col-md-9 contents">
     <div class="page-header toc-ignore">
       <h1 data-toc-skip>How to use fusen</h1>
@@ -135,37 +135,52 @@
 <ul>
 <li>Create a new directory / new project with
 <ul>
-<li>RStudio template: File &gt; New Project &gt; New directory &gt; Package using {fusen}</li>
+<li>RStudio template: File &gt; New Project &gt; New directory &gt;
+Package using {fusen}</li>
 <li>Choose the template <code>teaching</code> to start<br>
 </li>
-<li><em>Or command line: <code>create_fusen("path/to/new/project", template = "teaching")</code></em></li>
+<li><em>Or command line:
+<code>create_fusen("path/to/new/project", template = "teaching")</code></em></li>
 </ul>
 </li>
-<li>Open the “dev/flat_teaching” Rmd to start setting up the package</li>
-<li>Run the content of the first <code>development</code> chunk with <code><a href="https://testthat.r-lib.org" class="external-link">library(testthat)</a></code> inside</li>
-<li>Modify and run the content of the chunk named <code>description</code> asking to describe your package and license it
+<li>Open the “dev/flat_teaching” Rmd to start setting up the
+package</li>
+<li>Run the content of the first <code>development</code> chunk with
+<code><a href="https://testthat.r-lib.org" class="external-link">library(testthat)</a></code> inside</li>
+<li>Modify and run the content of the chunk named
+<code>description</code> asking to describe your package and license it
 <ul>
-<li><em>For the first time, you can let the code as is, this is already the content for a working package</em></li>
+<li><em>For the first time, you can let the code as is, this is already
+the content for a working package</em></li>
 </ul>
 </li>
-<li>Follow the <code>"dev/flat_teaching.Rmd"</code> template to write your documentation and build your functions and test your examples.
+<li>Follow the <code>"dev/flat_teaching.Rmd"</code> template to write
+your documentation and build your functions and test your examples.
 <ul>
 <li>Chunk named <code>function</code> gets the code of a function</li>
-<li>Chunk named <code>example</code> gets the code for examples of using the function. This will be used for function <code>@examples</code> and will be kept for the vignette</li>
+<li>Chunk named <code>example</code> gets the code for examples of using
+the function. This will be used for function <code>@examples</code> and
+will be kept for the vignette</li>
 <li>Chunk named <code>tests</code> gets the code for unit testing</li>
-<li>Chunk named <code>development</code> gets the code for development purposes, usually only used once like {usethis} functions</li>
+<li>Chunk named <code>development</code> gets the code for development
+purposes, usually only used once like {usethis} functions</li>
 </ul>
 </li>
-<li>Run the <code>dev-inflate</code> chunk to inflate the flat template and transform it as an inflated package with functions, unit tests and the current Rmd template transformed as a vignette. And check.</li>
-<li>Build your {pkgdown} site to verify everything is at the right place</li>
+<li>Run the <code>dev-inflate</code> chunk to inflate the flat template
+and transform it as an inflated package with functions, unit tests and
+the current Rmd template transformed as a vignette. And check.</li>
+<li>Build your {pkgdown} site to verify everything is at the right
+place</li>
 </ul>
 <blockquote>
-<p>Create multiple <code>"flat_xxx.Rmd"</code> files with <code>fusen::add_flat_template(template = "add")</code> if needed</p>
+<p>Create multiple <code>"flat_xxx.Rmd"</code> files with
+<code>fusen::add_flat_template(template = "add")</code> if needed</p>
 </blockquote>
 <div class="section level3">
 <h3 id="fill-your-package-description">Fill your package Description<a class="anchor" aria-label="anchor" href="#fill-your-package-description"></a>
 </h3>
-<p>Fonction <code><a href="../reference/fill_description.html">fill_description()</a></code> requires the description of your package: What does it do? Who are the developers?<br>
+<p>Fonction <code><a href="../reference/fill_description.html">fill_description()</a></code> requires the description of
+your package: What does it do? Who are the developers?<br>
 This will fill the DESCRIPTION file in the proper way.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/fill_description.html">fill_description</a></span><span class="op">(</span></span>
@@ -186,14 +201,17 @@ This will fill the DESCRIPTION file in the proper way.</p>
 <div class="section level3">
 <h3 id="inflate-your-package-from-the-flat-rmd-template">Inflate your package from the flat Rmd template<a class="anchor" aria-label="anchor" href="#inflate-your-package-from-the-flat-rmd-template"></a>
 </h3>
-<p>You’re one inflate from flat paper to box. Build your package from the flat Rmd template using the <code><a href="../reference/inflate.html">inflate()</a></code> command below.</p>
+<p>You’re one inflate from flat paper to box. Build your package from
+the flat Rmd template using the <code><a href="../reference/inflate.html">inflate()</a></code> command
+below.</p>
 <p>After that, you can:</p>
 <ul>
 <li>Verify your <code>"DESCRIPTION"</code> file has been updated</li>
 <li>Verify your function is in <code>"R/"</code> directory</li>
 <li>Verify your test is in <code>"tests/testthat/"</code> directory</li>
 <li>Verify this Rmd appears in <code>"vignettes/"</code> directory</li>
-<li>Build your documentation using <code><a href="https://usethis.r-lib.org/reference/use_pkgdown.html" class="external-link">usethis::use_pkgdown()</a></code> then <code>pkgdown::build()</code> for vignette and examples checks</li>
+<li>Build your documentation using <code><a href="https://usethis.r-lib.org/reference/use_pkgdown.html" class="external-link">usethis::use_pkgdown()</a></code>
+then <code>pkgdown::build()</code> for vignette and examples checks</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span></span>
@@ -206,7 +224,8 @@ This will fill the DESCRIPTION file in the proper way.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="create-a-new-package-from-command-line-directly-using-a-pre-defined-template">Create a new package from command line directly, using a pre-defined template<a class="anchor" aria-label="anchor" href="#create-a-new-package-from-command-line-directly-using-a-pre-defined-template"></a>
+<h2 id="create-a-new-package-from-command-line-directly-using-a-pre-defined-template">Create a new package from command line directly, using a pre-defined
+template<a class="anchor" aria-label="anchor" href="#create-a-new-package-from-command-line-directly-using-a-pre-defined-template"></a>
 </h2>
 <ul>
 <li>Build a package from Rmd template in a temporary directory
@@ -251,8 +270,10 @@ This will fill the DESCRIPTION file in the proper way.</p>
 <div class="section level2">
 <h2 id="there-can-be-development-actions">There can be development actions<a class="anchor" aria-label="anchor" href="#there-can-be-development-actions"></a>
 </h2>
-<p>These are only included in the flat template file, their content will not be part of the package anywhere else.</p>
-<p>Name the following chunk with <code>{r development-something, eval=FALSE}</code></p>
+<p>These are only included in the flat template file, their content will
+not be part of the package anywhere else.</p>
+<p>Name the following chunk with
+<code>{r development-something, eval=FALSE}</code></p>
 <pre><code>```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 
@@ -269,10 +290,17 @@ fusen::inflate(flat_file = "dev/dev_history.Rmd")
 <ul>
 <li>One title / one chunk is for one function</li>
 <li>
-<code>examples</code> and <code>tests</code> chunks need to be placed after the associated <code>function</code> chunk</li>
-<li>You can add sub-functions in the <code>function</code> chunk to store them in the same R file, but they won’t have <code>@examples</code>. Only the first function of the chunk will be able to get examples.</li>
-<li>As for any Rmarkdown file, chunk names need to be unique. Thus, you better use <code>examples-myfunction</code>, <code>examples-myotherfunction</code>, …</li>
-<li><em>Do not forget to regularly clear your Workspace to avoid functions hidden by global environment</em></li>
+<code>examples</code> and <code>tests</code> chunks need to be
+placed after the associated <code>function</code> chunk</li>
+<li>You can add sub-functions in the <code>function</code> chunk to
+store them in the same R file, but they won’t have
+<code>@examples</code>. Only the first function of the chunk will be
+able to get examples.</li>
+<li>As for any Rmarkdown file, chunk names need to be unique. Thus, you
+better use <code>examples-myfunction</code>,
+<code>examples-myotherfunction</code>, …</li>
+<li><em>Do not forget to regularly clear your Workspace to avoid
+functions hidden by global environment</em></li>
 </ul>
 </div>
   </div>
@@ -289,7 +317,7 @@ fusen::inflate(flat_file = "dev/dev_history.Rmd")
 
       <footer><div class="thinkr">
   <p></p>
-<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.6.</p>
+<p>Developed by Sebastien Rochette.</p>,<p>Site built with <a href="https://pkgdown.r-lib.org/" class="external-link">pkgdown</a> 2.0.7.</p>
 </div>
 
 <div class="author">
