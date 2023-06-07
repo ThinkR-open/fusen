@@ -58,7 +58,7 @@ usethis::with_project(dummypackage, {
     expect_equal(is_pkg_proj(dummypackage), FALSE)
   })
 
-  cat("BuildType: Package", file = file.path(dummypackage, "dummy.Rproj"))
+  cat("BuildType: Package\n", file = file.path(dummypackage, "dummy.Rproj"))
 
   test_that("is_pkg_proj works when rproj is pkg", {
     expect_equal(is_pkg_proj(dummypackage), TRUE)

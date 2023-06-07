@@ -537,7 +537,8 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
   # Vignette
   # Copied from usethis::use_vignette() to allow to not open vignette created
   usethis::use_package("knitr", "Suggests")
-  desc <- desc::desc(file = usethis::proj_get())
+  # desc <- desc::desc(file = usethis::proj_get())
+  desc <- desc::desc(file = pkg)
   desc$set("VignetteBuilder", "knitr")
   desc$write()
   usethis::use_git_ignore("inst/doc")
