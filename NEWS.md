@@ -32,6 +32,11 @@
 
 - replace the maintainer's name from `fill_description()` in examples, templates and tests (#155, @FlorenceMounier)
 
+# fusen 0.4.2
+
+## Bug
+
+- Replacement of unexported usethis functions (#205, @ateucher)
 
 # fusen 0.4.1
 
