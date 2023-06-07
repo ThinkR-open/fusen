@@ -1,3 +1,9 @@
+# fusen 0.4.2
+
+## Bug
+
+- Replacement of unexported usethis functions (#205, @ateucher)
+
 # fusen 0.4.1
 
 ## New features

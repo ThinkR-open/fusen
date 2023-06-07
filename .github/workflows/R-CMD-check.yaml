@@ -6,10 +6,12 @@ on:
       - main
       - master
       - tmate
+      - production-cran
   pull_request:
     branches:
       - main
       - master
+      - production-cran
 
 name: R-CMD-check
 

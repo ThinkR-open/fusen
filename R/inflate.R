@@ -536,9 +536,11 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
   yaml_options <- flat_yaml[["ast"]][[1]]
   # Vignette
   # Copied from usethis::use_vignette() to allow to not open vignette created
-  # usethis:::use_dependency("knitr", "Suggests")
-  getFromNamespace("use_dependency", "usethis")("knitr", "Suggests")
-  getFromNamespace("use_description_field", "usethis")("VignetteBuilder", "knitr", overwrite = TRUE)
+  usethis::use_package("knitr", "Suggests")
+  # desc <- desc::desc(file = usethis::proj_get())
+  desc <- desc::desc(file = pkg)
+  desc$set("VignetteBuilder", "knitr")
+  desc$write()
   usethis::use_git_ignore("inst/doc")
 
   # Vignette head
