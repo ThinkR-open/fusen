@@ -53,10 +53,10 @@
       <a href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
     </li>
     <li>
-      <a href="../articles/clean-fusen-files.html">Clean {fusen} files</a>
+      <a href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
     </li>
     <li>
-      <a href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
+      <a href="../articles/register-files-in-config.html">Register files in config</a>
     </li>
     <li>
       <a href="../articles/share-on-a-github-website.html">Share on a GitHub website</a>
@@ -87,7 +87,7 @@
   <div class="col-md-9 contents">
     <div class="page-header">
     <h1>Include all existing package files in the config file</h1>
-    <small class="dont-index">Source: <a href="https://github.com/Thinkr-open/fusen/blob/HEAD/R/clean_fusen_files.R" class="external-link"><code>R/clean_fusen_files.R</code></a></small>
+    <small class="dont-index">Source: <a href="https://github.com/Thinkr-open/fusen/blob/HEAD/R/register_config_file.R" class="external-link"><code>R/register_config_file.R</code></a></small>
     <div class="hidden name"><code>register_all_to_config.Rd</code></div>
     </div>
 
@@ -106,7 +106,7 @@
 
 
 <dt>clean</dt>
-<dd><p>Logical. Delete list associated a specific flat file before updating the whole list. Default is set to TRUE during <code><a href="inflate.html">inflate()</a></code> of a specific flat fil, as the list should only contain files created during the inflate. This parameter is set to FALSE with <code>register_to_config()</code> so that it can be run twice on the package when migrating from an old version of fusen. This could be set to FALSE with a direct use of <code><a href="df_to_config.html">df_to_config()</a></code> too.</p></dd>
+<dd><p>Logical. Delete list associated to a specific flat file before updating the whole list. Default is set to TRUE during <code><a href="inflate.html">inflate()</a></code> of a specific flat file, as the list should only contain files created during the inflate. This could be set to FALSE with a direct use of <code><a href="df_to_config.html">df_to_config()</a></code> too.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -130,7 +130,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># {fusen} steps</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpWpbXX3/register16b62be8efa5/DESCRIPTION"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmpz4UhrA/register165128bf2ecd/DESCRIPTION"</span>
 <span class="r-in"><span><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="add_flat_template.html">add_flat_template</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">dev_file</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"flat_"</span>, <span class="va">dev_file</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="co"># Inflate once</span></span></span>
@@ -147,11 +147,11 @@
 <span class="r-in"><span>  <span class="co"># Look at the output</span></span></span>
 <span class="r-in"><span>  <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">out_path</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpWpbXX3/register16b62be8efa5'</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ── Updating config file for dev/flat_full.Rmd ──────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmpz4UhrA/register165128bf2ecd'</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── config file for dev/flat_full.Rmd ───────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> There are no unregistered files</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> There is no file to register or everything was already registered</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpWpbXX3/dummypackage16b653f47c3c'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmpz4UhrA/dummypackage16515a6d9449'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$path</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dev/flat_full.Rmd"</span>
@@ -170,9 +170,6 @@
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "vignettes/get-started.Rmd"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate$pkg</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "register16b62be8efa5"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $flat_full.Rmd$inflate$flat_file</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "dev/flat_full.Rmd"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>

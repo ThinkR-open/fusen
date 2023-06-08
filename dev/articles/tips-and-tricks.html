@@ -82,10 +82,10 @@
       <a href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
     </li>
     <li>
-      <a href="../articles/clean-fusen-files.html">Clean {fusen} files</a>
+      <a href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
     </li>
     <li>
-      <a href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
+      <a href="../articles/register-files-in-config.html">Register files in config</a>
     </li>
     <li>
       <a href="../articles/share-on-a-github-website.html">Share on a GitHub website</a>
@@ -352,14 +352,11 @@ fusen chunks for all your future functions to be.</p>
 <h2 id="how-to-inflate-multiple-flat-files">How to Inflate multiple flat files ?<a class="anchor" aria-label="anchor" href="#how-to-inflate-multiple-flat-files"></a>
 </h2>
 <ul>
-<li>Add an entry in your main “dev_history.Rmd” file</li>
+<li>Use <code><a href="../reference/inflate_all.html">inflate_all()</a></code>
+</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file1.Rmd"</span><span class="op">)</span></span>
-<span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file2.Rmd"</span><span class="op">)</span></span>
-<span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file3.Rmd"</span><span class="op">)</span></span></code></pre></div>
-<p>If the main “dev_history.Rmd” file does not exists, you can create it
-with <code>add_flat_template("dev_history")</code></p>
+<p>Read the dedicated vignette “inflate-all-your-flat-files”</p>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"inflate-all-your-flat-files"</span>, package <span class="op">=</span> <span class="st">"fusen"</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="how-to-store-multiple-functions-in-a-unique-r-file">How to store multiple functions in a unique R file ?<a class="anchor" aria-label="anchor" href="#how-to-store-multiple-functions-in-a-unique-r-file"></a>
