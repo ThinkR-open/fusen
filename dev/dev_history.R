@@ -86,7 +86,7 @@ chameleon::build_pkgdown(
 )
 
 # Doc
-usethis::use_github_action_check_standard()
+usethis::use_github_action("check-standard")
 usethis::use_github_action("pkgdown")
 usethis::use_github_action("test-coverage")
 usethis::use_coverage()
@@ -94,24 +94,21 @@ usethis::use_build_ignore("_pkgdown.yml")
 # usethis::use_github_action(url = "https://github.com/DavisVaughan/extrachecks-html5/blob/main/R-CMD-check-HTML5.yaml")
 
 # Inflates ----
-fusen::inflate(flat_file = "dev/flat_addins.Rmd",
-               check = FALSE, vignette_name = NA, document = FALSE)
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
-fusen::inflate(flat_file = "dev/flat_create_flat.Rmd",
-               check = FALSE, vignette_name = NA, document = FALSE)
-fusen::inflate(flat_file = "dev/flat_clean_fusen_files.Rmd",
-               vignette_name = "Clean {fusen} files", check = FALSE,
-               overwrite = TRUE, open_vignette = FALSE)
+fusen::inflate_all()
+fusen::inflate_all(args = c("--no-manual", "--no-tests"))
+fusen::inflate_all_no_check()
 
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi",
-                 "nknitr", "knitr", "rmarkdown", "R6"),
+                 "knitr", "rmarkdown", "R6"),
   extra.suggests = c("testthat", "pkgload", "rstudioapi",
-                     "rmarkdown", "knitr")#,
+                     "rmarkdown", "knitr"),
   # "MASS", "lattice", "Matrix")
+  update.config = TRUE # attachment >= 0.4.0.
 )
 # attachment::create_dependencies_file()
 
@@ -176,6 +173,7 @@ pkgload::load_all()
 testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate-part1.R")
 testthat::test_file("tests/testthat/test-inflate-part2.R")
+testthat::test_file("tests/testthat/test-inflate_all.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
 
 Sys.setenv("FUSEN_TEST_PUBLISH" = "TRUE")

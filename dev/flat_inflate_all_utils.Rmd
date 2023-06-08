@@ -1,0 +1,773 @@
+---
+title: "flat_inflate_all_utils.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+library(yaml)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# pre_inflate_all_diagnosis_eval
+    
+```{r function-pre_inflate_all_diagnosis_eval}
+#' Eval message, warning and error from the diagnostic table
+#'
+#' @param diag_table Diagnostic table from `pre_inflate_all_diagnosis()`
+#' @param type_stop Logical. Wether to ouput type stop or others
+#'
+#' @return Side effect: messages, or errors
+#'
+#' @noRd
+pre_inflate_all_diagnosis_eval <- function(diag_table, type_stop = FALSE) {
+  if (nrow(diag_table) == 0) {
+    stop("No file to inflate")
+  }
+
+  if (isTRUE(type_stop)) {
+    diag_to_eval <- diag_table[diag_table[["type"]] == "stop", ]
+  } else {
+    diag_to_eval <- diag_table[diag_table[["type"]] != "stop", ]
+  }
+  if (nrow(diag_to_eval) == 0) {
+    return(NULL)
+  }
+
+  for (flat_file_diag in 1:nrow(diag_to_eval)) {
+    # do.call(
+    #   diag[["type"]][flat_file_diag],
+    #   list(diag[["status"]][flat_file_diag])
+    # )
+    params <- diag_to_eval[["params"]][flat_file_diag]
+    if (is.na(params)) {
+      status_text <- paste0(
+        diag_to_eval[["type"]][flat_file_diag],
+        "(\"", diag_to_eval[["status"]][flat_file_diag], "\")"
+      )
+    } else {
+      status_text <- paste0(
+        diag_to_eval[["type"]][flat_file_diag],
+        "(\"", diag_to_eval[["status"]][flat_file_diag], "\", ",
+        diag_to_eval[["params"]][flat_file_diag],
+        ")"
+      )
+    }
+
+    eval(parse(text = status_text))
+  }
+}
+```
+  
+```{r example-pre_inflate_all_diagnosis_eval}
+# pre_inflate_all_diagnosis_eval()
+```
+  
+```{r tests-pre_inflate_all_diagnosis_eval}
+test_that("pre_inflate_all_diagnosis_eval works", {
+  expect_true(inherits(pre_inflate_all_diagnosis_eval, "function"))
+
+  diagnostic <- structure(
+    list(
+      flat = c(
+        "flat_minimal.Rmd", "flat_minimal_2.Rmd",
+        "missing_file.Rmd"
+      ),
+      status = structure(
+        c(
+          "The flat file flat_minimal.Rmd is going to be inflated",
+          "The flat file flat_minimal2.Rmd is not going to be inflated because it is 'inactive or deprecated'",
+          "The file missing_file.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"
+        ),
+        class = c("glue", "character")
+      ),
+      type = c(
+        "cli::cli_alert_success", "cli::cli_alert_warning",
+        "stop"
+      ),
+      params = c(NA, NA, "call. = FALSE")
+    ),
+    row.names = c(NA, -3L),
+    class = c(
+      "tbl_df", "tbl",
+      "data.frame"
+    )
+  )
+
+  expect_error(
+    pre_inflate_all_diagnosis_eval(diagnostic, type_stop = TRUE),
+    regexp = "The file missing_file[.]Rmd is not going to be inflated"
+  )
+
+  expect_message(
+    pre_inflate_all_diagnosis_eval(diagnostic, type_stop = FALSE),
+    regexp = "The flat file flat_minimal[.]Rmd is going to be inflated"
+  )
+
+  expect_message(
+    pre_inflate_all_diagnosis_eval(diagnostic, type_stop = FALSE),
+    regexp = "The flat file flat_minimal2[.]Rmd is not going to be inflated"
+  )
+})
+```
+
+
+# pre_inflate_all_diagnosis
+
+```{r function-pre_inflate_all_diagnosis, filename = "inflate_all_utils"}
+#' This function evaluates whether flat files can or can not be inflated with `inflate_all()`
+#'
+#' Internal function used in `inflate_all()`
+#'
+#' @param config_yml List. Content of the fusen config_file
+#' @param pkg Character. Path of the current package
+#'
+#' @importFrom glue glue
+#' @importFrom tibble tibble
+#'
+#' @return a tibble with the ability to each flat file to be inflated by inflate_all()
+#' @noRd
+pre_inflate_all_diagnosis <- function(config_yml, pkg) {
+  flat_files_in_dev_folder <- list.files(file.path(pkg, "dev"))
+  flat_files_in_dev_folder <- flat_files_in_dev_folder[grepl(pattern = "^flat_", x = flat_files_in_dev_folder)]
+
+  if (length(flat_files_in_dev_folder) == 0) {
+    stop("There are no flat files starting with 'flat_' in the 'dev/' directory")
+  }
+
+  flat_files_status <- lapply(flat_files_in_dev_folder, function(flat) {
+    # flat <- flat_files_in_dev_folder[5]
+    if (flat %in% names(config_yml) &&
+      "inflate" %in% names(config_yml[[flat]]) &&
+      !is.null(config_yml[[flat]][["state"]]) &&
+      config_yml[[flat]][["state"]] == "active") {
+      return(tibble(
+        flat = flat,
+        status = glue("The flat file {flat} is going to be inflated"),
+        type = "cli::cli_alert_success",
+        params = NA
+      ))
+    } else if (flat %in% names(config_yml) &&
+               is.null(config_yml[[flat]][["state"]])) {
+      return(tibble(
+        flat = flat,
+        status = glue(
+          "The flat file {flat} is not going to be inflated because there is no 'state'",
+          " in the configuration file. ",
+          "Please add 'state: active' or 'state: inactive' under the flat name."),
+        type = "cli::cli_alert_warning",
+        params = NA
+      ))
+    } else if (flat %in% names(config_yml) &&
+      config_yml[[flat]][["state"]] != "active") {
+      return(tibble(
+        flat = flat,
+        status = glue("The flat file {flat} is not going to be inflated because",
+        " it is in state 'inactive or deprecated'"),
+        type = "cli::cli_alert_warning",
+        params = NA
+      ))
+    } else if (!flat %in% names(config_yml)) {
+      return(tibble(
+        flat = flat,
+        status = glue("The flat file {flat} is not going to be inflated because",
+        " it is absent from the config file.",
+        " Please inflate() from the flat once if needed or set it manually with status 'inactive'."),
+        type = "cli::cli_alert_danger",
+        params = NA
+      ))
+    } else if (flat %in% names(config_yml) &&
+      is.null(config_yml[[flat]][["inflate"]])) {
+      return(tibble(
+        flat = flat,
+        status = glue("The flat file {flat} is not going to be inflated because",
+        " although present in the config file, it has no inflate() parameters.",
+        " Please inflate() again from the flat file with this 'fusen' version"),
+        type = "stop",
+        params = "call. = FALSE"
+      ))
+    }
+  })
+
+  flat_files_status <- do.call(rbind, flat_files_status)
+
+  files_in_config_yml_but_missing_in_dev_folder <- names(config_yml)[!names(config_yml) %in% c(flat_files_in_dev_folder, "keep")]
+
+  if (length(files_in_config_yml_but_missing_in_dev_folder) > 0) {
+    flat_files_status <- rbind(
+      flat_files_status,
+      tibble(
+        flat = files_in_config_yml_but_missing_in_dev_folder,
+        status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
+        type = "stop",
+        params = "call. = FALSE"
+      )
+    )
+  }
+
+  # reorder with stops first
+
+  return(invisible(flat_files_status))
+}
+```
+
+
+```{r example-pre_inflate_all_diagnosis, eval = FALSE}
+#' \dontrun{
+dummypackage <- tempfile("register")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <-
+  suppressMessages(add_minimal(
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
+  ))
+# let's create 2 flat files
+flat_file <- dev_file[grepl("flat_", dev_file)]
+flat_file2 <-
+  gsub(
+    x = flat_file,
+    pattern = "flat_minimal.Rmd",
+    replacement = "flat_minimal_2.Rmd"
+  )
+file.copy(
+  from = flat_file,
+  to = flat_file2,
+  overwrite = TRUE
+)
+
+# let's inflate them to have dev/config_fusen.yml
+suppressMessages(
+  inflate(
+    pkg = dummypackage,
+    flat_file = flat_file,
+    vignette_name = "Get started",
+    check = FALSE,
+    open_vignette = FALSE
+  )
+)
+
+suppressMessages(
+  inflate(
+    pkg = dummypackage,
+    flat_file = flat_file2,
+    vignette_name = "Get started2",
+    check = FALSE,
+    open_vignette = FALSE
+  )
+)
+
+config_yml_ref <-
+  yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+
+# all files can be inflated with inflate_all()
+config_yml <- config_yml_ref
+diag <-
+  pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+print(diag)
+
+# let's consider the first flat file is deprecated
+config_yml <- config_yml_ref
+config_yml[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
+diag <-
+  pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+print(diag)
+
+# let's consider the first flat file is missing from config_fusen.yaml
+config_yml <- config_yml_ref
+config_yml[["flat_minimal.Rmd"]] <- NULL
+diag <-
+  pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+print(diag)
+
+# let's consider that the first flat file has not inflate related params in config_fusen.yaml
+config_yml <- config_yml_ref
+config_yml[["flat_minimal.Rmd"]][["inflate"]] <- NULL
+diag <-
+  pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+print(diag)
+
+# let's consider a file is in config.yml but missing from dev/
+config_yml <- config_yml_ref
+config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
+diag <-
+  pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+print(diag)
+
+unlink(dummypackage, recursive = TRUE)
+#' }
+```
+
+
+```{r tests-pre_inflate_all_diagnosis}
+dummypackage <- tempfile("diag")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+
+# let's create 2 flat files
+flat_file <- dev_file[grepl("flat_", dev_file)]
+flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
+file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
+
+test_that("pre_inflate_all_diagnosis is a function", {
+  expect_true(inherits(pre_inflate_all_diagnosis, "function"))
+})
+
+usethis::with_project(dummypackage, {
+  # We inflate both flat files
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file2,
+      vignette_name = "Get started2", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  config_yml_ref <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+
+  test_that("all files can be inflated with inflate_all()", {
+    # all files can be inflated with inflate_all()
+    config_yml <- config_yml_ref
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is going to be inflated",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
+          ),
+          class = c(
+            "glue",
+            "character"
+          )
+        ),
+        type = c("cli::cli_alert_success", "cli::cli_alert_success"),
+        params = c(NA, NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+    expect_equal(
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
+    )
+  })
+
+  test_that("not inflated because 'inactive or deprecated' (message) works", {
+    #  "not inflated because 'inactive or deprecated' (message) : a file is present in config_yml but its state is not 'active'
+    config_yml <- config_yml_ref
+    config_yml[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is not going to be inflated because it is in state 'inactive or deprecated'",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
+          ),
+          class = c(
+            "glue",
+            "character"
+          )
+        ),
+        type = c("cli::cli_alert_warning", "cli::cli_alert_success"),
+        params = c(NA, NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+
+    expect_equal(
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
+    )
+  })
+
+  test_that("not inflated because not in config file please inflate()  warning", {
+    #  "not inflated because not in config file please inflate() from the flat once" (warning) : a file is missing from config_yml
+    config_yml <- config_yml_ref
+    config_yml[["flat_minimal.Rmd"]] <- NULL
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is not going to be inflated because it is absent from the config file. Please inflate() from the flat once if needed or set it manually with status 'inactive'.",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
+          ),
+          class = c(
+            "glue",
+            "character"
+          )
+        ),
+        type = c("cli::cli_alert_danger", "cli::cli_alert_success"),
+        params = c(NA, NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+    expect_equal(
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
+    )
+  })
+
+    test_that("not inflated because in config but no state -  warning", {
+
+    config_yml <- config_yml_ref
+    config_yml[["flat_minimal.Rmd"]][["state"]] <- NULL
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is not going to be inflated because there is no 'state' in the configuration file. Please add 'state: active' or 'state: inactive' under the flat name.",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
+          ),
+          class = c(
+            "glue",
+            "character"
+          )
+        ),
+        type = c("cli::cli_alert_warning", "cli::cli_alert_success"),
+        params = c(NA, NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+    expect_equal(
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
+    )
+  })
+    
+  test_that("not inflated because in config, but without parameters - stop", {
+    #  "not inflated because in config, but without parameters, please inflate() again from the flat with this new 'fusen' version" (stop) : a file is is config_yml but has not inflate parameters
+    config_yml <- config_yml_ref
+    config_yml[["flat_minimal.Rmd"]][["inflate"]] <- NULL
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    diag_expected <- structure(
+      list(
+        flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat file with this 'fusen' version",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
+          ),
+          class = c(
+            "glue",
+            "character"
+          )
+        ),
+        type = c("stop", "cli::cli_alert_success"),
+        params = c("call. = FALSE", NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c("tbl_df", "tbl", "data.frame")
+    )
+
+    expect_equal(
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
+    )
+  })
+
+  
+  
+  test_that("a file is in config.yml but missing", {
+    # a file is in config.yml but missing from dev/
+    config_yml <- config_yml_ref
+    config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    diag_expected <- structure(
+      list(
+        flat = c(
+          "flat_minimal.Rmd", "flat_minimal_2.Rmd",
+          "missing_file.Rmd"
+        ),
+        status = structure(
+          c(
+            "The flat file flat_minimal.Rmd is going to be inflated",
+            "The flat file flat_minimal_2.Rmd is going to be inflated",
+            "The file missing_file.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"
+          ),
+          class = c("glue", "character")
+        ),
+        type = c(
+          "cli::cli_alert_success", "cli::cli_alert_success",
+          "stop"
+        ),
+        params = c(NA, NA, "call. = FALSE")
+      ),
+      row.names = c(NA, -3L),
+      class = c(
+        "tbl_df", "tbl",
+        "data.frame"
+      )
+    )
+
+    expect_equal(
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
+    )
+  })
+
+  test_that("messages show properly", {
+    config_yml <- config_yml_ref
+    config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    expect_error(
+      pre_inflate_all_diagnosis_eval(diag, type_stop = TRUE),
+    )
+    expect_message(
+      pre_inflate_all_diagnosis_eval(diag, type_stop = FALSE),
+    )
+  })
+
+  test_that("files listed in 'keep' are ignored", {
+    config_yml <- config_yml_ref
+
+    file.create(file.path(dummypackage, "R/zaza.R"))
+
+    my_files_to_protect <- tibble::tribble(
+      ~type, ~path,
+      "R", "R/zaza.R"
+    )
+
+    df_to_config(my_files_to_protect, force = TRUE)
+
+    config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    expect_false(
+      "keep" %in% diag[["flat"]]
+    )
+  })
+
+
+  test_that("error if we dont have any flat file", {
+    # error if we dont have any flat file in dev/
+    config_yml <- config_yml_ref
+    unlink(flat_file)
+    unlink(flat_file2)
+    expect_error(pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage),
+      regexp = "There are no flat files"
+    )
+  })
+})
+
+unlink(dummypackage, recursive = TRUE)
+```
+
+# read_inflate_params
+
+```{r function-read_inflate_params, filename = "inflate_all_utils"}
+#' Read inflate-related parameters in config_fusen.yaml
+#'
+#' Internal function used in `inflate_all()`
+#'
+#' @param config_yml List. Content of the fusen config_file
+#'
+#' @return a named list with the flat files listed in config_fusen.yaml
+#' and the parameters used to inflate them
+#' @noRd
+#' @examples
+read_inflate_params <- function(config_yml) {
+  config_yml <- config_yml[sapply(config_yml, function(flat) isTRUE(flat[["state"]] == "active"))]
+
+  flat_files_names <- names(config_yml)
+
+  flat_files_names <- flat_files_names[!flat_files_names %in% "keep"]
+
+  if (length(flat_files_names) == 0) {
+    return(NULL)
+  }
+
+  # inflate-related parameters are at level 2 of the list
+  inflate_params <- lapply(flat_files_names, function(flat) {
+    config_yml[[flat]][["inflate"]]
+  }) %>% setNames(flat_files_names)
+
+  inflate_params
+}
+```
+
+```{r examples-read_inflate_params, eval=FALSE}
+#' \dontrun{
+config_yml <- yaml::read_yaml(system.file("inflate_all/config_fusen_with_inflate_parameters.yaml", package = "fusen"))
+read_inflate_params(config_yml = config_yml)
+#' }
+```
+
+```{r tests-read_inflate_params}
+dummypackage <- tempfile("readinflateparams")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+
+# let's create 2 flat files
+flat_file <- dev_file[grepl("flat_", dev_file)]
+flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
+file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
+
+test_that("read_inflate_params is a function", {
+  expect_true(inherits(read_inflate_params, "function"))
+})
+
+test_that("read_inflate_params doesnt work if config fusen does not exist", {
+  config_fusen_not_existing <-
+    system.file("inflate_all/fake.yaml", package = "fusen")
+  expect_error(read_inflate_params(config_yml = config_fusen_not_existing))
+})
+
+
+
+usethis::with_project(dummypackage, {
+  # We inflate both flat files
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file2,
+      vignette_name = "Get started2", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  config_yml_ref <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+  
+  test_that("read_inflate_params work properly", {
+    inflate_params <-
+      read_inflate_params(config_yml = config_yml_ref)
+    
+    expect_equal(
+      length(inflate_params),
+      2
+    )
+    
+    expect_true(
+      all(names(inflate_params) %in% c("flat_minimal_2.Rmd", "flat_minimal.Rmd"))
+    )
+    
+    expect_equal(
+      inflate_params[["flat_minimal.Rmd"]],
+      list(
+        flat_file = "dev/flat_minimal.Rmd",
+        vignette_name = "Get started",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "ask"
+      )
+    )
+    
+    expect_equal(
+      inflate_params[["flat_minimal_2.Rmd"]],
+      list(
+        flat_file = "dev/flat_minimal_2.Rmd",
+        vignette_name = "Get started2",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "ask"
+      )
+    )
+  })
+  
+  # what happens if we deprecate a file
+  test_that("read_inflate_params work properly with deprecated", {
+    config_yml_ref[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
+    
+    inflate_params <-
+      read_inflate_params(config_yml = config_yml_ref)
+    
+    expect_null(inflate_params[["flat_minimal.Rmd"]])
+    
+    expect_equal(
+      length(inflate_params),
+      1
+    )
+  })
+  
+  # what happens if we add a file in the "keep" section
+  test_that("read_inflate_params work properly with keep section", {
+    file.create(file.path(dummypackage, "R/zaza.R"))
+    
+    my_files_to_protect <- tibble::tribble(
+      ~type, ~path,
+      "R", "R/zaza.R"
+    )
+    
+    df_to_config(my_files_to_protect, force = TRUE)
+    
+    config_yml <-
+      yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+    
+    inflate_params <-
+      read_inflate_params(config_yml = config_yml)
+    
+    expect_false("keep" %in% names(inflate_params))
+    
+    # Old version with no state for "keep" section should work too
+    config_yml[["keep"]][["state"]] <- NULL
+    
+    expect_error(
+      inflate_params <-
+        read_inflate_params(config_yml = config_yml), regexp = NA
+    )
+    
+    expect_false("keep" %in% names(inflate_params))
+  })
+})
+
+unlink(dummypackage, recursive = TRUE)
+```
+
+  
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_inflate_all_utils.Rmd",
+  vignette_name = NA,
+  check = FALSE,
+  overwrite = TRUE,
+  open_vignette = FALSE
+)
+# rstudioapi::navigateToFile("dev/dev_history.R", line = 105)
+```

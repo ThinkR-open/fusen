@@ -47,7 +47,7 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
-Config/fusen/version: 0.5.0.9001
+Config/fusen/version: 0.5.0.9002
 Config/Needs/website: ThinkR-open/thinkrtemplate
 Config/testthat/edition: 3
 Encoding: UTF-8

@@ -24,9 +24,9 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
 #' @param overwrite Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 #' Whether to overwrite vignette and functions if already exists.
-#' @param ... Arguments passed to `rcmdcheck::rcmdcheck()`.
+#' @param ... Arguments passed to `devtools::check()`.
 #'     For example, you can do `inflate(check = TRUE, quiet = TRUE)`, where `quiet` is
-#'     passed to `rcmdcheck::rcmdcheck()`.
+#'     passed to `devtools::check()`.
 #'
 #' @importFrom parsermd parse_rmd as_tibble
 #' @importFrom utils getFromNamespace
@@ -272,6 +272,7 @@ inflate <- function(pkg = ".", flat_file,
 
   inflate_default_parameters <- formalArgs(fusen::inflate)
   inflate_default_parameters <- inflate_default_parameters[which(inflate_default_parameters != "...")]
+  inflate_default_parameters <- inflate_default_parameters[which(inflate_default_parameters != "pkg")]
 
   inflate_default_parameters <- lapply(inflate_default_parameters, function(param) get(param)) %>%
     setNames(inflate_default_parameters)
@@ -282,15 +283,9 @@ inflate <- function(pkg = ".", flat_file,
     inflate_default_parameters <- c(inflate_default_parameters, inflate_dots_parameters)
   }
 
-  inflate_default_parameters[["pkg"]] <- basename(
-    normalizePath(
-      inflate_default_parameters[["pkg"]]
-    )
-  )
-
   inflate_default_parameters[["flat_file"]] <- relative_flat_file
 
-  cli::cat_rule(glue("Updating config file for ", relative_flat_file))
+  cli::cat_rule(glue("config file for {relative_flat_file}"))
   config_file <- df_to_config(
     df_files = all_files,
     flat_file_path = relative_flat_file,
@@ -301,7 +296,6 @@ inflate <- function(pkg = ".", flat_file,
     force = TRUE,
     inflate_parameters = inflate_default_parameters
   )
-  cli::cli_alert_info(glue("config file created: ", config_file))
 
   # TODO - Propose to clean all files with 'clean_fusen_files()' ----
 
@@ -309,28 +303,21 @@ inflate <- function(pkg = ".", flat_file,
   #   clean_fusen_files()
   # }
 
+  # Document and check package
+  document_and_check_pkg(
+    pkg = pkg,
+    check = check,
+    document = document,
+    ...
+  )
 
-  # Run attachment
-  if (isTRUE(document)) {
-    attachment::att_amend_desc(path = pkg)
-  }
-
-  # Check
-  if (isTRUE(check)) {
-    cli::cat_rule("Launching check()")
-    res <- devtools::check(
-      pkg,
-      ...
-    )
-    print(res)
-  }
 
   # Restart RStudio
   if (needs_restart) {
     cli::cat_rule("RStudio restart needed")
     getFromNamespace("restart_rstudio", "usethis")("A restart of RStudio is required to activate the Build pane")
   }
-  pkg
+  invisible(pkg)
 }
 
 

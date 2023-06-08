@@ -4,20 +4,29 @@ flat_addins.Rmd:
   R: R/build_fusen_chunks.R
   tests: tests/testthat/test-build_fusen_chunks.R
   vignettes: []
-flat_clean_fusen_files.Rmd:
-  path: dev/flat_clean_fusen_files.Rmd
-  state: active
-  R: R/clean_fusen_files.R
-  tests: tests/testthat/test-clean_fusen_files.R
-  vignettes: vignettes/clean-fusen-files.Rmd
+  inflate:
+    flat_file: dev/flat_addins.Rmd
+    vignette_name: .na
+    open_vignette: true
+    check: false
+    document: false
+    overwrite: ask
 flat_create_flat.Rmd:
   path: dev/flat_create_flat.Rmd
   state: active
   R: R/add_flat_template.R
   tests: tests/testthat/test-add_flat_template.R
   vignettes: []
+  inflate:
+    flat_file: dev/flat_create_flat.Rmd
+    vignette_name: .na
+    open_vignette: true
+    check: false
+    document: false
+    overwrite: ask
 flat_history_core.Rmd:
   path: dev/flat_history_core.Rmd
+  state: inactive
   R:
   - R/add_dev_history.R
   - R/fill_description.R
@@ -30,28 +39,66 @@ flat_history_core.Rmd:
   vignettes: vignettes/How-to-use-fusen.Rmd
 flat_history_maintain.Rmd:
   path: dev/flat_history_maintain.Rmd
+  state: inactive
   R: []
   tests: []
   vignettes: vignettes/Maintain-packages-with-fusen.Rmd
+flat_inflate_all.Rmd:
+  path: dev/flat_inflate_all.Rmd
+  state: active
+  R: R/inflate_all.R
+  tests: tests/testthat/test-inflate_all.R
+  vignettes: vignettes/inflate-all-your-flat-files.Rmd
+  inflate:
+    flat_file: dev/flat_inflate_all.Rmd
+    vignette_name: Inflate all your flat files
+    open_vignette: false
+    check: true
+    document: true
+    overwrite: 'yes'
+flat_inflate_all_utils.Rmd:
+  path: dev/flat_inflate_all_utils.Rmd
+  state: active
+  R:
+  - R/inflate_all_utils.R
+  - R/pre_inflate_all_diagnosis_eval.R
+  tests:
+  - tests/testthat/test-pre_inflate_all_diagnosis_eval.R
+  - tests/testthat/test-inflate_all_utils.R
+  vignettes: []
+  inflate:
+    pkg: fusen
+    flat_file: dev/flat_inflate_all_utils.Rmd
+    vignette_name: .na
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
 flat_init_share_on_github.Rmd:
   path: dev/flat_init_share_on_github.Rmd
   state: active
   R: R/init_share_on_github.R
   tests: tests/testthat/test-init_share_on_github.R
   vignettes: vignettes/share-on-a-github-website.Rmd
-flat_read_inflate_params.Rmd:
-  path: dev/flat_read_inflate_params.Rmd
-  state: active
-  R: R/pre_inflate_all_diagnosis.R
-  tests: tests/testthat/test-pre_inflate_all_diagnosis.R
-  vignettes: vignettes/inflate-all-your-flat-files.Rmd
   inflate:
-    pkg: fusen
-    flat_file: dev/flat_read_inflate_params.Rmd
-    vignette_name: Inflate all your flat files
-    open_vignette: no
-    check: no
-    document: yes
+    flat_file: dev/flat_init_share_on_github.Rmd
+    vignette_name: Share on a GitHub website
+    open_vignette: true
+    check: false
+    document: true
+    overwrite: 'yes'
+flat_register_config_file.Rmd:
+  path: dev/flat_register_config_file.Rmd
+  state: active
+  R: R/register_config_file.R
+  tests: tests/testthat/test-register_config_file.R
+  vignettes: vignettes/register-files-in-config.Rmd
+  inflate:
+    flat_file: dev/flat_register_config_file.Rmd
+    vignette_name: Register files in config
+    open_vignette: false
+    check: false
+    document: true
     overwrite: 'yes'
 keep:
   path: keep

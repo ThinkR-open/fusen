@@ -255,7 +255,5 @@ test_that("init_share_on_github works", {
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(flat_file = "dev/flat_init_share_on_github.Rmd", vignette_name = "Share on a GitHub website", overwrite = TRUE, check = FALSE)
-
-rstudioapi::navigateToFile("dev/dev_history.R", line = 105)
 ```
 

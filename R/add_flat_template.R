@@ -89,23 +89,23 @@ add_full <- function(pkg = ".",
 #' # Create a new project
 #' dummypackage <- tempfile("dummypackage")
 #' dir.create(dummypackage)
-#'
+#' 
 #' # Add
 #' add_flat_template(template = "teaching", pkg = dummypackage)
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
-#'
+#' 
 #' # For classical use in your package
 #' \dontrun{
 #' # first time ever using 'fusen'
 #' add_flat_template("full")
-#'
+#' 
 #' # first time in your new package
 #' add_flat_template("minimal")
-#'
+#' 
 #' # add new flat file for new functions
 #' add_flat_template("add")
-#'
+#' 
 #' # add new flat template for teaching (a reduced full template)
 #' add_flat_template("teaching")
 #' }
@@ -263,7 +263,8 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
     cat(enc2utf8(all), file = gitfile, sep = "\n")
   }
 
-  if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
+  if (length(list.files(pkg, pattern = "[.]Rproj")) == 0 &
+    !any(grepl("^[.]here$", list.files(pkg, all.files = TRUE)))) {
     here::set_here(pkg)
   }
   if (isTRUE(open) & interactive()) {

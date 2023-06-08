@@ -1,0 +1,24 @@
+# new_fun2
+
+```{r function-new_fun2}
+#' Title
+#'
+#' Description
+#'
+#' @return 2
+#'
+#' @export
+new_fun2 <- function(){
+
+}
+```
+
+```{r example-new_fun2}
+new_fun2()
+```
+
+```{r tests-new_fun2}
+test_that("new_fun2 works", {
+  expect_true(inherits(new_fun2, "function"))
+})
+```
