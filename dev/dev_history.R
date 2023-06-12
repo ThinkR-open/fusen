@@ -99,6 +99,11 @@ fusen::inflate_all()
 fusen::inflate_all(args = c("--no-manual", "--no-tests"))
 fusen::inflate_all_no_check()
 
+# Clean style
+styler::style_pkg()
+styler::style_file(list.files("dev", pattern = "[.](Rmd|qmd|rmd)$", full.names = TRUE)
+)
+
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")
 # attachment::att_from_namespace()
@@ -112,10 +117,7 @@ attachment::att_amend_desc(
 )
 # attachment::create_dependencies_file()
 
-# Clean style
-styler::style_pkg()
-styler::style_file(list.files("dev", pattern = "[.](Rmd|qmd|rmd)$", full.names = TRUE)
-)
+
 
 # Description and Bibliography
 chameleon::create_pkg_desc_file(out.dir = "inst", source = c("archive"), to = "html")

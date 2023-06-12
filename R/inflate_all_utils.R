@@ -98,16 +98,35 @@
 #' unlink(dummypackage, recursive = TRUE)
 #' }
 pre_inflate_all_diagnosis <- function(config_yml, pkg) {
-  flat_files_in_dev_folder <- list.files(file.path(pkg, "dev"))
-  flat_files_in_dev_folder <- flat_files_in_dev_folder[grepl(pattern = "^flat_", x = flat_files_in_dev_folder)]
 
-  if (length(flat_files_in_dev_folder) == 0) {
-    stop("There are no flat files starting with 'flat_' in the 'dev/' directory")
+  flat_file_in_config <- setdiff(names(config_yml), "keep")
+  flat_files_in_dev_folder <- list.files(file.path(pkg, "dev"), pattern = "^flat_.*[.](r|R|q|Q)md$")
+
+  flat_files_to_diag <- unique(c(flat_files_in_dev_folder, flat_file_in_config))
+  
+  if (length(flat_files_to_diag) == 0) {
+    stop("There are no flat files listed in config or files starting with 'flat_' in the 'dev/' directory")
+  }
+  
+  config_paths <- sapply(config_yml[which(names(config_yml) != "keep")], function(x) x$path)
+  flat_files_in_config_that_dontexist <- character(0)
+  if (length(config_paths) != 0) {
+      flat_files_in_config_that_dontexist <- names(config_paths)[!file.exists(config_paths)]
   }
 
-  flat_files_status <- lapply(flat_files_in_dev_folder, function(flat) {
-    # flat <- flat_files_in_dev_folder[5]
-    if (flat %in% names(config_yml) &&
+
+  flat_files_status <- lapply(flat_files_to_diag, function(flat) {
+    # flat <- flat_files_to_diag[2]
+    if (flat %in% flat_files_in_config_that_dontexist) {
+      return(tibble(
+        flat = flat,
+        status = glue("The file {flat} is not going to be inflated because it was not found,",
+        " have you changed the name or did you move in another place ?",
+        " Maybe you want to set the state as 'deprecated' in the config file"),
+        type = "stop",
+        params = "call. = FALSE"
+      ))
+    } else if (flat %in% names(config_yml) &&
       "inflate" %in% names(config_yml[[flat]]) &&
       !is.null(config_yml[[flat]][["state"]]) &&
       config_yml[[flat]][["state"]] == "active") {
@@ -160,22 +179,6 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
   })
 
   flat_files_status <- do.call(rbind, flat_files_status)
-
-  files_in_config_yml_but_missing_in_dev_folder <- names(config_yml)[!names(config_yml) %in% c(flat_files_in_dev_folder, "keep")]
-
-  if (length(files_in_config_yml_but_missing_in_dev_folder) > 0) {
-    flat_files_status <- rbind(
-      flat_files_status,
-      tibble(
-        flat = files_in_config_yml_but_missing_in_dev_folder,
-        status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
-        type = "stop",
-        params = "call. = FALSE"
-      )
-    )
-  }
-
-  # reorder with stops first
 
   return(invisible(flat_files_status))
 }

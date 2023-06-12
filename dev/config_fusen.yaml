@@ -67,7 +67,6 @@ flat_inflate_all_utils.Rmd:
   - tests/testthat/test-inflate_all_utils.R
   vignettes: []
   inflate:
-    pkg: fusen
     flat_file: dev/flat_inflate_all_utils.Rmd
     vignette_name: .na
     open_vignette: false

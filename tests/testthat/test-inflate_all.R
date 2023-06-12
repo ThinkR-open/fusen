@@ -79,10 +79,11 @@ usethis::with_project(dummypackage, {
     expect_error(inflate_all(check = FALSE), regexp = "The flat file flat_minimal[.]Rmd is not going to be inflated because although present in the config file, it has no inflate\\(\\) parameters")
   })
 
-  test_that("flat file in in config_fusen.yml not present in dev", {
-    # Let's add a flat file in in config_fusen.yml not present in dev/
+  test_that("flat file in config_fusen.yml not present in dev", {
+    # Let's add a flat file in config_fusen.yml not present in dev/
     config_yml_file_absent_in_dev <- config_yml_ref
     config_yml_file_absent_in_dev[["missing_file.Rmd"]] <- config_yml_file_absent_in_dev[["flat_minimal.Rmd"]]
+    config_yml_file_absent_in_dev[["missing_file.Rmd"]][["path"]] <- "dev/missing_file.Rmd"
     yaml::write_yaml(config_yml_file_absent_in_dev, file = "dev/config_fusen.yaml")
 
     expect_error(inflate_all(check = FALSE), regexp = "The file missing_file[.]Rmd is not going to be inflated because it was not found")
@@ -234,7 +235,64 @@ usethis::with_project(dummypackage, {
 
 unlink(dummypackage, recursive = TRUE)
 
-# Test inflate_all_no_check vs inflate_all with check
+# with no files named flat_ works ----
+
+# You can also inflate_all flats of another package as follows
+# Example with a dummy package with a flat file
+dummypackage <- tempfile("inflateall")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+flat_files <- add_minimal(
+  pkg = dummypackage,
+  overwrite = TRUE,
+  open = FALSE
+)
+flat_file <- flat_files[grep("flat", basename(flat_files))]
+# Change flat name
+flat_file_newname <- gsub("flat_minimal[.]Rmd", "test_minimal.Rmd", flat_file)
+file.rename(flat_file, flat_file_newname)
+
+# Inflate the flat file once
+usethis::with_project(dummypackage, {
+
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  # you need to inflate manually your flat file first
+  inflate(
+    pkg = dummypackage,
+    flat_file = flat_file_newname,
+    vignette_name = "Get started",
+    check = FALSE,
+    open_vignette = FALSE,
+    document = TRUE,
+    overwrite = "yes"
+  )
+
+  # your config file has been created
+  config_yml_ref <-
+    yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
+
+  test_that("inflate_all with no files named flat_ works", {
+  # now you can run inflate_all()
+  expect_message(
+    inflate_all(check = FALSE, document = TRUE), 
+    regexp = "The flat file test_minimal.Rmd is going to be inflated")
+  
+  # Delete R file and see if it comes back
+  the_file <- file.path("R", "my_fun.R")
+  file.remove(the_file)
+  expect_false(file.exists(the_file))
+  
+  inflate_all(check = FALSE, document = TRUE)
+  expect_true(file.exists(the_file))
+  })
+})
+
+# Clean the temporary directory
+unlink(dummypackage, recursive = TRUE)
+
+# Test inflate_all_no_check vs inflate_all with check ----
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
