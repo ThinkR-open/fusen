@@ -179,7 +179,6 @@ get_list_paths <- function(config_list) {
 
 #' @importFrom stats setNames
 #' @importFrom utils read.csv
-#' @importFrom yaml write_yaml read_yaml
 #' @importFrom cli cli_alert_warning cli_alert_info
 #'
 #' @return Config file path.
@@ -446,8 +445,18 @@ df_to_config <- function(df_files,
     }
   }
 
-  write_yaml(complete_yaml,
-    file = config_file,
+  write_yaml_verbatim(complete_yaml, file = config_file)
+
+  return(config_file)
+}
+
+
+#' Make sure yaml returns true/false as is, and not "yes/no"
+#' @importFrom yaml write_yaml read_yaml
+#' @noRd
+write_yaml_verbatim <- function(x, file) {
+  write_yaml(x,
+    file = file,
     handlers = list(
       logical = function(x) {
         result <- ifelse(x, "true", "false")
@@ -456,8 +465,6 @@ df_to_config <- function(df_files,
       }
     )
   )
-
-  return(config_file)
 }
 
 #' Extract name of file along with type to inform the user

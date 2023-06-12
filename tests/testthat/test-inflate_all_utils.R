@@ -32,8 +32,6 @@ usethis::with_project(dummypackage, {
     )
   )
 
-  browser()
-  
   config_yml_ref <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
 
   test_that("all files can be inflated with inflate_all()", {
@@ -193,12 +191,11 @@ usethis::with_project(dummypackage, {
     )
   })
 
-  
-  
   test_that("a file is in config.yml but missing", {
     # a file is in config.yml but missing from dev/
     config_yml <- config_yml_ref
     config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
+    config_yml[["missing_file.Rmd"]][["path"]] <- "dev/missing_file.Rmd"
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
     diag_expected <- structure(
@@ -233,10 +230,11 @@ usethis::with_project(dummypackage, {
       diag_expected[order(diag_expected$flat), ]
     )
   })
-
+  
   test_that("messages show properly", {
     config_yml <- config_yml_ref
     config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
+    config_yml[["missing_file.Rmd"]][["path"]] <- "dev/missing_file.Rmd"
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 
     expect_error(
@@ -267,15 +265,111 @@ usethis::with_project(dummypackage, {
       "keep" %in% diag[["flat"]]
     )
   })
+    
+  test_that("works if flat not named flat_", {
+    # Rename and remove from config
+    new_name <- file.path("dev", "test_minimal.Rmd")
+    file.rename(file.path("dev", "flat_minimal.Rmd"), new_name)
+    
+    config_yml <- config_yml_ref
+    config_yml[["flat_minimal.Rmd"]] <- NULL
+    config_yml_file <- file.path(dummypackage, "dev/config_fusen.yaml")
+    write_yaml_verbatim(config_yml, config_yml_file)
 
+    # inflate again
+    expect_error(
+      suppressMessages(
+        inflate(
+          pkg = dummypackage, flat_file = new_name,
+          vignette_name = "Get started", check = FALSE,
+          open_vignette = FALSE,
+          overwrite = TRUE
+        )
+      ), regexp = NA)
+    
 
-  test_that("error if we dont have any flat file", {
+    config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+
+    diag_expected <- structure(
+      list(
+        flat = c(
+          "test_minimal.Rmd", "flat_minimal_2.Rmd"
+        ),
+        status = structure(
+          c(
+            "The flat file test_minimal.Rmd is going to be inflated",
+            "The flat file flat_minimal_2.Rmd is going to be inflated"
+          ),
+          class = c("glue", "character")
+        ),
+        type = c(
+          "cli::cli_alert_success", "cli::cli_alert_success"
+        ),
+        params = c(NA, NA)
+      ),
+      row.names = c(NA, -2L),
+      class = c(
+        "tbl_df", "tbl",
+        "data.frame"
+      )
+    )
+
+    expect_equal(
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
+    )
+  })
+  # At this stage, there is no more "dev/flat_minimal.Rmd", but a "dev/test_minimal.Rmd"
+  file.rename(file.path(dummypackage, "dev", "test_minimal.Rmd"), 
+              file.path(dummypackage, "dev", "flat_minimal.Rmd"))
+  
+  # /!\ This one needs to be at the end because it deletes flat files
+  test_that("all missing files gives stop messages without errors", {
     # error if we dont have any flat file in dev/
     config_yml <- config_yml_ref
-    unlink(flat_file)
-    unlink(flat_file2)
-    expect_error(pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage),
-      regexp = "There are no flat files"
+    unlink(file.path(dummypackage, "dev/flat_minimal.Rmd"))
+    unlink(file.path(dummypackage, "dev/flat_minimal_2.Rmd"))
+
+    diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
+      
+    diag_expected <- structure(
+      list(
+        flat = c(
+          "flat_minimal.Rmd", "flat_minimal_2.Rmd"
+        ),
+        status = structure(
+          c(
+            "The file flat_minimal.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file",
+            "The file flat_minimal_2.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"
+          ),
+          class = c("glue", "character")
+        ),
+        type = c(
+          "stop", "stop"
+        ),
+        params = c("call. = FALSE", "call. = FALSE")
+      ),
+      row.names = c(NA, -2L),
+      class = c(
+        "tbl_df", "tbl",
+        "data.frame"
+      )
+    )
+
+    expect_equal(
+      diag[order(diag$flat), ],
+      diag_expected[order(diag_expected$flat), ]
+    )
+      
+  })
+  
+  # /!\ This one needs to be at the end because it deletes flat files
+  test_that("all missing files and config empty gives stops", {
+    config_yml <- list(keep = list(path = "keep"))
+    expect_error(
+          diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage),
+      regexp = "There are no flat files listed in config or files starting with 'flat_' in the 'dev/' directory"
     )
   })
 })

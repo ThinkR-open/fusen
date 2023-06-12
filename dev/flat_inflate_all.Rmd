@@ -248,6 +248,7 @@ usethis::with_project(dummypackage, {
     # Let's add a flat file in config_fusen.yml not present in dev/
     config_yml_file_absent_in_dev <- config_yml_ref
     config_yml_file_absent_in_dev[["missing_file.Rmd"]] <- config_yml_file_absent_in_dev[["flat_minimal.Rmd"]]
+    config_yml_file_absent_in_dev[["missing_file.Rmd"]][["path"]] <- "dev/missing_file.Rmd"
     yaml::write_yaml(config_yml_file_absent_in_dev, file = "dev/config_fusen.yaml")
 
     expect_error(inflate_all(check = FALSE), regexp = "The file missing_file[.]Rmd is not going to be inflated because it was not found")
@@ -437,7 +438,6 @@ usethis::with_project(dummypackage, {
   config_yml_ref <-
     yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
 
-  
   test_that("inflate_all with no files named flat_ works", {
   # now you can run inflate_all()
   expect_message(

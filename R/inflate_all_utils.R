@@ -36,7 +36,7 @@
 #'   to = flat_file2,
 #'   overwrite = TRUE
 #' )
-#'
+#' 
 #' # let's inflate them to have dev/config_fusen.yml
 #' suppressMessages(
 #'   inflate(
@@ -47,7 +47,7 @@
 #'     open_vignette = FALSE
 #'   )
 #' )
-#'
+#' 
 #' suppressMessages(
 #'   inflate(
 #'     pkg = dummypackage,
@@ -57,44 +57,44 @@
 #'     open_vignette = FALSE
 #'   )
 #' )
-#'
+#' 
 #' config_yml_ref <-
 #'   yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
-#'
+#' 
 #' # all files can be inflated with inflate_all()
 #' config_yml <- config_yml_ref
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' # let's consider the first flat file is deprecated
 #' config_yml <- config_yml_ref
 #' config_yml[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' # let's consider the first flat file is missing from config_fusen.yaml
 #' config_yml <- config_yml_ref
 #' config_yml[["flat_minimal.Rmd"]] <- NULL
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' # let's consider that the first flat file has not inflate related params in config_fusen.yaml
 #' config_yml <- config_yml_ref
 #' config_yml[["flat_minimal.Rmd"]][["inflate"]] <- NULL
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' # let's consider a file is in config.yml but missing from dev/
 #' config_yml <- config_yml_ref
 #' config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#'
+#' 
 #' unlink(dummypackage, recursive = TRUE)
 #' }
 pre_inflate_all_diagnosis <- function(config_yml, pkg) {
@@ -103,14 +103,30 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
   flat_files_in_dev_folder <- list.files(file.path(pkg, "dev"), pattern = "^flat_.*[.](r|R|q|Q)md$")
 
   flat_files_to_diag <- unique(c(flat_files_in_dev_folder, flat_file_in_config))
-
+  
   if (length(flat_files_to_diag) == 0) {
     stop("There are no flat files listed in config or files starting with 'flat_' in the 'dev/' directory")
   }
+  
+  config_paths <- sapply(config_yml[which(names(config_yml) != "keep")], function(x) x$path)
+  flat_files_in_config_that_dontexist <- character(0)
+  if (length(config_paths) != 0) {
+      flat_files_in_config_that_dontexist <- names(config_paths)[!file.exists(config_paths)]
+  }
+
 
   flat_files_status <- lapply(flat_files_to_diag, function(flat) {
-    # flat <- flat_files_to_diag[3]
-    if (flat %in% names(config_yml) &&
+    # flat <- flat_files_to_diag[2]
+    if (flat %in% flat_files_in_config_that_dontexist) {
+      return(tibble(
+        flat = flat,
+        status = glue("The file {flat} is not going to be inflated because it was not found,",
+        " have you changed the name or did you move in another place ?",
+        " Maybe you want to set the state as 'deprecated' in the config file"),
+        type = "stop",
+        params = "call. = FALSE"
+      ))
+    } else if (flat %in% names(config_yml) &&
       "inflate" %in% names(config_yml[[flat]]) &&
       !is.null(config_yml[[flat]][["state"]]) &&
       config_yml[[flat]][["state"]] == "active") {
@@ -163,24 +179,6 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
   })
 
   flat_files_status <- do.call(rbind, flat_files_status)
-
-  # TODO - Put this part inside the apply function
-  browser()
-  files_in_config_yml_but_missing_in_dev_folder <- names(config_yml)[!names(config_yml) %in% c(flat_files_in_dev_folder, "keep")]
-
-  if (length(files_in_config_yml_but_missing_in_dev_folder) > 0) {
-    flat_files_status <- rbind(
-      flat_files_status,
-      tibble(
-        flat = files_in_config_yml_but_missing_in_dev_folder,
-        status = glue("The file {files_in_config_yml_but_missing_in_dev_folder} is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"),
-        type = "stop",
-        params = "call. = FALSE"
-      )
-    )
-  }
-
-  # reorder with stops first
 
   return(invisible(flat_files_status))
 }
