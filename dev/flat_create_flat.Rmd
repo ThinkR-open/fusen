@@ -12,7 +12,7 @@ library(testthat)
 library(tools)
 ```
 
-# My function
+# add_flat_template
 
 ```{r function-1}
 #' Add flat Rmd file that drives package development
@@ -42,7 +42,6 @@ library(tools)
 #' "add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".
 #'
 #' `add_additional()`, `add_minimal()`, `add_full()` are wrapper around `add_flat_template("additional")`, ...
-#' However, `add_dev_history()` is a deprecated function from a previous version.
 #'
 #' @rdname add_flat_template
 #' @return

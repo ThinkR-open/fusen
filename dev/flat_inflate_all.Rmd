@@ -209,7 +209,7 @@ usethis::with_project(dummypackage, {
     config_yml_deprecated <- config_yml_ref
     config_yml_deprecated[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
     config_yml_deprecated[["flat_minimal.Rmd"]][["R"]] <- ""
-    yaml::write_yaml(config_yml_deprecated, file = "dev/config_fusen.yaml")
+    write_yaml_verbatim(config_yml_deprecated, file = "dev/config_fusen.yaml")
 
     # And remove R file to verify it is not rebuilt
     fun_file <- file.path("R", "my_fun.R")
@@ -239,7 +239,7 @@ usethis::with_project(dummypackage, {
     # Let's remove the inflate parameters from config_fusen.yml
     config_yml_no_inflate_params <- config_yml_ref
     config_yml_no_inflate_params[["flat_minimal.Rmd"]][["inflate"]] <- NULL
-    yaml::write_yaml(config_yml_no_inflate_params, file = "dev/config_fusen.yaml")
+    write_yaml_verbatim(config_yml_no_inflate_params, file = "dev/config_fusen.yaml")
 
     expect_error(inflate_all(check = FALSE), regexp = "The flat file flat_minimal[.]Rmd is not going to be inflated because although present in the config file, it has no inflate\\(\\) parameters")
   })
@@ -249,7 +249,7 @@ usethis::with_project(dummypackage, {
     config_yml_file_absent_in_dev <- config_yml_ref
     config_yml_file_absent_in_dev[["missing_file.Rmd"]] <- config_yml_file_absent_in_dev[["flat_minimal.Rmd"]]
     config_yml_file_absent_in_dev[["missing_file.Rmd"]][["path"]] <- "dev/missing_file.Rmd"
-    yaml::write_yaml(config_yml_file_absent_in_dev, file = "dev/config_fusen.yaml")
+    write_yaml_verbatim(config_yml_file_absent_in_dev, file = "dev/config_fusen.yaml")
 
     expect_error(inflate_all(check = FALSE), regexp = "The file missing_file[.]Rmd is not going to be inflated because it was not found")
   })
@@ -257,7 +257,7 @@ usethis::with_project(dummypackage, {
   test_that("inflate all really inflates all", {
     # Now let's take the ability of inflate_all() to inflate all our files !
     # We start from a clean place
-    yaml::write_yaml(config_yml_ref, file = "dev/config_fusen.yaml")
+    write_yaml_verbatim(config_yml_ref, file = "dev/config_fusen.yaml")
 
     suppressMessages(
       inflate(
@@ -366,7 +366,7 @@ usethis::with_project(dummypackage, {
   })
 
   test_that("inflate_all deals with vignette name", {
-    yaml::write_yaml(config_yml_ref, file = "dev/config_fusen.yaml")
+    write_yaml_verbatim(config_yml_ref, file = "dev/config_fusen.yaml")
 
     flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)

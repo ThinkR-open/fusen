@@ -493,7 +493,7 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 
 test_that("rmd and name are deprecated works", {
   usethis::with_project(dummypackage, {
-    expect_warning(
+    expect_error(
       suppressMessages(
         inflate(
           pkg = ".",
@@ -506,7 +506,7 @@ test_that("rmd and name are deprecated works", {
       ),
       regexp = "The `rmd` argument"
     )
-    expect_warning(
+    expect_error(
       suppressMessages(
         inflate(
           pkg = ".",
@@ -1185,3 +1185,61 @@ usethis::with_project(dummypackage, {
 
 # Clean
 unlink(dummypackage, recursive = TRUE)
+
+# Test special character in directory names ----
+dummypackage.special <- tempfile("dummypackage_@ (special)")
+dir.create(dummypackage.special)
+
+# {fusen} steps
+test_that("fill_description renames package name if not clean",  {
+  expect_warning(
+    desc_file <- fill_description(pkg = dummypackage.special, fields = list(Title = "Dummy Package")),
+    "Your package was renamed: `dummypackage[.]special[.]"
+  )
+
+  desc_file_lines <- readLines(desc_file)
+  expect_true(
+    grepl("dummypackage[.]special[.]",
+          desc_file_lines[grepl("Package", desc_file_lines)][1]
+  ))
+  expect_false(
+    grepl("dummypackage_@ \\(special\\)",
+          desc_file_lines[grepl("Package", desc_file_lines)][1]
+    ))
+})
+
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage.special, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage.special, {
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage.special, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  test_that("inflate with special character in directory worked", {
+    # config files
+    config_file <- file.path(dummypackage.special, "dev", "config_fusen.yaml")
+    config_content <- read_yaml(config_file)
+    expect_equal(
+      sort(config_content[["flat_full.Rmd"]][["R"]]),
+      expected = sort(c("R/my_median.R", "R/my_other_median.R"))
+    )
+    expect_equal(
+      sort(config_content[["flat_full.Rmd"]][["tests"]]),
+      expected = sort(c("tests/testthat/test-my_median.R",
+                        "tests/testthat/test-my_other_median.R"))
+    )
+    expect_equal(
+      sort(config_content[["flat_full.Rmd"]][["vignettes"]]),
+      expected = sort(c("vignettes/get-started.Rmd"))
+    )
+  })
+})
+
+# Clean
+unlink(dummypackage.special, recursive = TRUE)

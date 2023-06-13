@@ -122,7 +122,9 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
     write.csv(res_new, csv_file, row.names = FALSE)
     cli::cli_alert_info(paste(
       "Wrote not registered files in: ", csv_file,
-      "\nKeep only those necessary and run `df_to_config()` on the csv file."
+      "\nKeep only those necessary and run `df_to_config()` on the csv file:\n",
+      paste0('`df_to_config("', csv_file, '")`'),
+      "\nOr directly run `register_all_to_config()` and check your config file."
     ))
 
     return(csv_file)
@@ -340,7 +342,8 @@ df_to_config <- function(df_files,
     df_files$path <- gsub(
       paste0(normalize_path_winslash("."), "/"),
       "",
-      normalize_path_winslash(df_files$path, mustWork = TRUE)
+      normalize_path_winslash(df_files$path, mustWork = TRUE),
+      fixed = TRUE
     )
   }
 
@@ -349,8 +352,16 @@ df_to_config <- function(df_files,
     df_files$origin[df_files$origin != "keep"] <- gsub(
       paste0(normalize_path_winslash("."), "/"),
       "",
-      normalize_path_winslash(df_files$origin[df_files$origin != "keep"], mustWork = TRUE)
+      normalize_path_winslash(df_files$origin[df_files$origin != "keep"], mustWork = TRUE),
+      fixed = TRUE
     )
+  } else if (isFALSE(all(file.exists(df_files$origin[df_files$origin != "keep"])))) {
+    warning(
+      "Please open a bug on {fusen} package with this complete message:\n",
+      "There is an error in the df_to_config process.\n", 
+      "Files origin do not exist but will be registered as is in the config file:\n",
+      paste(df_files$origin[!file.exists(df_files$origin[df_files$origin != "keep"])],
+            collapse = ", "))
   }
 
   if (any(duplicated(df_files$path))) {

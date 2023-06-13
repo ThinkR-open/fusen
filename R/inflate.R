@@ -66,17 +66,15 @@ inflate <- function(pkg = ".", flat_file,
                     overwrite = "ask",
                     ...) {
   if (!is.null(list(...)[["name"]])) {
-    warning(paste0(
-      "The `name` argument to `inflate()` is deprecated since {fusen} version 0.3.0,",
-      " and will be removed in a future version.",
+    stop(paste0(
+      "The `name` argument to `inflate()` is deprecated since {fusen} version 0.3.0.",
       "\nPlease use `vignette_name = '", list(...)[["name"]], "'` instead.\n"
     ))
     vignette_name <- list(...)[["name"]]
   }
   if (!is.null(list(...)[["rmd"]])) {
-    warning(paste0(
-      "The `rmd` argument to `inflate()` is deprecated since {fusen} version 0.3.0,",
-      " and will be removed in a future version.",
+    stop(paste0(
+      "The `rmd` argument to `inflate()` is deprecated since {fusen} version 0.3.0.",
       "\nPlease use `flat_file = '", list(...)[["rmd"]], "'` instead.\n"
     ))
     flat_file <- list(...)[["rmd"]]
@@ -228,7 +226,8 @@ inflate <- function(pkg = ".", flat_file,
   # To be inserted in "DO NOT EDIT" comments
   relative_flat_file <- gsub(
     "^/", "",
-    sub(normalize_path_winslash(pkg), "", normalize_path_winslash(flat_file))
+    sub(normalize_path_winslash(pkg), "", normalize_path_winslash(flat_file),
+        fixed = TRUE)
   )
 
   # Check if there are functions ----

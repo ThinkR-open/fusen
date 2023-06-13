@@ -17,7 +17,7 @@ library(parsermd)
 # How to use {fusen}
 
 - Create a new directory / new project
-- Add the Rmarkdown template with `fusen::add_dev_history()`
+- Add the Rmarkdown template with `fusen::add_flat_template()`
 - Run the content of the first `development` chunk with `library(testthat)` inside
 - Modify and run the content of the chunk named `description`
 - Follow the `"dev/dev_history.Rmd"` template to write your documentation and build your functions and test your examples.  
@@ -28,7 +28,7 @@ library(parsermd)
 - Inflate the template to transform it as a package with functions, unit tests and the current Rmd transformed as a vignette. And check.
 - Build your {pkgdown} site to verify everything is at the right place
 
-> Create multiple `"dev_history_xxx.Rmd"` files with `fusen::add_dev_history()` if needed
+> Create multiple `"dev_history_xxx.Rmd"` files with `fusen::add_flat_template()` if needed
 
 ## Limitations
 
@@ -59,7 +59,9 @@ fusen::fill_description(
 
 # Add a new dev_history.Rmd template in "dev" directory
 
-```{r function}
+Deprecated. See `add_flat_template()` instead.
+
+```{r deprecated-function}
 #' Add dev_history.Rmd file that drives package development
 #'
 #' @param pkg Path where to save file
@@ -204,7 +206,7 @@ asciify_name <- function(name, to_pkg = FALSE) {
 }
 ```
 
-```{r example}
+```{r deprecated-example}
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
@@ -217,7 +219,7 @@ add_dev_history(pkg = dummypackage)
 unlink(dummypackage, recursive = TRUE)
 ```
 
-```{r tests}
+```{r deprecated-tests}
 # Create a new project
 tmpdir <- tempdir()
 dummypackage <- file.path(tmpdir, "dummypackage")
