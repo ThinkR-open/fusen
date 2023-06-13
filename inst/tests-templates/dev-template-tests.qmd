@@ -339,7 +339,7 @@ These are only included in the present flat template file, their content will no
 
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(flat_file = "dev/dev_history.qmd")
+fusen::inflate(flat_file = "dev/dev-template-tests.qmd")
 ```
 
 
