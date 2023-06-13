@@ -2,8 +2,10 @@
 % Please edit documentation in R/add_flat_template.R
 \name{add_additional}
 \alias{add_additional}
-\alias{add_minimal}
+\alias{add_minimal_flat}
+\alias{add_minimal_package}
 \alias{add_full}
+\alias{add_dev_history}
 \alias{add_flat_template}
 \title{Add flat Rmd file that drives package development}
 \usage{
@@ -15,7 +17,15 @@ add_additional(
   open = TRUE
 )
 
-add_minimal(
+add_minimal_flat(
+  pkg = ".",
+  dev_dir = "dev",
+  flat_name = "minimal",
+  overwrite = FALSE,
+  open = TRUE
+)
+
+add_minimal_package(
   pkg = ".",
   dev_dir = "dev",
   flat_name = "minimal",
@@ -31,11 +41,14 @@ add_full(
   open = TRUE
 )
 
+add_dev_history(pkg = ".", dev_dir = "dev", overwrite = FALSE, open = TRUE)
+
 add_flat_template(
-  template = c("full", "minimal", "additional", "teaching", "dev_history"),
+  template = c("full", "minimal_package", "minimal_flat", "additional", "teaching",
+    "dev_history"),
   pkg = ".",
   dev_dir = "dev",
-  flat_name = template,
+  flat_name = NULL,
   overwrite = FALSE,
   open = TRUE
 )
@@ -65,8 +78,8 @@ Choose \code{template} among the different templates available:
 \itemize{
 \item "full": The full template with a reproducible package that can directly be inflated.
 It comes along with the "dev_history" template. Default.
-\item "minimal": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template.
-\item "additional": Template for an additional vignette or set of additional functions.
+\item "minimal_package": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template.
+\item "minimal_flat" or "additional": Template for a new minimal flat file only.
 \item "teaching": Template with a reproducible package, simpler than "full", but everything to
 teach the minimal structure of a package.
 \item "dev_history": Template with functions commonly used during package development.
@@ -74,9 +87,9 @@ This does not contain chunks to write your own functions.
 }
 
 Abbreviated names can also be used for the different templates:
-"add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".
+"add" for additional, "minflat" for minimal_flat, "minpkg" for minimal_package "teach" for teaching, "dev" for "dev_history".
 
-\code{add_additional()}, \code{add_minimal()}, \code{add_full()} are wrapper around \code{add_flat_template("additional")}, ...
+\code{add_additional()}, \code{add_minimal_flat()}, \code{add_dev_history()}, \code{add_minimal_package()}, \code{add_full()} are wrapper around \code{add_flat_template("additional")}, ...
 }
 \examples{
 # Create a new project
@@ -94,10 +107,15 @@ unlink(dummypackage, recursive = TRUE)
 add_flat_template("full")
 
 # first time in your new package
-add_flat_template("minimal")
+add_flat_template("minimal_package")
 
 # add new flat file for new functions
 add_flat_template("add")
+add_additional()
+add_minimal_flat()
+
+# add only the dev_history file in an existing package
+add_dev_history()
 
 # add new flat template for teaching (a reduced full template)
 add_flat_template("teaching")

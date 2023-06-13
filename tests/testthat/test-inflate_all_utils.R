@@ -3,7 +3,7 @@
 dummypackage <- tempfile("diag")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 
 # let's create 2 flat files
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -128,8 +128,7 @@ usethis::with_project(dummypackage, {
     )
   })
 
-    test_that("not inflated because in config but no state -  warning", {
-
+  test_that("not inflated because in config but no state -  warning", {
     config_yml <- config_yml_ref
     config_yml[["flat_minimal.Rmd"]][["state"]] <- NULL
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
@@ -158,7 +157,7 @@ usethis::with_project(dummypackage, {
       diag_expected[order(diag_expected$flat), ]
     )
   })
-    
+
   test_that("not inflated because in config, but without parameters - stop", {
     #  "not inflated because in config, but without parameters, please inflate() again from the flat with this new 'fusen' version" (stop) : a file is is config_yml but has not inflate parameters
     config_yml <- config_yml_ref
@@ -230,7 +229,7 @@ usethis::with_project(dummypackage, {
       diag_expected[order(diag_expected$flat), ]
     )
   })
-  
+
   test_that("messages show properly", {
     config_yml <- config_yml_ref
     config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
@@ -265,12 +264,12 @@ usethis::with_project(dummypackage, {
       "keep" %in% diag[["flat"]]
     )
   })
-    
+
   test_that("works if flat not named flat_", {
     # Rename and remove from config
     new_name <- file.path("dev", "test_minimal.Rmd")
     file.rename(file.path("dev", "flat_minimal.Rmd"), new_name)
-    
+
     config_yml <- config_yml_ref
     config_yml[["flat_minimal.Rmd"]] <- NULL
     config_yml_file <- file.path(dummypackage, "dev/config_fusen.yaml")
@@ -285,8 +284,10 @@ usethis::with_project(dummypackage, {
           open_vignette = FALSE,
           overwrite = TRUE
         )
-      ), regexp = NA)
-    
+      ),
+      regexp = NA
+    )
+
 
     config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
@@ -321,9 +322,11 @@ usethis::with_project(dummypackage, {
     )
   })
   # At this stage, there is no more "dev/flat_minimal.Rmd", but a "dev/test_minimal.Rmd"
-  file.rename(file.path(dummypackage, "dev", "test_minimal.Rmd"), 
-              file.path(dummypackage, "dev", "flat_minimal.Rmd"))
-  
+  file.rename(
+    file.path(dummypackage, "dev", "test_minimal.Rmd"),
+    file.path(dummypackage, "dev", "flat_minimal.Rmd")
+  )
+
   # /!\ This one needs to be at the end because it deletes flat files
   test_that("all missing files gives stop messages without errors", {
     # error if we dont have any flat file in dev/
@@ -332,7 +335,7 @@ usethis::with_project(dummypackage, {
     unlink(file.path(dummypackage, "dev/flat_minimal_2.Rmd"))
 
     diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
-      
+
     diag_expected <- structure(
       list(
         flat = c(
@@ -361,14 +364,13 @@ usethis::with_project(dummypackage, {
       diag[order(diag$flat), ],
       diag_expected[order(diag_expected$flat), ]
     )
-      
   })
-  
+
   # /!\ This one needs to be at the end because it deletes flat files
   test_that("all missing files and config empty gives stops", {
     config_yml <- list(keep = list(path = "keep"))
     expect_error(
-          diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage),
+      diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage),
       regexp = "There are no flat files listed in config or files starting with 'flat_' in the 'dev/' directory"
     )
   })
@@ -379,7 +381,7 @@ unlink(dummypackage, recursive = TRUE)
 dummypackage <- tempfile("readinflateparams")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 
 # let's create 2 flat files
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -417,20 +419,20 @@ usethis::with_project(dummypackage, {
   )
 
   config_yml_ref <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
-  
+
   test_that("read_inflate_params work properly", {
     inflate_params <-
       read_inflate_params(config_yml = config_yml_ref)
-    
+
     expect_equal(
       length(inflate_params),
       2
     )
-    
+
     expect_true(
       all(names(inflate_params) %in% c("flat_minimal_2.Rmd", "flat_minimal.Rmd"))
     )
-    
+
     expect_equal(
       inflate_params[["flat_minimal.Rmd"]],
       list(
@@ -442,7 +444,7 @@ usethis::with_project(dummypackage, {
         overwrite = "ask"
       )
     )
-    
+
     expect_equal(
       inflate_params[["flat_minimal_2.Rmd"]],
       list(
@@ -455,49 +457,50 @@ usethis::with_project(dummypackage, {
       )
     )
   })
-  
+
   # what happens if we deprecate a file
   test_that("read_inflate_params work properly with deprecated", {
     config_yml_ref[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
-    
+
     inflate_params <-
       read_inflate_params(config_yml = config_yml_ref)
-    
+
     expect_null(inflate_params[["flat_minimal.Rmd"]])
-    
+
     expect_equal(
       length(inflate_params),
       1
     )
   })
-  
+
   # what happens if we add a file in the "keep" section
   test_that("read_inflate_params work properly with keep section", {
     file.create(file.path(dummypackage, "R/zaza.R"))
-    
+
     my_files_to_protect <- tibble::tribble(
       ~type, ~path,
       "R", "R/zaza.R"
     )
-    
+
     df_to_config(my_files_to_protect, force = TRUE)
-    
+
     config_yml <-
       yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
-    
+
     inflate_params <-
       read_inflate_params(config_yml = config_yml)
-    
+
     expect_false("keep" %in% names(inflate_params))
-    
+
     # Old version with no state for "keep" section should work too
     config_yml[["keep"]][["state"]] <- NULL
-    
+
     expect_error(
       inflate_params <-
-        read_inflate_params(config_yml = config_yml), regexp = NA
+        read_inflate_params(config_yml = config_yml),
+      regexp = NA
     )
-    
+
     expect_false("keep" %in% names(inflate_params))
   })
 })

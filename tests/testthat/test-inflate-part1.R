@@ -112,7 +112,7 @@ usethis::with_project(dummypackage, {
       "#' @noRd", "#' @examples",
       "#' \\dontrun{", "#' # comment",
       "#' my_norox2(10)", "#' }",
-      "#' ",
+      "#'",
       "#' \\dontrun{",
       "#' # comment",
       "#' my_norox2(12)", "#' }",
@@ -259,7 +259,6 @@ dev_file <- add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
-
   suppressMessages(
     inflate(
       pkg = dummypackage, flat_file = flat_file, vignette_name = "Get started",

@@ -1098,7 +1098,7 @@ usethis::with_project(dummypackage, {
       "#' @examples",
       "#' \\dontrun{",
       "#' my_twoexamples(10)",
-      "#' }", "#' ",
+      "#' }", "#'",
       "#' my_twoexamples(20)",
       "my_twoexamples <- function(x) {",
       "  x + 10",
@@ -1191,7 +1191,7 @@ dummypackage.special <- tempfile("dummypackage_@ (special)")
 dir.create(dummypackage.special)
 
 # {fusen} steps
-test_that("fill_description renames package name if not clean",  {
+test_that("fill_description renames package name if not clean", {
   expect_warning(
     desc_file <- fill_description(pkg = dummypackage.special, fields = list(Title = "Dummy Package")),
     "Your package was renamed: `dummypackage[.]special[.]"
@@ -1199,20 +1199,23 @@ test_that("fill_description renames package name if not clean",  {
 
   desc_file_lines <- readLines(desc_file)
   expect_true(
-    grepl("dummypackage[.]special[.]",
-          desc_file_lines[grepl("Package", desc_file_lines)][1]
-  ))
+    grepl(
+      "dummypackage[.]special[.]",
+      desc_file_lines[grepl("Package", desc_file_lines)][1]
+    )
+  )
   expect_false(
-    grepl("dummypackage_@ \\(special\\)",
-          desc_file_lines[grepl("Package", desc_file_lines)][1]
-    ))
+    grepl(
+      "dummypackage_@ \\(special\\)",
+      desc_file_lines[grepl("Package", desc_file_lines)][1]
+    )
+  )
 })
 
 dev_file <- suppressMessages(add_flat_template(pkg = dummypackage.special, overwrite = TRUE, open = FALSE))
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage.special, {
-
   suppressMessages(
     inflate(
       pkg = dummypackage.special, flat_file = flat_file,
@@ -1231,8 +1234,10 @@ usethis::with_project(dummypackage.special, {
     )
     expect_equal(
       sort(config_content[["flat_full.Rmd"]][["tests"]]),
-      expected = sort(c("tests/testthat/test-my_median.R",
-                        "tests/testthat/test-my_other_median.R"))
+      expected = sort(c(
+        "tests/testthat/test-my_median.R",
+        "tests/testthat/test-my_other_median.R"
+      ))
     )
     expect_equal(
       sort(config_content[["flat_full.Rmd"]][["vignettes"]]),

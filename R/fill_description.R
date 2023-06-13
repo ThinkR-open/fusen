@@ -68,7 +68,7 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
   # usethis::use_description(fields = fields)
 
   fields_new <- usethis::use_description_defaults(
-    package = clean_pkg_name, #basename(path),
+    package = clean_pkg_name, # basename(path),
     roxygen = TRUE,
     fields = fields
   )

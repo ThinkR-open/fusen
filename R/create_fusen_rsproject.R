@@ -85,6 +85,9 @@ create_fusen <- function(path,
   )
 
   ## Add dev/flat_template.Rmd in newly created project
+  if (template == "minimal") {
+    template <- "minimal_package"
+  }
   cli::cat_rule(glue::glue("Adding dev/flat_{template}.Rmd"))
   dev_file <- add_flat_template(
     template = template,

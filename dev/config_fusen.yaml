@@ -9,7 +9,7 @@ flat_addins.Rmd:
     vignette_name: .na
     open_vignette: true
     check: false
-    document: false
+    document: true
     overwrite: ask
 flat_create_flat.Rmd:
   path: dev/flat_create_flat.Rmd
@@ -22,7 +22,7 @@ flat_create_flat.Rmd:
     vignette_name: .na
     open_vignette: true
     check: false
-    document: false
+    document: true
     overwrite: ask
 flat_history_core.Rmd:
   path: dev/flat_history_core.Rmd

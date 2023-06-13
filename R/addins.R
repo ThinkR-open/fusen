@@ -9,7 +9,7 @@ addin_add_template <- function() {
     if (rstudioapi::hasFun("showPrompt")) {
       template <- rstudioapi::showPrompt(
         title = "Enter the flat template type",
-        message = "e.g. add = additional; min = minimal;",
+        message = "e.g. add = additional; dev = dev_history; teach = teaching",
         default = "additional"
       )
       if (is.null(template)) {

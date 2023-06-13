@@ -334,8 +334,6 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
       function(x) {
         tibble::tibble(
           fun_name = rmd_ex_group[x, ][["fun_name"]],
-          # example_chunk = list(paste("#'", rmd_get_chunk(rmd_ex[x, ])$code))
-          # example_chunk = list(paste("#'", unlist(rmd_node_code(rmd_ex[x, ][["ast"]]))))
           example_chunk = list(paste("#'", unlist(rmd_ex_group[x, ][["rmd_ex_code"]])))
         )
       }
@@ -356,13 +354,15 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   # Remove if example is empty
   fun_code[["example"]] <- lapply(fun_code[["example"]], function(example) {
     # example <- fun_code[["example"]][[1]]
+    example <- gsub("^#' $", "#'", example) # clean empty lines
+
     if (length(example) == 0) {
       return(NA)
     } else if (length(example) == 1 && is.na(example)) {
       return(NA)
     } else if (length(example) == 1 && example == "#' @examples") {
       return(NA)
-    } else if (length(example) > 1 & all(grepl("^#'\\s+$", example[-1]))) {
+    } else if (length(example) > 1 & all(grepl("^#'\\s*$", example[-1]))) {
       return(NA)
     } else {
       return(example)
@@ -399,7 +399,7 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 
   # Clean double #' due to dontrun
   fun_code[["code_example"]] <- lapply(fun_code[["code_example"]], function(example) {
-    gsub("#' #' ", "#' ", example)
+    gsub("^#' #'", "#'", example)
   })
 
 
@@ -563,7 +563,6 @@ asciify_name <- function(name, to_pkg = FALSE) {
       )
     )
   )
-  # grepl("^[[:alpha:]][[:alnum:]_-]*$", cleaned_name)
 
   if (isTRUE(to_pkg)) {
     cleaned_name <- gsub(
@@ -577,6 +576,18 @@ asciify_name <- function(name, to_pkg = FALSE) {
     )
   }
   cleaned_name
+}
+
+#' Clean function name
+#' @noRd
+clean_function_name <- function(name) {
+  gsub(
+    "-", "_",
+    gsub(
+      "^\\s*|\\s*$|^[0-9]*|^-*|-*$", "",
+      asciify_name(name, to_pkg = FALSE)
+    )
+  )
 }
 
 #' A flavor of normalizePath() that unixifies all its output

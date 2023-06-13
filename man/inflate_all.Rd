@@ -58,7 +58,7 @@ inflate_all_no_check()
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-flat_files <- add_minimal(
+flat_files <- add_minimal_package(
   pkg = dummypackage,
   overwrite = TRUE,
   open = FALSE

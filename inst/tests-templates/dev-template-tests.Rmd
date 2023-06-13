@@ -275,7 +275,7 @@ my_norox2 <- function(x) {
 #' # comment
 #' my_norox2(10)
 #' }
-#' 
+#'
 #' \dontrun{
 # comment
 my_norox2(12)

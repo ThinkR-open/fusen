@@ -18,7 +18,7 @@
 #' dir.create(dummypackage)
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 #' dev_file <-
-#'   suppressMessages(add_minimal(
+#'   suppressMessages(add_minimal_package(
 #'     pkg = dummypackage,
 #'     overwrite = TRUE,
 #'     open = FALSE
@@ -36,7 +36,7 @@
 #'   to = flat_file2,
 #'   overwrite = TRUE
 #' )
-#' 
+#'
 #' # let's inflate them to have dev/config_fusen.yml
 #' suppressMessages(
 #'   inflate(
@@ -47,7 +47,7 @@
 #'     open_vignette = FALSE
 #'   )
 #' )
-#' 
+#'
 #' suppressMessages(
 #'   inflate(
 #'     pkg = dummypackage,
@@ -57,61 +57,60 @@
 #'     open_vignette = FALSE
 #'   )
 #' )
-#' 
+#'
 #' config_yml_ref <-
 #'   yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
-#' 
+#'
 #' # all files can be inflated with inflate_all()
 #' config_yml <- config_yml_ref
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' # let's consider the first flat file is deprecated
 #' config_yml <- config_yml_ref
 #' config_yml[["flat_minimal.Rmd"]][["state"]] <- "deprecated"
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' # let's consider the first flat file is missing from config_fusen.yaml
 #' config_yml <- config_yml_ref
 #' config_yml[["flat_minimal.Rmd"]] <- NULL
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' # let's consider that the first flat file has not inflate related params in config_fusen.yaml
 #' config_yml <- config_yml_ref
 #' config_yml[["flat_minimal.Rmd"]][["inflate"]] <- NULL
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' # let's consider a file is in config.yml but missing from dev/
 #' config_yml <- config_yml_ref
 #' config_yml[["missing_file.Rmd"]] <- config_yml[["flat_minimal.Rmd"]]
 #' diag <-
 #'   pre_inflate_all_diagnosis(config_yml = config_yml, pkg = dummypackage)
 #' print(diag)
-#' 
+#'
 #' unlink(dummypackage, recursive = TRUE)
 #' }
 pre_inflate_all_diagnosis <- function(config_yml, pkg) {
-
   flat_file_in_config <- setdiff(names(config_yml), "keep")
   flat_files_in_dev_folder <- list.files(file.path(pkg, "dev"), pattern = "^flat_.*[.](r|R|q|Q)md$")
 
   flat_files_to_diag <- unique(c(flat_files_in_dev_folder, flat_file_in_config))
-  
+
   if (length(flat_files_to_diag) == 0) {
     stop("There are no flat files listed in config or files starting with 'flat_' in the 'dev/' directory")
   }
-  
+
   config_paths <- sapply(config_yml[which(names(config_yml) != "keep")], function(x) x$path)
   flat_files_in_config_that_dontexist <- character(0)
   if (length(config_paths) != 0) {
-      flat_files_in_config_that_dontexist <- names(config_paths)[!file.exists(config_paths)]
+    flat_files_in_config_that_dontexist <- names(config_paths)[!file.exists(config_paths)]
   }
 
 
@@ -120,9 +119,11 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
     if (flat %in% flat_files_in_config_that_dontexist) {
       return(tibble(
         flat = flat,
-        status = glue("The file {flat} is not going to be inflated because it was not found,",
-        " have you changed the name or did you move in another place ?",
-        " Maybe you want to set the state as 'deprecated' in the config file"),
+        status = glue(
+          "The file {flat} is not going to be inflated because it was not found,",
+          " have you changed the name or did you move in another place ?",
+          " Maybe you want to set the state as 'deprecated' in the config file"
+        ),
         type = "stop",
         params = "call. = FALSE"
       ))
@@ -137,13 +138,14 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
         params = NA
       ))
     } else if (flat %in% names(config_yml) &&
-               is.null(config_yml[[flat]][["state"]])) {
+      is.null(config_yml[[flat]][["state"]])) {
       return(tibble(
         flat = flat,
         status = glue(
           "The flat file {flat} is not going to be inflated because there is no 'state'",
           " in the configuration file. ",
-          "Please add 'state: active' or 'state: inactive' under the flat name."),
+          "Please add 'state: active' or 'state: inactive' under the flat name."
+        ),
         type = "cli::cli_alert_warning",
         params = NA
       ))
@@ -151,17 +153,21 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       config_yml[[flat]][["state"]] != "active") {
       return(tibble(
         flat = flat,
-        status = glue("The flat file {flat} is not going to be inflated because",
-        " it is in state 'inactive or deprecated'"),
+        status = glue(
+          "The flat file {flat} is not going to be inflated because",
+          " it is in state 'inactive or deprecated'"
+        ),
         type = "cli::cli_alert_warning",
         params = NA
       ))
     } else if (!flat %in% names(config_yml)) {
       return(tibble(
         flat = flat,
-        status = glue("The flat file {flat} is not going to be inflated because",
-        " it is absent from the config file.",
-        " Please inflate() from the flat once if needed or set it manually with status 'inactive'."),
+        status = glue(
+          "The flat file {flat} is not going to be inflated because",
+          " it is absent from the config file.",
+          " Please inflate() from the flat once if needed or set it manually with status 'inactive'."
+        ),
         type = "cli::cli_alert_danger",
         params = NA
       ))
@@ -169,9 +175,11 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       is.null(config_yml[[flat]][["inflate"]])) {
       return(tibble(
         flat = flat,
-        status = glue("The flat file {flat} is not going to be inflated because",
-        " although present in the config file, it has no inflate() parameters.",
-        " Please inflate() again from the flat file with this 'fusen' version"),
+        status = glue(
+          "The flat file {flat} is not going to be inflated because",
+          " although present in the config file, it has no inflate() parameters.",
+          " Please inflate() again from the flat file with this 'fusen' version"
+        ),
         type = "stop",
         params = "call. = FALSE"
       ))

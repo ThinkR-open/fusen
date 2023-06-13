@@ -17,7 +17,7 @@ usethis::with_project(dummypackage, {
   file.copy(
     system.file(testfile, package = "fusen"),
     qmd_flat_file,
-  # flat_file,
+    # flat_file,
     overwrite = TRUE
   )
   file.remove(flat_file)

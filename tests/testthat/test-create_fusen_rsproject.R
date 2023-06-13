@@ -20,7 +20,8 @@ withr::with_dir(dummypackage, {
     expect_true(file.exists(file.path(path_foosen, ".gitignore")))
     gitignore <- readLines(file.path(path_foosen, ".gitignore"))
     expect_true(all(
-      c(".Rproj.user", ".Rhistory", ".RData", ".DS_Store", ".httr-oauth") %in% gitignore))
+      c(".Rproj.user", ".Rhistory", ".RData", ".DS_Store", ".httr-oauth") %in% gitignore
+    ))
 
     actual_dev_history <- readLines(path_dev_history[grepl("flat", path_dev_history)])
     expect_identical(

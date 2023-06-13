@@ -294,7 +294,7 @@ unlink(dir_tmp, recursive = TRUE)
 dummypackage <- tempfile("dftoconfig")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- (add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- (add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
