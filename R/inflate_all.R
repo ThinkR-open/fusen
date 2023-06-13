@@ -5,6 +5,7 @@
 #' Inflate all the flat files stored in dev/ and starting with "flat_"
 #'
 #' @param pkg Path to package
+#' @param clean Logical. Whether to help detect unregistered files.
 #' @inheritParams inflate
 #'
 #' @importFrom yaml read_yaml
@@ -12,6 +13,8 @@
 #' @importFrom devtools check
 #'
 #' @return side effect. Inflates all your flat files that can be inflated.
+#' 
+#' @details
 #'
 #' @export
 #' @examples
@@ -68,7 +71,7 @@
 #'
 #' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
-inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette = FALSE, overwrite = TRUE, ...) {
+inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette = FALSE, overwrite = TRUE, clean = TRUE, ...) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
@@ -119,6 +122,11 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
       document = document,
       ...
     )
+  }
+  
+  if (isTRUE(clean)) {
+    cli::cat_rule("check not registered files")
+    invisible(check_not_registered_files(path = pkg))
   }
   invisible(pkg)
 }

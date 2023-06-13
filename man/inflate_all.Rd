@@ -11,6 +11,7 @@ inflate_all(
   check = TRUE,
   open_vignette = FALSE,
   overwrite = TRUE,
+  clean = TRUE,
   ...
 )
 
@@ -33,6 +34,8 @@ inflate_all_no_check(
 
 \item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 Whether to overwrite vignette and functions if already exists.}
+
+\item{clean}{Logical. Whether to help detect unregistered files.}
 
 \item{...}{Arguments passed to \code{devtools::check()}.
 For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is

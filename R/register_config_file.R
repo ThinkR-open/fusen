@@ -121,10 +121,14 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
   if (isTRUE(to_csv)) {
     write.csv(res_new, csv_file, row.names = FALSE)
     cli::cli_alert_info(paste(
-      "Wrote not registered files in: ", csv_file,
-      "\nKeep only those necessary and run `df_to_config()` on the csv file:\n",
-      paste0('`df_to_config("', csv_file, '")`'),
-      "\nOr directly run `register_all_to_config()` and check your config file."
+      "There are unregistered files in your package.",
+      "This means that some files are not listed in the 'fusen' config file.", 
+      "\n- Either they were manually created, thus not issued from an inflate.", 
+      "Hence, you may want to run `register_all_to_config()`",
+      "\n- Or they are issued from a previous inflate and you changed the name of the output. Hence, you will want to manually delete these files.", 
+      "\n Have a look at the csv that lists them and you can decide what to do: probably a combination of manually deleting files, and then run `register_all_to_config()`.",
+      "The csv file is there:", csv_file,
+      "\n After the process, see if there is a 'keep' section in your 'fusen' config file that lists all files not linked to any flat file."
     ))
 
     return(csv_file)
