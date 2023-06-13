@@ -335,6 +335,49 @@ test_that("local_file_ignore works", {
   unlink(tmpdirectory)
 })
 
+# add_flat_template allows bad flat_name for function name ----
+dummypackage <- tempfile(pattern = "bad.flat.ok")
+dir.create(dummypackage)
+pkg_name <- basename(dummypackage)
+
+test_that("add_flat_template allows bad flat_name for function name with full", {
+  dev_file_path <- expect_error(
+    suppressMessages(
+      add_flat_template(pkg = dummypackage, flat_name = "bad for function ! but.ok", open = FALSE)
+    ),
+    regexp = NA
+  )
+  flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
+
+  expect_true(all(file.exists(dev_file_path)))
+  expect_true(file.exists(file.path(dummypackage, "dev", "flat_bad-for-function-but-ok.Rmd")))
+  expect_true(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
+})
+unlink(dummypackage, recursive = TRUE)
+
+# add_flat_template allows bad flat_name for function name ----
+dummypackage <- tempfile(pattern = "bad.flat.ok.add")
+dir.create(dummypackage)
+pkg_name <- basename(dummypackage)
+
+test_that("add_flat_template allows bad flat_name for function name with add", {
+  dev_file_path <- expect_error(
+    suppressMessages(
+      add_additional(pkg = dummypackage, flat_name = "bad for function ! but.ok2", open = FALSE)
+    ),
+    regexp = NA
+  )
+  flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
+
+  expect_true(all(file.exists(dev_file_path)))
+  expect_true(file.exists(file.path(dummypackage, "dev", "flat_bad-for-function-but-ok2.Rmd")))
+
+  dev_lines <- readLines(flat_file)
+  # title, function x 3, example x 2, tests x 2
+  expect_equal(length(grep("bad_for_function_but_ok2", dev_lines)), 8)
+})
+unlink(dummypackage, recursive = TRUE)
+
 # add_full ----
 dummypackage <- tempfile(pattern = "add.wrappers")
 dir.create(dummypackage)
@@ -436,7 +479,7 @@ dummypackage <- tempfile(pattern = "add.wrappers")
 dir.create(dummypackage)
 pkg_name <- basename(dummypackage)
 
-test_that("add_dev_history adds dev_historyt.Rmd only", {
+test_that("add_dev_history adds dev_history.Rmd only", {
   dev_file_path <- expect_error(
     suppressMessages(add_dev_history(pkg = dummypackage, open = FALSE)),
     regexp = NA

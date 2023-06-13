@@ -190,14 +190,14 @@ add_flat_template <- function(template = c("full", "minimal_package", "minimal_f
     if (is.null(flat_name)) {
       flat_name <- "teaching"
     }
-  } else {
+  } else if (is.null(flat_name)) {
     flat_name <- template
   }
 
 
   if (!template %in% c("full", "teaching", "dev_history") &
     !flat_name %in% c("minimal", "minimal_package", "minimal_flat", "additional")) {
-    fun_name <- gsub("-", "_", asciify_name(flat_name))
+    fun_name <- clean_function_name(flat_name)
   } else {
     fun_name <- NA
   }

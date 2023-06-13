@@ -112,7 +112,7 @@ usethis::with_project(dummypackage, {
       "#' @noRd", "#' @examples",
       "#' \\dontrun{", "#' # comment",
       "#' my_norox2(10)", "#' }",
-      "#' ",
+      "#'",
       "#' \\dontrun{",
       "#' # comment",
       "#' my_norox2(12)", "#' }",

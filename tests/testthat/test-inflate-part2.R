@@ -1098,7 +1098,7 @@ usethis::with_project(dummypackage, {
       "#' @examples",
       "#' \\dontrun{",
       "#' my_twoexamples(10)",
-      "#' }", "#' ",
+      "#' }", "#'",
       "#' my_twoexamples(20)",
       "my_twoexamples <- function(x) {",
       "  x + 10",

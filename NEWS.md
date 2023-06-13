@@ -24,12 +24,14 @@
 ## Major changes
 
 - The tips and tricks vignette shortly presents how to combine {fusen} and {golem} (#187)
+- Incorrect function names issued from addins or `add_flat_template()` are cleaned before being included in the flat file to follow underscore rule.
 
 ## Minor changes
 
 - Update CONTRIBUTING to speak about flat file in {fusen} itself
 - replace the maintainer's name from `fill_description()` in examples, templates and tests (#155, @FlorenceMounier)
 - `create_fusen()` vaccinates created git project (#171)
+- Examples under function roxygen documentation are cleaned from extra spaces after empty `#'` to avoid git diff against code linters / stylers.
 
 
 
