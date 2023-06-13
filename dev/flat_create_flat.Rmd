@@ -31,17 +31,17 @@ library(tools)
 #'
 #' - "full": The full template with a reproducible package that can directly be inflated.
 #' It comes along with the "dev_history" template. Default.
-#' - "minimal": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template.
-#' - "additional": Template for an additional vignette or set of additional functions.
+#' - "minimal_package": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template.
+#' - "minimal_flat" or "additional": Template for a new minimal flat file only.
 #' - "teaching": Template with a reproducible package, simpler than "full", but everything to
 #'  teach the minimal structure of a package.
 #' - "dev_history": Template with functions commonly used during package development.
 #' This does not contain chunks to write your own functions.
 #'
 #' Abbreviated names can also be used for the different templates:
-#' "add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".
+#' "add" for additional, "minflat" for minimal_flat, "minpkg" for minimal_package "teach" for teaching, "dev" for "dev_history".
 #'
-#' `add_additional()`, `add_minimal()`, `add_full()` are wrapper around `add_flat_template("additional")`, ...
+#' `add_additional()`, `add_minimal_flat()`, `add_dev_history()`, `add_minimal_package()`, `add_full()` are wrapper around `add_flat_template("additional")`, ...
 #'
 #' @rdname add_flat_template
 #' @return
@@ -49,10 +49,10 @@ library(tools)
 #' @export
 #'
 #' @examples
-add_flat_template <- function(template = c("full", "minimal", "additional", "teaching", "dev_history"),
+add_flat_template <- function(template = c("full", "minimal_package", "minimal_flat", "additional", "teaching", "dev_history"),
                               pkg = ".",
                               dev_dir = "dev",
-                              flat_name = template,
+                              flat_name = NULL,
                               overwrite = FALSE,
                               open = TRUE) {
   project_name <- get_pkg_name(pkg = pkg)
@@ -64,9 +64,42 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
     )
   }
 
-  template <- match.arg(template)
+  template <- template[1]
+  template <- match.arg(template, choices = c(
+    "full",
+    "minimal_package", "minpkg",
+    "minimal_flat", "minflat", "add", "additional",
+    "teach", "teaching",
+    "dev_history", "dev"
+  ))
+
+  if (template %in% c("additional", "add")) {
+    template <- "additional"
+    if (is.null(flat_name)) {
+      flat_name <- "additional"
+    }
+  } else if (template %in% c("minimal_flat", "minflat")) {
+    template <- "additional"
+    if (is.null(flat_name)) {
+      flat_name <- "minimal"
+    }
+  } else if (template %in% c("minpkg", "minimal", "minimal_package", "min")) {
+    template <- "minimal_package"
+    if (is.null(flat_name)) {
+      flat_name <- "minimal"
+    }
+  } else if (template %in% c("teach")) {
+    template <- "teaching"
+    if (is.null(flat_name)) {
+      flat_name <- "teaching"
+    }
+  } else {
+    flat_name <- template
+  }
+
+
   if (!template %in% c("full", "teaching", "dev_history") &
-    !flat_name %in% c("minimal", "additional")) {
+    !flat_name %in% c("minimal", "minimal_package", "minimal_flat", "additional")) {
     fun_name <- gsub("-", "_", asciify_name(flat_name))
   } else {
     fun_name <- NA
@@ -136,7 +169,7 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
   }
 
   # Add the-dev-history when needed ----
-  if (template %in% c("full", "minimal", "dev_history")) {
+  if (template %in% c("full", "minimal_package", "dev_history")) {
     dev_file <- file.path(full_dev_dir, "0-dev_history.Rmd")
     if (file.exists(dev_file) & !isTRUE(overwrite)) {
       message(
@@ -174,14 +207,14 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
   } else {
     ignores <- c(paste0("^", dev_dir, "$"))
   }
-  
+
   local_file_ignore(file = file.path(pkg, ".Rbuildignore"), ignores)
 
   # Add a gitignore file in dev_dir ----
   # Files to ignore
   ignores <- c("*.html", "*.R")
   local_file_ignore(file = file.path(full_dev_dir, ".gitignore"), ignores)
-  
+
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0 &
     !any(grepl("^[.]here$", list.files(pkg, all.files = TRUE)))) {
     here::set_here(pkg)
@@ -226,10 +259,15 @@ unlink(dummypackage, recursive = TRUE)
 add_flat_template("full")
 
 # first time in your new package
-add_flat_template("minimal")
+add_flat_template("minimal_package")
 
 # add new flat file for new functions
 add_flat_template("add")
+add_additional()
+add_minimal_flat()
+
+# add only the dev_history file in an existing package
+add_dev_history()
 
 # add new flat template for teaching (a reduced full template)
 add_flat_template("teaching")
@@ -237,8 +275,6 @@ add_flat_template("teaching")
 ```
 
 ```{r tests-1}
-print("==== add_flat_template ====")
-
 # Create a new project
 dummypackage <- tempfile(pattern = "add.flat.template")
 dir.create(dummypackage)
@@ -402,13 +438,18 @@ unlink(dummypackage3, recursive = TRUE)
 # with the correct here()
 
 # Test all templates to knit ----
-all_templates <- c("full", "minimal", "additional", "teaching") # "dev_history"
+all_templates <- c("full", "minimal_package", "additional", "teaching") # "dev_history"
 
 for (template in all_templates) {
+  main_flat_file_name <- template
+  if (template == "minimal_package") {
+    main_flat_file_name <- "minimal"
+  }
+
   dummypackage4 <- tempfile(pattern = "all.templates.knit")
   dir.create(dummypackage4)
   # Add
-  dev_file_path <- add_flat_template(pkg = dummypackage4, template = template, open = FALSE)
+  dev_file_path <- suppressMessages(add_flat_template(pkg = dummypackage4, template = template, open = FALSE))
   flat_file <- dev_file_path[grepl("flat", dev_file_path)]
 
   # Change lines asking for pkg name
@@ -426,16 +467,16 @@ for (template in all_templates) {
 
     if (rmarkdown::pandoc_available("1.12.3")) {
       rmarkdown::render(
-        input = file.path(dummypackage4, "dev", paste0("flat_", template, ".Rmd")),
-        output_file = file.path(dummypackage4, "dev", paste0("flat_", template, ".html")),
+        input = file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".Rmd")),
+        output_file = file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".html")),
         envir = new.env(), quiet = TRUE
       )
     }
   })
 
   test_that(paste0("template", template, "runs as markdown"), {
-    expect_true(file.exists(file.path(dummypackage4, "dev", paste0("flat_", template, ".Rmd"))))
-    if (template %in% c("full", "minimal")) {
+    expect_true(file.exists(file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".Rmd"))))
+    if (template %in% c("full", "minimal_package")) {
       expect_true(file.exists(file.path(dirname(flat_file), "0-dev_history.Rmd")))
     }
 
@@ -445,7 +486,7 @@ for (template in all_templates) {
       if (template %in% c("full", "teaching")) {
         expect_true(file.exists(file.path(dummypackage4, "inst", "nyc_squirrels_sample.csv")))
       }
-      expect_true(file.exists(file.path(dummypackage4, "dev", paste0("flat_", template, ".html"))))
+      expect_true(file.exists(file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".html"))))
     }
   })
   unlink(dummypackage4, recursive = TRUE)
@@ -472,10 +513,10 @@ test_that("Other flat_name works", {
   expect_equal(length(grep("hello", hello_flat)), 8 + 2)
   expect_equal(length(grep("flat_hello[.]Rmd", hello_flat)), 2)
 
-  # Template minimal used with "min", same name, flat changes name
+  # Template minimal used with "minpkg", same name, flat changes name
   expect_message(
     add_flat_template(
-      template = "min",
+      template = "minpkg",
       pkg = dummypackage, flat_name = "hello", open = FALSE
     ),
     regexp = "flat_hello.Rmd already exists."
@@ -548,25 +589,29 @@ unlink(dummypackage, recursive = TRUE)
 test_that("local_file_ignore works", {
   tmpdirectory <- tempfile()
   dir.create(tmpdirectory)
-  
+
   anyfile <- file.path(tmpdirectory, "whatever")
   local_file_ignore(file = anyfile, ignores = c("whatever", "^.other/$"))
   lines <- readLines(anyfile)
-  expect_equal(object = lines, 
-               expected = c("whatever", "^.other/$"))
-  
+  expect_equal(
+    object = lines,
+    expected = c("whatever", "^.other/$")
+  )
+
   # Add over
-    local_file_ignore(file = anyfile, ignores = c("whatever", "something.else"))
+  local_file_ignore(file = anyfile, ignores = c("whatever", "something.else"))
   lines <- readLines(anyfile)
-  expect_equal(object = lines, 
-               expected = c("whatever", "^.other/$", "something.else"))
-  
+  expect_equal(
+    object = lines,
+    expected = c("whatever", "^.other/$", "something.else")
+  )
+
   # Clean
   unlink(tmpdirectory)
 })
 ```
 
-## add_additional
+## add_additional & co.
 
 ```{r function-add_additional}
 #' @rdname add_flat_template
@@ -588,13 +633,30 @@ add_additional <- function(pkg = ".",
 
 #' @rdname add_flat_template
 #' @export
-add_minimal <- function(pkg = ".",
-                        dev_dir = "dev",
-                        flat_name = "minimal",
-                        overwrite = FALSE,
-                        open = TRUE) {
+add_minimal_flat <- function(pkg = ".",
+                             dev_dir = "dev",
+                             flat_name = "minimal",
+                             overwrite = FALSE,
+                             open = TRUE) {
   add_flat_template(
-    template = "minimal",
+    template = "minimal_flat",
+    pkg = pkg,
+    dev_dir = dev_dir,
+    flat_name = flat_name,
+    overwrite = overwrite,
+    open = open
+  )
+}
+
+#' @rdname add_flat_template
+#' @export
+add_minimal_package <- function(pkg = ".",
+                                dev_dir = "dev",
+                                flat_name = "minimal",
+                                overwrite = FALSE,
+                                open = TRUE) {
+  add_flat_template(
+    template = "minimal_package",
     pkg = pkg,
     dev_dir = dev_dir,
     flat_name = flat_name,
@@ -619,19 +681,35 @@ add_full <- function(pkg = ".",
     open = open
   )
 }
+
+#' @rdname add_flat_template
+#' @export
+add_dev_history <- function(pkg = ".",
+                            dev_dir = "dev",
+                            overwrite = FALSE,
+                            open = TRUE) {
+  add_flat_template(
+    template = "dev_history",
+    pkg = pkg,
+    dev_dir = dev_dir,
+    flat_name = "fake",
+    overwrite = overwrite,
+    open = open
+  )
+}
 ```
 
 ```{r example-add_additional}
 ```
 
 ```{r tests-add_additional}
+# add_full ----
 dummypackage <- tempfile(pattern = "add.wrappers")
 dir.create(dummypackage)
 pkg_name <- basename(dummypackage)
 
-# add_full ----
 test_that("add_full adds flat_full.Rmd", {
-  dev_file_path <- expect_error(add_full(pkg = dummypackage, open = FALSE),
+  dev_file_path <- expect_error(suppressMessages(add_full(pkg = dummypackage, open = FALSE)),
     regexp = NA
   )
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
@@ -652,55 +730,91 @@ test_that("add_full adds flat_full.Rmd", {
 })
 unlink(dummypackage, recursive = TRUE)
 
+# add_minimal ----
 dummypackage <- tempfile(pattern = "add.wrappers")
 dir.create(dummypackage)
 pkg_name <- basename(dummypackage)
-# add_minimal
-test_that("add_minimal adds flat_minimal.Rmd", {
-  dev_file_path <- expect_error(add_minimal(pkg = dummypackage, open = FALSE),
+
+test_that("add_minimal_package adds flat_minimal.Rmd", {
+  dev_file_path <- expect_error(
+    suppressMessages(add_minimal_package(pkg = dummypackage, open = FALSE)),
     regexp = NA
   )
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
 
   expect_true(all(file.exists(dev_file_path)))
+  expect_true(file.exists(file.path(dummypackage, "dev", "flat_minimal.Rmd")))
   expect_true(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
   expect_true(file.exists(file.path(dummypackage, ".here")))
   expect_false(file.exists(file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")))
 
-  rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
-  expect_true(file.exists(rbuildignore_file))
-  rbuildignore_lines <- readLines(rbuildignore_file)
-  expect_true(any(grepl("^dev$", rbuildignore_lines, fixed = TRUE)))
-  expect_true(any(grepl("[.]here", rbuildignore_lines)))
-
   dev_lines <- readLines(flat_file)
-  expect_equal(length(grep("minimal", dev_lines)), 2)
+  expect_equal(length(grep("flat_minimal", dev_lines)), 2)
 })
 unlink(dummypackage, recursive = TRUE)
 
+# add_additional ----
 dummypackage <- tempfile(pattern = "add.wrappers")
 dir.create(dummypackage)
 pkg_name <- basename(dummypackage)
-# add_additional
+
 test_that("add_additional adds flat_additional.Rmd", {
-  dev_file_path <- expect_error(add_additional(pkg = dummypackage, open = FALSE),
+  dev_file_path <- expect_error(
+    suppressMessages(add_additional(pkg = dummypackage, open = FALSE)),
     regexp = NA
   )
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
 
   expect_true(all(file.exists(dev_file_path)))
+  expect_true(file.exists(file.path(dummypackage, "dev", "flat_additional.Rmd")))
   expect_false(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
   expect_true(file.exists(file.path(dummypackage, ".here")))
   expect_false(file.exists(file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")))
 
-  rbuildignore_file <- file.path(dummypackage, ".Rbuildignore")
-  expect_true(file.exists(rbuildignore_file))
-  rbuildignore_lines <- readLines(rbuildignore_file)
-  expect_true(any(grepl("^dev$", rbuildignore_lines, fixed = TRUE)))
-  expect_true(any(grepl("[.]here", rbuildignore_lines)))
-
   dev_lines <- readLines(flat_file)
   expect_equal(length(grep("additional", dev_lines)), 2)
+})
+unlink(dummypackage, recursive = TRUE)
+
+# add_minimal_flat ----
+dummypackage <- tempfile(pattern = "add.wrappers")
+dir.create(dummypackage)
+pkg_name <- basename(dummypackage)
+
+test_that("add_minimal_flat adds add_minimal_flat.Rmd", {
+  dev_file_path <- expect_error(
+    suppressMessages(add_minimal_flat(pkg = dummypackage, open = FALSE)),
+    regexp = NA
+  )
+  flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
+
+  expect_true(all(file.exists(dev_file_path)))
+  expect_true(file.exists(file.path(dummypackage, "dev", "flat_minimal.Rmd")))
+  expect_false(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
+  expect_true(file.exists(file.path(dummypackage, ".here")))
+  expect_false(file.exists(file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")))
+
+  dev_lines <- readLines(flat_file)
+  expect_equal(length(grep("flat_minimal", dev_lines)), 2)
+})
+unlink(dummypackage, recursive = TRUE)
+
+# add_dev_history ----
+dummypackage <- tempfile(pattern = "add.wrappers")
+dir.create(dummypackage)
+pkg_name <- basename(dummypackage)
+
+test_that("add_dev_history adds dev_historyt.Rmd only", {
+  dev_file_path <- expect_error(
+    suppressMessages(add_dev_history(pkg = dummypackage, open = FALSE)),
+    regexp = NA
+  )
+
+  expect_true(all(file.exists(dev_file_path)))
+  expect_false(file.exists(file.path(dummypackage, "dev", "flat_fake.Rmd")))
+  expect_true(file.exists(file.path(dummypackage, "dev", "0-dev_history.Rmd")))
+  expect_true(file.exists(file.path(dummypackage, ".here")))
+  expect_false(file.exists(file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")))
 })
 unlink(dummypackage, recursive = TRUE)
 ```
@@ -709,7 +823,9 @@ unlink(dummypackage, recursive = TRUE)
 ```{r development-inflate, eval=FALSE}
 # # Run but keep eval=FALSE to avoid infinite loop
 # # Execute in the console directly
-fusen::inflate(flat_file = "dev/flat_create_flat.Rmd",
-               check = FALSE, vignette_name = NA, document = FALSE)
+fusen::inflate(
+  flat_file = "dev/flat_create_flat.Rmd",
+  check = FALSE, vignette_name = NA, document = FALSE
+)
 ```
 

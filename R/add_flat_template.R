@@ -19,13 +19,30 @@ add_additional <- function(pkg = ".",
 
 #' @rdname add_flat_template
 #' @export
-add_minimal <- function(pkg = ".",
-                        dev_dir = "dev",
-                        flat_name = "minimal",
-                        overwrite = FALSE,
-                        open = TRUE) {
+add_minimal_flat <- function(pkg = ".",
+                             dev_dir = "dev",
+                             flat_name = "minimal",
+                             overwrite = FALSE,
+                             open = TRUE) {
   add_flat_template(
-    template = "minimal",
+    template = "minimal_flat",
+    pkg = pkg,
+    dev_dir = dev_dir,
+    flat_name = flat_name,
+    overwrite = overwrite,
+    open = open
+  )
+}
+
+#' @rdname add_flat_template
+#' @export
+add_minimal_package <- function(pkg = ".",
+                                dev_dir = "dev",
+                                flat_name = "minimal",
+                                overwrite = FALSE,
+                                open = TRUE) {
+  add_flat_template(
+    template = "minimal_package",
     pkg = pkg,
     dev_dir = dev_dir,
     flat_name = flat_name,
@@ -51,6 +68,22 @@ add_full <- function(pkg = ".",
   )
 }
 
+#' @rdname add_flat_template
+#' @export
+add_dev_history <- function(pkg = ".",
+                            dev_dir = "dev",
+                            overwrite = FALSE,
+                            open = TRUE) {
+  add_flat_template(
+    template = "dev_history",
+    pkg = pkg,
+    dev_dir = dev_dir,
+    flat_name = "fake",
+    overwrite = overwrite,
+    open = open
+  )
+}
+
 #' Add flat Rmd file that drives package development
 #'
 #' @param template Name of the template to use. See details.
@@ -67,17 +100,17 @@ add_full <- function(pkg = ".",
 #'
 #' - "full": The full template with a reproducible package that can directly be inflated.
 #' It comes along with the "dev_history" template. Default.
-#' - "minimal": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template.
-#' - "additional": Template for an additional vignette or set of additional functions.
+#' - "minimal_package": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template.
+#' - "minimal_flat" or "additional": Template for a new minimal flat file only.
 #' - "teaching": Template with a reproducible package, simpler than "full", but everything to
 #'  teach the minimal structure of a package.
 #' - "dev_history": Template with functions commonly used during package development.
 #' This does not contain chunks to write your own functions.
 #'
 #' Abbreviated names can also be used for the different templates:
-#' "add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".
+#' "add" for additional, "minflat" for minimal_flat, "minpkg" for minimal_package "teach" for teaching, "dev" for "dev_history".
 #'
-#' `add_additional()`, `add_minimal()`, `add_full()` are wrapper around `add_flat_template("additional")`, ...
+#' `add_additional()`, `add_minimal_flat()`, `add_dev_history()`, `add_minimal_package()`, `add_full()` are wrapper around `add_flat_template("additional")`, ...
 #'
 #' @rdname add_flat_template
 #' @return
@@ -88,30 +121,35 @@ add_full <- function(pkg = ".",
 #' # Create a new project
 #' dummypackage <- tempfile("dummypackage")
 #' dir.create(dummypackage)
-#' 
+#'
 #' # Add
 #' add_flat_template(template = "teaching", pkg = dummypackage)
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
-#' 
+#'
 #' # For classical use in your package
 #' \dontrun{
 #' # first time ever using 'fusen'
 #' add_flat_template("full")
-#' 
+#'
 #' # first time in your new package
-#' add_flat_template("minimal")
-#' 
+#' add_flat_template("minimal_package")
+#'
 #' # add new flat file for new functions
 #' add_flat_template("add")
-#' 
+#' add_additional()
+#' add_minimal_flat()
+#'
+#' # add only the dev_history file in an existing package
+#' add_dev_history()
+#'
 #' # add new flat template for teaching (a reduced full template)
 #' add_flat_template("teaching")
 #' }
-add_flat_template <- function(template = c("full", "minimal", "additional", "teaching", "dev_history"),
+add_flat_template <- function(template = c("full", "minimal_package", "minimal_flat", "additional", "teaching", "dev_history"),
                               pkg = ".",
                               dev_dir = "dev",
-                              flat_name = template,
+                              flat_name = NULL,
                               overwrite = FALSE,
                               open = TRUE) {
   project_name <- get_pkg_name(pkg = pkg)
@@ -123,9 +161,42 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
     )
   }
 
-  template <- match.arg(template)
+  template <- template[1]
+  template <- match.arg(template, choices = c(
+    "full",
+    "minimal_package", "minpkg",
+    "minimal_flat", "minflat", "add", "additional",
+    "teach", "teaching",
+    "dev_history", "dev"
+  ))
+
+  if (template %in% c("additional", "add")) {
+    template <- "additional"
+    if (is.null(flat_name)) {
+      flat_name <- "additional"
+    }
+  } else if (template %in% c("minimal_flat", "minflat")) {
+    template <- "additional"
+    if (is.null(flat_name)) {
+      flat_name <- "minimal"
+    }
+  } else if (template %in% c("minpkg", "minimal", "minimal_package", "min")) {
+    template <- "minimal_package"
+    if (is.null(flat_name)) {
+      flat_name <- "minimal"
+    }
+  } else if (template %in% c("teach")) {
+    template <- "teaching"
+    if (is.null(flat_name)) {
+      flat_name <- "teaching"
+    }
+  } else {
+    flat_name <- template
+  }
+
+
   if (!template %in% c("full", "teaching", "dev_history") &
-    !flat_name %in% c("minimal", "additional")) {
+    !flat_name %in% c("minimal", "minimal_package", "minimal_flat", "additional")) {
     fun_name <- gsub("-", "_", asciify_name(flat_name))
   } else {
     fun_name <- NA
@@ -195,7 +266,7 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
   }
 
   # Add the-dev-history when needed ----
-  if (template %in% c("full", "minimal", "dev_history")) {
+  if (template %in% c("full", "minimal_package", "dev_history")) {
     dev_file <- file.path(full_dev_dir, "0-dev_history.Rmd")
     if (file.exists(dev_file) & !isTRUE(overwrite)) {
       message(
@@ -233,14 +304,14 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
   } else {
     ignores <- c(paste0("^", dev_dir, "$"))
   }
-  
+
   local_file_ignore(file = file.path(pkg, ".Rbuildignore"), ignores)
 
   # Add a gitignore file in dev_dir ----
   # Files to ignore
   ignores <- c("*.html", "*.R")
   local_file_ignore(file = file.path(full_dev_dir, ".gitignore"), ignores)
-  
+
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0 &
     !any(grepl("^[.]here$", list.files(pkg, all.files = TRUE)))) {
     here::set_here(pkg)

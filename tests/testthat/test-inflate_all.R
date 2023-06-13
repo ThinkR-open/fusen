@@ -4,7 +4,7 @@
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+dev_file <- add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -38,7 +38,7 @@ usethis::with_project(dummypackage, {
       regexp = glue::glue("The flat file {basename(flat_file)} is going to be inflated")
     )
   })
-  
+
   test_that("deprecated is detected and not inflated", {
     # Let's deprecate our flat file
     config_yml_deprecated <- config_yml_ref
@@ -242,7 +242,7 @@ unlink(dummypackage, recursive = TRUE)
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-flat_files <- add_minimal(
+flat_files <- add_minimal_package(
   pkg = dummypackage,
   overwrite = TRUE,
   open = FALSE
@@ -254,7 +254,6 @@ file.rename(flat_file, flat_file_newname)
 
 # Inflate the flat file once
 usethis::with_project(dummypackage, {
-
   # Add licence
   usethis::use_mit_license("John Doe")
 
@@ -274,18 +273,19 @@ usethis::with_project(dummypackage, {
     yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
 
   test_that("inflate_all with no files named flat_ works", {
-  # now you can run inflate_all()
-  expect_message(
-    inflate_all(check = FALSE, document = TRUE), 
-    regexp = "The flat file test_minimal.Rmd is going to be inflated")
-  
-  # Delete R file and see if it comes back
-  the_file <- file.path("R", "my_fun.R")
-  file.remove(the_file)
-  expect_false(file.exists(the_file))
-  
-  inflate_all(check = FALSE, document = TRUE)
-  expect_true(file.exists(the_file))
+    # now you can run inflate_all()
+    expect_message(
+      inflate_all(check = FALSE, document = TRUE),
+      regexp = "The flat file test_minimal.Rmd is going to be inflated"
+    )
+
+    # Delete R file and see if it comes back
+    the_file <- file.path("R", "my_fun.R")
+    file.remove(the_file)
+    expect_false(file.exists(the_file))
+
+    inflate_all(check = FALSE, document = TRUE)
+    expect_true(file.exists(the_file))
   })
 })
 
@@ -296,7 +296,7 @@ unlink(dummypackage, recursive = TRUE)
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+dev_file <- add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE)
 
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]

@@ -398,3 +398,15 @@ But why not!?
 
 Hence, you can add a flat file and change its extension to ".qmd" if you like.  
 
+# Can I use {fusen} with {golem}?
+
+Of course ! That is even recommended as it allows to properly separate the business logic (in "dev/" directory) from the UI (in the modules of the "R/" directory).  
+Start by creating a {golem} project. Then you can start adding your flat files.  
+We recommend to create modules with names in relation to flat files, so that you can better navigate in your project.  
+```
+golem::create_golem('my.golem.app')
+fusen::add_minimal_flat(flat_name = "page1")
+golem::add_module(name = "page1")
+```
+
+Although default {golem} "dev/" files already contain the main actions to maintain your package, you can still add the "0-dev_history.Rmd" file recommended with {fusen} using `add_dev_history()`. Note that some sections will be redundant with the {golem} dev files.

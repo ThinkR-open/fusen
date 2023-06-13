@@ -13,12 +13,17 @@
 ## Breaking changes
 
 - Arguments `rmd` and `name` in function `inflate()` now lead to errors (Deprecated since v0.3.0).
-- `add_dev_history()` no longer exist (Deprecated since v0.3.0). Use `add_flat_template()` instead.
+- `add_dev_history()` was deprecated since v0.3.0 in favor of `add_flat_template()`. Now `add_dev_history()` only adds a "dev_history.Rmd" file in the "dev/" directory.
+- `add_flat_template(template = "minimal")` no longer exists to avoid confusion between minimal package or minimal flat file. Indeed, now there are `add_flat_template(template = "minimal_package")` (also `add_minimal_package()`) or `add_flat_template(template = "minimal_flat")` (also `add_minimal_flat()`). The latter doing exactly the same as `add_additional()` (#187)
 
 ## Bug fixes
 
 - Fix using line break after function name in flat files (#142, @FlorenceMounier)
 - If project directory is renamed by "my.package (Copy)", `inflate()` still works, even if this name is not a proper package name. What is important is that DESCRIPTION Package name is correct.
+
+## Major changes
+
+- The tips and tricks vignette shortly presents how to combine {fusen} and {golem} (#187)
 
 ## Minor changes
 

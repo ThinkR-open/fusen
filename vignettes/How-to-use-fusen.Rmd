@@ -123,6 +123,8 @@ unlink(dummypackage, recursive = TRUE)
 ```{r example, eval=FALSE}
 # Add an additional dev template
 add_flat_template(template = "add", pkg = dummypackage)
+# or directly
+add_additional(pkg = dummypackage)
 ```
 
 # There can be development actions

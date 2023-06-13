@@ -33,6 +33,8 @@ To add a new family of functions, create a new flat Rmd template
 
 ```{r, eval=FALSE}
 add_flat_template(template = "add")
+# or directly
+add_additional()
 ```
 
 

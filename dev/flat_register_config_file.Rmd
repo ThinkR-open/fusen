@@ -371,10 +371,12 @@ df_to_config <- function(df_files,
   } else if (isFALSE(all(file.exists(df_files$origin[df_files$origin != "keep"])))) {
     warning(
       "Please open a bug on {fusen} package with this complete message:\n",
-      "There is an error in the df_to_config process.\n", 
+      "There is an error in the df_to_config process.\n",
       "Files origin do not exist but will be registered as is in the config file:\n",
       paste(df_files$origin[!file.exists(df_files$origin[df_files$origin != "keep"])],
-            collapse = ", "))
+        collapse = ", "
+      )
+    )
   }
 
   if (any(duplicated(df_files$path))) {
@@ -449,7 +451,8 @@ df_to_config <- function(df_files,
   complete_yaml <- c(complete_yaml, all_groups_list)
   # order according to name without path so that flat_2 is after flat.Rmd
   complete_yaml <- complete_yaml[order(
-    sub("(?<!^|[.]|/)[.][^.]+$", "", names(complete_yaml), perl = TRUE))]
+    sub("(?<!^|[.]|/)[.][^.]+$", "", names(complete_yaml), perl = TRUE)
+  )]
 
   # Get duplicated paths after update
   yaml_paths <- unlist(complete_yaml)
@@ -855,7 +858,7 @@ unlink(dir_tmp, recursive = TRUE)
 dummypackage <- tempfile("dftoconfig")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- (add_minimal(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- (add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
 

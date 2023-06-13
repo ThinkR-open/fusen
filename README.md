@@ -219,6 +219,7 @@ function is at the same place.
 - Can I load all functions of the current flat file during development
   without having to `inflate()`?
 - Can I inflate a Quarto qmd file?
+- Can I use {fusen} with {golem}?
 
 =\> See vignette Tips and Tricks:
 <https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html>

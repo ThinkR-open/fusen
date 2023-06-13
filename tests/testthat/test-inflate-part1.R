@@ -259,7 +259,6 @@ dev_file <- add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
-
   suppressMessages(
     inflate(
       pkg = dummypackage, flat_file = flat_file, vignette_name = "Get started",
