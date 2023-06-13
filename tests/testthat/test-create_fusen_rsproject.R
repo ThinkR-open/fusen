@@ -7,12 +7,20 @@ expected_rmd_template_with_fusen_name <- readLines(system.file("flat-template-fu
   gsub("flat_template[.]Rmd", "flat_full.Rmd", .)
 
 withr::with_dir(dummypackage, {
-  test_that("Create fusen", {
+  test_that("Create fusen works", {
     path_foosen <- file.path(dummypackage, "foosen")
-    path_dev_history <- suppressMessages(create_fusen(path_foosen, template = "full", open = FALSE))
+
+    path_dev_history <- suppressMessages(
+      create_fusen(path_foosen, template = "full", open = FALSE)
+    )
 
     expect_true(dir.exists(path_foosen))
     expect_true(all(file.exists(path_dev_history)))
+
+    expect_true(file.exists(file.path(path_foosen, ".gitignore")))
+    gitignore <- readLines(file.path(path_foosen, ".gitignore"))
+    expect_true(all(
+      c(".Rproj.user", ".Rhistory", ".RData", ".DS_Store", ".httr-oauth") %in% gitignore))
 
     actual_dev_history <- readLines(path_dev_history[grepl("flat", path_dev_history)])
     expect_identical(
