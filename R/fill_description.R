@@ -41,6 +41,15 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
 
   path <- normalizePath(pkg)
 
+  project_name <- get_pkg_name(pkg = pkg)
+  clean_pkg_name <- asciify_name(project_name, to_pkg = TRUE)
+  if (project_name != clean_pkg_name) {
+    warning(
+      "Your package was renamed: `", clean_pkg_name,
+      "` as a package name should only contain letters, numbers and dots."
+    )
+  }
+
   desc_file <- file.path(path, "DESCRIPTION")
 
   if (capwords(fields[["Title"]]) != fields[["Title"]]) {
@@ -59,7 +68,7 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
   # usethis::use_description(fields = fields)
 
   fields_new <- usethis::use_description_defaults(
-    package = basename(path),
+    package = clean_pkg_name, #basename(path),
     roxygen = TRUE,
     fields = fields
   )

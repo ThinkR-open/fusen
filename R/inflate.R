@@ -226,7 +226,8 @@ inflate <- function(pkg = ".", flat_file,
   # To be inserted in "DO NOT EDIT" comments
   relative_flat_file <- gsub(
     "^/", "",
-    sub(normalize_path_winslash(pkg), "", normalize_path_winslash(flat_file))
+    sub(normalize_path_winslash(pkg), "", normalize_path_winslash(flat_file),
+        fixed = TRUE)
   )
 
   # Check if there are functions ----

@@ -18,6 +18,7 @@
 ## Bug fixes
 
 - Fix using line break after function name in flat files (#142, @FlorenceMounier)
+- If project directory is renamed by "my.package (Copy)", `inflate()` still works, even if this name is not a proper package name. What is important is that DESCRIPTION Package name is correct.
 
 ## Minor changes
 
