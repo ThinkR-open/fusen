@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9004</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9005</span>
       </span>
     </div>
 
@@ -104,7 +104,15 @@
 <span>  open <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">add_minimal</span><span class="op">(</span></span>
+<span><span class="fu">add_minimal_flat</span><span class="op">(</span></span>
+<span>  pkg <span class="op">=</span> <span class="st">"."</span>,</span>
+<span>  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,</span>
+<span>  flat_name <span class="op">=</span> <span class="st">"minimal"</span>,</span>
+<span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  open <span class="op">=</span> <span class="cn">TRUE</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">add_minimal_package</span><span class="op">(</span></span>
 <span>  pkg <span class="op">=</span> <span class="st">"."</span>,</span>
 <span>  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,</span>
 <span>  flat_name <span class="op">=</span> <span class="st">"minimal"</span>,</span>
@@ -120,11 +128,14 @@
 <span>  open <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span>
 <span></span>
+<span><span class="fu">add_dev_history</span><span class="op">(</span>pkg <span class="op">=</span> <span class="st">"."</span>, dev_dir <span class="op">=</span> <span class="st">"dev"</span>, overwrite <span class="op">=</span> <span class="cn">FALSE</span>, open <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span></span>
 <span><span class="fu">add_flat_template</span><span class="op">(</span></span>
-<span>  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"full"</span>, <span class="st">"minimal"</span>, <span class="st">"additional"</span>, <span class="st">"teaching"</span>, <span class="st">"dev_history"</span><span class="op">)</span>,</span>
+<span>  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"full"</span>, <span class="st">"minimal_package"</span>, <span class="st">"minimal_flat"</span>, <span class="st">"additional"</span>, <span class="st">"teaching"</span>,</span>
+<span>    <span class="st">"dev_history"</span><span class="op">)</span>,</span>
 <span>  pkg <span class="op">=</span> <span class="st">"."</span>,</span>
 <span>  dev_dir <span class="op">=</span> <span class="st">"dev"</span>,</span>
-<span>  flat_name <span class="op">=</span> <span class="va">template</span>,</span>
+<span>  flat_name <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  open <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -167,15 +178,15 @@ Use the name of the main function of your template to get chunks pre-filled with
     <h2>Details</h2>
     <p>Choose <code>template</code> among the different templates available:</p><ul><li><p>"full": The full template with a reproducible package that can directly be inflated.
 It comes along with the "dev_history" template. Default.</p></li>
-<li><p>"minimal": Minimal template to start a new package when you already know fusen, along with the "dev_history" template.</p></li>
-<li><p>"additional": Template for an additional vignette or set of additional functions.</p></li>
+<li><p>"minimal_package": Minimal template to start a new package when you already know fusen, along with the "dev_history" template.</p></li>
+<li><p>"minimal_flat" or "additional": Template for a new minimal flat file only.</p></li>
 <li><p>"teaching": Template with a reproducible package, simpler than "full", but everything to
 teach the minimal structure of a package.</p></li>
 <li><p>"dev_history": Template with functions commonly used during package development.
 This does not contain chunks to write your own functions.</p></li>
 </ul><p>Abbreviated names can also be used for the different templates:
-"add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".</p>
-<p><code>add_additional()</code>, <code>add_minimal()</code>, <code>add_full()</code> are wrapper around <code>add_flat_template("additional")</code>, ...</p>
+"add" for additional, "minflat" for minimal_flat, "minpkg" for minimal_package "teach" for teaching, "dev" for "dev_history".</p>
+<p><code>add_additional()</code>, <code>add_minimal_flat()</code>, <code>add_dev_history()</code>, <code>add_minimal_package()</code>, <code>add_full()</code> are wrapper around <code>add_flat_template("additional")</code>, ...</p>
     </div>
 
     <div id="ref-examples">
@@ -186,8 +197,8 @@ This does not contain chunks to write your own functions.</p></li>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Add</span></span></span>
 <span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span>template <span class="op">=</span> <span class="st">"teaching"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpGteht3/dummypackage16414c9a8687 . Please start a new R session in the new project directory.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpGteht3/dummypackage16414c9a8687/dev/flat_teaching.Rmd"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpU92VSl/dummypackage15eb17d89093 . Please start a new R session in the new project directory.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpU92VSl/dummypackage15eb17d89093/dev/flat_teaching.Rmd"</span>
 <span class="r-in"><span><span class="co"># Delete dummy package</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
@@ -197,10 +208,15 @@ This does not contain chunks to write your own functions.</p></li>
 <span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"full"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># first time in your new package</span></span></span>
-<span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"minimal"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"minimal_package"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># add new flat file for new functions</span></span></span>
 <span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"add"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">add_additional</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">add_minimal_flat</span><span class="op">(</span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># add only the dev_history file in an existing package</span></span></span>
+<span class="r-in"><span><span class="fu">add_dev_history</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># add new flat template for teaching (a reduced full template)</span></span></span>
 <span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span><span class="st">"teaching"</span><span class="op">)</span></span></span>

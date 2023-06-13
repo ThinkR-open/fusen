@@ -59,7 +59,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9004</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9005</span>
       </span>
     </div>
 
@@ -163,7 +163,7 @@
 </li>
 <li>There are wrappers around <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> for lazy
 developpers: <code><a href="../reference/add_flat_template.html">add_additional()</a></code>, <code><a href="../reference/add_flat_template.html">add_full()</a></code>,
-<code><a href="../reference/add_flat_template.html">add_minimal()</a></code>
+<code>add_minimal()</code>
 </li>
 </ul>
 </div>
@@ -572,6 +572,25 @@ The vignette created from this flat file will still be a Rmd file. But
 why not!?</p>
 <p>Hence, you can add a flat file and change its extension to “.qmd” if
 you like.</p>
+</div>
+<div class="section level2">
+<h2 id="can-i-use-fusen-with-golem">Can I use {fusen} with {golem}?<a class="anchor" aria-label="anchor" href="#can-i-use-fusen-with-golem"></a>
+</h2>
+<p>Of course ! That is even recommended as it allows to properly
+separate the business logic (in “dev/” directory) from the UI (in the
+modules of the “R/” directory).<br>
+Start by creating a {golem} project. Then you can start adding your flat
+files.<br>
+We recommend to create modules with names in relation to flat files, so
+that you can better navigate in your project.</p>
+<pre><code><span><span class="fu">golem</span><span class="fu">::</span><span class="fu">create_golem</span><span class="op">(</span><span class="st">'my.golem.app'</span><span class="op">)</span></span>
+<span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/add_flat_template.html">add_minimal_flat</a></span><span class="op">(</span>flat_name <span class="op">=</span> <span class="st">"page1"</span><span class="op">)</span></span>
+<span><span class="fu">golem</span><span class="fu">::</span><span class="fu">add_module</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"page1"</span><span class="op">)</span></span></code></pre>
+<p>Although default {golem} “dev/” files already contain the main
+actions to maintain your package, you can still add the
+“0-dev_history.Rmd” file recommended with {fusen} using
+<code><a href="../reference/add_flat_template.html">add_dev_history()</a></code>. Note that some sections will be
+redundant with the {golem} dev files.</p>
 </div>
   </div>
 
