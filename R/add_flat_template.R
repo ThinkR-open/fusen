@@ -229,39 +229,18 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
   # .Rbuildignore ----
   # usethis::use_build_ignore(dev_dir) # Cannot be used outside project
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0) {
-    lines <- c(paste0("^", dev_dir, "$"), "^\\.here$")
+    ignores <- c(paste0("^", dev_dir, "$"), "^\\.here$")
   } else {
-    lines <- c(paste0("^", dev_dir, "$"))
+    ignores <- c(paste0("^", dev_dir, "$"))
   }
-
-  buildfile <- normalizePath(file.path(pkg, ".Rbuildignore"), mustWork = FALSE)
-  if (!file.exists(buildfile)) {
-    existing_lines <- ""
-  } else {
-    existing_lines <- readLines(buildfile, warn = FALSE, encoding = "UTF-8")
-  }
-  new <- setdiff(lines, existing_lines)
-  if (length(new) != 0) {
-    all <- c(existing_lines, new)
-    cat(enc2utf8(all), file = buildfile, sep = "\n")
-  }
+  
+  local_file_ignore(file = file.path(pkg, ".Rbuildignore"), ignores)
 
   # Add a gitignore file in dev_dir ----
   # Files to ignore
-  lines <- c("*.html", "*.R")
-
-  gitfile <- normalizePath(file.path(full_dev_dir, ".gitignore"), mustWork = FALSE)
-  if (!file.exists(gitfile)) {
-    existing_lines <- ""
-  } else {
-    existing_lines <- readLines(gitfile, warn = FALSE, encoding = "UTF-8")
-  }
-  new <- setdiff(lines, existing_lines)
-  if (length(new) != 0) {
-    all <- c(existing_lines, new)
-    cat(enc2utf8(all), file = gitfile, sep = "\n")
-  }
-
+  ignores <- c("*.html", "*.R")
+  local_file_ignore(file = file.path(full_dev_dir, ".gitignore"), ignores)
+  
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0 &
     !any(grepl("^[.]here$", list.files(pkg, all.files = TRUE)))) {
     here::set_here(pkg)
@@ -271,4 +250,20 @@ add_flat_template <- function(template = c("full", "minimal", "additional", "tea
   }
 
   dev_file_path
+}
+
+#' Add new lines in a file if they are different from what exists
+#' @noRd
+local_file_ignore <- function(file, ignores) {
+  buildfile <- normalizePath(file, mustWork = FALSE)
+  if (!file.exists(buildfile)) {
+    existing_lines <- character(0)
+  } else {
+    existing_lines <- readLines(buildfile, warn = FALSE, encoding = "UTF-8")
+  }
+  new <- setdiff(ignores, existing_lines)
+  if (length(new) != 0) {
+    all <- c(existing_lines, new)
+    cat(enc2utf8(all), file = buildfile, sep = "\n")
+  }
 }

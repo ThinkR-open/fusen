@@ -78,6 +78,12 @@ create_fusen <- function(path,
     }
   }
 
+  # Equivalent to local git vaccinate
+  local_file_ignore(
+    file = file.path(path, ".gitignore"),
+    ignores = c(".Rproj.user", ".Rhistory", ".RData", ".DS_Store", ".httr-oauth")
+  )
+
   ## Add dev/flat_template.Rmd in newly created project
   cli::cat_rule(glue::glue("Adding dev/flat_{template}.Rmd"))
   dev_file <- add_flat_template(

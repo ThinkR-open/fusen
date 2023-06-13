@@ -307,6 +307,27 @@ test_that("Other dev_dir works", {
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
+# local_file_ignore works ----
+test_that("local_file_ignore works", {
+  tmpdirectory <- tempfile()
+  dir.create(tmpdirectory)
+
+  anyfile <- file.path(tmpdirectory, "whatever")
+  local_file_ignore(file = anyfile, ignores = c("whatever", "^.other/$"))
+  lines <- readLines(anyfile)
+  expect_equal(object = lines,
+               expected = c("whatever", "^.other/$"))
+
+  # Add over
+    local_file_ignore(file = anyfile, ignores = c("whatever", "something.else"))
+  lines <- readLines(anyfile)
+  expect_equal(object = lines,
+               expected = c("whatever", "^.other/$", "something.else"))
+
+  # Clean
+  unlink(tmpdirectory)
+})
+
 dummypackage <- tempfile(pattern = "add.wrappers")
 dir.create(dummypackage)
 pkg_name <- basename(dummypackage)
