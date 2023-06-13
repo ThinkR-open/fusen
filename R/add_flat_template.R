@@ -78,7 +78,6 @@ add_full <- function(pkg = ".",
 #' "add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".
 #'
 #' `add_additional()`, `add_minimal()`, `add_full()` are wrapper around `add_flat_template("additional")`, ...
-#' However, `add_dev_history()` is a deprecated function from a previous version.
 #'
 #' @rdname add_flat_template
 #' @return

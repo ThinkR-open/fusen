@@ -66,17 +66,15 @@ inflate <- function(pkg = ".", flat_file,
                     overwrite = "ask",
                     ...) {
   if (!is.null(list(...)[["name"]])) {
-    warning(paste0(
-      "The `name` argument to `inflate()` is deprecated since {fusen} version 0.3.0,",
-      " and will be removed in a future version.",
+    stop(paste0(
+      "The `name` argument to `inflate()` is deprecated since {fusen} version 0.3.0.",
       "\nPlease use `vignette_name = '", list(...)[["name"]], "'` instead.\n"
     ))
     vignette_name <- list(...)[["name"]]
   }
   if (!is.null(list(...)[["rmd"]])) {
-    warning(paste0(
-      "The `rmd` argument to `inflate()` is deprecated since {fusen} version 0.3.0,",
-      " and will be removed in a future version.",
+    stop(paste0(
+      "The `rmd` argument to `inflate()` is deprecated since {fusen} version 0.3.0.",
       "\nPlease use `flat_file = '", list(...)[["rmd"]], "'` instead.\n"
     ))
     flat_file <- list(...)[["rmd"]]

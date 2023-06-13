@@ -77,7 +77,6 @@ Abbreviated names can also be used for the different templates:
 "add" for additional, "min" for minimal, "teach" for teaching, "dev" for "dev_history".
 
 \code{add_additional()}, \code{add_minimal()}, \code{add_full()} are wrapper around \code{add_flat_template("additional")}, ...
-However, \code{add_dev_history()} is a deprecated function from a previous version.
 }
 \examples{
 # Create a new project

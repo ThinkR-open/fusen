@@ -10,6 +10,11 @@
 
 - `inflate()` creates a configuration file "dev/config_fusen.yaml" to register all files created while inflating the corresponding flat file, along with inflate parameters (#198, @ymansiaux)
 
+## Breaking changes
+
+- Arguments `rmd` and `name` in function `inflate()` now lead to errors (Deprecated since v0.3.0).
+- `add_dev_history()` no longer exist (Deprecated since v0.3.0). Use `add_flat_template()` instead.
+
 ## Bug fixes
 
 - Fix using line break after function name in flat files (#142, @FlorenceMounier)
@@ -18,6 +23,7 @@
 
 - Update CONTRIBUTING to speak about flat file in {fusen} itself
 - replace the maintainer's name from `fill_description()` in examples, templates and tests (#155, @FlorenceMounier)
+
 
 
 # fusen 0.5.0

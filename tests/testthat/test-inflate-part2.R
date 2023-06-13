@@ -493,7 +493,7 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 
 test_that("rmd and name are deprecated works", {
   usethis::with_project(dummypackage, {
-    expect_warning(
+    expect_error(
       suppressMessages(
         inflate(
           pkg = ".",
@@ -506,7 +506,7 @@ test_that("rmd and name are deprecated works", {
       ),
       regexp = "The `rmd` argument"
     )
-    expect_warning(
+    expect_error(
       suppressMessages(
         inflate(
           pkg = ".",

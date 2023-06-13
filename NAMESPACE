@@ -2,7 +2,6 @@
 
 export("%>%")
 export(add_additional)
-export(add_dev_history)
 export(add_flat_template)
 export(add_full)
 export(add_fusen_chunks)
