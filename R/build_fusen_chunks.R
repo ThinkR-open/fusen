@@ -90,6 +90,17 @@ add_fusen_chunks <- function(function_name = NULL,
 #' @examples
 #' cat(build_fusen_chunks("pouet"))
 build_fusen_chunks <- function(function_name, export = TRUE) {
+  cleaned_function_name <- clean_function_name(function_name)
+
+  if (function_name != cleaned_function_name) {
+    message(
+      "Your function name was cleaned: `", function_name, "` is now `", cleaned_function_name,
+      "` as a function name should only contain letters, numbers and underscores."
+    )
+    function_name <- cleaned_function_name
+  }
+
+
   paste(
     sep = "\n",
     sprintf("# %s", function_name),

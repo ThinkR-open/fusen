@@ -579,6 +579,18 @@ asciify_name <- function(name, to_pkg = FALSE) {
   cleaned_name
 }
 
+#' Clean function name
+#' @noRd
+clean_function_name <- function(name) {
+  gsub(
+    "-", "_",
+    gsub(
+      "^\\s*|\\s*$|^[0-9]*|^-*|-*$", "",
+      asciify_name(name, to_pkg = FALSE)
+    )
+  )
+}
+
 #' A flavor of normalizePath() that unixifies all its output
 #' @noRd
 normalize_path_winslash <- function(...) normalizePath(..., winslash = "/")

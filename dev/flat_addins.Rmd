@@ -111,6 +111,17 @@ add_fusen_chunks <- function(function_name = NULL,
 #'
 #' @noRd
 build_fusen_chunks <- function(function_name, export = TRUE) {
+  cleaned_function_name <- clean_function_name(function_name)
+
+  if (function_name != cleaned_function_name) {
+    message(
+      "Your function name was cleaned: `", function_name, "` is now `", cleaned_function_name,
+      "` as a function name should only contain letters, numbers and underscores."
+    )
+    function_name <- cleaned_function_name
+  }
+
+
   paste(
     sep = "\n",
     sprintf("# %s", function_name),
@@ -188,12 +199,51 @@ test_that("build_fusen_chunks works properly", {
   )
 })
 
+# function names are clean ----
+test_that("build_fusen_chunks cleans functions names", {
+  expect_message(
+    res <- build_fusen_chunks("1po @uet ()"),
+    regexp = "Your function name was cleaned:"
+  )
+  expect_true(
+    grepl("^# po_uet", res)
+  )
+  expect_true(
+    grepl("function-po_uet}", res)
+  )
+  expect_true(
+    grepl("example-po_uet}", res)
+  )
+  expect_true(
+    grepl("tests-po_uet}", res)
+  )
+  expect_true(
+    grepl("Title", res)
+  )
+  expect_true(
+    grepl("Description", res)
+  )
+  expect_true(
+    grepl("@return", res)
+  )
+  expect_true(
+    grepl("@export", res)
+  )
+  expect_message(
+    res <- build_fusen_chunks("1po @uet ()", FALSE),
+    regexp = "Your function name was cleaned:"
+  )
+  expect_true(
+    grepl("@noRd", res)
+  )
+})
+
 # Create a new package, add set of chunks with export and check ----
 dummydir <- tempfile(pattern = "chunk.export.")
 dir.create(dummydir)
 path_foosen <- file.path(dummydir, "foosen")
 
-test_that("build_fusen_chunks add lines as expected", {
+test_that("build_fusen_chunks add lines with export as expected", {
   withr::with_dir(dummydir, {
     dev_file <- create_fusen(path_foosen, template = "minimal", open = FALSE)
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
@@ -254,7 +304,7 @@ dummydir <- tempfile(pattern = "chunk.noRd.")
 dir.create(dummydir)
 path_foosen <- file.path(dummydir, "foosen")
 
-test_that("build_fusen_chunks add lines as expected", {
+test_that("build_fusen_chunks add lines with noRd as expected", {
   withr::with_dir(dummydir, {
     dev_file <- create_fusen(path_foosen, template = "minimal", open = FALSE)
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
@@ -317,7 +367,6 @@ test_that("build_fusen_chunks add lines as expected", {
 fusen::inflate(
   flat_file = "dev/flat_addins.Rmd",
   vignette_name = NA,
-  check = FALSE,
-  document = FALSE
+  check = FALSE
 )
 ```
