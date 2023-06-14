@@ -938,7 +938,7 @@ df_to_config <- function(df_files,
   if (length(all_modified) != 0) {
     cli_alert_info(
       paste0(
-        "Some files group already existed and were", ifelse(isTRUE(clean), "overwritten", "modified"),
+        "Some files group already existed and were ", ifelse(isTRUE(clean), "overwritten: ", "modified: "),
         paste(all_modified, collapse = ", ")
       )
     )
