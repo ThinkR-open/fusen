@@ -368,7 +368,6 @@ dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite =
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
-  browser()
   # Add licence
   suppressMessages(usethis::use_mit_license("John Doe"))
 
