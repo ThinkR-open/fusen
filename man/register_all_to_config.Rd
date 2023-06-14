@@ -4,15 +4,13 @@
 \alias{register_all_to_config}
 \title{Include all existing package files in the config file}
 \usage{
-register_all_to_config(pkg = ".", clean = FALSE)
+register_all_to_config(pkg = ".")
 }
 \arguments{
 \item{pkg}{Path to the package from which to add file to configuration file}
-
-\item{clean}{Logical. Delete list associated to a specific flat file before updating the whole list. Default is set to TRUE during \code{inflate()} of a specific flat file, as the list should only contain files created during the inflate. This could be set to FALSE with a direct use of \code{df_to_config()} too.}
 }
 \value{
-Path to configuration file
+Invisible path to 'fusen' configuration file
 }
 \description{
 Helps transition from non-fusen packages or made with earlier version

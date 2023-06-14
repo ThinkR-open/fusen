@@ -13,9 +13,9 @@
 #' @importFrom devtools check
 #'
 #' @return side effect. Inflates all your flat files that can be inflated.
-#' 
-#' @details This requires to [inflate()] all flat files individually at least once, so that their specific inflate configurations are stored.  
-#' 
+#'
+#' @details This requires to [inflate()] all flat files individually at least once, so that their specific inflate configurations are stored.
+#'
 #' This also requires to register all R, tests and vignettes files of your package, even if not created with an inflate. Run [inflate_all()] once and read the messages. The first time, you will probably need to run [register_all_to_config()] if your package is not new.
 #'
 #' @seealso
@@ -82,7 +82,13 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
-    stop("There is no fusen.config_file in your package. Your flat files must be inflated at least once manually before you can use `inflate_all()`. If you were using a fusen prior to v0.5.0.9000 you must inflate all your flat files manually once again.")
+    stop(
+      " `inflate_all()` requires a configuration file to work properly.",
+      " There is no configuration file at this place in your package: '", config_file, "'.",
+      "\nYour flat files must be individually inflated at least once manually before you can use `inflate_all()`.",
+      " This will create a proper configuration file with a section for each flat file.",
+      "\nThis error is common if you were using 'fusen' prior to v0.5.1."
+    )
   }
 
   config_yml <- read_yaml(config_file)
@@ -130,7 +136,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
       ...
     )
   }
-  
+
   if (isTRUE(clean)) {
     cli::cat_rule("check not registered files")
     invisible(check_not_registered_files(path = pkg))

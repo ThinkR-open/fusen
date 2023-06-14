@@ -74,7 +74,7 @@ fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
 #' @examples
 init_share_on_github <- function() {
   pkg <- "."
-  
+
   if (!requireNamespace("gert", quietly = TRUE)) {
     stop("Please install the {gert} package to be able to share on GitHub as you will need to use git and commit.")
   }
