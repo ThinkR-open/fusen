@@ -577,7 +577,7 @@ usethis::with_project(dummypackage, {
     csv_file <- file.path("dev", "config_not_registered.csv")
     expect_true(file.exists(csv_file))
     
-    csv_content <- read.csv(csv_file)
+    csv_content <- read.csv(csv_file, stringsAsFactors = FALSE)
     csv_content <- csv_content[order(csv_content[["path"]]),]
     
     csv_content_expected <- structure(list(
