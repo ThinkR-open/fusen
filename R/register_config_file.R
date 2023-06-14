@@ -140,7 +140,13 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, 
     ))
 
     if (isTRUE(open) & interactive()) {
-      usethis::edit_file(csv_file)
+      if (requireNamespace("rstudioapi") &&
+        rstudioapi::isAvailable() &&
+        rstudioapi::hasFun("navigateToFile")) {
+        rstudioapi::navigateToFile(csv_file)
+      } else {
+        utils::file.edit(csv_file)
+      }
     }
 
     return(csv_file)
