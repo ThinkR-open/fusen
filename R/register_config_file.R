@@ -7,6 +7,7 @@
 #' @param path Path to package to check for not registered files
 #' @param guess Logical. Guess if the file was inflated by a specific flat file
 #' @param to_csv Logical. Whether to store along the config file, the outputs in a csv for the user to clean it manually
+#' @param open Logical. Whether to open the csv of unregistered files.
 #' @return Path to csv file if `to_csv` is TRUE. `dput()` of the dataframe otherwise.
 #' @importFrom utils write.csv
 #'
@@ -56,7 +57,7 @@
 #'   yaml::read_yaml(out_config)
 #' })
 #' unlink(dummypackage, recursive = TRUE)
-check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) {
+check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, open = TRUE) {
   path <- normalizePath(path, winslash = "/")
 
   all_r <- list.files(file.path(path, "R"), pattern = "[.]R$|[.]r$", full.names = TRUE)
@@ -110,7 +111,10 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
     # This may mean that the package is not clean
     if (!is.null(config_flat_paths)) {
       res_new$origin[which(res_new$origin %in% config_flat_paths)] <-
-        paste0("Possibly deprecated file. Please check its link with detected flat source: ", res_new$origin)
+        paste0(
+          "Possibly deprecated file. Please check its link with detected flat source: ",
+          res_new$origin[which(res_new$origin %in% config_flat_paths)]
+        )
     }
   } else {
     res_new$origin <- "keep"
@@ -129,11 +133,15 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
     write.csv(res_new, csv_file, row.names = FALSE)
     cli::cli_alert_info(paste(
       "\nSome files in your package are not registered in the configuration file:", config_file,
-      "'fusen' uses a configuration file to store the structure of your package and help you clean it when needed.",
+      "\n'fusen' uses a configuration file to store the structure of your package and help you clean it when needed.",
       "\nYou will find a list of unregistered files there:", csv_file,
       "\nDelete unregistered files that you do not need anymore. Then run `fusen::register_all_to_config()`.",
       "\n For more information, read `vignette('register-files-in-config', package = 'fusen')`"
     ))
+
+    if (isTRUE(open) & interactive()) {
+      usethis::edit_file(csv_file)
+    }
 
     return(csv_file)
   } else {
@@ -508,16 +516,22 @@ update_one_group_yaml <- function(df_files,
     )
   }
 
-  if (!is.null(inflate_parameters)) this_group_list <- c(this_group_list, list(inflate = inflate_parameters))
+  this_group_list_return <- this_group_list
+  this_group_list_message <- this_group_list
+  if (!is.null(inflate_parameters)) {
+    this_group_list_return <- c(this_group_list, list(inflate = inflate_parameters))
+    this_group_list_message <- c(this_group_list, list(inflate = "each parameter"))
+  }
 
-  # Those removed
+  # Messages only
+  #
   those_removed <- setdiff(
     all_keep_before,
-    this_group_list
+    this_group_list_message
   )
   those_removed_vec <- files_list_to_vector(those_removed)
   those_added <- setdiff(
-    this_group_list,
+    this_group_list_message,
     all_keep_before
   )
   those_added_vec <- files_list_to_vector(those_added)
@@ -529,7 +543,7 @@ update_one_group_yaml <- function(df_files,
     silent <- lapply(paste(those_added_vec, "was added to the config file"), cli_alert_success)
   }
 
-  return(this_group_list)
+  return(this_group_list_return)
 }
 
 #' Include all existing package files in the config file

@@ -4,7 +4,12 @@
 \alias{check_not_registered_files}
 \title{Show in a table files that are not already registered in the yaml config file}
 \usage{
-check_not_registered_files(path = ".", guess = TRUE, to_csv = TRUE)
+check_not_registered_files(
+  path = ".",
+  guess = TRUE,
+  to_csv = TRUE,
+  open = TRUE
+)
 }
 \arguments{
 \item{path}{Path to package to check for not registered files}
@@ -12,6 +17,8 @@ check_not_registered_files(path = ".", guess = TRUE, to_csv = TRUE)
 \item{guess}{Logical. Guess if the file was inflated by a specific flat file}
 
 \item{to_csv}{Logical. Whether to store along the config file, the outputs in a csv for the user to clean it manually}
+
+\item{open}{Logical. Whether to open the csv of unregistered files.}
 }
 \value{
 Path to csv file if \code{to_csv} is TRUE. \code{dput()} of the dataframe otherwise.

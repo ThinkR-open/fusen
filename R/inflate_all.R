@@ -87,7 +87,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
       " There is no configuration file at this place in your package: '", config_file, "'.",
       "\nYour flat files must be individually inflated at least once manually before you can use `inflate_all()`.",
       " This will create a proper configuration file with a section for each flat file.",
-      "\nThis error is common if you were using 'fusen' prior to v0.5.1."
+      "\nThis error is common if you were using 'fusen' prior to v0.5.1. Read `vignette('inflate-all-your-flat-files', package = 'fusen')` for more information."
     )
   }
 

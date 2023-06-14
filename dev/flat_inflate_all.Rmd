@@ -27,9 +27,11 @@ Indeed, `inflate_all()` requires the existence of a complete {fusen} configurati
 
 - If you are working in a project initiated with a version of {fusen} prior to v0.5.0, please manually run `inflate()` for each of the flat files you want to work with, in order to create the appropriate "dev/config_fusen.yaml" file.
 
-- If you are already familiar with "dev/config_fusen.yaml" but were working with a dev version of {fusen} prior to v0.6.0, your "dev/config_fusen.yaml" file does not contain inflate-related parameters. You will have to inflate again you flat files in order to complete the configuration file with the proper `inflate()` parameters.
+- If you are already familiar with "dev/config_fusen.yaml" but were working with a dev version of {fusen} prior to v0.5.1, your "dev/config_fusen.yaml" file does not contain inflate-related parameters. You will have to inflate again you flat files in order to complete the configuration file with the proper `inflate()` parameters.
 
 There is a wrapper named `inflate_all_no_check()` that will prevent running `check()`. This is a short version of `inflate_all(check = FALSE)`.
+
+Note also that all files stored in R, tests and vignettes directories are checked to detect those not created from a flat file. They will need to be registered in the config file too, in order to help you keep your package clean of deprecated files. `inflate_all()` thus runs `check_not_registered_files()` behind the scene and informs about the procedure. Read `vignette('register-files-in-config', package = 'fusen')` to get more information.
 
 ```{r function-inflate_all}
 #' Inflate all your flat files
@@ -65,7 +67,7 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
       " There is no configuration file at this place in your package: '", config_file, "'.",
       "\nYour flat files must be individually inflated at least once manually before you can use `inflate_all()`.",
       " This will create a proper configuration file with a section for each flat file.",
-      "\nThis error is common if you were using 'fusen' prior to v0.5.1."
+      "\nThis error is common if you were using 'fusen' prior to v0.5.1. Read `vignette('inflate-all-your-flat-files', package = 'fusen')` for more information."
     )
   }
 
