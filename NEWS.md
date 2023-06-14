@@ -5,6 +5,8 @@
 ### Inflate all active flat file
 
 - `inflate_all()` uses the configuration file to inflate all your flat files at once. `document` and `check` options are thus only run once for all flat files. (#204, @ymansiaux)
+- This requires to run `inflate()` at least once for each flat file.
+- This also requires to register all other files, that were present in the package before this version of 'fusen' with `register_all_to_config()`
 
 ### List all files created with an `inflate()` in a config file with parameters
 
@@ -46,7 +48,7 @@
 ### List all files created with an `inflate()` in a config file
 
 - `inflate()` creates a "dev/config_fusen.yaml" file to register all files created while inflating the corresponding flat file (First steps in #24)
-- Migrate from a non-fusen package or a previous version of {fusen} use with `register_all_to_config()`
+- Migrate from a non-fusen package or a previous version of 'fusen' with `register_all_to_config()`
 - Create or update the config file from a data.frame with `df_to_config()` to list legitimate scripts (even if not associated with a flat file)
 
 ### Others

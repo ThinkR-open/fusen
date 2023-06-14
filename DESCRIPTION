@@ -22,7 +22,6 @@ Imports:
     cli,
     desc,
     devtools,
-    gert,
     glue,
     here (>= 1.0.0),
     magrittr,
@@ -38,6 +37,7 @@ Imports:
     utils,
     yaml
 Suggests: 
+    gert,
     knitr,
     pkgload,
     rcmdcheck,
