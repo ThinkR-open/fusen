@@ -9,6 +9,7 @@ extra.suggests:
   - rstudioapi
   - rmarkdown
   - knitr
+  - gert
 pkg_ignore:
   - testthat
   - dummypackage
@@ -16,6 +17,7 @@ pkg_ignore:
   - knitr
   - rmarkdown
   - R6
+  - gert
 document: yes
 normalize: yes
 inside_rmd: no

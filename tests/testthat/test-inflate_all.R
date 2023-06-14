@@ -296,7 +296,7 @@ unlink(dummypackage, recursive = TRUE)
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -346,15 +346,91 @@ usethis::with_project(dummypackage, {
   # run check on interactive mode only
   test_that("inflate_all with check = TRUE works", {
     skip_if_not(interactive())
-    inflate_all(
+    suppressMessages(inflate_all(
       check = TRUE,
       quiet = TRUE,
       args = c("--no-manual", "--no-build-vignettes"),
       check_dir = file.path(dummypackage, "dev/")
-    )
+    ))
     check_lines <- readLines(file.path(dummypackage, "dev/", paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
     expect_equal(check_lines[length(check_lines)], "Status: OK")
   })
 })
 
 unlink(dummypackage, recursive = TRUE)
+
+# Test inflate_all detects unregistered files ----
+dummypackage <- tempfile("inflateall.unregistered")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  suppressMessages(usethis::use_mit_license("John Doe"))
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "toto",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+  )
+
+  test_that("inflate_all detects unregistered files", {
+    # Create an unregistered file
+    cat("# unregistered file in R\n", 
+        file = file.path(dummypackage, "R", "unregistered_r.R"))
+    cat("# unregistered file in test\n", 
+        file = file.path(dummypackage, "tests", "testthat", "test-unregistered_r.R"))
+    
+    expect_message(
+      inflate_all_no_check(),
+      regexp = "There are unregistered files in your package."
+    )
+    csv_file <- file.path("dev", "config_not_registered.csv")
+    expect_true(file.exists(csv_file))
+    
+    csv_content <- read.csv(csv_file, stringsAsFactors = FALSE)
+    csv_content <- csv_content[order(csv_content[["path"]]),]
+    
+    csv_content_expected <- structure(list(
+      type = c("R", "test"),
+      path = c("R/unregistered_r.R", 
+               "tests/testthat/test-unregistered_r.R"), 
+      origin = c("No existing source path found. Write 'keep', the full path to the flat file source, or delete this line.", 
+                 "No existing source path found. Write 'keep', the full path to the flat file source, or delete this line."
+      )), 
+      row.names = 1:2,
+      class = "data.frame")
+    csv_content_expected <- csv_content_expected[order(csv_content_expected[["path"]]),]
+    
+    expect_equal(csv_content, csv_content_expected)
+    
+  })
+  
+  test_that("inflate_all is silent after files registered", {
+
+    # register everything
+    register_all_to_config()
+        
+    expect_message(
+      inflate_all_no_check(),
+      regexp = "There are no unregistered files"
+    )
+  })
+  
+  test_that("inflate_all is does not check registered if FALSE", {
+    output <- capture.output(inflate_all_no_check(clean = FALSE))
+    expect_false(any(grepl("registered", output)))
+  })
+  
+})
+unlink(dummypackage, recursive = TRUE)
+

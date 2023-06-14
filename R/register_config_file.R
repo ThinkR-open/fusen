@@ -9,6 +9,11 @@
 #' @param to_csv Logical. Whether to store along the config file, the outputs in a csv for the user to clean it manually
 #' @return Path to csv file if `to_csv` is TRUE. `dput()` of the dataframe otherwise.
 #' @importFrom utils write.csv
+#' 
+#' @seealso
+#'   [df_to_config()] to manually register all files detected by `check_not_registered_files()`,
+#'   [register_all_to_config()] for automatically registering all files already present in the project,
+#'   [inflate_all()] to inflate every flat files according to the configuration file.
 #'
 #' @export
 #' @examples
@@ -121,10 +126,14 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
   if (isTRUE(to_csv)) {
     write.csv(res_new, csv_file, row.names = FALSE)
     cli::cli_alert_info(paste(
-      "Wrote not registered files in: ", csv_file,
-      "\nKeep only those necessary and run `df_to_config()` on the csv file:\n",
-      paste0('`df_to_config("', csv_file, '")`'),
-      "\nOr directly run `register_all_to_config()` and check your config file."
+      "There are unregistered files in your package.",
+      "This means that some files are not listed in the 'fusen' config file.", 
+      "\n- Either they were manually created, thus not issued from an inflate.", 
+      "Hence, you may want to run `register_all_to_config()`",
+      "\n- Or they are issued from a previous inflate and you changed the name of the output. Hence, you will want to manually delete these files.", 
+      "\n Have a look at the csv that lists them and you can decide what to do: probably a combination of manually deleting files, and then run `register_all_to_config()`.",
+      "The csv file is there:", csv_file,
+      "\n After the process, see if there is a 'keep' section in your 'fusen' config file that lists all files not linked to any flat file."
     ))
 
     return(csv_file)
@@ -185,6 +194,11 @@ get_list_paths <- function(config_list) {
 #'
 #' @return Config file path.
 #' Side effect: create a yaml config file.
+#' 
+#' @seealso
+#'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
+#'   [register_all_to_config()] for automatically registering all files already present in the project
+#'   
 #' @export
 #'
 #'
@@ -582,11 +596,14 @@ update_one_group_yaml <- function(df_files,
 
 #' Include all existing package files in the config file
 #'
-#' Helps transition from non-fusen packages
+#' Helps transition from non-fusen packages or made with earlier version
 #'
 #' @param pkg Path to the package from which to add file to configuration file
 #' @inheritParams df_to_config
 #' @return Path to configuration file
+#' 
+#' @seealso
+#'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
 #'
 #' @export
 #' @examples

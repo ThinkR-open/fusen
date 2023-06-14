@@ -95,3 +95,7 @@ config_file <- df_to_config(
 )
 }
 }
+\seealso{
+\code{\link[=check_not_registered_files]{check_not_registered_files()}} for the list of files not already associated with a flat file in the config file,
+\code{\link[=register_all_to_config]{register_all_to_config()}} for automatically registering all files already present in the project
+}

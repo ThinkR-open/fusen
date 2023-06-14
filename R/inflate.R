@@ -37,6 +37,9 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' Package structure. Return path to current package.
 #' @export
 #'
+#' @seealso
+#'   [inflate_all()] to inflate every flat files according to the configuration file.
+#'
 #' @examples
 #' # Create a new project
 #' dummypackage <- tempfile("dummypackage")

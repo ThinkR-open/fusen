@@ -14,6 +14,13 @@
 #' }
 init_share_on_github <- function() {
   pkg <- "."
+  
+  if (!requireNamespace("gert", quietly = TRUE)) {
+    stop("Please install the {gert} package to be able to share on GitHub as you will need to use git and commit.")
+  }
+  if (!requireNamespace("knitr", quietly = TRUE)) {
+    stop("Please install the {knitr} package to be able to share on GitHub as you will need to knit your README.")
+  }
 
   # Init git if not already initiated
   repo <- tryCatch(gert::git_find(pkg), error = function(e) NULL)
@@ -78,7 +85,7 @@ init_share_on_github <- function() {
 
   # Add GitHub Actions with pkgdown
   cli::cat_rule("Init GitHub Actions")
-  usethis::use_github_action_check_standard()
+  usethis::use_github_action("check-standard")
   usethis::use_github_action("pkgdown")
   usethis::use_github_action("test-coverage")
 

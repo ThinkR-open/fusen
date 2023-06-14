@@ -109,9 +109,9 @@ styler::style_file(list.files("dev", pattern = "[.](Rmd|qmd|rmd)$", full.names =
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
   pkg_ignore = c("testthat", "dummypackage", "rstudioapi",
-                 "knitr", "rmarkdown", "R6"),
+                 "knitr", "rmarkdown", "R6", "gert"),
   extra.suggests = c("testthat", "pkgload", "rstudioapi",
-                     "rmarkdown", "knitr"),
+                     "rmarkdown", "knitr", "gert"),
   # "MASS", "lattice", "Matrix")
   update.config = TRUE # attachment >= 0.4.0.
 )

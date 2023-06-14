@@ -80,11 +80,14 @@ Run `register_all_to_config()` in your current package to create the "dev/config
 ```{r function-register_all_to_config}
 #' Include all existing package files in the config file
 #'
-#' Helps transition from non-fusen packages
+#' Helps transition from non-fusen packages or made with earlier version
 #'
 #' @param pkg Path to the package from which to add file to configuration file
 #' @inheritParams df_to_config
 #' @return Path to configuration file
+#' 
+#' @seealso
+#'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
 #'
 #' @export
 register_all_to_config <- function(pkg = ".", clean = FALSE) {
@@ -257,6 +260,11 @@ This is important if you started to develop without {fusen}, and start using a f
 #'
 #' @return Config file path.
 #' Side effect: create a yaml config file.
+#' 
+#' @seealso
+#'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
+#'   [register_all_to_config()] for automatically registering all files already present in the project
+#'   
 #' @export
 #'
 #'
@@ -1034,6 +1042,11 @@ Note that `check_not_registered_files()` will try to guess the source flat templ
 #' @param to_csv Logical. Whether to store along the config file, the outputs in a csv for the user to clean it manually
 #' @return Path to csv file if `to_csv` is TRUE. `dput()` of the dataframe otherwise.
 #' @importFrom utils write.csv
+#' 
+#' @seealso
+#'   [df_to_config()] to manually register all files detected by `check_not_registered_files()`,
+#'   [register_all_to_config()] for automatically registering all files already present in the project,
+#'   [inflate_all()] to inflate every flat files according to the configuration file.
 #'
 #' @export
 check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) {
@@ -1099,10 +1112,14 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE) 
   if (isTRUE(to_csv)) {
     write.csv(res_new, csv_file, row.names = FALSE)
     cli::cli_alert_info(paste(
-      "Wrote not registered files in: ", csv_file,
-      "\nKeep only those necessary and run `df_to_config()` on the csv file:\n",
-      paste0('`df_to_config("', csv_file, '")`'),
-      "\nOr directly run `register_all_to_config()` and check your config file."
+      "There are unregistered files in your package.",
+      "This means that some files are not listed in the 'fusen' config file.", 
+      "\n- Either they were manually created, thus not issued from an inflate.", 
+      "Hence, you may want to run `register_all_to_config()`",
+      "\n- Or they are issued from a previous inflate and you changed the name of the output. Hence, you will want to manually delete these files.", 
+      "\n Have a look at the csv that lists them and you can decide what to do: probably a combination of manually deleting files, and then run `register_all_to_config()`.",
+      "The csv file is there:", csv_file,
+      "\n After the process, see if there is a 'keep' section in your 'fusen' config file that lists all files not linked to any flat file."
     ))
 
     return(csv_file)
@@ -1211,6 +1228,7 @@ dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = T
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
+
   test_that("check_not_registered_files returns message if empty", {
     expect_true(inherits(check_not_registered_files, "function"))
 
@@ -1246,7 +1264,7 @@ usethis::with_project(dummypackage, {
     # Delete config file to check if al sub-functions work
     file.remove(file.path(dummypackage, "dev", "config_fusen.yaml"))
     expect_message(out_csv <- check_not_registered_files(),
-      regexp = "Wrote not registered files in:  dev/config_not_registered.csv"
+      regexp = "There are unregistered files in your package"
     )
 
     content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
@@ -1298,7 +1316,7 @@ usethis::with_project(dummypackage, {
   cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
   test_that("check_not_registered_files can help manually fill config", {
-    expect_message(out_csv <- check_not_registered_files(), "Wrote not registered files")
+    expect_message(out_csv <- check_not_registered_files(), "There are unregistered files in your package")
     content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
     expect_true(
       grepl(

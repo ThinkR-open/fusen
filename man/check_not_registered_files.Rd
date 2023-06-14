@@ -67,3 +67,8 @@ usethis::with_project(dummypackage, {
 })
 unlink(dummypackage, recursive = TRUE)
 }
+\seealso{
+\code{\link[=df_to_config]{df_to_config()}} to manually register all files detected by \code{check_not_registered_files()},
+\code{\link[=register_all_to_config]{register_all_to_config()}} for automatically registering all files already present in the project,
+\code{\link[=inflate_all]{inflate_all()}} to inflate every flat files according to the configuration file.
+}
