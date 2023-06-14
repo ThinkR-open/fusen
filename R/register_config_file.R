@@ -9,6 +9,11 @@
 #' @param to_csv Logical. Whether to store along the config file, the outputs in a csv for the user to clean it manually
 #' @return Path to csv file if `to_csv` is TRUE. `dput()` of the dataframe otherwise.
 #' @importFrom utils write.csv
+#' 
+#' @seealso
+#'   [df_to_config()] to manually register all files detected by `check_not_registered_files()`,
+#'   [register_all_to_config()] for automatically registering all files already present in the project,
+#'   [inflate_all()] to inflate every flat files according to the configuration file.
 #'
 #' @export
 #' @examples
@@ -189,6 +194,11 @@ get_list_paths <- function(config_list) {
 #'
 #' @return Config file path.
 #' Side effect: create a yaml config file.
+#' 
+#' @seealso
+#'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
+#'   [register_all_to_config()] for automatically registering all files already present in the project
+#'   
 #' @export
 #'
 #'
@@ -586,11 +596,14 @@ update_one_group_yaml <- function(df_files,
 
 #' Include all existing package files in the config file
 #'
-#' Helps transition from non-fusen packages
+#' Helps transition from non-fusen packages or made with earlier version
 #'
 #' @param pkg Path to the package from which to add file to configuration file
 #' @inheritParams df_to_config
 #' @return Path to configuration file
+#' 
+#' @seealso
+#'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
 #'
 #' @export
 #' @examples

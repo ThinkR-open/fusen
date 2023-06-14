@@ -15,7 +15,7 @@ register_all_to_config(pkg = ".", clean = FALSE)
 Path to configuration file
 }
 \description{
-Helps transition from non-fusen packages
+Helps transition from non-fusen packages or made with earlier version
 }
 \examples{
 \dontrun{
@@ -46,4 +46,7 @@ usethis::with_project(dummypackage, {
   # Look at the output
   yaml::read_yaml(out_path)
 })
+}
+\seealso{
+\code{\link[=check_not_registered_files]{check_not_registered_files()}} for the list of files not already associated with a flat file in the config file,
 }

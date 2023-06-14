@@ -65,3 +65,6 @@ inflate(
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 }
+\seealso{
+\code{\link[=inflate_all]{inflate_all()}} to inflate every flat files according to the configuration file.
+}

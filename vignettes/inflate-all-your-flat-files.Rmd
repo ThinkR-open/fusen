@@ -41,7 +41,7 @@ There is a wrapper named `inflate_all_no_check()` that will prevent running `che
 ```{r example-inflate_all, eval = FALSE}
 #' \dontrun{
 # Usually, in the current package run inflate_all() directly
-# These functions changes the current user workspace
+# These functions change the current user workspace
 inflate_all()
 # Or inflate_all_no_check() to prevent checks to run
 inflate_all_no_check()

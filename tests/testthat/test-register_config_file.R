@@ -460,6 +460,7 @@ dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = T
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
+
   test_that("check_not_registered_files returns message if empty", {
     expect_true(inherits(check_not_registered_files, "function"))
 
@@ -495,7 +496,7 @@ usethis::with_project(dummypackage, {
     # Delete config file to check if al sub-functions work
     file.remove(file.path(dummypackage, "dev", "config_fusen.yaml"))
     expect_message(out_csv <- check_not_registered_files(),
-      regexp = "Wrote not registered files in:  dev/config_not_registered.csv"
+      regexp = "There are unregistered files in your package"
     )
 
     content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
@@ -547,7 +548,7 @@ usethis::with_project(dummypackage, {
   cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
   test_that("check_not_registered_files can help manually fill config", {
-    expect_message(out_csv <- check_not_registered_files(), "Wrote not registered files")
+    expect_message(out_csv <- check_not_registered_files(), "There are unregistered files in your package")
     content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
     expect_true(
       grepl(
