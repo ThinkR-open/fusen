@@ -659,8 +659,6 @@ dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = T
 flat_file <- dev_file[grepl("flat_", dev_file)]
 # Inflate once
 usethis::with_project(dummypackage, {
-  browser()
-
   suppressMessages(
     inflate(
       pkg = dummypackage, flat_file = flat_file,

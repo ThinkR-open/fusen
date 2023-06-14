@@ -4,7 +4,7 @@
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -19,7 +19,7 @@ usethis::with_project(dummypackage, {
 
   test_that("error if no config file exists", {
     # if no config file exists, we raise an error
-    expect_error(inflate_all(), regexp = "There is no fusen[.]config_file in your package[.]")
+    expect_error(inflate_all(), regexp = "requires a configuration file to work properly")
   })
 
   # we inflate the flat file
@@ -394,7 +394,7 @@ usethis::with_project(dummypackage, {
 
     expect_message(
       inflate_all_no_check(),
-      regexp = "There are unregistered files in your package."
+      regexp = "Some files in your package are not registered"
     )
     csv_file <- file.path("dev", "config_not_registered.csv")
     expect_true(file.exists(csv_file))
@@ -467,12 +467,12 @@ usethis::with_project(dummypackage, {
 
     expect_message(
       inflate_all_no_check(),
-      regexp = "There are unregistered files in your package"
+      regexp = "Some files in your package are not registered"
     )
 
     # register everything
     # debugonce(register_all_to_config)
-    register_all_to_config()
+    suppressMessages(register_all_to_config())
 
     expect_message(
       inflate_all_no_check(),
