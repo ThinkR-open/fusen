@@ -14,7 +14,7 @@
 #' }
 init_share_on_github <- function() {
   pkg <- "."
-  
+
   if (!requireNamespace("gert", quietly = TRUE)) {
     stop("Please install the {gert} package to be able to share on GitHub as you will need to use git and commit.")
   }

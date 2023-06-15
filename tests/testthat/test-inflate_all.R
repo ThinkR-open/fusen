@@ -4,7 +4,7 @@
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -19,7 +19,7 @@ usethis::with_project(dummypackage, {
 
   test_that("error if no config file exists", {
     # if no config file exists, we raise an error
-    expect_error(inflate_all(), regexp = "There is no fusen[.]config_file in your package[.]")
+    expect_error(inflate_all(), regexp = "requires a configuration file to work properly")
   })
 
   # we inflate the flat file
@@ -385,52 +385,99 @@ usethis::with_project(dummypackage, {
 
   test_that("inflate_all detects unregistered files", {
     # Create an unregistered file
-    cat("# unregistered file in R\n", 
-        file = file.path(dummypackage, "R", "unregistered_r.R"))
-    cat("# unregistered file in test\n", 
-        file = file.path(dummypackage, "tests", "testthat", "test-unregistered_r.R"))
-    
+    cat("# unregistered file in R\n",
+      file = file.path(dummypackage, "R", "unregistered_r.R")
+    )
+    cat("# unregistered file in test\n",
+      file = file.path(dummypackage, "tests", "testthat", "test-unregistered_r.R")
+    )
+
     expect_message(
       inflate_all_no_check(),
-      regexp = "There are unregistered files in your package."
+      regexp = "Some files in your package are not registered"
     )
     csv_file <- file.path("dev", "config_not_registered.csv")
     expect_true(file.exists(csv_file))
-    
-    csv_content <- read.csv(csv_file, stringsAsFactors = FALSE)
-    csv_content <- csv_content[order(csv_content[["path"]]),]
-    
-    csv_content_expected <- structure(list(
-      type = c("R", "test"),
-      path = c("R/unregistered_r.R", 
-               "tests/testthat/test-unregistered_r.R"), 
-      origin = c("No existing source path found. Write 'keep', the full path to the flat file source, or delete this line.", 
-                 "No existing source path found. Write 'keep', the full path to the flat file source, or delete this line."
-      )), 
-      row.names = 1:2,
-      class = "data.frame")
-    csv_content_expected <- csv_content_expected[order(csv_content_expected[["path"]]),]
-    
-    expect_equal(csv_content, csv_content_expected)
-    
-  })
-  
-  test_that("inflate_all is silent after files registered", {
 
+    csv_content <- read.csv(csv_file, stringsAsFactors = FALSE)
+    csv_content <- csv_content[order(csv_content[["path"]]), ]
+
+    csv_content_expected <- structure(
+      list(
+        type = c("R", "test"),
+        path = c(
+          "R/unregistered_r.R",
+          "tests/testthat/test-unregistered_r.R"
+        ),
+        origin = c(
+          "No existing source path found.",
+          "No existing source path found."
+        )
+      ),
+      row.names = 1:2,
+      class = "data.frame"
+    )
+    csv_content_expected <- csv_content_expected[order(csv_content_expected[["path"]]), ]
+
+    expect_equal(csv_content, csv_content_expected)
+
+    config_content <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+
+    expect_true(
+      !is.null(config_content[["flat_minimal.Rmd"]][["inflate"]])
+    )
+  })
+
+  test_that("inflate_all is silent after files registered", {
     # register everything
     register_all_to_config()
-        
+
+    config_content <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+
+    expect_true(
+      !is.null(config_content[["flat_minimal.Rmd"]][["inflate"]])
+    )
+    expect_equal(
+      config_content[["keep"]][["R"]],
+      "R/unregistered_r.R"
+    )
+    expect_equal(
+      config_content[["keep"]][["tests"]],
+      "tests/testthat/test-unregistered_r.R"
+    )
+
     expect_message(
       inflate_all_no_check(),
       regexp = "There are no unregistered files"
     )
   })
-  
+
   test_that("inflate_all is does not check registered if FALSE", {
     output <- capture.output(inflate_all_no_check(clean = FALSE))
     expect_false(any(grepl("registered", output)))
   })
-  
+
+  test_that("register_all_to_config does not affect inflate_all with autonomous files", {
+    config_content <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+    # Imagine that R/my_fun.R was previously named R/my_old_name.R
+    file.copy(
+      file.path(dummypackage, "R", "my_fun.R"),
+      file.path(dummypackage, "R", "my_old_name.R")
+    )
+
+    expect_message(
+      inflate_all_no_check(),
+      regexp = "Some files in your package are not registered"
+    )
+
+    # register everything
+    # debugonce(register_all_to_config)
+    suppressMessages(register_all_to_config())
+
+    expect_message(
+      inflate_all_no_check(),
+      regexp = "There are no unregistered files"
+    )
+  })
 })
 unlink(dummypackage, recursive = TRUE)
-

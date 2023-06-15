@@ -99,7 +99,7 @@ fusen::inflate_all()
 fusen::inflate_all(args = c("--no-manual", "--no-tests"))
 fusen::inflate_all_no_check()
 
-# Clean style
+# Clean style ----
 styler::style_pkg()
 styler::style_file(list.files("dev", pattern = "[.](Rmd|qmd|rmd)$", full.names = TRUE)
 )

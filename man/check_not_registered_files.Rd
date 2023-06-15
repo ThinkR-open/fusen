@@ -4,7 +4,12 @@
 \alias{check_not_registered_files}
 \title{Show in a table files that are not already registered in the yaml config file}
 \usage{
-check_not_registered_files(path = ".", guess = TRUE, to_csv = TRUE)
+check_not_registered_files(
+  path = ".",
+  guess = TRUE,
+  to_csv = TRUE,
+  open = TRUE
+)
 }
 \arguments{
 \item{path}{Path to package to check for not registered files}
@@ -12,6 +17,8 @@ check_not_registered_files(path = ".", guess = TRUE, to_csv = TRUE)
 \item{guess}{Logical. Guess if the file was inflated by a specific flat file}
 
 \item{to_csv}{Logical. Whether to store along the config file, the outputs in a csv for the user to clean it manually}
+
+\item{open}{Logical. Whether to open the csv of unregistered files.}
 }
 \value{
 Path to csv file if \code{to_csv} is TRUE. \code{dput()} of the dataframe otherwise.
@@ -23,7 +30,7 @@ If user start their package without 'fusen' or with version < 0.4, they need to 
 \dontrun{
 # Run this on the current package in development
 out_csv <- check_not_registered_files()
-out_csv
+file.edit(out_csv)
 }
 
 # Or you can try on the reproducible example
@@ -50,17 +57,11 @@ usethis::with_project(dummypackage, {
   # Use the fonction to check the list of files
   out_csv <- check_not_registered_files(dummypackage)
   out_csv
-  # Open the csv to modify manually the list of files in the csv created
-  # Indeed, the "to_keep.R" file will be registered as
-  # "No existing source path found."
-  # Manually change this line with "keep"
+  # Read the csv to see what is going on
   content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
-  # Here I change the line to simulate what you manually did above
-  content_csv[content_csv[["path"]] == "R/to_keep.R", "origin"] <- "keep"
-  write.csv(content_csv, out_csv)
-  out_config <- df_to_config(
-    df_files = out_csv
-  )
+  content_csv
+  # Keep it all or delete some files, and then register all remaining
+  out_config <- register_all_to_config()
   out_config
   # Open the out_config file to see what's going on
   yaml::read_yaml(out_config)
@@ -68,7 +69,6 @@ usethis::with_project(dummypackage, {
 unlink(dummypackage, recursive = TRUE)
 }
 \seealso{
-\code{\link[=df_to_config]{df_to_config()}} to manually register all files detected by \code{check_not_registered_files()},
 \code{\link[=register_all_to_config]{register_all_to_config()}} for automatically registering all files already present in the project,
 \code{\link[=inflate_all]{inflate_all()}} to inflate every flat files according to the configuration file.
 }
