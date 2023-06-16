@@ -59,7 +59,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9006</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9007</span>
       </span>
     </div>
 
@@ -144,15 +144,18 @@
 <h2 id="inflate-all-your-flat-files-at-once">Inflate all your flat files at once<a class="anchor" aria-label="anchor" href="#inflate-all-your-flat-files-at-once"></a>
 </h2>
 <p>The <code><a href="../reference/inflate_all.html">inflate_all()</a></code> function allows the user to inflate
-all the flat files available in the “dev/” directory at once. This
-requires to inflate each new flat file individually at least once in
-order to register the inflate parameters.</p>
+all the active flat files available in the “dev/” directory at once.
+This requires to inflate each new flat file individually at least once
+in order to register the inflate parameters.</p>
 <p>Prior to be able to inflate all the flat files, some checks are
 performed, to assess whether the flat files are available to be used by
 <code><a href="../reference/inflate_all.html">inflate_all()</a></code>.</p>
-<p>Indeed, <code><a href="../reference/inflate_all.html">inflate_all()</a></code> requires the existence of a
-complete {fusen} configuration file: “dev/config_fusen.yaml”. This file
-exists only from versions of {fusen} upper than v0.5.0:</p>
+<div class="section level3">
+<h3 id="store-configuration-of-each-flat-file-once">Store configuration of each flat file once<a class="anchor" aria-label="anchor" href="#store-configuration-of-each-flat-file-once"></a>
+</h3>
+<p><code><a href="../reference/inflate_all.html">inflate_all()</a></code> requires the existence of a complete
+{fusen} configuration file: “dev/config_fusen.yaml”. This file exists
+only from versions of {fusen} upper than v0.5.0:</p>
 <ul>
 <li><p>If you are working in a project initiated with a version of
 {fusen} prior to v0.5.0, please manually run <code><a href="../reference/inflate.html">inflate()</a></code> for
@@ -165,9 +168,35 @@ parameters. You will have to inflate again you flat files in order to
 complete the configuration file with the proper <code><a href="../reference/inflate.html">inflate()</a></code>
 parameters.</p></li>
 </ul>
+</div>
+<div class="section level3">
+<h3 id="prevent-some-flat-files-to-be-inflated">Prevent some flat files to be inflated<a class="anchor" aria-label="anchor" href="#prevent-some-flat-files-to-be-inflated"></a>
+</h3>
+<p>When a flat file is listed in the configuration file, it will be
+inflated each time you run <code><a href="../reference/inflate_all.html">inflate_all()</a></code>.<br>
+If you do not want this flat file to be inflated anymore, you can
+deprecate it. Open the configuration file in “dev/config_fusen.yaml”.
+Find the section concerning the flat file. Change the
+<code>state: active</code> to <code>state: deprecated</code>. It will
+not be inflated during the following calls to
+<code><a href="../reference/inflate_all.html">inflate_all()</a></code>.</p>
+<p>You may have a flat file that is a work in progress and is not
+inflated yet. This will not affect other flat files to be inflated. In
+this case you may see the following message. You can ignore it.</p>
+<pre><code>The flat file {flat} is not going to be inflated.
+It was detected in your flats directory but it is absent from the config file.
+Please inflate() it manually when you are ready, so that it is accounted the next time.</code></pre>
+</div>
+<div class="section level3">
+<h3 id="wrapper-around-inflate_all">Wrapper around <code>inflate_all()</code><a class="anchor" aria-label="anchor" href="#wrapper-around-inflate_all"></a>
+</h3>
 <p>There is a wrapper named <code><a href="../reference/inflate_all.html">inflate_all_no_check()</a></code> that
-will prevent running <code>check()</code>. This is a short version of
-<code>inflate_all(check = FALSE)</code>.</p>
+will prevent running <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>. This is a short
+version of <code>inflate_all(check = FALSE)</code>.</p>
+</div>
+<div class="section level3">
+<h3 id="register-all-other-files-to-help-clean-your-project">Register all other files to help clean your project<a class="anchor" aria-label="anchor" href="#register-all-other-files-to-help-clean-your-project"></a>
+</h3>
 <p>Note also that all files stored in R, tests and vignettes directories
 are checked to detect those not created from a flat file. They will need
 to be registered in the config file too, in order to help you keep your
@@ -176,7 +205,7 @@ package clean of deprecated files. <code><a href="../reference/inflate_all.html"
 about the procedure. Read
 <code><a href="../articles/register-files-in-config.html">vignette('register-files-in-config', package = 'fusen')</a></code> to
 get more information.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' \dontrun{</span></span>
 <span><span class="co"># Usually, in the current package run inflate_all() directly</span></span>
 <span><span class="co"># These functions change the current user workspace</span></span>
@@ -230,6 +259,7 @@ get more information.</p>
 <span></span>
 <span><span class="co"># Clean the temporary directory</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+</div>
 </div>
   </div>
 
