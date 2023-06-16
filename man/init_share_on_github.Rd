@@ -4,7 +4,11 @@
 \alias{init_share_on_github}
 \title{Initiate GitHub to share your work on a website}
 \usage{
-init_share_on_github()
+init_share_on_github(ask = TRUE)
+}
+\arguments{
+\item{ask}{Logical. \code{TRUE} (default) to ask the user to apply the instructions each time needed,
+or \code{FALSE} if the user already know what to do.}
 }
 \value{
 The URL of the website created
