@@ -52,6 +52,8 @@ Inflate all the flat files stored in "dev/" and starting with "flat_"
 This requires to \code{\link[=inflate]{inflate()}} all flat files individually at least once, so that their specific inflate configurations are stored.
 
 This also requires to register all R, tests and vignettes files of your package, even if not created with an inflate. Run \code{\link[=inflate_all]{inflate_all()}} once and read the messages. The first time, you will probably need to run \code{\link[=register_all_to_config]{register_all_to_config()}} if your package is not new.
+
+For more information, read the \code{vignette("inflate-all-your-flat-files", package = "fusen")}
 }
 \examples{
 \dontrun{

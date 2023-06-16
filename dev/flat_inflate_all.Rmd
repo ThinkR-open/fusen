@@ -18,18 +18,40 @@ pkgload::load_all(export_all = FALSE)
 
 # Inflate all your flat files at once
 
-The `inflate_all()` function allows the user to inflate all the flat files available in the "dev/" directory at once.
+The `inflate_all()` function allows the user to inflate all the active flat files available in the "dev/" directory at once.
 This requires to inflate each new flat file individually at least once in order to register the inflate parameters.
 
 Prior to be able to inflate all the flat files, some checks are performed, to assess whether the flat files are available to be used by `inflate_all()`.
 
-Indeed, `inflate_all()` requires the existence of a complete {fusen} configuration file: "dev/config_fusen.yaml". This file exists only from versions of {fusen} upper than v0.5.0:
+## Store configuration of each flat file once
+
+`inflate_all()` requires the existence of a complete {fusen} configuration file: "dev/config_fusen.yaml". This file exists only from versions of {fusen} upper than v0.5.0:
 
 - If you are working in a project initiated with a version of {fusen} prior to v0.5.0, please manually run `inflate()` for each of the flat files you want to work with, in order to create the appropriate "dev/config_fusen.yaml" file.
 
 - If you are already familiar with "dev/config_fusen.yaml" but were working with a dev version of {fusen} prior to v0.5.1, your "dev/config_fusen.yaml" file does not contain inflate-related parameters. You will have to inflate again you flat files in order to complete the configuration file with the proper `inflate()` parameters.
 
-There is a wrapper named `inflate_all_no_check()` that will prevent running `check()`. This is a short version of `inflate_all(check = FALSE)`.
+## Prevent some flat files to be inflated
+
+When a flat file is listed in the configuration file, it will be inflated each time you run `inflate_all()`.  
+If you do not want this flat file to be inflated anymore, you can deprecate it. Open the configuration file in "dev/config_fusen.yaml". Find the section concerning the flat file.
+Change the `state: active` to `state: deprecated`. It will not be inflated during the following calls to `inflate_all()`.
+
+You may have a flat file that is a work in progress and is not inflated yet.
+This will not affect other flat files to be inflated. In this case you may see the following message. You can ignore it.
+
+```
+The flat file {flat} is not going to be inflated.
+It was detected in your flats directory but it is absent from the config file.
+Please inflate() it manually when you are ready, so that it is accounted the next time.
+```
+
+
+## Wrapper around `inflate_all()`
+
+There is a wrapper named `inflate_all_no_check()` that will prevent running `devtools::check()`. This is a short version of `inflate_all(check = FALSE)`.
+
+## Register all other files to help clean your project
 
 Note also that all files stored in R, tests and vignettes directories are checked to detect those not created from a flat file. They will need to be registered in the config file too, in order to help you keep your package clean of deprecated files. `inflate_all()` thus runs `check_not_registered_files()` behind the scene and informs about the procedure. Read `vignette('register-files-in-config', package = 'fusen')` to get more information.
 
@@ -51,6 +73,8 @@ Note also that all files stored in R, tests and vignettes directories are checke
 #' @details This requires to [inflate()] all flat files individually at least once, so that their specific inflate configurations are stored.
 #'
 #' This also requires to register all R, tests and vignettes files of your package, even if not created with an inflate. Run [inflate_all()] once and read the messages. The first time, you will probably need to run [register_all_to_config()] if your package is not new.
+#' 
+#' For more information, read the `vignette("inflate-all-your-flat-files", package = "fusen")`
 #'
 #' @seealso
 #'   [inflate()] for the options of a single file inflate,
@@ -252,7 +276,7 @@ usethis::with_project(dummypackage, {
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
 
     expect_message(inflate_all(check = FALSE),
-      regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated because it is absent from the config file")
+      regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated. It was detected in your flats directory but it is absent from the config file.")
     )
 
     unlink(flat_file2)

@@ -108,7 +108,7 @@ usethis::with_project(dummypackage, {
         flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
         status = structure(
           c(
-            "The flat file flat_minimal.Rmd is not going to be inflated because it is absent from the config file. Please inflate() from the flat once if needed or set it manually with status 'inactive'.",
+            "The flat file flat_minimal.Rmd is not going to be inflated. It was detected in your flats directory but it is absent from the config file.\nPlease inflate() it manually when you are ready, so that it is accounted the next time.",
             "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
           class = c(

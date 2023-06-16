@@ -64,7 +64,7 @@ usethis::with_project(dummypackage, {
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
 
     expect_message(inflate_all(check = FALSE),
-      regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated because it is absent from the config file")
+      regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated. It was detected in your flats directory but it is absent from the config file.")
     )
 
     unlink(flat_file2)

@@ -164,9 +164,9 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
       return(tibble(
         flat = flat,
         status = glue(
-          "The flat file {flat} is not going to be inflated because",
-          " it is absent from the config file.",
-          " Please inflate() from the flat once if needed or set it manually with status 'inactive'."
+          "The flat file {flat} is not going to be inflated.",
+          " It was detected in your flats directory but it is absent from the config file.",
+          "\nPlease inflate() it manually when you are ready, so that it is accounted the next time."
         ),
         type = "cli::cli_alert_danger",
         params = NA
