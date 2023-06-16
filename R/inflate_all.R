@@ -18,6 +18,8 @@
 #'
 #' This also requires to register all R, tests and vignettes files of your package, even if not created with an inflate. Run [inflate_all()] once and read the messages. The first time, you will probably need to run [register_all_to_config()] if your package is not new.
 #'
+#' For more information, read the `vignette("inflate-all-your-flat-files", package = "fusen")`
+#'
 #' @seealso
 #'   [inflate()] for the options of a single file inflate,
 #'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
@@ -82,16 +84,12 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
-    stop(
-      " `inflate_all()` requires a configuration file to work properly.",
-      " There is no configuration file at this place in your package: '", config_file, "'.",
-      "\nYour flat files must be individually inflated at least once manually before you can use `inflate_all()`.",
-      " This will create a proper configuration file with a section for each flat file.",
-      "\nThis error is common if you were using 'fusen' prior to v0.5.1. Read `vignette('inflate-all-your-flat-files', package = 'fusen')` for more information."
-    )
+    config_yml <- list()
+    stop_after_infos <- TRUE
+  } else {
+    config_yml <- read_yaml(config_file)
+    stop_after_infos <- FALSE
   }
-
-  config_yml <- read_yaml(config_file)
 
   diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = pkg)
   # Run stop first only
@@ -100,6 +98,18 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
   # => Is going to be
   pre_inflate_all_diagnosis_eval(diag, type_stop = FALSE)
 
+  if (stop_after_infos) {
+    cli::cli_abort(
+      paste0(
+        " `inflate_all()` requires a configuration file to work properly.",
+        " There is no configuration file at this place in your package: '", config_file, "'.",
+        "\nYour active flat files must be individually inflated at least once manually before you can use `inflate_all()`.",
+        " This will create a proper configuration file with a section for each flat file.",
+        "\nThis error is common if you were using 'fusen' prior to v0.5.1. Read `vignette('inflate-all-your-flat-files', package = 'fusen')` for more information."
+      )
+    )
+    return(NULL)
+  }
   inflate_params <- read_inflate_params(config_yml = config_yml)
 
   if (length(inflate_params) == 0) {

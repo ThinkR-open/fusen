@@ -1,0 +1,25 @@
+---
+title: "dev_history.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+# Some documentation only addressed to developers
+
+This flat can be inflated but will not create any other files
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/dev_history.Rmd", 
+               vignette_name = NA,
+               open_vignette = FALSE,
+               overwrite = "yes",
+               check = FALSE)
+
+```

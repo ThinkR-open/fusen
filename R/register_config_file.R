@@ -198,7 +198,9 @@ get_list_paths <- function(config_list) {
 #' @param flat_file_path Character. Usually set to `"keep"` for users. You can use the name of the origin flat file but this is more of an internal use, as inflating the flat file should have the same result.
 #' @param state Character. Whether if the flat file is `active` or `deprecated`.
 #' @param force Logical. Whether to force writing the configuration file even is some files do not exist.
-#' @param clean Logical. Delete list associated to a specific flat file before updating the whole list. Default is set to TRUE during `inflate()` of a specific flat file, as the list should only contain files created during the inflate. This could be set to FALSE with a direct use of `df_to_config()` too.
+#' @param clean Logical. Delete list associated to a specific flat file before updating the whole list.
+#' Default is set to TRUE during `inflate()` of a specific flat file, as the list should only contain files created during the inflate.
+#' This could be set to FALSE with a direct use of `df_to_config()` too. This is forced to FALSE for "keep" section.
 #' @param inflate_parameters list of parameters passed through a call to `inflate()`
 
 #' @importFrom stats setNames
@@ -266,6 +268,15 @@ df_to_config <- function(df_files,
         stop(msg)
       }
     }
+  }
+
+  if (flat_file_path != "keep") {
+    flat_file_path_relative <- gsub(
+      paste0(normalize_path_winslash("."), "/"),
+      "",
+      normalize_path_winslash(flat_file_path, mustWork = TRUE),
+      fixed = TRUE
+    )
   }
 
   if (!all(grepl("^R$|^r$|^test$|^tests$|^vignette$|^vignettes$", df_files[["type"]]))) {
@@ -370,7 +381,7 @@ df_to_config <- function(df_files,
     complete_yaml <- list()
   }
 
-  each_flat_file_path <- unique(df_files[["origin"]])
+  each_flat_file_path <- unique(c(flat_file_path, df_files[["origin"]]))
   if (length(state) != length(each_flat_file_path)) {
     state <- rep(state, length.out = length(each_flat_file_path))
   }
@@ -381,7 +392,7 @@ df_to_config <- function(df_files,
         df_files, complete_yaml,
         each_flat_file_path[x],
         state = state[x],
-        clean = clean,
+        clean = ifelse(each_flat_file_path[x] == "keep", FALSE, clean),
         inflate_parameters = inflate_parameters
       )
     }
@@ -497,28 +508,28 @@ update_one_group_yaml <- function(df_files,
     this_group_list <- list(
       path = flat_file_path,
       state = state,
-      R = c(
+      R = unique(c(
         # new ones
         df_files_filtered[["path"]][
           grepl("^R$|^r$", df_files_filtered[["type"]])
         ],
         # previous ones
         unlist(all_keep_before[["R"]])
-      ),
-      tests = c(
+      )),
+      tests = unique(c(
         # new ones
         df_files_filtered[["path"]][
           grepl("^test$|^tests$", df_files_filtered[["type"]])
         ],
         # previous ones
         unlist(all_keep_before[["tests"]])
-      ),
-      vignettes = c(
+      )),
+      vignettes = unique(c(
         # new ones
         df_files_filtered[["path"]][grepl("^vignette$|^vignettes$", df_files_filtered[["type"]])],
         # previous ones
         unlist(all_keep_before[["vignettes"]])
-      )
+      ))
     )
   }
 
@@ -530,16 +541,29 @@ update_one_group_yaml <- function(df_files,
   }
 
   # Messages only
-  #
-  those_removed <- setdiff(
-    all_keep_before,
-    this_group_list_message
-  )
+  all_names <- names(this_group_list_message)
+  those_removed <- lapply(
+    all_names,
+    function(x) {
+      setdiff(
+        all_keep_before[[x]],
+        this_group_list_message[[x]]
+      )
+    }
+  ) %>%
+    setNames(all_names)
+
   those_removed_vec <- files_list_to_vector(those_removed)
-  those_added <- setdiff(
-    this_group_list_message,
-    all_keep_before
-  )
+  those_added <- lapply(
+    all_names,
+    function(x) {
+      setdiff(
+        this_group_list_message[[x]],
+        all_keep_before[[x]]
+      )
+    }
+  ) %>%
+    setNames(all_names)
   those_added_vec <- files_list_to_vector(those_added)
 
   if (!is.null(those_removed_vec) || length(those_removed_vec) != 0) {

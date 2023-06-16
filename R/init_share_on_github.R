@@ -5,6 +5,9 @@
 #' This uses {pkgdown} to share the documentation of the package through GitHub Actions.
 #' You may need to run `usethis::create_github_token()`, then `gitcreds::gitcreds_set()` before.
 #'
+#' @param ask Logical. `TRUE` (default) to ask the user to apply the instructions each time needed,
+#' or `FALSE` if the user already know what to do.
+#'
 #' @return The URL of the website created
 #' @export
 #'
@@ -12,7 +15,7 @@
 #' \dontrun{
 #' init_share_on_github()
 #' }
-init_share_on_github <- function() {
+init_share_on_github <- function(ask = TRUE) {
   pkg <- "."
 
   if (!requireNamespace("gert", quietly = TRUE)) {
@@ -30,11 +33,15 @@ init_share_on_github <- function() {
     to_init <- TRUE
   }
   if (to_init) {
-    sure <- paste0(
-      "git is not initiated yet\n",
-      "Do you want to init and commit the current state? (y/n)\n"
-    )
-    do_it <- readline(sure) == "y"
+    if (isTRUE(ask)) {
+      sure <- paste0(
+        "git is not initiated yet\n",
+        "Do you want to init and commit the current state? (y/n)\n"
+      )
+      do_it <- readline(sure) == "y"
+    } else {
+      do_it <- TRUE
+    }
     if (do_it) {
       cli::cat_rule("Init Git Repository with first commit")
       gert::git_init(path = pkg)
@@ -52,7 +59,25 @@ init_share_on_github <- function() {
   cli::cat_rule("Init GitHub Connexion")
   info_git <- gert::git_remote_list()
   if (nrow(info_git) == 0) {
-    usethis::use_github()
+    if (isTRUE(ask)) {
+      sure <- paste0(
+        "You may be redirected on GitHub. \nDo not forget to come back here, ok? (y/n)\n"
+      )
+      do_it <- readline(sure) == "y"
+    } else {
+      dont_do_it <- FALSE
+    }
+    if (do_it) {
+      usethis::use_github()
+    } else {
+      cli::cli_text(
+        cli::cli_alert_info(
+          "You decided to stop the procedure. \nYour package was not send to {.url https://github.com}",
+          "\nYou can run again `fusen::init_share_on_github()` to finish the procedure if you want."
+        )
+      )
+      return(NULL)
+    }
   } else if (grepl("github", info_git[info_git$name == "origin", "url"])) {
     message(
       "Your repository is already connected to a remote GitHub repository: ",
@@ -120,23 +145,59 @@ init_share_on_github <- function() {
   cli::cat_rule("Make sure GitHub is set for your website publication")
   url_setting_pages <- paste0(github_url_no_git, "/settings/pages")
   url_actions <- paste0(github_url_no_git, "/actions/workflows/pkgdown.yaml")
+
+  cli::cli_text(
+    cli::cli_alert_info(
+      "You need to wait for the 'pkgdown' Actions to finish",
+      "\nYou know the action is finished if there is a green check box near 'chore: Init Actions and website' on this web page: {.url {url_actions}}."
+    )
+  )
+
+  if (isTRUE(ask)) {
+    sure <- paste0(
+      "Say 'yes' when the 'chore: Init Actions and website' action is done and green? (y/n)\n"
+    )
+    do_it <- readline(sure) == "y"
+  } else {
+    do_it <- TRUE
+  }
+  if (isFALSE(do_it)) {
+    message("Wait a little more for it to finish or try to guess the problems if it failed...")
+  }
+
+  if (isTRUE(ask)) {
+    sure <- paste0(
+      "You will need to follow a list of operations before you can continue development",
+      "\nPlease read them carefully if you want to have access to your documentation website",
+      "\nSay 'yes' to continue\n"
+    )
+    do_it <- readline(sure) == "y"
+  }
+  if (isTRUE(do_it)) {
+    message("You did not write 'yes', but the to-do list will still appear!")
+  }
+
   # usethis::ui_todo(
   # cli::cli_warn(
   cat(
-    cli::cli_text("1 - Wait for the 'pkgdown' Actions 'chore: Init Actions and website' to finish on: {.url {url_actions}}."),
-    cli::cli_text("2 - Once the 'gh-pages' branch is created, you need to tell GitHub to follow it."),
-    cli::cli_text("Go to: {.url  {url_setting_pages}} and choose 'gh-pages' in the 'Branch' drop-down menu, instead of 'None'."),
-    cli::cli_text("You may need to wait for it to be created by GitHub Actions."),
+    cli::cli_text("Let's go for the instructions to finish the process:"),
+    cli::cli_text("\n1 - Wait for the 'pkgdown' Actions 'chore: Init Actions and website' to finish on: {.url {url_actions}}. This action will create a new branch on GitHub, named 'gh-pages'"),
+    cli::cli_text("\n2 - Once the 'gh-pages' branch is created, you need to tell GitHub to follow it."),
+    cli::cli_text("Go to: {.url  {url_setting_pages}} and choose 'gh-pages' in the 'Branch' drop-down menu, instead of 'None'. Click 'Save'."),
+    cli::cli_text("If the branch is not there, wait a minute and refresh the page."),
 
     # browseURL(paste0(github_url_no_git, "/settings/pages"))
-    cli::cli_text("3 - In a few seconds, you'll be able to see your project website at: {.url {url_pages}}"),
+    cli::cli_text("\n3 - Wait another minute and you'll be able to see your project website at: {.url {url_pages}}"),
     cli::cli_text("Now it's time to continue your project: fill the flat file, inflate, push to GitHub."),
-    cli::cli_text("> Infos: ", paste(msg, collapse = " - ")),
+    cli::cli_text("\n> Infos: ", paste(msg, collapse = " \n- ")),
     {
-      if (!dir.exists("R")) cli::cli_text("> Note: The Action 'R-CMD-check' may fail as you do not have any function in your package yet. Inflate your flat file with a function once, and it should be good.")
+      if (!dir.exists("R")) cli::cli_text("\n> Note: The Action 'R-CMD-check' may fail as you do not have any function in your package yet. Inflate your flat file with a function once, and it should be good.")
     },
     {
-      if (!dir.exists("tests")) cli::cli_text("> Note: The Action 'test-coverage' may fail as you do not have any test in your package yet. Inflate your flat file with a unit test once, and it should be good.")
+      if (!dir.exists("tests")) cli::cli_text("\n> Note: The Action 'test-coverage' may fail as you do not have any test in your package yet. Inflate your flat file with a unit test once, and it should be good.")
+    },
+    {
+      if (isTRUE(ask)) cli::cli_text("\n\nThe next time you run this function, you can set `init_share_on_github(ask = TRUE)`, to not see all the intermediate questions.")
     }
   )
 

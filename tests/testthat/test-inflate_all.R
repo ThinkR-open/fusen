@@ -64,7 +64,7 @@ usethis::with_project(dummypackage, {
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
 
     expect_message(inflate_all(check = FALSE),
-      regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated because it is absent from the config file")
+      regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated. It was detected in your flats directory but it is absent from the config file.")
     )
 
     unlink(flat_file2)
@@ -481,3 +481,123 @@ usethis::with_project(dummypackage, {
   })
 })
 unlink(dummypackage, recursive = TRUE)
+
+# inflate_all can deal with empty flat files ----
+dummypackage <- tempfile("inflate.empties")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-text-only-no-output.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+  usethis::use_mit_license("Statnmap")
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  test_that("empty flat - only vignette created during inflate", {
+    expect_true(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
+    expect_false(dir.exists(file.path(dummypackage, "R")))
+    expect_false(dir.exists(file.path(dummypackage, "tests")))
+  })
+
+  # empty flat is present in config file
+  test_that("empty flat is present in config file", {
+    config_content <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+
+    # present in config file
+    expect_equal(names(config_content), "flat_full.Rmd")
+    expect_equal(config_content[["flat_full.Rmd"]][["path"]], "dev/flat_full.Rmd")
+
+    # no files listed expect vignette
+    expect_equal(config_content[["flat_full.Rmd"]][["R"]], list())
+    expect_equal(config_content[["flat_full.Rmd"]][["tests"]], list())
+    expect_equal(config_content[["flat_full.Rmd"]][["vignettes"]], "vignettes/get-started.Rmd")
+
+    # all params there
+    expect_equal(
+      names(config_content[["flat_full.Rmd"]][["inflate"]]),
+      c(
+        "flat_file", "vignette_name", "open_vignette",
+        "check", "document", "overwrite"
+      )
+    )
+  })
+
+  # empty flat is going to be inflated
+  test_that("empty flat is going to be inflated", {
+    expect_message(
+      inflate_all_no_check(),
+      regexp = "The flat file flat_full.Rmd is going to be inflated"
+    )
+  })
+
+  # Inflate with no vignette, nothing
+  # Delete vignette
+  file.remove(file.path(dummypackage, "vignettes", "get-started.Rmd"))
+  file.remove(file.path(dummypackage, "dev", "config_fusen.yaml"))
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = NA, check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  test_that("empty_flat - no vignette created during inflate", {
+    expect_false(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
+    expect_false(dir.exists(file.path(dummypackage, "R")))
+    expect_false(dir.exists(file.path(dummypackage, "tests")))
+  })
+
+  # flat_full is present in config file
+  test_that("empty flat is present in config file", {
+    config_content <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+
+    # present in config file
+    expect_equal(names(config_content), "flat_full.Rmd")
+    expect_equal(config_content[["flat_full.Rmd"]][["path"]], "dev/flat_full.Rmd")
+
+    # no files listed expect vignette
+    expect_equal(config_content[["flat_full.Rmd"]][["R"]], list())
+    expect_equal(config_content[["flat_full.Rmd"]][["tests"]], list())
+    expect_equal(config_content[["flat_full.Rmd"]][["vignettes"]], list())
+
+    # all params there
+    expect_equal(
+      names(config_content[["flat_full.Rmd"]][["inflate"]]),
+      c(
+        "flat_file", "vignette_name", "open_vignette",
+        "check", "document", "overwrite"
+      )
+    )
+    expect_true(is.na(config_content[["flat_full.Rmd"]][["inflate"]][["vignette_name"]]))
+  })
+
+  # flat_full.Rmd is going to be inflated
+  test_that("empty flat is going to be inflated", {
+    expect_message(
+      inflate_all_no_check(),
+      regexp = "The flat file flat_full.Rmd is going to be inflated"
+    )
+
+    expect_false(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
+    expect_false(dir.exists(file.path(dummypackage, "R")))
+    expect_false(dir.exists(file.path(dummypackage, "tests")))
+  })
+})

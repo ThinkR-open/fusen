@@ -13,7 +13,7 @@ usethis::with_project(dummypackage, {
     expect_true(inherits(check_not_registered_files, "function"))
 
     # debugonce(check_not_registered_files)
-    expect_message(check_not_registered_files(), "There are no files in the package")
+    expect_message(check_not_registered_files(open = FALSE), "There are no files in the package")
   })
 
   # Inflate once
@@ -37,13 +37,13 @@ usethis::with_project(dummypackage, {
   test_that("check_not_registered_files works", {
     # All files were registered during inflate
     expect_true(file.exists(file.path(dummypackage, "dev", "config_fusen.yaml")))
-    expect_message(out_csv <- check_not_registered_files(),
+    expect_message(out_csv <- check_not_registered_files(open = FALSE),
       regexp = "There are no unregistered files"
     )
 
     # Delete config file to check if al sub-functions work
     file.remove(file.path(dummypackage, "dev", "config_fusen.yaml"))
-    expect_message(out_csv <- check_not_registered_files(),
+    expect_message(out_csv <- check_not_registered_files(open = FALSE),
       regexp = "Some files in your package are not registered in the configuration file"
     )
 
@@ -71,7 +71,7 @@ usethis::with_project(dummypackage, {
       df_files = out_csv
     )
     out_config_content <- yaml::read_yaml(out_config)
-    expect_true(names(out_config_content) == "flat_full.Rmd")
+    expect_true(all(names(out_config_content) %in% c("flat_full.Rmd", "keep")))
     expect_equal(
       names(out_config_content[["flat_full.Rmd"]]),
       c("path", "state", "R", "tests", "vignettes")
@@ -96,7 +96,7 @@ usethis::with_project(dummypackage, {
   cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
   test_that("check_not_registered_files can help manually fill config", {
-    expect_message(out_csv <- check_not_registered_files(), "Some files in your package are not registered in the configuration file")
+    expect_message(out_csv <- check_not_registered_files(open = FALSE), "Some files in your package are not registered in the configuration file")
     content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
     expect_true(
       grepl(
@@ -121,13 +121,15 @@ usethis::with_project(dummypackage, {
     expect_true(is.null(out_csv))
 
     # Add same file in the yaml file with `df_to_config()` using different origin (existing one, but duplicate R file) ----
-
-    keep_to_add_to_config$origin <- "dev/flat_full.Rmd"
+    cat("fake flat\n", file = file.path("dev", "flat_other.Rmd"))
+    keep_to_add_to_config$origin <- "dev/flat_other.Rmd"
 
     expect_error(
       df_to_config(keep_to_add_to_config),
       "Some paths would appear multiple times in the future config file."
     )
+    out_config_content <- yaml::read_yaml(out_config)
+    expect_equal(out_config_content$keep$R, "R/to_keep.R")
 
     # Add same file in the yaml file with `df_to_config()` using different origin (not existing) ----
 
@@ -253,7 +255,7 @@ usethis::with_project(dummypackage, {
   cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
   test_that("register_all_to_config runs properly after check_not_registered", {
-    suppressMessages(check_not_registered_files())
+    suppressMessages(check_not_registered_files(open = FALSE))
     # expect csv contains : No existing source path found
     not_registered <- "dev/config_not_registered.csv"
 
@@ -276,7 +278,7 @@ usethis::with_project(dummypackage, {
     expect_equal(config_file[["keep"]][["R"]], "R/to_keep.R")
     # Create an obsolete file
     file.copy("R/my_median.R", "R/my_old_fun.R")
-    expect_message(check_not_registered_files(), "Some files in your package are not registered")
+    expect_message(check_not_registered_files(open = FALSE), "Some files in your package are not registered")
     # expect csv contains : Possibly deprecated file issued from flat...
     not_registered_content <- read.csv(not_registered, stringsAsFactors = FALSE)
     expected_registered <- structure(
@@ -290,20 +292,52 @@ usethis::with_project(dummypackage, {
     )
 
     expect_equal(not_registered_content, expected_registered)
+  })
 
+  test_that("register_all_to_config can append new files in keep section", {
     suppressMessages(register_all_to_config())
     config_file <- yaml::read_yaml("dev/config_fusen.yaml")
     expect_equal(
       sort(config_file[["keep"]][["R"]]),
       sort(c("R/to_keep.R", "R/my_old_fun.R"))
     )
-    # expect cnofig file with my_old_fun.R in "keep" section
+    # expect config file with my_old_fun.R in "keep" section
     file.remove("R/my_old_fun.R")
-    expect_message(check_not_registered_files(),
+    expect_message(check_not_registered_files(open = FALSE),
       regexp = "There are no unregistered files"
     )
+
+    # register_all_to_config throws an error if there is something to add to the config
+    file.copy("R/my_median.R", "R/my_second_old_fun.R")
+    config_file <- yaml::read_yaml("dev/config_fusen.yaml")
+    expect_error(
+      register_all_to_config(),
+      regexp = "Some 'path' in config_file do not exist: R/my_old_fun.R"
+    )
+
+    # Clean the missing file and it should be good to add the second new file
+    config_file <- yaml::read_yaml("dev/config_fusen.yaml")
+    config_file$keep$R <- "R/to_keep.R"
+    write_yaml_verbatim(config_file, "dev/config_fusen.yaml")
+
     expect_message(register_all_to_config(),
-      regexp = "There is no file to register"
+      regexp = "R: R/my_second_old_fun.R was added to the config file"
+    )
+    config_file <- yaml::read_yaml("dev/config_fusen.yaml")
+    expect_equal(
+      sort(config_file[["keep"]][["R"]]),
+      sort(c("R/to_keep.R", "R/my_second_old_fun.R"))
+    )
+
+    # add new file to add to keep
+    cat("new_to_keep\n", file = "R/newfile_to_keep.R")
+    expect_message(register_all_to_config(),
+      regexp = "R: R/newfile_to_keep.R was added to the config file"
+    )
+    config_file <- yaml::read_yaml("dev/config_fusen.yaml")
+    expect_equal(
+      sort(config_file[["keep"]][["R"]]),
+      sort(c("R/to_keep.R", "R/my_second_old_fun.R", "R/newfile_to_keep.R"))
     )
   })
 })
@@ -360,6 +394,7 @@ file.remove(config_file_path)
 dir_tmp <- tempfile()
 dir.create(dir_tmp)
 file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R", "toto.Rmd")))
+config_file_path <- tempfile(fileext = ".yaml")
 
 test_that("df_to_config works", {
   withr::with_dir(dir_tmp, {
@@ -373,7 +408,9 @@ test_that("df_to_config works", {
         "test", "test-zaza.R"
       )
 
-      expect_message(config_file_out <- df_to_config(all_files))
+      expect_message(config_file_out <- df_to_config(all_files),
+        regexp = "R: zaza.R was added to the config file"
+      )
     })
 
     expect_equal(config_file_out, config_file_path)
@@ -419,6 +456,7 @@ dir.create(dir_tmp)
 file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
 dir.create(file.path(dir_tmp, "vignettes"))
 file.create(file.path(dir_tmp, "vignettes", "my-vignette.Rmd"))
+config_file_path <- tempfile(fileext = ".yaml")
 
 test_that("df_to_config works with files having no content", {
   withr::with_options(list(fusen.config_file = config_file_path), {
@@ -432,7 +470,9 @@ test_that("df_to_config works with files having no content", {
         "vignette", file.path("vignettes", "my-vignette.Rmd")
       )
 
-      expect_message(config_file_out <- df_to_config(all_files))
+      expect_message(config_file_out <- df_to_config(all_files),
+        regexp = "vignettes: vignettes/my-vignette.Rmd was added to the config file"
+      )
     })
 
     expect_equal(config_file_out, config_file_path)

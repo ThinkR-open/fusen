@@ -18,18 +18,40 @@ pkgload::load_all(export_all = FALSE)
 
 # Inflate all your flat files at once
 
-The `inflate_all()` function allows the user to inflate all the flat files available in the "dev/" directory at once.
+The `inflate_all()` function allows the user to inflate all the active flat files available in the "dev/" directory at once.
 This requires to inflate each new flat file individually at least once in order to register the inflate parameters.
 
 Prior to be able to inflate all the flat files, some checks are performed, to assess whether the flat files are available to be used by `inflate_all()`.
 
-Indeed, `inflate_all()` requires the existence of a complete {fusen} configuration file: "dev/config_fusen.yaml". This file exists only from versions of {fusen} upper than v0.5.0:
+## Store configuration of each flat file once
+
+`inflate_all()` requires the existence of a complete {fusen} configuration file: "dev/config_fusen.yaml". This file exists only from versions of {fusen} upper than v0.5.0:
 
 - If you are working in a project initiated with a version of {fusen} prior to v0.5.0, please manually run `inflate()` for each of the flat files you want to work with, in order to create the appropriate "dev/config_fusen.yaml" file.
 
 - If you are already familiar with "dev/config_fusen.yaml" but were working with a dev version of {fusen} prior to v0.5.1, your "dev/config_fusen.yaml" file does not contain inflate-related parameters. You will have to inflate again you flat files in order to complete the configuration file with the proper `inflate()` parameters.
 
-There is a wrapper named `inflate_all_no_check()` that will prevent running `check()`. This is a short version of `inflate_all(check = FALSE)`.
+## Prevent some flat files to be inflated
+
+When a flat file is listed in the configuration file, it will be inflated each time you run `inflate_all()`.  
+If you do not want this flat file to be inflated anymore, you can deprecate it. Open the configuration file in "dev/config_fusen.yaml". Find the section concerning the flat file.
+Change the `state: active` to `state: deprecated`. It will not be inflated during the following calls to `inflate_all()`.
+
+You may have a flat file that is a work in progress and is not inflated yet.
+This will not affect other flat files to be inflated. In this case you may see the following message. You can ignore it.
+
+```
+The flat file {flat} is not going to be inflated.
+It was detected in your flats directory but it is absent from the config file.
+Please inflate() it manually when you are ready, so that it is accounted the next time.
+```
+
+
+## Wrapper around `inflate_all()`
+
+There is a wrapper named `inflate_all_no_check()` that will prevent running `devtools::check()`. This is a short version of `inflate_all(check = FALSE)`.
+
+## Register all other files to help clean your project
 
 Note also that all files stored in R, tests and vignettes directories are checked to detect those not created from a flat file. They will need to be registered in the config file too, in order to help you keep your package clean of deprecated files. `inflate_all()` thus runs `check_not_registered_files()` behind the scene and informs about the procedure. Read `vignette('register-files-in-config', package = 'fusen')` to get more information.
 
@@ -52,6 +74,8 @@ Note also that all files stored in R, tests and vignettes directories are checke
 #'
 #' This also requires to register all R, tests and vignettes files of your package, even if not created with an inflate. Run [inflate_all()] once and read the messages. The first time, you will probably need to run [register_all_to_config()] if your package is not new.
 #'
+#' For more information, read the `vignette("inflate-all-your-flat-files", package = "fusen")`
+#'
 #' @seealso
 #'   [inflate()] for the options of a single file inflate,
 #'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
@@ -62,16 +86,12 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
-    stop(
-      " `inflate_all()` requires a configuration file to work properly.",
-      " There is no configuration file at this place in your package: '", config_file, "'.",
-      "\nYour flat files must be individually inflated at least once manually before you can use `inflate_all()`.",
-      " This will create a proper configuration file with a section for each flat file.",
-      "\nThis error is common if you were using 'fusen' prior to v0.5.1. Read `vignette('inflate-all-your-flat-files', package = 'fusen')` for more information."
-    )
+    config_yml <- list()
+    stop_after_infos <- TRUE
+  } else {
+    config_yml <- read_yaml(config_file)
+    stop_after_infos <- FALSE
   }
-
-  config_yml <- read_yaml(config_file)
 
   diag <- pre_inflate_all_diagnosis(config_yml = config_yml, pkg = pkg)
   # Run stop first only
@@ -80,6 +100,18 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
   # => Is going to be
   pre_inflate_all_diagnosis_eval(diag, type_stop = FALSE)
 
+  if (stop_after_infos) {
+    cli::cli_abort(
+      paste0(
+        " `inflate_all()` requires a configuration file to work properly.",
+        " There is no configuration file at this place in your package: '", config_file, "'.",
+        "\nYour active flat files must be individually inflated at least once manually before you can use `inflate_all()`.",
+        " This will create a proper configuration file with a section for each flat file.",
+        "\nThis error is common if you were using 'fusen' prior to v0.5.1. Read `vignette('inflate-all-your-flat-files', package = 'fusen')` for more information."
+      )
+    )
+    return(NULL)
+  }
   inflate_params <- read_inflate_params(config_yml = config_yml)
 
   if (length(inflate_params) == 0) {
@@ -252,7 +284,7 @@ usethis::with_project(dummypackage, {
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
 
     expect_message(inflate_all(check = FALSE),
-      regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated because it is absent from the config file")
+      regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated. It was detected in your flats directory but it is absent from the config file.")
     )
 
     unlink(flat_file2)
@@ -669,6 +701,126 @@ usethis::with_project(dummypackage, {
   })
 })
 unlink(dummypackage, recursive = TRUE)
+
+# inflate_all can deal with empty flat files ----
+dummypackage <- tempfile("inflate.empties")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # More complicated example for tests
+  testfile <- "tests-templates/dev-template-text-only-no-output.Rmd"
+  file.copy(
+    system.file(testfile, package = "fusen"),
+    flat_file,
+    overwrite = TRUE
+  )
+  usethis::use_mit_license("Statnmap")
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  test_that("empty flat - only vignette created during inflate", {
+    expect_true(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
+    expect_false(dir.exists(file.path(dummypackage, "R")))
+    expect_false(dir.exists(file.path(dummypackage, "tests")))
+  })
+
+  # empty flat is present in config file
+  test_that("empty flat is present in config file", {
+    config_content <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+
+    # present in config file
+    expect_equal(names(config_content), "flat_full.Rmd")
+    expect_equal(config_content[["flat_full.Rmd"]][["path"]], "dev/flat_full.Rmd")
+
+    # no files listed expect vignette
+    expect_equal(config_content[["flat_full.Rmd"]][["R"]], list())
+    expect_equal(config_content[["flat_full.Rmd"]][["tests"]], list())
+    expect_equal(config_content[["flat_full.Rmd"]][["vignettes"]], "vignettes/get-started.Rmd")
+
+    # all params there
+    expect_equal(
+      names(config_content[["flat_full.Rmd"]][["inflate"]]),
+      c(
+        "flat_file", "vignette_name", "open_vignette",
+        "check", "document", "overwrite"
+      )
+    )
+  })
+
+  # empty flat is going to be inflated
+  test_that("empty flat is going to be inflated", {
+    expect_message(
+      inflate_all_no_check(),
+      regexp = "The flat file flat_full.Rmd is going to be inflated"
+    )
+  })
+
+  # Inflate with no vignette, nothing
+  # Delete vignette
+  file.remove(file.path(dummypackage, "vignettes", "get-started.Rmd"))
+  file.remove(file.path(dummypackage, "dev", "config_fusen.yaml"))
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = NA, check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  test_that("empty_flat - no vignette created during inflate", {
+    expect_false(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
+    expect_false(dir.exists(file.path(dummypackage, "R")))
+    expect_false(dir.exists(file.path(dummypackage, "tests")))
+  })
+
+  # flat_full is present in config file
+  test_that("empty flat is present in config file", {
+    config_content <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+
+    # present in config file
+    expect_equal(names(config_content), "flat_full.Rmd")
+    expect_equal(config_content[["flat_full.Rmd"]][["path"]], "dev/flat_full.Rmd")
+
+    # no files listed expect vignette
+    expect_equal(config_content[["flat_full.Rmd"]][["R"]], list())
+    expect_equal(config_content[["flat_full.Rmd"]][["tests"]], list())
+    expect_equal(config_content[["flat_full.Rmd"]][["vignettes"]], list())
+
+    # all params there
+    expect_equal(
+      names(config_content[["flat_full.Rmd"]][["inflate"]]),
+      c(
+        "flat_file", "vignette_name", "open_vignette",
+        "check", "document", "overwrite"
+      )
+    )
+    expect_true(is.na(config_content[["flat_full.Rmd"]][["inflate"]][["vignette_name"]]))
+  })
+
+  # flat_full.Rmd is going to be inflated
+  test_that("empty flat is going to be inflated", {
+    expect_message(
+      inflate_all_no_check(),
+      regexp = "The flat file flat_full.Rmd is going to be inflated"
+    )
+
+    expect_false(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
+    expect_false(dir.exists(file.path(dummypackage, "R")))
+    expect_false(dir.exists(file.path(dummypackage, "tests")))
+  })
+})
 ```
 
 ```{r development-inflate, eval=FALSE}
