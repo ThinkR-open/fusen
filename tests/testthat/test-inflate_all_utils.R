@@ -7,8 +7,10 @@ dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite =
 
 # let's create 2 flat files
 flat_file <- dev_file[grepl("flat_", dev_file)]
-flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
-file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
+# flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
+# file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
+
+flat_file2 <- fusen::add_additional(pkg = dummypackage, flat_name = "minimal_2", open = FALSE)
 
 test_that("pre_inflate_all_diagnosis is a function", {
   expect_true(inherits(pre_inflate_all_diagnosis, "function"))
@@ -108,7 +110,7 @@ usethis::with_project(dummypackage, {
         flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
         status = structure(
           c(
-            "The flat file flat_minimal.Rmd is not going to be inflated. It was detected in your flats directory but it is absent from the config file.\nPlease inflate() it manually when you are ready, so that it is accounted the next time.",
+            "The flat file flat_minimal.Rmd is not going to be inflated. It was detected in your flats directory but it is absent from the config file.\nPlease inflate() it manually when you are ready, so that it is accounted the next time. Then you will be able to fully use `inflate_all*()`.",
             "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
           class = c(
@@ -138,7 +140,7 @@ usethis::with_project(dummypackage, {
         flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
         status = structure(
           c(
-            "The flat file flat_minimal.Rmd is not going to be inflated because there is no 'state' in the configuration file. Please add 'state: active' or 'state: inactive' under the flat name.",
+            "The flat file flat_minimal.Rmd is not going to be inflated because there is no 'state' in the configuration file. \nPlease inflate() it manually once to get the full configuration file. Then you will be able to use `inflate_all*()` again.",
             "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
           class = c(
@@ -169,7 +171,7 @@ usethis::with_project(dummypackage, {
         flat = c("flat_minimal.Rmd", "flat_minimal_2.Rmd"),
         status = structure(
           c(
-            "The flat file flat_minimal.Rmd is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat file with this 'fusen' version",
+            "The flat file flat_minimal.Rmd is not going to be inflated because although present in the config file, it has no inflate() parameters. Please inflate() again from the flat file with this 'fusen' version. Then you will be able to use `inflate_all*()` again.",
             "The flat file flat_minimal_2.Rmd is going to be inflated"
           ),
           class = c(
@@ -207,7 +209,7 @@ usethis::with_project(dummypackage, {
           c(
             "The flat file flat_minimal.Rmd is going to be inflated",
             "The flat file flat_minimal_2.Rmd is going to be inflated",
-            "The file missing_file.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"
+            "The file missing_file.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'state: deprecated' in the config file"
           ),
           class = c("glue", "character")
         ),
@@ -343,8 +345,8 @@ usethis::with_project(dummypackage, {
         ),
         status = structure(
           c(
-            "The file flat_minimal.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file",
-            "The file flat_minimal_2.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'deprecated' in the config file"
+            "The file flat_minimal.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'state: deprecated' in the config file",
+            "The file flat_minimal_2.Rmd is not going to be inflated because it was not found, have you changed the name or did you move in another place ? Maybe you want to set the state as 'state: deprecated' in the config file"
           ),
           class = c("glue", "character")
         ),

@@ -268,6 +268,15 @@ df_to_config <- function(df_files,
     }
   }
 
+  if (flat_file_path != "keep") {
+    flat_file_path_relative <- gsub(
+      paste0(normalize_path_winslash("."), "/"),
+      "",
+      normalize_path_winslash(flat_file_path, mustWork = TRUE),
+      fixed = TRUE
+    )
+  }
+
   if (!all(grepl("^R$|^r$|^test$|^tests$|^vignette$|^vignettes$", df_files[["type"]]))) {
     stop("Only types 'R', 'test' or 'vignette' are allowed")
   }
@@ -370,7 +379,7 @@ df_to_config <- function(df_files,
     complete_yaml <- list()
   }
 
-  each_flat_file_path <- unique(df_files[["origin"]])
+  each_flat_file_path <- unique(c(flat_file_path, df_files[["origin"]]))
   if (length(state) != length(each_flat_file_path)) {
     state <- rep(state, length.out = length(each_flat_file_path))
   }

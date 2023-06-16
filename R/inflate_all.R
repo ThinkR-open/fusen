@@ -17,7 +17,7 @@
 #' @details This requires to [inflate()] all flat files individually at least once, so that their specific inflate configurations are stored.
 #'
 #' This also requires to register all R, tests and vignettes files of your package, even if not created with an inflate. Run [inflate_all()] once and read the messages. The first time, you will probably need to run [register_all_to_config()] if your package is not new.
-#' 
+#'
 #' For more information, read the `vignette("inflate-all-your-flat-files", package = "fusen")`
 #'
 #' @seealso

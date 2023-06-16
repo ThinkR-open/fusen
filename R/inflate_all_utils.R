@@ -122,7 +122,7 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
         status = glue(
           "The file {flat} is not going to be inflated because it was not found,",
           " have you changed the name or did you move in another place ?",
-          " Maybe you want to set the state as 'deprecated' in the config file"
+          " Maybe you want to set the state as 'state: deprecated' in the config file"
         ),
         type = "stop",
         params = "call. = FALSE"
@@ -144,7 +144,8 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
         status = glue(
           "The flat file {flat} is not going to be inflated because there is no 'state'",
           " in the configuration file. ",
-          "Please add 'state: active' or 'state: inactive' under the flat name."
+          "\nPlease inflate() it manually once to get the full configuration file.",
+          " Then you will be able to use `inflate_all*()` again."
         ),
         type = "cli::cli_alert_warning",
         params = NA
@@ -166,7 +167,8 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
         status = glue(
           "The flat file {flat} is not going to be inflated.",
           " It was detected in your flats directory but it is absent from the config file.",
-          "\nPlease inflate() it manually when you are ready, so that it is accounted the next time."
+          "\nPlease inflate() it manually when you are ready, so that it is accounted the next time.",
+          " Then you will be able to fully use `inflate_all*()`."
         ),
         type = "cli::cli_alert_danger",
         params = NA
@@ -178,7 +180,8 @@ pre_inflate_all_diagnosis <- function(config_yml, pkg) {
         status = glue(
           "The flat file {flat} is not going to be inflated because",
           " although present in the config file, it has no inflate() parameters.",
-          " Please inflate() again from the flat file with this 'fusen' version"
+          " Please inflate() again from the flat file with this 'fusen' version.",
+          " Then you will be able to use `inflate_all*()` again."
         ),
         type = "stop",
         params = "call. = FALSE"

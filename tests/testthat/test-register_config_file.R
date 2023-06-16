@@ -71,7 +71,7 @@ usethis::with_project(dummypackage, {
       df_files = out_csv
     )
     out_config_content <- yaml::read_yaml(out_config)
-    expect_true(names(out_config_content) == "flat_full.Rmd")
+    expect_true(all(names(out_config_content) %in% c("flat_full.Rmd", "keep")))
     expect_equal(
       names(out_config_content[["flat_full.Rmd"]]),
       c("path", "state", "R", "tests", "vignettes")
@@ -96,7 +96,7 @@ usethis::with_project(dummypackage, {
   cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
   test_that("check_not_registered_files can help manually fill config", {
-    expect_message(out_csv <- check_not_registered_files(), "Some files in your package are not registered in the configuration file")
+    expect_message(out_csv <- check_not_registered_files(open = FALSE), "Some files in your package are not registered in the configuration file")
     content_csv <- read.csv(out_csv, stringsAsFactors = FALSE)
     expect_true(
       grepl(
@@ -122,7 +122,9 @@ usethis::with_project(dummypackage, {
 
     # Add same file in the yaml file with `df_to_config()` using different origin (existing one, but duplicate R file) ----
 
-    keep_to_add_to_config$origin <- "dev/flat_full.Rmd"
+    cat("fake flat\n", file = file.path("dev", "flat_other.Rmd"))
+    keep_to_add_to_config$origin <- "dev/flat_other.Rmd"
+    # out_config_content <- yaml::read_yaml(out_config)
 
     expect_error(
       df_to_config(keep_to_add_to_config),
