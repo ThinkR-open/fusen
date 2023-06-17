@@ -156,7 +156,7 @@ usethis::pr_finish(41)
 
 
 # Prepare for CRAN ----
-# Update template Rmd
+# _Update template Rmd ----
 skeleton_dir <- tempfile()
 dir.create(skeleton_dir)
 the_flat <- fusen::add_additional(
@@ -170,7 +170,7 @@ file.copy(
   overwrite = TRUE)
 unlink(skeleton_dir, recursive = TRUE)
 
-# _Check in interactive test-inflate for templates and Addins
+# _Check in interactive test-inflate for templates and Addins ----
 pkgload::load_all()
 testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate-part1.R")
@@ -180,6 +180,7 @@ testthat::test_file("tests/testthat/test-skeleton.R")
 
 Sys.setenv("FUSEN_TEST_PUBLISH" = "TRUE")
 testthat::test_file("tests/testthat/test-init_share_on_github.R")
+Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 # Test no output generated in the user files
 # pkgload::load_all(export_all = FALSE)
