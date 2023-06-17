@@ -115,7 +115,7 @@ usethis::with_project(dummypackage, {
     expect_equal(out_config_content$keep$R, "R/to_keep.R")
 
     expect_message(
-      out_csv <- check_not_registered_files(),
+      out_csv <- check_not_registered_files(open = FALSE),
       "There are no unregistered files"
     )
     expect_true(is.null(out_csv))

@@ -8,7 +8,7 @@ check_not_registered_files(
   path = ".",
   guess = TRUE,
   to_csv = TRUE,
-  open = TRUE
+  open = FALSE
 )
 }
 \arguments{

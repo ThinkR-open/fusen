@@ -57,7 +57,7 @@
 #'   yaml::read_yaml(out_config)
 #' })
 #' unlink(dummypackage, recursive = TRUE)
-check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, open = TRUE) {
+check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, open = FALSE) {
   path <- normalizePath(path, winslash = "/")
 
   all_r <- list.files(file.path(path, "R"), pattern = "[.]R$|[.]r$", full.names = TRUE)
@@ -135,7 +135,9 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, 
       "\nSome files in your package are not registered in the configuration file:", config_file,
       "\n'fusen' uses a configuration file to store the structure of your package and help you clean it when needed.",
       "\nYou will find a list of unregistered files there:", csv_file,
+      "that you can open with", paste0("`file.edit('", csv_file, "')`"),
       "\nDelete unregistered files that you do not need anymore. Then run `fusen::register_all_to_config()`.",
+      "\nAfter that, this message should not appear in your next `inflate_all()` calls.",
       "\n For more information, read `vignette('register-files-in-config', package = 'fusen')`"
     ))
 
@@ -618,7 +620,7 @@ update_one_group_yaml <- function(df_files,
 #' })
 register_all_to_config <- function(pkg = ".") {
   # Use the function to check the list of files
-  out_df <- check_not_registered_files(pkg, to_csv = FALSE)
+  out_df <- check_not_registered_files(pkg, to_csv = FALSE, open = FALSE)
 
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
   if (is.null(out_df)) {
