@@ -19,7 +19,12 @@ usethis::with_project(dummypackage, {
 
   test_that("error if no config file exists", {
     # if no config file exists, we raise an error
-    expect_error(inflate_all(), regexp = "requires a configuration file to work properly")
+    withr::with_options(list(cli.width = 80), {
+      # cli.width is requires as cli output is wrapped to the console size
+      expect_error(inflate_all(),
+        regexp = "requires a configuration file to[[:space:]]work properly"
+      )
+    })
   })
 
   # we inflate the flat file

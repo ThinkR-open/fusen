@@ -133,7 +133,7 @@ init_share_on_github <- function(ask = TRUE) {
       cli::cli_text(
         cli::cli_alert_info(
           "You decided to stop the procedure. \nYour package was not send to {.url https://github.com}",
-          "\nYou can run again `fusen::init_share_on_github()` to finish the procedure if you want."
+          "\nYou can run again {.fn fusen::init_share_on_github} to finish the procedure if you want."
         )
       )
       return(NULL)

@@ -131,15 +131,17 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, 
   # Save for manual modification
   if (isTRUE(to_csv)) {
     write.csv(res_new, csv_file, row.names = FALSE)
-    cli::cli_alert_info(paste(
-      "\nSome files in your package are not registered in the configuration file:", config_file,
-      "\n'fusen' uses a configuration file to store the structure of your package and help you clean it when needed.",
-      "\nYou will find a list of unregistered files there:", csv_file,
-      "that you can open with", paste0("`file.edit('", csv_file, "')`"),
-      "\nDelete unregistered files that you do not need anymore. Then run `fusen::register_all_to_config()`.",
-      "\nAfter that, this message should not appear in your next `inflate_all()` calls.",
-      "\n For more information, read `vignette('register-files-in-config', package = 'fusen')`"
-    ))
+    cli::cli_text(
+      cli::cli_alert_info(c(
+        "\nSome files in your package are not registered in the configuration file: {config_file}",
+        "\n{.pkg fusen} uses a configuration file to store the structure of your package and help you clean it when needed.",
+        "\nYou will find a list of unregistered files there: {.path csv_file}",
+        " that you can open with {.run file.edit('{csv_file}')}",
+        "\nDelete unregistered files that you do not need anymore. Then run {.fn fusen::register_all_to_config}.",
+        "\nAfter that, this message should not appear in your next {.fn fusen::inflate_all} calls.",
+        "\n For more information, read `vignette('{.vignette register-files-in-config}', package = 'fusen')`"
+      ))
+    )
 
     if (isTRUE(open) & interactive()) {
       if (requireNamespace("rstudioapi") &&
