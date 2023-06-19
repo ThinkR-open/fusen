@@ -235,7 +235,7 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, 
         " that you can open with {.run file.edit('{csv_file}')}",
         "\nDelete unregistered files that you do not need anymore. Then run {.fn fusen::register_all_to_config}.",
         "\nAfter that, this message should not appear in your next {.fn fusen::inflate_all} calls.",
-        "\n For more information, read `vignette('{.vignette register-files-in-config}', package = 'fusen')`"
+        "\nFor more information, read `vignette('{.vignette [register-files-in-config](fusen::register-files-in-config)}', package = 'fusen')`"
       ))
     )
 
