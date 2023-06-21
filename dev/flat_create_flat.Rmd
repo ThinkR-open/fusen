@@ -441,6 +441,7 @@ unlink(dummypackage3, recursive = TRUE)
 all_templates <- c("full", "minimal_package", "additional", "teaching") # "dev_history"
 
 for (template in all_templates) {
+  # template <- all_templates[1]
   main_flat_file_name <- template
   if (template == "minimal_package") {
     main_flat_file_name <- "minimal"
@@ -448,7 +449,10 @@ for (template in all_templates) {
 
   dummypackage4 <- tempfile(pattern = "all.templates.knit")
   dir.create(dummypackage4)
-  # Add
+  
+  orig.proj <- here::here()
+  
+    # Add
   dev_file_path <- suppressMessages(add_flat_template(pkg = dummypackage4, template = template, open = FALSE))
   flat_file <- dev_file_path[grepl("flat", dev_file_path)]
 
@@ -461,10 +465,10 @@ for (template in all_templates) {
     )
   cat(enc2utf8(lines_template), file = flat_file, sep = "\n")
 
-  withr::with_dir(dummypackage4, {
+withr::with_dir(dummypackage4, {
     usethis::proj_set(dummypackage4)
     here:::do_refresh_here(dummypackage4)
-
+    
     if (rmarkdown::pandoc_available("1.12.3")) {
       rmarkdown::render(
         input = file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".Rmd")),
@@ -472,6 +476,9 @@ for (template in all_templates) {
         envir = new.env(), quiet = TRUE
       )
     }
+    
+    usethis::proj_set(NULL)
+    here:::do_refresh_here(orig.proj)
   })
 
   test_that(paste0("template", template, "runs as markdown"), {
