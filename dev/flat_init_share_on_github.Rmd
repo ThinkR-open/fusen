@@ -16,7 +16,11 @@ pkgload::load_all(export_all = FALSE)
 
 **You write R scripts and you would like to share them with other users, in a sustainable and maintainable way. You already know how to write a notebook (Rmarkdown or Quarto) and share its HTML output, but you do not like to present the outputs along with how to use the functions in the same web page.**
 
-# Initiate GitHub to share your work on a website
+If you plan on sharing your package on GitHub, `fusen::init_share_on_github()` creates all necessary files in your project and send them on your GitHub account to create the website of the package documentation. 
+Then, you can focus on the content.  
+Follow the steps below and you'll see your public website documentation in no time!
+
+# Initiate your package and share it on GitHub
 
 - Create a new project with {fusen} using git
 ```{r}
@@ -63,13 +67,32 @@ fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
   + You will be asked multiple times if you want to commit, you can say "yes" each time.
 
 ```{r function-init_share_on_github}
-#' Initiate GitHub to share your work on a website
+#' Initiate GitHub to share your package on a website
 #'
 #' This uses {pkgdown} to share the documentation of the package through GitHub Actions.
 #' You may need to run `usethis::create_github_token()`, then `gitcreds::gitcreds_set()` before.
 #'
 #' @param ask Logical. `TRUE` (default) to ask the user to apply the instructions each time needed,
 #' or `FALSE` if the user already know what to do.
+#' 
+#' @details
+#' 
+#' `init_share_on_github()` runs multiple steps to be able to share a proper package on GitHub:
+#' 
+#' - Start versionning with git if not already
+#' - Connect to your GitHub account
+#' - Create a minimal DESCRIPTION file if missing
+#'   + You will have to update its content with your information after deployment
+#' - Add NEWS file to present modifications of your releases
+#' - Add README.Rmd and knit it to README.md to quickly present the aim and the use of your package
+#' - Init continuous integration (CI)
+#'   + Check the package on Linux, Windows and MacOS
+#'   + Calculate code coverage. Note that you may need to connect to <https://about.codecov.io/> to see the results of the code coverage.
+#' - Init continuous deployment (CD) of the {pkgdown} website documentation
+#' - Commit and push to GitHub
+#' - List remaining manual steps to make the website public
+#' 
+#' Read `vignette("share-on-a-github-website", package = "fusen")`
 #'
 #' @return The URL of the website created
 #' @export
@@ -173,6 +196,7 @@ init_share_on_github <- function(ask = TRUE) {
   usethis::use_github_action("check-standard")
   usethis::use_github_action("pkgdown")
   usethis::use_github_action("test-coverage")
+  usethis::use_coverage(type = "codecov")
 
   # Get info for website
   github_url <- gert::git_remote_info()$url
@@ -267,6 +291,7 @@ init_share_on_github <- function(ask = TRUE) {
 
 ```{r examples-init_share_on_github, eval=FALSE}
 #' \dontrun{
+#' # This modifies the current directory and send it on GitHub
 init_share_on_github()
 #' }
 ```
@@ -318,6 +343,22 @@ test_that("init_share_on_github works", {
 })
 ```
 
+# What happens behind the scene ?
+
+`init_share_on_github()` runs multiple steps to be able to share a proper package on GitHub:
+
+- Start versionning with git if not already
+- Connect to your GitHub account
+- Create a minimal DESCRIPTION file if missing
+  + You will have to update its content with your information after deployment
+- Add NEWS file to present modifications of your releases
+- Add README.Rmd and knit it to README.md to quickly present the aim and the use of your package
+- Init continuous integration (CI)
+  + Check the package on Linux, Windows and MacOS
+  + Calculate code coverage
+- Init continuous deployment (CD) of the {pkgdown} website documentation
+- Commit and push to GitHub
+- List remaining manual steps to make the website public
 
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop

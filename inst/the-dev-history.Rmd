@@ -27,6 +27,17 @@ fusen::fill_description(
 usethis::use_mit_license("John Doe")
 ```
 
+# All-in-one function to deploy publicly on GitHub
+
+Either use this GitHub all-in-one function or choose the steps one-by-one in the following sections.
+See `vignette("share-on-a-github-website", package = "fusen")` for more information.
+
+```{r, eval=FALSE}
+# _All-in-one share of your package and its documentation on GitHub
+fusen::init_share_on_github()
+```
+
+
 # Start using git
 
 ```{r, eval=FALSE}
@@ -67,9 +78,6 @@ usethis::use_package_doc()
 # Add your credentials for GitHub
 usethis::create_github_token()
 gitcreds::gitcreds_set()
-
-# _All-in-one share of your package and its documentation on GitHub
-fusen::init_share_on_github()
 
 # _Or one step at a time
 # Send your project to a new GitHub project (included in `init_share_on_github()`)

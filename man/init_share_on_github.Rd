@@ -2,7 +2,7 @@
 % Please edit documentation in R/init_share_on_github.R
 \name{init_share_on_github}
 \alias{init_share_on_github}
-\title{Initiate GitHub to share your work on a website}
+\title{Initiate GitHub to share your package on a website}
 \usage{
 init_share_on_github(ask = TRUE)
 }
@@ -17,8 +17,32 @@ The URL of the website created
 This uses {pkgdown} to share the documentation of the package through GitHub Actions.
 You may need to run \code{usethis::create_github_token()}, then \code{gitcreds::gitcreds_set()} before.
 }
+\details{
+\code{init_share_on_github()} runs multiple steps to be able to share a proper package on GitHub:
+\itemize{
+\item Start versionning with git if not already
+\item Connect to your GitHub account
+\item Create a minimal DESCRIPTION file if missing
+\itemize{
+\item You will have to update its content with your information after deployment
+}
+\item Add NEWS file to present modifications of your releases
+\item Add README.Rmd and knit it to README.md to quickly present the aim and the use of your package
+\item Init continuous integration (CI)
+\itemize{
+\item Check the package on Linux, Windows and MacOS
+\item Calculate code coverage. Note that you may need to connect to \url{https://about.codecov.io/} to see the results of the code coverage.
+}
+\item Init continuous deployment (CD) of the {pkgdown} website documentation
+\item Commit and push to GitHub
+\item List remaining manual steps to make the website public
+}
+
+Read \code{vignette("share-on-a-github-website", package = "fusen")}
+}
 \examples{
 \dontrun{
+# This modifies the current directory and send it on GitHub
 init_share_on_github()
 }
 }
