@@ -1,3 +1,10 @@
+# v0.5.1
+## R CMD check results
+
+0 errors | 0 warnings | 0 note
+
+* Tested on rhub, winbuilder and macbuilder
+
 # v0.4.2
 ## R CMD check results
 

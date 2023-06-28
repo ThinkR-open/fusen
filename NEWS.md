@@ -1,4 +1,4 @@
-# fusen (development)
+# fusen 0.5.1
 
 ## New features
 
