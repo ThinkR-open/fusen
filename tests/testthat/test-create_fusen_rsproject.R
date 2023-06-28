@@ -62,6 +62,78 @@ withr::with_dir(dummypackage, {
 # clean
 unlink(dummypackage, recursive = TRUE)
 
+# Test other templates with different flat_name ----
+## Create a new project
+
+for (template.to.try in c("full", "minimal", "teaching", "dev_history")) {
+
+  # template.to.try <- "full"
+  dummypackage <- tempfile(pattern = paste0("create.fusen.", template.to.try))
+  dir.create(dummypackage)
+  pkgname <- "tempfoosen"
+  flat_name <- "hello"
+
+  withr::with_dir(dummypackage, {
+    test_that(paste("Create fusen works with template:", template.to.try), {
+
+      if (template.to.try %in% "dev_history") {
+        expected_rmd_template_with_fusen_name <- NULL
+      } else {
+        template.to.try.rmd <- template.to.try
+        if (template.to.try == "minimal") {
+          template.to.try.rmd <- "minimal_package"
+        }
+
+        expect_message(
+          expected_rmd_template_with_fusen_name <- readLines(
+            system.file(paste0("flat-template-", template.to.try.rmd, ".Rmd"), package = "fusen")) %>%
+            gsub("<my_package_name>", pkgname, .) %>%
+            gsub("flat_template[.]Rmd", paste0("flat_",flat_name,".Rmd"), .) %>%
+            gsub("my_fun", flat_name, .),
+          regexp = NA)
+      }
+
+      path_foosen <- file.path(dummypackage, pkgname)
+
+      expect_error(
+        path_dev_history <- suppressMessages(
+          create_fusen(path_foosen, template = template.to.try, flat_name = flat_name, open = FALSE)
+        ), regexp = NA
+      )
+
+      expect_true(dir.exists(path_foosen))
+      expect_true(all(file.exists(path_dev_history)))
+      if (!is.null(expected_rmd_template_with_fusen_name)) {
+        expect_equal(sum(grepl("flat_hello", path_dev_history)), 1)
+      } else {
+        expect_equal(sum(grepl("flat_hello", path_dev_history)), 0)
+      }
+
+      expect_true(file.exists(file.path(path_foosen, ".gitignore")))
+      gitignore <- readLines(file.path(path_foosen, ".gitignore"))
+      expect_true(all(
+        c(".Rproj.user", ".Rhistory", ".RData", ".DS_Store", ".httr-oauth") %in% gitignore
+      ))
+
+      if (!is.null(expected_rmd_template_with_fusen_name)) {
+        actual_dev_history <- readLines(path_dev_history[grepl("flat", path_dev_history)])
+        expect_identical(
+          actual_dev_history,
+          expected_rmd_template_with_fusen_name
+        )
+        if (template.to.try %in% c("minimal")) {
+          expect_equal(sum(grepl("hello <- function", actual_dev_history)), 1)
+        }
+      }
+    })
+  })
+
+  # clean loop
+  unlink(dummypackage, recursive = TRUE)
+}
+
+
+
 ## Create in a subdirectory ----
 dummysubdir <- tempfile(pattern = "subdir/subdir2/dummy")
 test_that("Can create in a subdirectory", {
@@ -82,22 +154,24 @@ create_dummygui <- function() {
   return(dummygui)
 }
 
-dummygui <- create_dummygui()
-withr::with_dir(dummygui$dirname, {
-  test_that("Can create in a subdirectory", {
-    dev_path <- expect_error(
-      suppressMessages(
-        create_fusen_gui(dummygui$basename, template = "teaching", with_git = FALSE)
-      ),
-      regexp = NA # expect no errors
-    )
-    expect_true(dir.exists(dummygui$path))
-    expect_true(file.exists(dev_path))
-    expect_false(dir.exists(file.path(dummygui$path, ".git/")))
-  })
-})
-unlink(dummygui$path, recursive = TRUE)
+for (template.to.try in c("full", "minimal", "teaching", "dev_history")) {
+  dummygui <- create_dummygui()
+  withr::with_dir(dummygui$dirname, {
+    test_that(paste("Can create in a project with gui for:", template.to.try), {
 
+      dev_path <- expect_error(
+        suppressMessages(
+          create_fusen_gui(dummygui$basename, template = template.to.try, with_git = FALSE)
+        ),
+        regexp = NA # expect no errors
+      )
+      expect_true(dir.exists(dummygui$path))
+      expect_true(all(file.exists(dev_path)))
+      expect_false(dir.exists(file.path(dummygui$path, ".git/")))
+    })
+  })
+  unlink(dummygui$path, recursive = TRUE)
+}
 
 ## Test initialise git ----
 # if git exists

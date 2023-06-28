@@ -172,12 +172,15 @@ unlink(skeleton_dir, recursive = TRUE)
 
 # _Check in interactive test-inflate for templates and Addins ----
 pkgload::load_all()
+
+Sys.setenv("NOT_CRAN" = "true")
 testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate-part1.R")
 testthat::test_file("tests/testthat/test-inflate-part2.R")
 testthat::test_file("tests/testthat/test-inflate_all.R")
 testthat::test_file("tests/testthat/test-add_flat_template.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
+Sys.setenv("NOT_CRAN" = "false")
 
 Sys.setenv("FUSEN_TEST_PUBLISH" = "TRUE")
 testthat::test_file("tests/testthat/test-init_share_on_github.R")
@@ -225,7 +228,8 @@ devtools::check(args = c("--no-manual", "--as-cran"))
 # remotes::install_github("ThinkR-open/checkhelper")
 tags <- checkhelper::find_missing_tags()
 View(tags$functions)
-checkhelper::check_clean_userspace(pkg = ".")
+out <- checkhelper::check_clean_userspace(pkg = ".")
+out
 checkhelper::check_as_cran()
 
 # Check spelling

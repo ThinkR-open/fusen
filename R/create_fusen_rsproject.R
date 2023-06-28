@@ -1,7 +1,9 @@
 #' Create a new fusen project
 #'
 #' @param path Character. Path where to create the new fusen project.
-#' @param template Character. Name of the template to be used among "full", "minimal" and "teaching".
+#' @param template Character. Name of the template to be used among "full", "minimal", "teaching" and "dev_history".
+#' @param flat_name Character. Filename of the flat file created.
+#' This is also used to name the first function of the file in `minimal` template.
 #' @param open Logical. Should the newly created project be opened ?
 #' @param overwrite Logical. Allow to overwrite 'dev/' files if path exists.
 #' @param with_git Logical. Should git be initialized in the newly created project ?
@@ -9,7 +11,7 @@
 #' @details
 #' See \code{\link{add_flat_template}} for details about the different options for `template`.
 #' Template "additional" is not available here as it is meant to be used with an already
-#' existing fusen.
+#' existing 'fusen'.
 #'
 #' @importFrom cli cli_alert_warning cli_alert_danger cat_rule cli_alert_success
 #' @export
@@ -19,7 +21,8 @@
 #' my_path <- tempfile("mypkg")
 #' create_fusen(path = my_path, template = "full", open = FALSE)
 create_fusen <- function(path,
-                         template = c("full", "minimal", "teaching"),
+                         template = c("full", "minimal", "teaching", "dev_history"),
+                         flat_name = template,
                          open = TRUE,
                          overwrite = FALSE,
                          with_git = FALSE) {
@@ -88,10 +91,10 @@ create_fusen <- function(path,
   if (template == "minimal") {
     template <- "minimal_package"
   }
-  cli::cat_rule(glue::glue("Adding dev/flat_{template}.Rmd"))
   dev_file <- add_flat_template(
     template = template,
     pkg = path,
+    flat_name = flat_name,
     overwrite = TRUE,
     open = FALSE,
     dev_dir = "dev"
@@ -119,10 +122,12 @@ create_fusen <- function(path,
 #' @noRd
 create_fusen_gui <- function(path,
                              template,
+                             flat_name = template,
                              with_git) {
   create_fusen(
     path = file.path(getwd(), path),
     template = template,
+    flat_name = flat_name,
     open = FALSE, # Project opening is done spontaneously by Rstudio Project Wizard
     with_git = with_git
   )

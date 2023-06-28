@@ -17,6 +17,7 @@
 - Arguments `rmd` and `name` in function `inflate()` now lead to errors (Deprecated since v0.3.0).
 - `add_dev_history()` was deprecated since v0.3.0 in favor of `add_flat_template()`. Now `add_dev_history()` only adds a "dev_history.Rmd" file in the "dev/" directory.
 - `add_flat_template(template = "minimal")` no longer exists to avoid confusion between minimal package or minimal flat file. Indeed, now there are `add_flat_template(template = "minimal_package")` (also `add_minimal_package()`) or `add_flat_template(template = "minimal_flat")` (also `add_minimal_flat()`). The latter doing exactly the same as `add_additional()` (#187)
+- `create_fusen()` still uses `minimal` as `minimal_package`
 
 ## Bug fixes
 
@@ -25,6 +26,7 @@
 
 ## Major changes
 
+- `create_fusen()` and the RStudio gui interface now accept `flat_file` parameter to name the first flat file as well as the first function (when using 'minimal' template).
 - The tips and tricks vignette shortly presents how to combine {fusen} and {golem} (#187)
 - Incorrect function names issued from addins or `add_flat_template()` are cleaned before being included in the flat file to follow underscore rule.
 
