@@ -40,7 +40,7 @@ library(fusen)
 
 ## Fill your package Description
 
-Fonction `fill_description()` requires the description of your package: What does it do? Who are the developers?  
+Function `fill_description()` requires the description of your package: What does it do? Who are the developers?  
 This will fill the DESCRIPTION file in the proper way. 
 
 ```{r example-description, eval=FALSE}

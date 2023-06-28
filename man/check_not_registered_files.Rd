@@ -54,7 +54,7 @@ usethis::with_project(dummypackage, {
   # Add a not registered file to the package
   cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
-  # Use the fonction to check the list of files
+  # Use the function to check the list of files
   out_csv <- check_not_registered_files(dummypackage)
   out_csv
   # Read the csv to see what is going on

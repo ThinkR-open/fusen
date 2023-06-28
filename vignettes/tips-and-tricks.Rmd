@@ -22,7 +22,7 @@ knitr::opts_chunk$set(
   - `tests` can be named `test-` or `test-my_function_name`
   - `development` can be named `dev-` or `dev_` or `dev-my_function_name`
 
-- There are wrappers around `add_flat_template()` for lazy developpers: `add_additional()`, `add_full()`, `add_minimal()`
+- There are wrappers around `add_flat_template()` for lazy developers: `add_additional()`, `add_full()`, `add_minimal()`
 
 
 # Can I knit the content of the flat template ?
