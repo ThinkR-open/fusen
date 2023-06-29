@@ -10,7 +10,7 @@ badge](https://thinkr-open.r-universe.dev/badges/fusen)](https://thinkr-open.r-u
 [![CRAN
 status](https://www.r-pkg.org/badges/version/fusen)](https://CRAN.R-project.org/package=fusen)
 [![R-CMD-check](https://github.com/ThinkR-open/fusen/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/ThinkR-open/fusen/actions/workflows/R-CMD-check.yaml)
-[![codecov](https://codecov.io/gh/ThinkR-open/fusen/branch/main/graph/badge.svg)](https://codecov.io/gh/ThinkR-open/fusen)
+[![codecov](https://codecov.io/gh/ThinkR-open/fusen/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ThinkR-open/fusen)
 [![](https://cranlogs.r-pkg.org/badges/fusen)](https://cran.r-project.org/package=fusen)
 <!-- badges: end -->
 
