@@ -440,7 +440,7 @@ get_pkg_name <- function(pkg) {
   if (file.exists(desc)) {
     pkgname <- read.dcf(desc)[colnames(read.dcf(desc)) == "Package"]
   } else {
-    pkgname <- basename(pkg)
+    pkgname <- basename(normalizePath(pkg, mustWork = FALSE))
   }
   pkgname
 }

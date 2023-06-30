@@ -159,6 +159,7 @@ usethis::pr_finish(41)
 # _Update template Rmd ----
 skeleton_dir <- tempfile()
 dir.create(skeleton_dir)
+# When opening, verify that "skeleton" is written in the correct places
 the_flat <- fusen::add_additional(
   pkg = skeleton_dir,
   dev_dir = "dev",

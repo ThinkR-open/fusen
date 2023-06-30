@@ -53,7 +53,9 @@ unlink(dummypackage, recursive = TRUE)
 alltemp <- tempfile("all.templates.inflate")
 dir.create(alltemp)
 
-for (pkgname in c("full", "teaching", "minimal")) {
+# for (pkgname in c("full", "teaching", "minimal")) {
+create_choices_test <- fusen:::create_fusen_choices[!grepl("dev_history", fusen:::create_fusen_choices)]
+for (pkgname in create_choices_test) {
   # No "additional" with create_fusen
   # {fusen} steps
   path_foosen <- normalize_path_winslash(file.path(alltemp, pkgname), mustWork = FALSE)

@@ -15,6 +15,16 @@ library(tools)
 # add_flat_template
 
 ```{r function-1}
+flat_template_choices <- c(
+    "full",
+    "minimal_package", "minpkg",
+    "minimal_flat", "minflat", "add", "additional",
+    "teach", "teaching",
+    "dev_history", "dev"
+  )
+
+create_fusen_choices <- c("full", "minimal", "teaching", "dev_history")
+
 #' Add flat Rmd file that drives package development
 #'
 #' @param template Name of the template to use. See details.
@@ -65,13 +75,7 @@ add_flat_template <- function(template = c("full", "minimal_package", "minimal_f
   }
 
   template <- template[1]
-  template <- match.arg(template, choices = c(
-    "full",
-    "minimal_package", "minpkg",
-    "minimal_flat", "minflat", "add", "additional",
-    "teach", "teaching",
-    "dev_history", "dev"
-  ))
+  template <- match.arg(template, choices = flat_template_choices)
 
   if (template %in% c("additional", "add")) {
     template <- "additional"
@@ -438,13 +442,21 @@ unlink(dummypackage3, recursive = TRUE)
 # with the correct here()
 
 # Test all templates to knit ----
-all_templates <- c("full", "minimal_package", "additional", "teaching") # "dev_history"
+all_templates <- fusen:::flat_template_choices[!fusen:::flat_template_choices %in% c("dev_history", "dev")] # "dev_history"
+test_that("all templates to knit and inflate a second time", {
+  expect_length(all_templates, 9)
+})
 
 for (template in all_templates) {
   # template <- all_templates[1]
   main_flat_file_name <- template
-  if (template == "minimal_package") {
+  if (template %in% c("minimal_package", "minpkg", 
+                      "minimal_flat", "minflat")) {
     main_flat_file_name <- "minimal"
+  } else if (template == "add") {
+    main_flat_file_name <- "additional"
+  } else if (template == "teach") {
+    main_flat_file_name <- "teaching"
   }
 
   dummypackage4 <- tempfile(pattern = "all.templates.knit")
@@ -452,24 +464,54 @@ for (template in all_templates) {
   
   orig.proj <- here::here()
   
-    # Add
-  dev_file_path <- suppressMessages(add_flat_template(pkg = dummypackage4, template = template, open = FALSE))
+  withr::with_dir(dummypackage4, {
+
+    # Add template
+  dev_file_path <- suppressMessages(add_flat_template(template = template, open = FALSE))
   flat_file <- dev_file_path[grepl("flat", dev_file_path)]
 
   # Change lines asking for pkg name
-  lines_template <- readLines(system.file("tests-templates/dev-template-tests.Rmd", package = "fusen"))
+  lines_template <- readLines(flat_file)
   lines_template[grepl("<my_package_name>", lines_template)] <-
     gsub(
       "<my_package_name>", basename(dummypackage4),
       lines_template[grepl("<my_package_name>", lines_template)]
     )
+  if (any(grepl("\\{r description", lines_template))) {
+    lines_template[grepl("\\{r description", lines_template)] <- "```{r description, eval=TRUE}"
+  }
   cat(enc2utf8(lines_template), file = flat_file, sep = "\n")
+  
+  # description chunk as eval=TRUE
+  if (any(grepl("dev_history", dev_file_path))) {
+    dev_hist_path <- dev_file_path[grepl("dev_history", dev_file_path)]
+    lines_dev <- readLines(dev_hist_path)
+    lines_dev[grepl("\\{r description", lines_dev)] <- "```{r description, eval=TRUE}"
+    cat(enc2utf8(lines_dev), file = dev_hist_path, sep = "\n")
+  }
 
-withr::with_dir(dummypackage4, {
+  # Simulate as being inside project
     usethis::proj_set(dummypackage4)
     here:::do_refresh_here(dummypackage4)
     
     if (rmarkdown::pandoc_available("1.12.3")) {
+      # knitting with dev_history should transform project as a package
+      # as fill_description is eval = TRUE
+      if (any(grepl("dev_history", dev_file_path))) {
+
+        rmarkdown::render(
+          input = dev_hist_path,
+          output_file = file.path(dummypackage4, "dev", "dev_history.html"),
+          envir = new.env(), quiet = TRUE
+        )
+      } else if (template %in% c("additional", "add", 
+                                 "minimal_flat", "minflat")) {
+        fusen::fill_description(pkg = here::here(),
+                                fields = list(Title = "Dummy Package"))
+        # Define License with use_*_license()
+        usethis::use_mit_license("John Doe")
+      }
+      
       rmarkdown::render(
         input = file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".Rmd")),
         output_file = file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".html")),
@@ -481,7 +523,7 @@ withr::with_dir(dummypackage4, {
     here:::do_refresh_here(orig.proj)
   })
 
-  test_that(paste0("template", template, "runs as markdown"), {
+  test_that(paste0("template", template, "runs as markdown and project is a package"), {
     expect_true(file.exists(file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".Rmd"))))
     if (template %in% c("full", "minimal_package")) {
       expect_true(file.exists(file.path(dirname(flat_file), "0-dev_history.Rmd")))
@@ -490,15 +532,37 @@ withr::with_dir(dummypackage4, {
     if (rmarkdown::pandoc_available("1.12.3")) {
       expect_true(file.exists(file.path(dummypackage4, "DESCRIPTION")))
       expect_true(file.exists(file.path(dummypackage4, "LICENSE")))
-      if (template %in% c("full", "teaching")) {
+      if (template %in% c("full")) {
         expect_true(file.exists(file.path(dummypackage4, "inst", "nyc_squirrels_sample.csv")))
+      } else {
+        expect_false(file.exists(file.path(dummypackage4, "inst", "nyc_squirrels_sample.csv")))
       }
       expect_true(file.exists(file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".html"))))
     }
   })
+  
+  # Now try to inflate from the inflate chunk
+  test_that("flat file inflates after knit from command inside", {
+    flat_lines <- readLines(flat_file)
+    
+    expect_true(sum(grepl(paste0("fusen::inflate\\(flat_file = \"dev/flat_", main_flat_file_name, ".Rmd\""), flat_lines)) == 1)
+    
+    withr::with_dir(dummypackage4, {
+      inflate_command <- paste0("fusen::inflate(flat_file = \"dev/flat_", main_flat_file_name, ".Rmd\", open_vignette = FALSE, check = FALSE)")
+      expect_error(suppressMessages(eval(parse(text = inflate_command))), regexp = NA)
+    })
+  })
+  
+  # Now try to inflates a second time
+  test_that("flat file inflates a second time", {
+    withr::with_dir(dummypackage4, {
+      inflate_command_second <- paste0("fusen::inflate(flat_file = \"dev/flat_", main_flat_file_name, ".Rmd\", open_vignette = FALSE, check = FALSE, overwrite = TRUE)")
+      expect_error(suppressMessages(eval(parse(text = inflate_command_second))), regexp = NA)
+    })
+  })
+  
   unlink(dummypackage4, recursive = TRUE)
 } # end of loop on template knit
-
 
 # Test other names modifies template ----
 dummypackage <- tempfile(pattern = "other.names")

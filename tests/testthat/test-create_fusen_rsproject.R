@@ -65,7 +65,7 @@ unlink(dummypackage, recursive = TRUE)
 # Test other templates with different flat_name ----
 ## Create a new project
 
-for (template.to.try in c("full", "minimal", "teaching", "dev_history")) {
+for (template.to.try in fusen:::create_fusen_choices) {
 
   # template.to.try <- "full"
   dummypackage <- tempfile(pattern = paste0("create.fusen.", template.to.try))
