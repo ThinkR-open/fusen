@@ -32,7 +32,7 @@ This configuration file also register all files not created from a flat file. Th
 To make this work properly, you will have to register all files that were not created from a flat file. `add_files_to_config()` will help you do so (See below: "Register some specific files, even with regex").  
 -->
 
-To know if you have some special steps to realise with this version of {fusen}, run:
+To know if you have some special steps to realize with this version of {fusen}, run:
 
 
 ```{r eval = FALSE}
@@ -182,7 +182,7 @@ usethis::with_project(dummypackage, {
   # Add a not registered file to the package
   cat("# test R file\n", file = file.path(dummypackage, "R", "to_keep.R"))
 
-  # Use the fonction to check the list of files
+  # Use the function to check the list of files
   out_csv <- check_not_registered_files(dummypackage)
   out_csv
   # Read the csv to see what is going on

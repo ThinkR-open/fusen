@@ -6,7 +6,12 @@ Icon: fusen.png
 Parameter: template
 Widget: SelectInput
 Label: Choose a {fusen} template
-Fields: full, minimal, teaching
+Fields: full, minimal, teaching, dev_history
+
+Parameter: flat_name
+Widget: textInput
+Label: Choose the flat filename
+Default: first
 
 Parameter: with_git
 Widget: CheckboxInput

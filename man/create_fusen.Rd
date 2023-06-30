@@ -6,7 +6,8 @@
 \usage{
 create_fusen(
   path,
-  template = c("full", "minimal", "teaching"),
+  template = c("full", "minimal", "teaching", "dev_history"),
+  flat_name = template,
   open = TRUE,
   overwrite = FALSE,
   with_git = FALSE
@@ -15,7 +16,10 @@ create_fusen(
 \arguments{
 \item{path}{Character. Path where to create the new fusen project.}
 
-\item{template}{Character. Name of the template to be used among "full", "minimal" and "teaching".}
+\item{template}{Character. Name of the template to be used among "full", "minimal", "teaching" and "dev_history".}
+
+\item{flat_name}{Character. Filename of the flat file created.
+This is also used to name the first function of the file in \code{minimal} template.}
 
 \item{open}{Logical. Should the newly created project be opened ?}
 
@@ -33,7 +37,7 @@ Create a new fusen project
 \details{
 See \code{\link{add_flat_template}} for details about the different options for \code{template}.
 Template "additional" is not available here as it is meant to be used with an already
-existing fusen.
+existing 'fusen'.
 }
 \examples{
 my_path <- tempfile("mypkg")
