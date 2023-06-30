@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -51,6 +51,15 @@
     </li>
     <li>
       <a href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
+    </li>
+    <li>
+      <a href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
+    </li>
+    <li>
+      <a href="../articles/register-files-in-config.html">Register files in config</a>
+    </li>
+    <li>
+      <a href="../articles/share-on-a-github-website.html">Share on a GitHub website</a>
     </li>
     <li>
       <a href="../articles/tips-and-tricks.html">Tips and tricks</a>
@@ -82,6 +91,83 @@
     </div>
 
     <div class="section level2">
+<h2 class="page-header" data-toc-text="0.5.1" id="fusen-051">fusen 0.5.1<small>2023-06-29</small><a class="anchor" aria-label="anchor" href="#fusen-051"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-5-1">New features<a class="anchor" aria-label="anchor" href="#new-features-0-5-1"></a></h3>
+<div class="section level4">
+<h4 id="inflate-all-active-flat-file-0-5-1">Inflate all active flat file<a class="anchor" aria-label="anchor" href="#inflate-all-active-flat-file-0-5-1"></a></h4>
+<ul><li>
+<code><a href="../reference/inflate_all.html">inflate_all()</a></code> uses the configuration file to inflate all your flat files at once. <code>document</code> and <code>check</code> options are thus only run once for all flat files. (<a href="https://github.com/Thinkr-open/fusen/issues/204" class="external-link">#204</a>, <a href="https://github.com/ymansiaux" class="external-link">@ymansiaux</a>)</li>
+<li>This requires to run <code><a href="../reference/inflate.html">inflate()</a></code> at least once for each flat file.</li>
+<li>This also requires to register all other files, that were present in the package before this version of ‘fusen’ with <code><a href="../reference/register_all_to_config.html">register_all_to_config()</a></code>
+</li>
+</ul></div>
+<div class="section level4">
+<h4 id="list-all-files-created-with-an-inflate-in-a-config-file-with-parameters-0-5-1">List all files created with an <code>inflate()</code> in a config file with parameters<a class="anchor" aria-label="anchor" href="#list-all-files-created-with-an-inflate-in-a-config-file-with-parameters-0-5-1"></a></h4>
+<ul><li>
+<code><a href="../reference/inflate.html">inflate()</a></code> creates a configuration file “dev/config_fusen.yaml” to register all files created while inflating the corresponding flat file, along with inflate parameters (<a href="https://github.com/Thinkr-open/fusen/issues/198" class="external-link">#198</a>, <a href="https://github.com/ymansiaux" class="external-link">@ymansiaux</a>)</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="breaking-changes-0-5-1">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-5-1"></a></h3>
+<ul><li>Arguments <code>rmd</code> and <code>name</code> in function <code><a href="../reference/inflate.html">inflate()</a></code> now lead to errors (Deprecated since v0.3.0).</li>
+<li>
+<code><a href="../reference/add_flat_template.html">add_dev_history()</a></code> was deprecated since v0.3.0 in favor of <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code>. Now <code><a href="../reference/add_flat_template.html">add_dev_history()</a></code> only adds a “dev_history.Rmd” file in the “dev/” directory.</li>
+<li>
+<code>add_flat_template(template = "minimal")</code> no longer exists to avoid confusion between minimal package or minimal flat file. Indeed, now there are <code>add_flat_template(template = "minimal_package")</code> (also <code><a href="../reference/add_flat_template.html">add_minimal_package()</a></code>) or <code>add_flat_template(template = "minimal_flat")</code> (also <code><a href="../reference/add_flat_template.html">add_minimal_flat()</a></code>). The latter doing exactly the same as <code><a href="../reference/add_flat_template.html">add_additional()</a></code> (<a href="https://github.com/Thinkr-open/fusen/issues/187" class="external-link">#187</a>)</li>
+<li>
+<code><a href="../reference/create_fusen.html">create_fusen()</a></code> still uses <code>minimal</code> as <code>minimal_package</code>
+</li>
+</ul></div>
+<div class="section level3">
+<h3 id="bug-fixes-0-5-1">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-5-1"></a></h3>
+<ul><li>Fix using line break after function name in flat files (<a href="https://github.com/Thinkr-open/fusen/issues/142" class="external-link">#142</a>, <a href="https://github.com/FlorenceMounier" class="external-link">@FlorenceMounier</a>)</li>
+<li>If project directory is renamed by “my.package (Copy)”, <code><a href="../reference/inflate.html">inflate()</a></code> still works, even if this name is not a proper package name. What is important is that DESCRIPTION Package name is correct.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="major-changes-0-5-1">Major changes<a class="anchor" aria-label="anchor" href="#major-changes-0-5-1"></a></h3>
+<ul><li>
+<code><a href="../reference/create_fusen.html">create_fusen()</a></code> and the RStudio gui interface now accept <code>flat_file</code> parameter to name the first flat file as well as the first function (when using ‘minimal’ template).</li>
+<li>The tips and tricks vignette shortly presents how to combine {fusen} and {golem} (<a href="https://github.com/Thinkr-open/fusen/issues/187" class="external-link">#187</a>)</li>
+<li>Incorrect function names issued from addins or <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> are cleaned before being included in the flat file to follow underscore rule.</li>
+</ul></div>
+<div class="section level3">
+<h3 id="minor-changes-0-5-1">Minor changes<a class="anchor" aria-label="anchor" href="#minor-changes-0-5-1"></a></h3>
+<ul><li>Update CONTRIBUTING to speak about flat file in {fusen} itself</li>
+<li>replace the maintainer’s name from <code><a href="../reference/fill_description.html">fill_description()</a></code> in examples, templates and tests (<a href="https://github.com/Thinkr-open/fusen/issues/155" class="external-link">#155</a>, <a href="https://github.com/FlorenceMounier" class="external-link">@FlorenceMounier</a>)</li>
+<li>
+<code><a href="../reference/create_fusen.html">create_fusen()</a></code> vaccinates created git project (<a href="https://github.com/Thinkr-open/fusen/issues/171" class="external-link">#171</a>)</li>
+<li>Examples under function roxygen documentation are cleaned from extra spaces after empty <code>#'</code> to avoid git diff against code linters / stylers.</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.5.0" id="fusen-050">fusen 0.5.0<a class="anchor" aria-label="anchor" href="#fusen-050"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-5-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-5-0"></a></h3>
+<div class="section level4">
+<h4 id="publish-your-package-website-on-github-0-5-0">Publish your package website on GitHub<a class="anchor" aria-label="anchor" href="#publish-your-package-website-on-github-0-5-0"></a></h4>
+<ul><li>Publish your {fusen} project on a GitHub website with one command: <code><a href="../reference/init_share_on_github.html">init_share_on_github()</a></code>
+</li>
+</ul></div>
+<div class="section level4">
+<h4 id="list-all-files-created-with-an-inflate-in-a-config-file-0-5-0">List all files created with an <code>inflate()</code> in a config file<a class="anchor" aria-label="anchor" href="#list-all-files-created-with-an-inflate-in-a-config-file-0-5-0"></a></h4>
+<ul><li>
+<code><a href="../reference/inflate.html">inflate()</a></code> creates a “dev/config_fusen.yaml” file to register all files created while inflating the corresponding flat file (First steps in <a href="https://github.com/Thinkr-open/fusen/issues/24" class="external-link">#24</a>)</li>
+<li>Migrate from a non-fusen package or a previous version of ‘fusen’ with <code><a href="../reference/register_all_to_config.html">register_all_to_config()</a></code>
+</li>
+<li>Create or update the config file from a data.frame with <code>df_to_config()</code> to list legitimate scripts (even if not associated with a flat file)</li>
+</ul></div>
+<div class="section level4">
+<h4 id="others-0-5-0">Others<a class="anchor" aria-label="anchor" href="#others-0-5-0"></a></h4>
+<ul><li>Allow multiple examples for the same function (<a href="https://github.com/Thinkr-open/fusen/issues/149" class="external-link">#149</a>)</li>
+</ul></div>
+</div>
+<div class="section level3">
+<h3 id="bug-fixes-0-5-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-5-0"></a></h3>
+<ul><li>Fix for when using word “<code>function(</code>” in documentation (<a href="https://github.com/Thinkr-open/fusen/issues/174" class="external-link">#174</a>, <a href="https://github.com/FlorenceMounier" class="external-link">@FlorenceMounier</a>)</li>
+</ul></div>
+</div>
+    <div class="section level2">
 <h2 class="page-header" data-toc-text="0.4.2" id="fusen-042">fusen 0.4.2<small>2023-06-07</small><a class="anchor" aria-label="anchor" href="#fusen-042"></a></h2>
 <div class="section level3">
 <h3 id="bug-0-4-2">Bug<a class="anchor" aria-label="anchor" href="#bug-0-4-2"></a></h3>
@@ -107,7 +193,7 @@
 <ul><li>
 <code><a href="../reference/inflate.html">inflate()</a></code> the current opened flat file if <code>flat_file</code> is empty (<a href="https://github.com/Thinkr-open/fusen/issues/138" class="external-link">#138</a>)</li>
 <li>Add rmarkdown template for additional flat file for RStudio</li>
-<li>Add wrappers around <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> for lazy devs: <code><a href="../reference/add_flat_template.html">add_additional()</a></code>, <code><a href="../reference/add_flat_template.html">add_full()</a></code>, <code><a href="../reference/add_flat_template.html">add_minimal()</a></code>
+<li>Add wrappers around <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> for lazy devs: <code><a href="../reference/add_flat_template.html">add_additional()</a></code>, <code><a href="../reference/add_flat_template.html">add_full()</a></code>, <code>add_minimal()</code>
 </li>
 <li>Show “flat_template” origin of files generated by {fusen} (@ ALanguillaume)</li>
 <li>Allow <code>inflate(vignette_name = c("Super title" = "01-Super Slug"))</code> for nice Title different from vignette Entry (<a href="https://github.com/Thinkr-open/fusen/issues/87" class="external-link">#87</a>)</li>
@@ -131,9 +217,9 @@
 <div class="section level3">
 <h3 id="breaking-changes-0-3-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-3-0"></a></h3>
 <ul><li>
-<code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> superseeds <code><a href="../reference/add_dev_history.html">add_dev_history()</a></code> with more advanced possibilities</li>
+<code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> superseeds <code><a href="../reference/add_flat_template.html">add_dev_history()</a></code> with more advanced possibilities</li>
 <li>
-<code><a href="../reference/add_dev_history.html">add_dev_history()</a></code> is deprecated</li>
+<code><a href="../reference/add_flat_template.html">add_dev_history()</a></code> is deprecated</li>
 <li>Vignette name to create is now set with <code>inflate(vignette_name = "Get started")</code> instead of <code>name</code>
 </li>
 <li>Flat name to inflate is now set with <code>inflate(flat_file = "dev/flat_full.Rmd")</code> instead of <code>rmd</code>
@@ -172,7 +258,7 @@
 <li>Allow <code>R6Class()</code> in <code>function</code> chunks</li>
 <li>Fix inflate function chunks with data or package documentation only</li>
 <li>Fix inflate with empty functions chunks</li>
-<li>Fix filename to inflate in templates with new calls of <code><a href="../reference/add_dev_history.html">add_dev_history()</a></code> (<a href="https://github.com/Cervangirard" class="external-link">@Cervangirard</a>)</li>
+<li>Fix filename to inflate in templates with new calls of <code><a href="../reference/add_flat_template.html">add_dev_history()</a></code> (<a href="https://github.com/Cervangirard" class="external-link">@Cervangirard</a>)</li>
 <li>Default vignette name is now “Get started” creating “vignettes/get-started.Rmd”</li>
 <li>All open files are saved when using <code><a href="../reference/inflate.html">inflate()</a></code> where {RStudioapi} works</li>
 <li>Ask to restart RStudio after first inflate</li>

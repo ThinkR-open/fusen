@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -51,6 +51,15 @@
     </li>
     <li>
       <a href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
+    </li>
+    <li>
+      <a href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
+    </li>
+    <li>
+      <a href="../articles/register-files-in-config.html">Register files in config</a>
+    </li>
+    <li>
+      <a href="../articles/share-on-a-github-website.html">Share on a GitHub website</a>
     </li>
     <li>
       <a href="../articles/tips-and-tricks.html">Tips and tricks</a>
@@ -132,9 +141,9 @@ Whether to overwrite vignette and functions if already exists.</p></dd>
 
 
 <dt>...</dt>
-<dd><p>Arguments passed to <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.html" class="external-link">rcmdcheck::rcmdcheck()</a></code>.
+<dd><p>Arguments passed to <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>.
 For example, you can do <code>inflate(check = TRUE, quiet = TRUE)</code>, where <code>quiet</code> is
-passed to <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.html" class="external-link">rcmdcheck::rcmdcheck()</a></code>.</p></dd>
+passed to <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>.</p></dd>
 
 </dl></div>
     <div id="value">
@@ -142,6 +151,10 @@ passed to <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
     
 
 <p>Package structure. Return path to current package.</p>
+    </div>
+    <div id="see-also">
+    <h2>See also</h2>
+    <div class="dont-index"><p><code><a href="inflate_all.html">inflate_all()</a></code> to inflate every flat files according to the configuration file.</p></div>
     </div>
 
     <div id="ref-examples">
@@ -152,32 +165,39 @@ passed to <code><a href="http://r-lib.github.io/rcmdcheck/reference/rcmdcheck.ht
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># {fusen} steps</span></span></span>
 <span class="r-in"><span><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"full"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpNoyEGr/dummypackage16e966a02810 . Please start a new R session in the new project directory.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpxwOQP5/dummypackage1748588f3faa . Please start a new R session in the new project directory.</span>
 <span class="r-in"><span><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">dev_file</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"flat"</span>, <span class="va">dev_file</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpNoyEGr/dummypackage16e966a02810/DESCRIPTION"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpxwOQP5/dummypackage1748588f3faa/DESCRIPTION"</span>
 <span class="r-in"><span><span class="fu">inflate</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  pkg <span class="op">=</span> <span class="va">dummypackage</span>, flat_file <span class="op">=</span> <span class="va">flat_file</span>,</span></span>
 <span class="r-in"><span>  vignette_name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>, check <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpNoyEGr/dummypackage16e966a02810'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage16e966a02810</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpxwOQP5/dummypackage1748588f3faa'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage1748588f3faa</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required namespace: testthat</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'knitr'</span> to <span style="color: #00BB00;">Suggests</span> field in DESCRIPTION</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Use <span style="color: #555555;">`requireNamespace("knitr", quietly = TRUE)`</span> to test if package is installed</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Then directly refer to functions with <span style="color: #555555;">`knitr::fun()`</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'inst/doc'</span> to <span style="color: #0000BB;">'.gitignore'</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── config file for dev/flat_full.Rmd ───────────────────────────────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> path: dev/flat_full.Rmd was added to the config file</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> state: active was added to the config file</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> R: R/my_median.R was added to the config file</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> R: R/my_other_median.R was added to the config file</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> tests: tests/testthat/test-my_median.R was added to the config file</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> tests: tests/testthat/test-my_other_median.R was added to the config file</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> vignettes: vignettes/exploration-of-my-data.Rmd was added to the config file</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> inflate: each parameter was added to the config file</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Saving attachment parameters to yaml config file</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating dummypackage16e966a02810 documentation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage16e966a02810</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating dummypackage1748588f3faa documentation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage1748588f3faa</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">my_median.Rd</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">my_other_median.Rd</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">sub_median.Rd</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage16e966a02810</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummypackage1748588f3faa</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> [+] 3 package(s) added: stats, rmarkdown, testthat.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpNoyEGr/dummypackage16e966a02810"</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Explore directory of the package</span></span></span>
 <span class="r-in"><span><span class="co"># browseURL(dummypackage)</span></span></span>

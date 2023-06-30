@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -79,6 +79,15 @@
     </li>
     <li>
       <a href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
+    </li>
+    <li>
+      <a href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
+    </li>
+    <li>
+      <a href="../articles/register-files-in-config.html">Register files in config</a>
+    </li>
+    <li>
+      <a href="../articles/share-on-a-github-website.html">Share on a GitHub website</a>
     </li>
     <li>
       <a href="../articles/tips-and-tricks.html">Tips and tricks</a>
@@ -152,8 +161,8 @@
 </ul>
 </li>
 <li>There are wrappers around <code><a href="../reference/add_flat_template.html">add_flat_template()</a></code> for lazy
-developpers: <code><a href="../reference/add_flat_template.html">add_additional()</a></code>, <code><a href="../reference/add_flat_template.html">add_full()</a></code>,
-<code><a href="../reference/add_flat_template.html">add_minimal()</a></code>
+developers: <code><a href="../reference/add_flat_template.html">add_additional()</a></code>, <code><a href="../reference/add_flat_template.html">add_full()</a></code>,
+<code>add_minimal()</code>
 </li>
 </ul>
 </div>
@@ -342,14 +351,11 @@ fusen chunks for all your future functions to be.</p>
 <h2 id="how-to-inflate-multiple-flat-files">How to Inflate multiple flat files ?<a class="anchor" aria-label="anchor" href="#how-to-inflate-multiple-flat-files"></a>
 </h2>
 <ul>
-<li>Add an entry in your main “dev_history.Rmd” file</li>
+<li>Use <code><a href="../reference/inflate_all.html">inflate_all()</a></code>
+</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file1.Rmd"</span><span class="op">)</span></span>
-<span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file2.Rmd"</span><span class="op">)</span></span>
-<span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate.html">inflate</a></span><span class="op">(</span><span class="st">"dev/flat_file3.Rmd"</span><span class="op">)</span></span></code></pre></div>
-<p>If the main “dev_history.Rmd” file does not exists, you can create it
-with <code>add_flat_template("dev_history")</code></p>
+<p>Read the dedicated vignette “inflate-all-your-flat-files”</p>
+<pre><code><span><span class="fu"><a href="https://rdrr.io/r/utils/vignette.html" class="external-link">vignette</a></span><span class="op">(</span><span class="st">"inflate-all-your-flat-files"</span>, package <span class="op">=</span> <span class="st">"fusen"</span><span class="op">)</span></span></code></pre>
 </div>
 <div class="section level2">
 <h2 id="how-to-store-multiple-functions-in-a-unique-r-file">How to store multiple functions in a unique R file ?<a class="anchor" aria-label="anchor" href="#how-to-store-multiple-functions-in-a-unique-r-file"></a>
@@ -526,18 +532,21 @@ You will need to anticipate the two ways of reading the data:</p>
 <span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">the_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="co"># The path to use during dev in the flat file</span></span>
 <span>  <span class="va">the_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="st">"tests"</span>, <span class="st">"testthat"</span>, <span class="va">the_file</span><span class="op">)</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">the_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="va">the_file</span>, <span class="st">" does not exist"</span><span class="op">)</span><span class="op">}</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/files.html" class="external-link">file.exists</a></span><span class="op">(</span><span class="va">the_file</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="va">the_file</span>, <span class="st">" does not exist"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span><span class="op">}</span></span>
 <span></span>
 <span><span class="va">my_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/utils/read.table.html" class="external-link">read.csv</a></span><span class="op">(</span><span class="va">the_file</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
-<h2 id="can-i-load-all-functions-of-th-current-flat-file-during-development-without-having-to-inflate">Can I load all functions of th current flat file during development
-without having to <code>inflate()</code>?<a class="anchor" aria-label="anchor" href="#can-i-load-all-functions-of-th-current-flat-file-during-development-without-having-to-inflate"></a>
+<h2 id="can-i-load-all-functions-of-the-current-flat-file-during-development-without-having-to-inflate">Can I load all functions of the current flat file during development
+without having to <code>inflate()</code>?<a class="anchor" aria-label="anchor" href="#can-i-load-all-functions-of-the-current-flat-file-during-development-without-having-to-inflate"></a>
 </h2>
-<p>Yes. You can run <code>function</code> chunks only in the currently
-opened flat file with <code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code>.<br>
-With long flat file currently in developement, and before
+<p>Yes. You can run and load <code>function</code> chunks only in the
+currently opened flat file with
+<code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code>.<br>
+With long flat file currently in development, and before
 <code><a href="../reference/inflate.html">inflate()</a></code>, it is sometimes difficult to run all chunks
 needed after multiple modifications. This can also be useful when you
 start again your development the day after.</p>
@@ -546,8 +555,8 @@ for a flat file, although it does not account for dependencies.</p>
 <p>In the console, run:</p>
 <div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/load_flat_functions.html">load_flat_functions</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<p>You can also run <code>function</code> chunks from a specific flat
-file with:</p>
+<p>You can also run <code>function</code> chunks of a specific flat file
+with:</p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/load_flat_functions.html">load_flat_functions</a></span><span class="op">(</span>flat_file <span class="op">=</span> <span class="st">"dev/flat_full.Rmd"</span><span class="op">)</span></span></code></pre></div>
 </div>
@@ -558,9 +567,29 @@ file with:</p>
 good for a R package vignette, you can use the qmd format.<br>
 This will not really change the output of anything as the flat file is
 not meant to be rendered.<br>
-But why not!?</p>
-<p>So, you can add a flat file a change it to “.qmd” if it suits
-you.</p>
+The vignette created from this flat file will still be a Rmd file. But
+why not!?</p>
+<p>Hence, you can add a flat file and change its extension to “.qmd” if
+you like.</p>
+</div>
+<div class="section level2">
+<h2 id="can-i-use-fusen-with-golem">Can I use {fusen} with {golem}?<a class="anchor" aria-label="anchor" href="#can-i-use-fusen-with-golem"></a>
+</h2>
+<p>Of course ! That is even recommended as it allows to properly
+separate the business logic (in “dev/” directory) from the UI (in the
+modules of the “R/” directory).<br>
+Start by creating a {golem} project. Then you can start adding your flat
+files.<br>
+We recommend to create modules with names in relation to flat files, so
+that you can better navigate in your project.</p>
+<pre><code><span><span class="fu">golem</span><span class="fu">::</span><span class="fu">create_golem</span><span class="op">(</span><span class="st">'my.golem.app'</span><span class="op">)</span></span>
+<span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/add_flat_template.html">add_minimal_flat</a></span><span class="op">(</span>flat_name <span class="op">=</span> <span class="st">"page1"</span><span class="op">)</span></span>
+<span><span class="fu">golem</span><span class="fu">::</span><span class="fu">add_module</span><span class="op">(</span>name <span class="op">=</span> <span class="st">"page1"</span><span class="op">)</span></span></code></pre>
+<p>Although default {golem} “dev/” files already contain the main
+actions to maintain your package, you can still add the
+“0-dev_history.Rmd” file recommended with {fusen} using
+<code><a href="../reference/add_flat_template.html">add_dev_history()</a></code>. Note that some sections will be
+redundant with the {golem} dev files.</p>
 </div>
   </div>
 

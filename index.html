@@ -63,7 +63,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -84,6 +84,15 @@
     </li>
     <li>
       <a href="articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
+    </li>
+    <li>
+      <a href="articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
+    </li>
+    <li>
+      <a href="articles/register-files-in-config.html">Register files in config</a>
+    </li>
+    <li>
+      <a href="articles/share-on-a-github-website.html">Share on a GitHub website</a>
     </li>
     <li>
       <a href="articles/tips-and-tricks.html">Tips and tricks</a>
@@ -130,7 +139,7 @@
 <blockquote>
 <p>If you know how to create a Rmarkdown file, then you know how to build a package.</p>
 </blockquote>
-<p><img src="reference/figures/fusen_inflate_functions.png" width="65%" style="display: block; margin: auto;"></p>
+<p><img src="reference/figures/fusen_inflate_functions.png" width="75%" style="display: block; margin: auto;"></p>
 <p><em>Fill the flat Rmd (or qmd) template with everything in one place and {fusen} will inflate the identified parts in the correct package files and directories.</em></p>
 <blockquote>
 <p>The {fusen} Rmarkdown template encourages users to fill their documentation and tests at the same time of writing their functions code. Thanks to the R package structure used by {fusen}, you can built a robust workflow or R package. {fusen} simplifies and reduces the number of steps towards a full R package.<br>
@@ -149,10 +158,14 @@ After that, your {pkgdown} documentation website is one command away to be share
 <p>You can install the development version of {fusen} from GitHub:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># From r-universe.dev (No need for GITHUB_PAT)</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"fusen"</span>, </span>
-<span>                 repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"thinkropen"</span> <span class="op">=</span> <span class="st">"https://thinkr-open.r-universe.dev"</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
+<span>  thinkropen <span class="op">=</span> <span class="st">"https://thinkr-open.r-universe.dev"</span>,</span>
+<span>  CRAN <span class="op">=</span> <span class="st">"https://cloud.r-project.org"</span></span>
+<span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="co"># Download and install {fusen} in R</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"fusen"</span><span class="op">)</span></span>
 <span></span>
-<span><span class="co"># With {remotes} using GitHub API</span></span>
+<span><span class="co"># With {remotes} using GitHub API - Need for GITHUB_PAT</span></span>
 <span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_github.html" class="external-link">install_github</a></span><span class="op">(</span><span class="st">"ThinkR-open/fusen"</span><span class="op">)</span></span></code></pre></div>
 <blockquote>
@@ -187,7 +200,7 @@ After that, your {pkgdown} documentation website is one command away to be share
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fill_description.html">fill_description</a></span><span class="op">(</span>fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"My Awesome Package"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html" class="external-link">use_mit_license</a></span><span class="op">(</span><span class="st">"Sébastien Rochette"</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html" class="external-link">use_mit_license</a></span><span class="op">(</span><span class="st">"John Doe"</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>Write your analysis and functionalities following the Rmd template
 <ul>
@@ -207,12 +220,17 @@ After that, your {pkgdown} documentation website is one command away to be share
 <span>  vignette_name <span class="op">=</span> <span class="st">"Get started"</span>,</span>
 <span>  check <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><strong>That’s it! You built a package! A documented and tested package!</strong></p>
+<ul>
+<li>Share it on a website on GitHub</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/init_share_on_github.html">init_share_on_github</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
+<p><strong>That’s it! You built a package! A documented and tested package!</strong><br><strong>You even have a website for it!</strong></p>
 <p>Let’s test it now:</p>
 <ul>
 <li>Install your package locally</li>
 </ul>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_local.html" class="external-link">install_local</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>Restart your R session to clean environment
@@ -222,16 +240,8 @@ After that, your {pkgdown} documentation website is one command away to be share
 </li>
 <li>Test functions of your package</li>
 </ul>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">my.package</span><span class="fu">::</span><span class="fu">my_median</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span></code></pre></div>
-<ul>
-<li>Test the correct documentation of the package by building its dedicated website</li>
-</ul>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Build {pkgdown} to test it</span></span>
-<span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/use_pkgdown.html" class="external-link">use_pkgdown</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="fu">pkgdown</span><span class="fu">::</span><span class="fu"><a href="https://pkgdown.r-lib.org/reference/build_site.html" class="external-link">build_site</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co"># &gt; See references and articles</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu">my.package</span><span class="fu">::</span><span class="fu">my_median</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="description-of-the-rmd-template">Description of the Rmd template<a class="anchor" aria-label="anchor" href="#description-of-the-rmd-template"></a>
@@ -295,8 +305,9 @@ After that, your {pkgdown} documentation website is one command away to be share
 <li>How to Inflate multiple flat files ?</li>
 <li>How to store multiple functions in a unique R file ?</li>
 <li>How to read dataset that I usually put in “tests/testthat/” for my unit tests?</li>
-<li>Can I load all functions of th current flat file during development without having to <code><a href="reference/inflate.html">inflate()</a></code>?</li>
+<li>Can I load all functions of the current flat file during development without having to <code><a href="reference/inflate.html">inflate()</a></code>?</li>
 <li>Can I inflate a Quarto qmd file?</li>
+<li>Can I use {fusen} with {golem}?</li>
 </ul>
 <p>=&gt; See vignette Tips and Tricks: <a href="https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html" class="uri">https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html</a></p>
 </div>

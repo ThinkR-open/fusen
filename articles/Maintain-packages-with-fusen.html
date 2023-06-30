@@ -58,7 +58,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.4.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.1</span>
       </span>
     </div>
 
@@ -79,6 +79,15 @@
     </li>
     <li>
       <a href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
+    </li>
+    <li>
+      <a href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
+    </li>
+    <li>
+      <a href="../articles/register-files-in-config.html">Register files in config</a>
+    </li>
+    <li>
+      <a href="../articles/share-on-a-github-website.html">Share on a GitHub website</a>
     </li>
     <li>
       <a href="../articles/tips-and-tricks.html">Tips and tricks</a>
@@ -146,7 +155,9 @@
 </h3>
 <p>To add a new family of functions, create a new flat Rmd template</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></span></code></pre></div>
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></span>
+<span><span class="co"># or directly</span></span>
+<span><span class="fu"><a href="../reference/add_flat_template.html">add_additional</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
 <div class="section level2">
@@ -252,8 +263,8 @@ functionality</li>
 package</strong>
 <ul>
 <li>Commit your previous state if you are afraid of {fusen}</li>
-<li>If you are not sure enough to do it on an existing package, then
-follow the guide in <a href="https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html">“How
+<li>If you are not confident enough to try it on an existing package,
+then create a new package while following the guide in <a href="https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html">“How
 to use fusen”</a>
 </li>
 </ul>
@@ -263,7 +274,7 @@ to use fusen”</a>
 <li>A Rmd file appears in “dev/flat_additional.Rmd”. Open it.</li>
 </ul>
 </li>
-<li>Add a new function in the <code>function</code> chunk. For
+<li>Write a new function in the <code>function</code> chunk. For
 instance:</li>
 </ul>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
@@ -278,12 +289,20 @@ instance:</li>
 <span><span class="co">#'</span></span>
 <span><span class="co">#' @examples</span></span>
 <span><span class="va">my_median</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">x</span>, <span class="va">na.rm</span> <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span> <span class="op">{</span></span>
-<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span><span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"x should be numeric"</span><span class="op">)</span><span class="op">}</span></span>
+<span>  <span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/numeric.html" class="external-link">is.numeric</a></span><span class="op">(</span><span class="va">x</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>    <span class="kw"><a href="https://rdrr.io/r/base/stop.html" class="external-link">stop</a></span><span class="op">(</span><span class="st">"x should be numeric"</span><span class="op">)</span></span>
+<span>  <span class="op">}</span></span>
 <span>  <span class="fu">stats</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/stats/median.html" class="external-link">median</a></span><span class="op">(</span><span class="va">x</span>, na.rm <span class="op">=</span> <span class="va">na.rm</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <ul>
-<li>Add a corresponding example in the <code>example</code> chunk. For
-instance:</li>
+<li>Add a corresponding example in the <code>example</code> chunk.
+<ul>
+<li>If you’re looking for an equivalent of <code>load_all()</code> but
+for all functions inside this flat file before inflating, you can use
+<code><a href="../reference/load_flat_functions.html">fusen::load_flat_functions()</a></code>
+</li>
+</ul>
+</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">my_median</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span></code></pre></div>
@@ -297,7 +316,7 @@ instance:</li>
 <span>  <span class="fu">expect_error</span><span class="op">(</span><span class="fu">my_median</span><span class="op">(</span><span class="st">"text"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span></code></pre></div>
 <ul>
-<li>Run command of the last chunk:
+<li>Run the command of the last chunk of the flat file:
 <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd")</code>
 <ul>
 <li>This will run {attachment} behind the scene and may modify the list
@@ -307,6 +326,10 @@ to avoid that.</li>
 <li>This will also run <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code>. Use
 <code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", check = FALSE)</code>
 to avoid that.</li>
+<li>This will create a new vignette in your package. You may want to
+avoid this with
+<code>fusen::inflate(flat_file = "dev/flat_additional.Rmd", vignette_name = NA)</code>
+</li>
 </ul>
 </li>
 </ul>
@@ -346,8 +369,8 @@ devtools<br>  + Or <code><a href="https://devtools.r-lib.org/reference/creat
 </tr>
 <tr>
 <td style="text-align:left;">
-<br>- Open “DESCRIPTION” file <br>- Write your information <br>- Run
-function for the desired license in the console <br>  +
+<br>- Open “DESCRIPTION” file<br>- Write your information<br>- Run
+function for the desired license in the console<br>  +
 <code>usethis::use_*_license()</code>
 </td>
 <td style="text-align:left;">
@@ -358,16 +381,15 @@ chunk <code>description</code>
 <tr>
 <td style="text-align:left;">
 <br>- Create and open a file for your functions in “R/”<br>   +
-<code>usethis::use_r("my_fonction")</code> <br>- Write the code of your
-function <br>- Write a reproducible example for your
-function <br><br>- Open DESCRIPTION file and fill the list of
-dependencies required <br><br>- Create and open a new file for your
-tests in “tests/testthat/” <br>   +
-<code><a href="https://usethis.r-lib.org/reference/use_testthat.html" class="external-link">usethis::use_testthat()</a></code> <br>   +
-<code>usethis::use_test("my_fonction")</code> <br>- Write some unit
-tests for your function <br><br>- Create and open a new file for a
-vignette in “vignettes/” <br>   +
-<code>usethis::use_vignette("Vignette title")</code> <br>   <br>- Open
+<code>usethis::use_r("my_fonction")</code><br>- Write the code of your
+function<br>- Write a reproducible example for your function<br><br>-
+Open DESCRIPTION file and fill the list of dependencies
+required<br><br>- Create and open a new file for your tests in
+“tests/testthat/”<br>   + <code><a href="https://usethis.r-lib.org/reference/use_testthat.html" class="external-link">usethis::use_testthat()</a></code><br>   +
+<code>usethis::use_test("my_fonction")</code><br>- Write some unit
+tests for your function<br><br>- Create and open a new file for a
+vignette in “vignettes/”<br>   +
+<code>usethis::use_vignette("Vignette title")</code><br><br>- Open
 DESCRIPTION file and fill the list of “Suggests” dependencies required
 </td>
 <td style="text-align:left;">
@@ -376,10 +398,10 @@ DESCRIPTION file and fill the list of “Suggests” dependencies required
 </tr>
 <tr>
 <td style="text-align:left;">
-<br>- Generate documentation <br> + Either
-<code><a href="https://thinkr-open.github.io/attachment/reference/att_amend_desc.html" class="external-link">attachment::att_amend_desc()</a></code> <br> + Or
-<code><a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link">roxygen2::roxygenise()</a></code> <br> <br>- Check the
-package <br> + <code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> =&gt;
+<br>- Generate documentation<br> + Either
+<code><a href="https://thinkr-open.github.io/attachment/reference/att_amend_desc.html" class="external-link">attachment::att_amend_desc()</a></code><br> + Or
+<code><a href="https://roxygen2.r-lib.org/reference/roxygenize.html" class="external-link">roxygen2::roxygenise()</a></code><br><br>- Check the package<br> +
+<code><a href="https://devtools.r-lib.org/reference/check.html" class="external-link">devtools::check()</a></code> =&gt;
 <code>0 errors, 0 warnings, 0 notes</code>
 </td>
 <td style="text-align:left;">

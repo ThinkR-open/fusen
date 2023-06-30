@@ -4,8 +4,11 @@ pkgdown_sha: ~
 articles:
   How-to-use-fusen: How-to-use-fusen.html
   Maintain-packages-with-fusen: Maintain-packages-with-fusen.html
+  inflate-all-your-flat-files: inflate-all-your-flat-files.html
+  register-files-in-config: register-files-in-config.html
+  share-on-a-github-website: share-on-a-github-website.html
   tips-and-tricks: tips-and-tricks.html
-last_built: 2023-06-07T13:00Z
+last_built: 2023-06-30T08:56Z
 urls:
   reference: https://thinkr-open.github.io/fusen/reference
   article: https://thinkr-open.github.io/fusen/articles
