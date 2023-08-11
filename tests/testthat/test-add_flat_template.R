@@ -208,7 +208,7 @@ for (template in all_templates) {
     loadall_line <- grep("^pkgload::load_all", lines_template)
     lines_template[loadall_line] <- "# pkgload::load_all() commented"
     data_line <- grep("datafile <- system.file", lines_template)
-    lines_template[data_line] <- glue::glue('datafile <- file.path("{dummypackage4}", "inst", "nyc_squirrels_sample.csv")')
+    lines_template[data_line] <- glue::glue('datafile <- file.path("inst", "nyc_squirrels_sample.csv")')
   }
 
   cat(enc2utf8(lines_template), file = flat_file, sep = "\n")
@@ -262,7 +262,7 @@ for (template in all_templates) {
     here:::do_refresh_here(orig.proj)
   })
 
-  test_that(paste0("template", template, "that was run as Rmarkdown gives project as a package"), {
+  test_that(paste0("template ", template, " that was run as Rmarkdown gives project as a package"), {
     expect_true(file.exists(file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".Rmd"))))
     if (template %in% c("full", "minimal_package")) {
       expect_true(file.exists(file.path(dirname(flat_file), "0-dev_history.Rmd")))
