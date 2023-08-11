@@ -312,7 +312,7 @@ usethis::with_project(dummypackage, {
     config_file <- yaml::read_yaml("dev/config_fusen.yaml")
     expect_error(
       register_all_to_config(),
-      regexp = "Some 'path' in config_file do not exist: R/my_old_fun.R"
+      regexp = "Some paths in config_file do not exist: R/my_old_fun.R"
     )
 
     # Clean the missing file and it should be good to add the second new file

@@ -198,9 +198,19 @@ for (template in all_templates) {
       "<my_package_name>", basename(dummypackage4),
       lines_template[grepl("<my_package_name>", lines_template)]
     )
-  if (any(grepl("\\{r description", lines_template))) {
-    lines_template[grepl("\\{r description", lines_template)] <- "```{r description, eval=TRUE}"
+  # Run description chunk to build DESCRIPTION file and make it a proper pkg
+  desc_line <- grep("\\{r description", lines_template)
+  if (length(desc_line) != 0) {
+    lines_template[desc_line] <- "```{r description, eval=TRUE}"
   }
+  # pkgload::load_all in the template cannot work in non interactive R CMD Check
+  if (template == "full" & !interactive()) {
+    loadall_line <- grep("^pkgload::load_all", lines_template)
+    lines_template[loadall_line] <- "# pkgload::load_all() commented"
+    data_line <- grep("datafile <- system.file", lines_template)
+    lines_template[data_line] <- glue::glue('datafile <- file.path("{dummypackage4}", "inst", "nyc_squirrels_sample.csv")')
+  }
+
   cat(enc2utf8(lines_template), file = flat_file, sep = "\n")
 
   # description chunk as eval=TRUE
@@ -235,10 +245,13 @@ for (template in all_templates) {
         usethis::use_mit_license("John Doe")
       }
 
-      test_that(paste0("template", template, "can be rendered"), {
+      test_that(paste0("template ", template, " can be rendered"), {
+        flat_to_render <- file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".Rmd"))
+        expect_true(file.exists(flat_to_render))
+
         expect_error(
           rmarkdown::render(
-            input = file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".Rmd")),
+            input = flat_to_render,
             output_file = file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".html")),
             envir = new.env(), quiet = TRUE
           ), regexp = NA)
