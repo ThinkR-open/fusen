@@ -171,8 +171,10 @@ test_that("all templates to knit and inflate a second time", {
 for (template in all_templates) {
   # template <- all_templates[1]
   main_flat_file_name <- template
-  if (template %in% c("minimal_package", "minpkg",
-                      "minimal_flat", "minflat")) {
+  if (template %in% c(
+    "minimal_package", "minpkg",
+    "minimal_flat", "minflat"
+  )) {
     main_flat_file_name <- "minimal"
   } else if (template == "add") {
     main_flat_file_name <- "additional"
@@ -186,42 +188,41 @@ for (template in all_templates) {
   orig.proj <- here::here()
 
   withr::with_dir(dummypackage4, {
-
     # Add template
-  dev_file_path <- suppressMessages(add_flat_template(template = template, open = FALSE))
-  flat_file <- dev_file_path[grepl("flat", dev_file_path)]
+    dev_file_path <- suppressMessages(add_flat_template(template = template, open = FALSE))
+    flat_file <- dev_file_path[grepl("flat", dev_file_path)]
 
-  # Change lines asking for pkg name
-  lines_template <- readLines(flat_file)
-  lines_template[grepl("<my_package_name>", lines_template)] <-
-    gsub(
-      "<my_package_name>", basename(dummypackage4),
-      lines_template[grepl("<my_package_name>", lines_template)]
-    )
-  # Run description chunk to build DESCRIPTION file and make it a proper pkg
-  desc_line <- grep("\\{r description", lines_template)
-  if (length(desc_line) != 0) {
-    lines_template[desc_line] <- "```{r description, eval=TRUE}"
-  }
-  # pkgload::load_all in the template cannot work in non interactive R CMD Check
-  if (template == "full" & !interactive()) {
-    loadall_line <- grep("^pkgload::load_all", lines_template)
-    lines_template[loadall_line] <- "# pkgload::load_all() commented"
-    data_line <- grep("datafile <- system.file", lines_template)
-    lines_template[data_line] <- glue::glue('datafile <- file.path("inst", "nyc_squirrels_sample.csv")')
-  }
+    # Change lines asking for pkg name
+    lines_template <- readLines(flat_file)
+    lines_template[grepl("<my_package_name>", lines_template)] <-
+      gsub(
+        "<my_package_name>", basename(dummypackage4),
+        lines_template[grepl("<my_package_name>", lines_template)]
+      )
+    # Run description chunk to build DESCRIPTION file and make it a proper pkg
+    desc_line <- grep("\\{r description", lines_template)
+    if (length(desc_line) != 0) {
+      lines_template[desc_line] <- "```{r description, eval=TRUE}"
+    }
+    # pkgload::load_all in the template cannot work in non interactive R CMD Check
+    if (template == "full" & !interactive()) {
+      loadall_line <- grep("^pkgload::load_all", lines_template)
+      lines_template[loadall_line] <- "# pkgload::load_all() commented"
+      data_line <- grep("datafile <- system.file", lines_template)
+      lines_template[data_line] <- glue::glue('datafile <- file.path(normalize_path_winslash("{dummypackage4}"), "inst", "nyc_squirrels_sample.csv")')
+    }
 
-  cat(enc2utf8(lines_template), file = flat_file, sep = "\n")
+    cat(enc2utf8(lines_template), file = flat_file, sep = "\n")
 
-  # description chunk as eval=TRUE
-  if (any(grepl("dev_history", dev_file_path))) {
-    dev_hist_path <- dev_file_path[grepl("dev_history", dev_file_path)]
-    lines_dev <- readLines(dev_hist_path)
-    lines_dev[grepl("\\{r description", lines_dev)] <- "```{r description, eval=TRUE}"
-    cat(enc2utf8(lines_dev), file = dev_hist_path, sep = "\n")
-  }
+    # description chunk as eval=TRUE
+    if (any(grepl("dev_history", dev_file_path))) {
+      dev_hist_path <- dev_file_path[grepl("dev_history", dev_file_path)]
+      lines_dev <- readLines(dev_hist_path)
+      lines_dev[grepl("\\{r description", lines_dev)] <- "```{r description, eval=TRUE}"
+      cat(enc2utf8(lines_dev), file = dev_hist_path, sep = "\n")
+    }
 
-  # Simulate as being inside project
+    # Simulate as being inside project
     usethis::proj_set(dummypackage4)
     here:::do_refresh_here(dummypackage4)
 
@@ -235,12 +236,18 @@ for (template in all_templates) {
               input = dev_hist_path,
               output_file = file.path(dummypackage4, "dev", "dev_history.html"),
               envir = new.env(), quiet = TRUE
-            ), regexp = NA)
+            ),
+            regexp = NA
+          )
         })
-      } else if (template %in% c("additional", "add",
-                                 "minimal_flat", "minflat")) {
-        fusen::fill_description(pkg = here::here(),
-                                fields = list(Title = "Dummy Package"))
+      } else if (template %in% c(
+        "additional", "add",
+        "minimal_flat", "minflat"
+      )) {
+        fusen::fill_description(
+          pkg = here::here(),
+          fields = list(Title = "Dummy Package")
+        )
         # Define License with use_*_license()
         usethis::use_mit_license("John Doe")
       }
@@ -254,7 +261,9 @@ for (template in all_templates) {
             input = flat_to_render,
             output_file = file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".html")),
             envir = new.env(), quiet = TRUE
-          ), regexp = NA)
+          ),
+          regexp = NA
+        )
       })
     }
 

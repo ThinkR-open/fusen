@@ -487,7 +487,7 @@ for (template in all_templates) {
     loadall_line <- grep("^pkgload::load_all", lines_template)
     lines_template[loadall_line] <- "# pkgload::load_all() commented"
     data_line <- grep("datafile <- system.file", lines_template)
-    lines_template[data_line] <- glue::glue('datafile <- file.path("inst", "nyc_squirrels_sample.csv")')
+    lines_template[data_line] <- glue::glue('datafile <- file.path(normalize_path_winslash("{dummypackage4}"), "inst", "nyc_squirrels_sample.csv")')
   }
 
   cat(enc2utf8(lines_template), file = flat_file, sep = "\n")
