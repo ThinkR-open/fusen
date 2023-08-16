@@ -12,6 +12,7 @@ inflate_all(
   open_vignette = FALSE,
   overwrite = TRUE,
   clean = TRUE,
+  stylers,
   ...
 )
 
@@ -21,6 +22,7 @@ inflate_all_no_check(
   open_vignette = FALSE,
   overwrite = TRUE,
   clean = TRUE,
+  stylers,
   ...
 )
 }
@@ -37,6 +39,8 @@ inflate_all_no_check(
 Whether to overwrite vignette and functions if already exists.}
 
 \item{clean}{Logical. Whether to help detect unregistered files.}
+
+\item{stylers}{Function to be run at the end of the process, like \code{styler::style_pkg} or \code{lintr::lint_package} or a lambda function combining functions like: \code{function() {styler::style_pkg(); lintr::lint_package()}}. For a unique function, use the format without parenthesis \verb{()} at the end of the command.}
 
 \item{...}{Arguments passed to \code{devtools::check()}.
 For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is
@@ -62,6 +66,8 @@ For more information, read the \code{vignette("inflate-all-your-flat-files", pac
 inflate_all()
 # Or inflate_all_no_check() to prevent checks to run
 inflate_all_no_check()
+# Or inflate with the styler you want
+inflate_all(stylers = styler::style_pkg)
 }
 
 # You can also inflate_all flats of another package as follows

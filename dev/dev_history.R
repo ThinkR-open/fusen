@@ -24,11 +24,13 @@ my_desc$set_version("0.0.0.9000")
 my_desc$set(Package = "fusen")
 my_desc$set(Title = "Build A Package From Rmarkdown file")
 my_desc$set(Description = "Use Rmd First method to build your package. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.")
-my_desc$set("Authors@R",
-            'c(
+my_desc$set(
+  "Authors@R",
+  'c(
   person("Sebastien", "Rochette", email = "sebastien@thinkr.fr", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-1565-9313")),
   person(given = "ThinkR", role = "cph")
-)')
+)'
+)
 my_desc$set("VignetteBuilder", "knitr")
 my_desc$del("Maintainer")
 my_desc$del("URL")
@@ -98,20 +100,27 @@ usethis::use_build_ignore("_pkgdown.yml")
 fusen::inflate_all()
 fusen::inflate_all(args = c("--no-manual", "--no-tests"))
 fusen::inflate_all_no_check()
+fusen::inflate_all_no_check(stylers = function() {
+  styler::style_pkg()
+  styler::style_dir("dev")
+})
 
 # Clean style ----
 styler::style_pkg()
-styler::style_file(list.files("dev", pattern = "[.](Rmd|qmd|rmd)$", full.names = TRUE)
-)
+styler::style_file(list.files("dev", pattern = "[.](Rmd|qmd|rmd)$", full.names = TRUE))
 
 # Dependencies ----
 # devtools::install_github("ThinkR-open/attachment")
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
-  pkg_ignore = c("testthat", "dummypackage", "rstudioapi",
-                 "knitr", "rmarkdown", "R6", "gert"),
-  extra.suggests = c("testthat", "pkgload", "rstudioapi",
-                     "rmarkdown", "knitr", "gert"),
+  pkg_ignore = c(
+    "testthat", "dummypackage", "rstudioapi",
+    "knitr", "rmarkdown", "R6", "gert"
+  ),
+  extra.suggests = c(
+    "testthat", "pkgload", "rstudioapi",
+    "rmarkdown", "knitr", "gert", "styler"
+  ),
   # "MASS", "lattice", "Matrix")
   update.config = TRUE # attachment >= 0.4.0.
 )
@@ -164,11 +173,13 @@ the_flat <- fusen::add_additional(
   pkg = skeleton_dir,
   dev_dir = "dev",
   flat_name = "skeleton",
-  open = TRUE)
+  open = TRUE
+)
 file.copy(
   the_flat,
   here::here("inst/rmarkdown/templates/additional/skeleton/skeleton.Rmd"),
-  overwrite = TRUE)
+  overwrite = TRUE
+)
 unlink(skeleton_dir, recursive = TRUE)
 
 # _Check in interactive test-inflate for templates and Addins ----
@@ -195,8 +206,8 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 # Run examples in interactive mode too
 devtools::run_examples()
 
-local <- utils::fileSnapshot (".", timestamp = tempfile("timestamp"), md5sum = TRUE)
-home <- utils::fileSnapshot ("~", timestamp = tempfile("timestamp"), md5sum = TRUE)
+local <- utils::fileSnapshot(".", timestamp = tempfile("timestamp"), md5sum = TRUE)
+home <- utils::fileSnapshot("~", timestamp = tempfile("timestamp"), md5sum = TRUE)
 
 # run tests or whatever, then ...
 # x <- autotest::autotest_package(test = TRUE)
@@ -211,7 +222,7 @@ rcmdcheck::rcmdcheck(check_dir = dircheck)
 the_dir <- list.files(file.path(dircheck), pattern = ".Rcheck", full.names = TRUE)
 # Same tests, no new files
 all(list.files(file.path(the_dir, "tests", "testthat")) %in%
-list.files(file.path(".", "tests", "testthat")))
+  list.files(file.path(".", "tests", "testthat")))
 
 devtools::build_vignettes()
 devtools::clean_vignettes()

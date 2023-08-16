@@ -2,7 +2,7 @@
 
 ## New features
 
-- Allow a styler function with parameter `stylers` in `inflate_all*()` 
+- Allow a styler function with parameter `stylers` in `inflate_all*()` (e.g `inflate_all(stylers = styler::style_pkg)`)
 
 ## Minor changes
 

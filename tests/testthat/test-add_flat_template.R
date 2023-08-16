@@ -468,7 +468,6 @@ test_that("add_flat_template allows bad flat_name for function name with add", {
 })
 unlink(dummypackage, recursive = TRUE)
 
-
 # add_full ----
 dummypackage <- tempfile(pattern = "add.wrappers")
 dir.create(dummypackage)

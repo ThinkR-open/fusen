@@ -73,6 +73,8 @@ Note also that all files stored in R, tests and vignettes directories are checke
 inflate_all()
 # Or inflate_all_no_check() to prevent checks to run
 inflate_all_no_check()
+# Or inflate with the styler you want
+inflate_all(stylers = styler::style_pkg)
 #' }
 
 # You can also inflate_all flats of another package as follows
