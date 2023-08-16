@@ -204,6 +204,16 @@ package clean of deprecated files. <code><a href="../reference/inflate_all.html"
 about the procedure. Read
 <code><a href="../articles/register-files-in-config.html">vignette('register-files-in-config', package = 'fusen')</a></code> to
 get more information.</p>
+</div>
+<div class="section level3">
+<h3 id="complete-the-process-with-your-own-code-style">Complete the process with your own code style<a class="anchor" aria-label="anchor" href="#complete-the-process-with-your-own-code-style"></a>
+</h3>
+<p>You can run your preferred styling functions just before the check of
+the package in <code><a href="../reference/inflate_all.html">inflate_all()</a></code>. For instance, if you want
+{styler} package to clean your code during the inflate process, you can
+run <code>inflate_all(stylers = styler::style_pkg)</code>. If you also
+would like to clean the “dev/” directory, you can run
+<code>inflate_all(stylers = function() {styler::style_pkg(); styler::style_dir("dev")})</code>.</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' \dontrun{</span></span>
 <span><span class="co"># Usually, in the current package run inflate_all() directly</span></span>
