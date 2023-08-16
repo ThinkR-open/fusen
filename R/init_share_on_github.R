@@ -7,11 +7,11 @@
 #'
 #' @param ask Logical. `TRUE` (default) to ask the user to apply the instructions each time needed,
 #' or `FALSE` if the user already know what to do.
-#' 
+#'
 #' @details
-#' 
+#'
 #' `init_share_on_github()` runs multiple steps to be able to share a proper package on GitHub:
-#' 
+#'
 #' - Start versionning with git if not already
 #' - Connect to your GitHub account
 #' - Create a minimal DESCRIPTION file if missing
@@ -24,7 +24,7 @@
 #' - Init continuous deployment (CD) of the {pkgdown} website documentation
 #' - Commit and push to GitHub
 #' - List remaining manual steps to make the website public
-#' 
+#'
 #' Read `vignette("share-on-a-github-website", package = "fusen")`
 #'
 #' @return The URL of the website created

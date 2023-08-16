@@ -66,7 +66,6 @@ unlink(dummypackage, recursive = TRUE)
 ## Create a new project
 
 for (template.to.try in fusen:::create_fusen_choices) {
-
   # template.to.try <- "full"
   dummypackage <- tempfile(pattern = paste0("create.fusen.", template.to.try))
   dir.create(dummypackage)
@@ -75,7 +74,6 @@ for (template.to.try in fusen:::create_fusen_choices) {
 
   withr::with_dir(dummypackage, {
     test_that(paste("Create fusen works with template:", template.to.try), {
-
       if (template.to.try %in% "dev_history") {
         expected_rmd_template_with_fusen_name <- NULL
       } else {
@@ -86,11 +84,13 @@ for (template.to.try in fusen:::create_fusen_choices) {
 
         expect_message(
           expected_rmd_template_with_fusen_name <- readLines(
-            system.file(paste0("flat-template-", template.to.try.rmd, ".Rmd"), package = "fusen")) %>%
+            system.file(paste0("flat-template-", template.to.try.rmd, ".Rmd"), package = "fusen")
+          ) %>%
             gsub("<my_package_name>", pkgname, .) %>%
-            gsub("flat_template[.]Rmd", paste0("flat_",flat_name,".Rmd"), .) %>%
+            gsub("flat_template[.]Rmd", paste0("flat_", flat_name, ".Rmd"), .) %>%
             gsub("my_fun", flat_name, .),
-          regexp = NA)
+          regexp = NA
+        )
       }
 
       path_foosen <- file.path(dummypackage, pkgname)
@@ -98,7 +98,8 @@ for (template.to.try in fusen:::create_fusen_choices) {
       expect_error(
         path_dev_history <- suppressMessages(
           create_fusen(path_foosen, template = template.to.try, flat_name = flat_name, open = FALSE)
-        ), regexp = NA
+        ),
+        regexp = NA
       )
 
       expect_true(dir.exists(path_foosen))
@@ -158,7 +159,6 @@ for (template.to.try in c("full", "minimal", "teaching", "dev_history")) {
   dummygui <- create_dummygui()
   withr::with_dir(dummygui$dirname, {
     test_that(paste("Can create in a project with gui for:", template.to.try), {
-
       dev_path <- expect_error(
         suppressMessages(
           create_fusen_gui(dummygui$basename, template = template.to.try, with_git = FALSE)

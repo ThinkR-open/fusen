@@ -1,3 +1,14 @@
+# fusen 0.5.2
+
+## New features
+
+- Allow a styler function with parameter `stylers` in `inflate_all*()` 
+
+## Minor changes
+
+- Fix use of `packageVersion()` with character
+- Allow "." for current package when adding flat file without DESCRIPTION (#224)
+
 # fusen 0.5.1
 
 ## New features

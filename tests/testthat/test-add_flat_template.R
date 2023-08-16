@@ -111,7 +111,7 @@ test_that("add dev_history template works with windows \\users path", {
 
     expect_true(file.exists(dev_file_path))
     # Test specific \\users path
-    newdir_uu <- tempfile("aa\\U/gzv")
+    newdir_uu <- tempfile("aa\\Users/gzv")
     dir.create(newdir_uu, recursive = TRUE)
 
     usethis::with_project(dummypackage, {
@@ -192,13 +192,7 @@ for (template in all_templates) {
     dev_file_path <- suppressMessages(add_flat_template(template = template, open = FALSE))
     flat_file <- dev_file_path[grepl("flat", dev_file_path)]
 
-    # Change lines asking for pkg name
     lines_template <- readLines(flat_file)
-    lines_template[grepl("<my_package_name>", lines_template)] <-
-      gsub(
-        "<my_package_name>", basename(dummypackage4),
-        lines_template[grepl("<my_package_name>", lines_template)]
-      )
     # Run description chunk to build DESCRIPTION file and make it a proper pkg
     desc_line <- grep("\\{r description", lines_template)
     if (length(desc_line) != 0) {
@@ -206,10 +200,12 @@ for (template in all_templates) {
     }
     # pkgload::load_all in the template cannot work in non interactive R CMD Check
     if (template == "full" & !interactive()) {
+      # if (template == "full" & interactive()) {
       loadall_line <- grep("^pkgload::load_all", lines_template)
       lines_template[loadall_line] <- "# pkgload::load_all() commented"
       data_line <- grep("datafile <- system.file", lines_template)
-      lines_template[data_line] <- glue::glue('datafile <- file.path(normalize_path_winslash("{dummypackage4}"), "inst", "nyc_squirrels_sample.csv")')
+      lines_template[data_line] <-
+        glue::glue('datafile <- file.path("{normalize_path_winslash(dummypackage4)}", "inst", "nyc_squirrels_sample.csv")')
     }
 
     cat(enc2utf8(lines_template), file = flat_file, sep = "\n")
@@ -471,6 +467,7 @@ test_that("add_flat_template allows bad flat_name for function name with add", {
   expect_equal(length(grep("bad_for_function_but_ok2", dev_lines)), 8)
 })
 unlink(dummypackage, recursive = TRUE)
+
 
 # add_full ----
 dummypackage <- tempfile(pattern = "add.wrappers")

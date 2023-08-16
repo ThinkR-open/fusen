@@ -372,7 +372,7 @@ df_to_config <- function(df_files,
           yaml_paths[!all_exists],
           collapse = ", "
         ), ".\n",
-        "Please open the configuration file: ", config_file," to verify, and delete the non-existing files if needed."
+        "Please open the configuration file: ", config_file, " to verify, and delete the non-existing files if needed."
       )
       if (isTRUE(force)) {
         cli_alert_warning(

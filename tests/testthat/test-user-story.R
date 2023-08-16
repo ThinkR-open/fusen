@@ -23,15 +23,19 @@ for (template in all_templates_second) {
 
     # Follow dev_history
     suppressMessages(
-      fill_description(pkg = here::here(),
-                       fields = list(Title = "Dummy Package"))
+      fill_description(
+        pkg = here::here(),
+        fields = list(Title = "Dummy Package")
+      )
     )
     # Define License with use_*_license()
     suppressMessages(usethis::use_mit_license("John Doe"))
 
     # Inflate first flat file
-    suppressMessages(inflate(flat_file = "dev/flat_first.Rmd", vignette_name = "My First",
-                             open_vignette = FALSE, check = FALSE))
+    suppressMessages(inflate(
+      flat_file = "dev/flat_first.Rmd", vignette_name = "My First",
+      open_vignette = FALSE, check = FALSE
+    ))
 
     test_that(paste0("full process -", template, "- first minimal basis ok"), {
       expect_true(file.exists("DESCRIPTION"))
@@ -47,12 +51,15 @@ for (template in all_templates_second) {
     test_that(paste0("full process -", template, "- add and inflate new template"), {
       expect_error(
         add_flat_template(template = template, flat_name = "second", open = FALSE),
-        regexp = NA)
+        regexp = NA
+      )
       expect_true(file.exists("dev/flat_second.Rmd"))
 
       # Inflate second flat file
-      suppressMessages(inflate(flat_file = "dev/flat_second.Rmd", vignette_name = "My Second",
-                               open_vignette = FALSE, check = FALSE))
+      suppressMessages(inflate(
+        flat_file = "dev/flat_second.Rmd", vignette_name = "My Second",
+        open_vignette = FALSE, check = FALSE
+      ))
       expect_true(file.exists("vignettes/my-second.Rmd"))
 
 

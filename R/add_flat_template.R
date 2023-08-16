@@ -85,12 +85,12 @@ add_dev_history <- function(pkg = ".",
 }
 
 flat_template_choices <- c(
-    "full",
-    "minimal_package", "minpkg",
-    "minimal_flat", "minflat", "add", "additional",
-    "teach", "teaching",
-    "dev_history", "dev"
-  )
+  "full",
+  "minimal_package", "minpkg",
+  "minimal_flat", "minflat", "add", "additional",
+  "teach", "teaching",
+  "dev_history", "dev"
+)
 
 create_fusen_choices <- c("full", "minimal", "teaching", "dev_history")
 
