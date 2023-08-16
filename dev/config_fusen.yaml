@@ -28,11 +28,9 @@ flat_history_core.Rmd:
   path: dev/flat_history_core.Rmd
   state: inactive
   R:
-  - R/add_dev_history.R
   - R/fill_description.R
   - R/inflate.R
   tests:
-  - tests/testthat/test-add_dev_history.R
   - tests/testthat/test-fill_description.R
   - tests/testthat/test-inflate-part1.R
   - tests/testthat/test-inflate-part2.R
@@ -101,6 +99,7 @@ flat_register_config_file.Rmd:
     overwrite: 'yes'
 keep:
   path: keep
+  state: active
   R:
   - R/addins.R
   - R/create_fusen_rsproject.R
@@ -110,6 +109,7 @@ keep:
   - R/load_flat_functions.R
   - R/utils-pipe.R
   tests:
+  - tests/testthat/test-user-story.R
   - tests/testthat/test-create_fusen_rsproject.R
   - tests/testthat/test-inflate_qmd.R
   - tests/testthat/test-inflate_utils.R

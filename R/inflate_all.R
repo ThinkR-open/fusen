@@ -6,6 +6,7 @@
 #'
 #' @param pkg Path to package
 #' @param clean Logical. Whether to help detect unregistered files.
+#' @param stylers Function to be run at the end of the process, like `styler::style_pkg` or `lintr::lint_package` or a lambda function combining functions like: `function() {styler::style_pkg(); lintr::lint_package()}`. For a unique function, use the format without parenthesis `()` at the end of the command.
 #' @inheritParams inflate
 #'
 #' @importFrom yaml read_yaml
@@ -33,6 +34,8 @@
 #' inflate_all()
 #' # Or inflate_all_no_check() to prevent checks to run
 #' inflate_all_no_check()
+#' # Or inflate with the styler you want
+#' inflate_all(stylers = styler::style_pkg)
 #' }
 #'
 #' # You can also inflate_all flats of another package as follows
@@ -80,7 +83,7 @@
 #'
 #' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
-inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette = FALSE, overwrite = TRUE, clean = TRUE, ...) {
+inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette = FALSE, overwrite = TRUE, clean = TRUE, stylers, ...) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
@@ -138,25 +141,37 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
     }
 
     apply_inflate(inflate_params, pkg = pkg, overwrite = overwrite, open_vignette = open_vignette)
-
-    # Document and check package
-    document_and_check_pkg(
-      pkg = pkg,
-      check = check,
-      document = document,
-      ...
-    )
   }
 
   if (isTRUE(clean)) {
     cli::cat_rule("check not registered files")
     invisible(check_not_registered_files(path = pkg))
   }
+
+  if (!missing(stylers)) {
+    cli::cat_rule("Let's apply stylers to the package")
+    if (is.function(stylers)) {
+      stylers()
+    } else if (is.character(stylers)) {
+      eval(parse(text = stylers))
+    } else {
+      stylers
+    }
+  }
+
+  # Document and check package
+  document_and_check_pkg(
+    pkg = pkg,
+    check = check,
+    document = document,
+    ...
+  )
+
   invisible(pkg)
 }
 
 #' @rdname inflate_all
 #' @export
-inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, clean = TRUE, ...) {
-  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, clean = clean, ...)
+inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, clean = TRUE, stylers, ...) {
+  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, clean = clean, stylers, ...)
 }

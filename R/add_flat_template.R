@@ -84,6 +84,16 @@ add_dev_history <- function(pkg = ".",
   )
 }
 
+flat_template_choices <- c(
+  "full",
+  "minimal_package", "minpkg",
+  "minimal_flat", "minflat", "add", "additional",
+  "teach", "teaching",
+  "dev_history", "dev"
+)
+
+create_fusen_choices <- c("full", "minimal", "teaching", "dev_history")
+
 #' Add flat Rmd file that drives package development
 #'
 #' @param template Name of the template to use. See details.
@@ -162,13 +172,7 @@ add_flat_template <- function(template = c("full", "minimal_package", "minimal_f
   }
 
   template <- template[1]
-  template <- match.arg(template, choices = c(
-    "full",
-    "minimal_package", "minpkg",
-    "minimal_flat", "minflat", "add", "additional",
-    "teach", "teaching",
-    "dev_history", "dev"
-  ))
+  template <- match.arg(template, choices = flat_template_choices)
 
   if (template %in% c("additional", "add")) {
     template <- "additional"

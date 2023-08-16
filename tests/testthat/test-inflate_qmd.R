@@ -8,7 +8,7 @@ dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = T
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 # For comments with #|
-skip_if_not(utils::packageVersion("knitr") >= 1.35)
+skip_if_not(utils::packageVersion("knitr") >= "1.35")
 
 usethis::with_project(dummypackage, {
   # More complicated example for tests

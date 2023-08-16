@@ -367,11 +367,12 @@ df_to_config <- function(df_files,
     all_exists <- file.exists(yaml_paths)
     if (!all(all_exists)) {
       msg <- paste(
-        "Some 'path' in config_file do not exist:",
+        "Some paths in config_file do not exist:",
         paste(
           yaml_paths[!all_exists],
           collapse = ", "
-        )
+        ), ".\n",
+        "Please open the configuration file: ", config_file, " to verify, and delete the non-existing files if needed."
       )
       if (isTRUE(force)) {
         cli_alert_warning(

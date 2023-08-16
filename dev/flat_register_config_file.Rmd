@@ -748,7 +748,7 @@ usethis::with_project(dummypackage, {
     config_file <- yaml::read_yaml("dev/config_fusen.yaml")
     expect_error(
       register_all_to_config(),
-      regexp = "Some 'path' in config_file do not exist: R/my_old_fun.R"
+      regexp = "Some paths in config_file do not exist: R/my_old_fun.R"
     )
 
     # Clean the missing file and it should be good to add the second new file
@@ -960,11 +960,12 @@ df_to_config <- function(df_files,
     all_exists <- file.exists(yaml_paths)
     if (!all(all_exists)) {
       msg <- paste(
-        "Some 'path' in config_file do not exist:",
+        "Some paths in config_file do not exist:",
         paste(
           yaml_paths[!all_exists],
           collapse = ", "
-        )
+        ), ".\n",
+        "Please open the configuration file: ", config_file, " to verify, and delete the non-existing files if needed."
       )
       if (isTRUE(force)) {
         cli_alert_warning(

@@ -246,7 +246,7 @@ unlink(dummypackage, recursive = TRUE)
 # Example with a dummy package with a flat file
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
-fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+suppressMessages(fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package")))
 flat_files <- add_minimal_package(
   pkg = dummypackage,
   overwrite = TRUE,
@@ -260,17 +260,19 @@ file.rename(flat_file, flat_file_newname)
 # Inflate the flat file once
 usethis::with_project(dummypackage, {
   # Add licence
-  usethis::use_mit_license("John Doe")
+  suppressMessages(usethis::use_mit_license("John Doe"))
 
   # you need to inflate manually your flat file first
-  inflate(
-    pkg = dummypackage,
-    flat_file = flat_file_newname,
-    vignette_name = "Get started",
-    check = FALSE,
-    open_vignette = FALSE,
-    document = TRUE,
-    overwrite = "yes"
+  suppressMessages(
+    inflate(
+      pkg = dummypackage,
+      flat_file = flat_file_newname,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
   )
 
   # your config file has been created
@@ -300,7 +302,7 @@ unlink(dummypackage, recursive = TRUE)
 # Test inflate_all_no_check vs inflate_all with check ----
 dummypackage <- tempfile("inflateall")
 dir.create(dummypackage)
-fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+suppressMessages(fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package")))
 dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 
 # let's create a flat file
@@ -312,7 +314,7 @@ test_that("inflate_all_no_check is a function", {
 
 usethis::with_project(dummypackage, {
   # Add licence
-  usethis::use_mit_license("John Doe")
+  suppressMessages(usethis::use_mit_license("John Doe"))
 
   suppressMessages(
     inflate(
@@ -367,7 +369,7 @@ unlink(dummypackage, recursive = TRUE)
 # Test inflate_all detects unregistered files ----
 dummypackage <- tempfile("inflateall.unregistered")
 dir.create(dummypackage)
-fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+suppressMessages(fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package")))
 dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
 
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -504,7 +506,7 @@ usethis::with_project(dummypackage, {
     flat_file,
     overwrite = TRUE
   )
-  usethis::use_mit_license("Statnmap")
+  suppressMessages(usethis::use_mit_license("Statnmap"))
 
   suppressMessages(
     inflate(
@@ -604,5 +606,50 @@ usethis::with_project(dummypackage, {
     expect_false(file.exists(file.path(dummypackage, "vignettes", "get-started.Rmd")))
     expect_false(dir.exists(file.path(dummypackage, "R")))
     expect_false(dir.exists(file.path(dummypackage, "tests")))
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+
+# Test inflate_all works with stylers ----
+dummypackage <- tempfile("inflateall.stylers")
+dir.create(dummypackage)
+suppressMessages(fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package")))
+dev_file <- suppressMessages(add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  suppressMessages(usethis::use_mit_license("John Doe"))
+
+  suppressMessages(
+    inflate(
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "toto",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+  )
+
+  # Check that stylers work ----
+  test_that("stylers works in inflate_all", {
+    # as character
+    expect_message(
+      inflate_all_no_check(stylers = "message('stylers ok')"),
+      regexp = "stylers ok"
+    )
+    # as function
+    expect_message(
+      inflate_all_no_check(stylers = function() message("stylers ok")),
+      regexp = "stylers ok"
+    )
+    # as other - run during `if()` call, but that's normal...
+    expect_message(
+      inflate_all_no_check(stylers = message("stylers ok")),
+      regexp = "stylers ok"
+    )
   })
 })

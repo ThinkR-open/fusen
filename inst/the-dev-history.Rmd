@@ -11,7 +11,7 @@ All commands that you use to use when developing packages...
 
 - Fill the following chunk to create the DESCRIPTION of your package
 
-```{r description, eval=FALSE}
+```{r description}
 # Describe your package
 fusen::fill_description(
   pkg = here::here(),
@@ -94,7 +94,7 @@ gitlabr::use_gitlab_ci(type = "check-coverage-pkgdown")
 
 ## Use everytime needed
 
-```{r}
+```{r, eval=FALSE}
 # Simulate package installation
 pkgload::load_all()
 
@@ -110,7 +110,7 @@ fusen::add_flat_template("add")
 
 # Share the package
 
-```{r}
+```{r, eval=FALSE}
 # set and try pkgdown documentation website locally
 usethis::use_pkgdown()
 pkgdown::build_site()
