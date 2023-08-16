@@ -55,6 +55,10 @@ There is a wrapper named `inflate_all_no_check()` that will prevent running `dev
 
 Note also that all files stored in R, tests and vignettes directories are checked to detect those not created from a flat file. They will need to be registered in the config file too, in order to help you keep your package clean of deprecated files. `inflate_all()` thus runs `check_not_registered_files()` behind the scene and informs about the procedure. Read `vignette('register-files-in-config', package = 'fusen')` to get more information.
 
+## Complete the process with your own code style
+
+You can run your preferred styling functions just before the check of the package in `inflate_all()`. For instance, if you want {styler} package to clean your code during the inflate process, you can run `inflate_all(stylers = styler::style_pkg)`. If you also would like to clean the "dev/" directory, you can run `inflate_all(stylers = function() {styler::style_pkg(); styler::style_dir("dev")})`.
+
 ```{r function-inflate_all}
 #' Inflate all your flat files
 #'
