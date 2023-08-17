@@ -59,7 +59,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9008</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.2.9000</span>
       </span>
     </div>
 
@@ -145,8 +145,15 @@ other users, in a sustainable and maintainable way. You already know how
 to write a notebook (Rmarkdown or Quarto) and share its HTML output, but
 you do not like to present the outputs along with how to use the
 functions in the same web page.</strong></p>
+<p>If you plan on sharing your package on GitHub,
+<code><a href="../reference/init_share_on_github.html">fusen::init_share_on_github()</a></code> creates all necessary files
+in your project and send them on your GitHub account to create the
+website of the package documentation. Then, you can focus on the
+content.<br>
+Follow the steps below and you’ll see your public website documentation
+in no time!</p>
 <div class="section level2">
-<h2 id="initiate-github-to-share-your-work-on-a-website">Initiate GitHub to share your work on a website<a class="anchor" aria-label="anchor" href="#initiate-github-to-share-your-work-on-a-website"></a>
+<h2 id="initiate-your-package-and-share-it-on-github">Initiate your package and share it on GitHub<a class="anchor" aria-label="anchor" href="#initiate-your-package-and-share-it-on-github"></a>
 </h2>
 <ul>
 <li><p>Create a new project with {fusen} using git</p></li>
@@ -213,6 +220,7 @@ registered GitHub token yet.</li>
 </ul>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">#' \dontrun{</span></span>
+<span><span class="co">#' # This modifies the current directory and send it on GitHub</span></span>
 <span><span class="fu"><a href="../reference/init_share_on_github.html">init_share_on_github</a></span><span class="op">(</span><span class="op">)</span></span>
 <span><span class="co">#' }</span></span></code></pre></div>
 <p><em>In a few minutes, you’ll be able to see and share your project
@@ -220,6 +228,35 @@ website.</em><br>
 You won’t have to run this command line again. Each time you push new
 commits to the main branch on GitHub, your website will be updated
 thanks to GitHub Actions.</p>
+</div>
+<div class="section level2">
+<h2 id="what-happens-behind-the-scene">What happens behind the scene ?<a class="anchor" aria-label="anchor" href="#what-happens-behind-the-scene"></a>
+</h2>
+<p><code><a href="../reference/init_share_on_github.html">init_share_on_github()</a></code> runs multiple steps to be able to
+share a proper package on GitHub:</p>
+<ul>
+<li>Start versionning with git if not already</li>
+<li>Connect to your GitHub account</li>
+<li>Create a minimal DESCRIPTION file if missing
+<ul>
+<li>You will have to update its content with your information after
+deployment</li>
+</ul>
+</li>
+<li>Add NEWS file to present modifications of your releases</li>
+<li>Add README.Rmd and knit it to README.md to quickly present the aim
+and the use of your package</li>
+<li>Init continuous integration (CI)
+<ul>
+<li>Check the package on Linux, Windows and MacOS</li>
+<li>Calculate code coverage</li>
+</ul>
+</li>
+<li>Init continuous deployment (CD) of the {pkgdown} website
+documentation</li>
+<li>Commit and push to GitHub</li>
+<li>List remaining manual steps to make the website public</li>
+</ul>
 </div>
   </div>
 

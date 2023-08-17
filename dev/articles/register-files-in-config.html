@@ -59,7 +59,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9008</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.2.9000</span>
       </span>
     </div>
 
@@ -152,7 +152,7 @@ flat file. This helps you keep your package clean.</p>
 <!--
 To make this work properly, you will have to register all files that were not created from a flat file. `add_files_to_config()` will help you do so (See below: "Register some specific files, even with regex").  
 -->
-<p>To know if you have some special steps to realise with this version
+<p>To know if you have some special steps to realize with this version
 of {fusen}, run:</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="../reference/inflate_all.html">inflate_all_no_check</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
@@ -331,7 +331,7 @@ should not be in <code>state: active</code> but in
 <span>  <span class="co"># Add a not registered file to the package</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"# test R file\n"</span>, file <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/file.path.html" class="external-link">file.path</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="st">"R"</span>, <span class="st">"to_keep.R"</span><span class="op">)</span><span class="op">)</span></span>
 <span></span>
-<span>  <span class="co"># Use the fonction to check the list of files</span></span>
+<span>  <span class="co"># Use the function to check the list of files</span></span>
 <span>  <span class="va">out_csv</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/check_not_registered_files.html">check_not_registered_files</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span>
 <span>  <span class="va">out_csv</span></span>
 <span>  <span class="co"># Read the csv to see what is going on</span></span>

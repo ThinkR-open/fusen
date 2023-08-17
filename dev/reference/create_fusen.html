@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9008</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.2.9000</span>
       </span>
     </div>
 
@@ -98,7 +98,8 @@
     <div id="ref-usage">
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">create_fusen</span><span class="op">(</span></span>
 <span>  <span class="va">path</span>,</span>
-<span>  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"full"</span>, <span class="st">"minimal"</span>, <span class="st">"teaching"</span><span class="op">)</span>,</span>
+<span>  template <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"full"</span>, <span class="st">"minimal"</span>, <span class="st">"teaching"</span>, <span class="st">"dev_history"</span><span class="op">)</span>,</span>
+<span>  flat_name <span class="op">=</span> <span class="va">template</span>,</span>
 <span>  open <span class="op">=</span> <span class="cn">TRUE</span>,</span>
 <span>  overwrite <span class="op">=</span> <span class="cn">FALSE</span>,</span>
 <span>  with_git <span class="op">=</span> <span class="cn">FALSE</span></span>
@@ -112,7 +113,12 @@
 
 
 <dt>template</dt>
-<dd><p>Character. Name of the template to be used among "full", "minimal" and "teaching".</p></dd>
+<dd><p>Character. Name of the template to be used among "full", "minimal", "teaching" and "dev_history".</p></dd>
+
+
+<dt>flat_name</dt>
+<dd><p>Character. Filename of the flat file created.
+This is also used to name the first function of the file in <code>minimal</code> template.</p></dd>
 
 
 <dt>open</dt>
@@ -138,24 +144,23 @@ a package</p>
     <h2>Details</h2>
     <p>See <code><a href="add_flat_template.html">add_flat_template</a></code> for details about the different options for <code>template</code>.
 Template "additional" is not available here as it is meant to be used with an already
-existing fusen.</p>
+existing 'fusen'.</p>
     </div>
 
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">my_path</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"mypkg"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">create_fusen</span><span class="op">(</span>path <span class="op">=</span> <span class="va">my_path</span>, template <span class="op">=</span> <span class="st">"full"</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ── Creating new directory: /tmp/RtmpPdD9mG/mypkg15f77bf8e480 ───────────────────</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Creating <span style="color: #0000BB;">'/tmp/RtmpPdD9mG/mypkg15f77bf8e480/'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpPdD9mG/mypkg15f77bf8e480'</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── Creating new directory: /tmp/Rtmp87ssOA/mypkg178e3dfe4aa4 ───────────────────</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Creating <span style="color: #0000BB;">'/tmp/Rtmp87ssOA/mypkg178e3dfe4aa4/'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmp87ssOA/mypkg178e3dfe4aa4'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Creating <span style="color: #0000BB;">'R/'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Writing a sentinel file <span style="color: #0000BB;">'.here'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Build robust paths within your project via <span style="color: #555555;">`here::here()`</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Learn more at &lt;https://here.r-lib.org&gt;</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'&lt;no active project&gt;'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> New directory created: /tmp/RtmpPdD9mG/mypkg15f77bf8e480</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ── Adding dev/flat_full.Rmd ────────────────────────────────────────────────────</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Added /tmp/RtmpPdD9mG/mypkg15f77bf8e480/dev/flat_full.Rmd, /tmp/RtmpPdD9mG/mypkg15f77bf8e480/dev/0-dev_history.Rmd</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> New directory created: /tmp/Rtmp87ssOA/mypkg178e3dfe4aa4</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Added /tmp/Rtmp87ssOA/mypkg178e3dfe4aa4/dev/flat_full.Rmd, /tmp/Rtmp87ssOA/mypkg178e3dfe4aa4/dev/0-dev_history.Rmd</span>
 </code></pre></div>
     </div>
   </div>

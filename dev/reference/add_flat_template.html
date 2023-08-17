@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.0.9008</span>
+        <span class="version label label-danger" data-toggle="tooltip" data-placement="bottom" title="In-development version">0.5.2.9000</span>
       </span>
     </div>
 
@@ -178,7 +178,7 @@ Use the name of the main function of your template to get chunks pre-filled with
     <h2>Details</h2>
     <p>Choose <code>template</code> among the different templates available:</p><ul><li><p>"full": The full template with a reproducible package that can directly be inflated.
 It comes along with the "dev_history" template. Default.</p></li>
-<li><p>"minimal_package": Minimal template to start a new package when you already know fusen, along with the "dev_history" template.</p></li>
+<li><p>"minimal_package": Minimal template to start a new package when you already know fusen, along with the "dev_history" template. Note that this is called "minimal" in <code><a href="create_fusen.html">create_fusen()</a></code>.</p></li>
 <li><p>"minimal_flat" or "additional": Template for a new minimal flat file only.</p></li>
 <li><p>"teaching": Template with a reproducible package, simpler than "full", but everything to
 teach the minimal structure of a package.</p></li>
@@ -192,13 +192,13 @@ This does not contain chunks to write your own functions.</p></li>
     <div id="ref-examples">
     <h2>Examples</h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># Create a new project</span></span></span>
-<span class="r-in"><span><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummypackage"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"dummy.package.flat"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Add</span></span></span>
 <span class="r-in"><span><span class="fu">add_flat_template</span><span class="op">(</span>template <span class="op">=</span> <span class="st">"teaching"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpPdD9mG/dummypackage15f718cb67bb . Please start a new R session in the new project directory.</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpPdD9mG/dummypackage15f718cb67bb/dev/flat_teaching.Rmd"</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/Rtmp87ssOA/dummy.package.flat178e35d5cc29 . Please start a new R session in the new project directory.</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp87ssOA/dummy.package.flat178e35d5cc29/dev/flat_teaching.Rmd"</span>
 <span class="r-in"><span><span class="co"># Delete dummy package</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
