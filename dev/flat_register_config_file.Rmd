@@ -154,7 +154,7 @@ Have a look at the configuration file at the end of the process to check that ev
 #'
 #' @export
 check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, open = FALSE) {
-  path <- normalizePath(path, winslash = "/")
+  path <- normalize_path_winslash(path)
 
   all_r <- list.files(file.path(path, "R"), pattern = "[.]R$|[.]r$", full.names = TRUE)
   all_test <- list.files(file.path(path, "tests", "testthat"), pattern = "[.]R$|[.]r$", full.names = TRUE)
@@ -182,7 +182,7 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, 
   if (file.exists(config_file)) {
     # Read config file, and remove those already there
     config_list <- yaml::read_yaml(config_file)
-    config_list_path <- normalizePath(get_list_paths(config_list), mustWork = FALSE, winslash = "/")
+    config_list_path <- normalize_path_winslash(get_list_paths(config_list), mustWork = FALSE)
     res_existing <- res[res$path %in% config_list_path, ]
     res_new <- res[!res$path %in% config_list_path, ]
     config_flat_paths <- sapply(config_list, function(x) x[["path"]])
@@ -217,11 +217,11 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, 
   }
 
   # TODO go back to relative path
-  res_new$path <- gsub(paste0(getwd(), "/"), "", normalize_path_winslash(res_new$path, mustWork = TRUE), fixed = TRUE)
+  res_new$path <- gsub(paste0(normalize_path_winslash(getwd()), "/"), "", normalize_path_winslash(res_new$path, mustWork = TRUE), fixed = TRUE)
 
   # config_file may not exist already
   csv_file <- file.path(
-    gsub(paste0(getwd(), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE)), fixed = TRUE), "config_not_registered.csv"
+    gsub(paste0(normalize_path_winslash(getwd()), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE)), fixed = TRUE), "config_not_registered.csv"
   )
 
   # Save for manual modification
@@ -270,9 +270,12 @@ guess_flat_origin <- function(path) {
     lines[grep("(G|g)enerated by \\{fusen\\} from", lines)][1]
   )
 
-  guess_path <- normalizePath(guess_path, mustWork = FALSE, winslash = "/")
+  guess_path <- normalize_path_winslash(guess_path, mustWork = FALSE)
   if (file.exists(guess_path)) {
-    guess_path <- gsub(paste0(getwd(), "/"), "", normalizePath(guess_path, mustWork = FALSE, winslash = "/"))
+    guess_path <- gsub(
+      paste0(normalize_path_winslash(getwd()), "/"), "",
+      normalize_path_winslash(guess_path, mustWork = FALSE)
+    )
     return(guess_path)
   } else {
     return("No existing source path found.")
@@ -521,7 +524,7 @@ register_all_to_config <- function(pkg = ".") {
 
   # Delete out_df
   csv_file <- file.path(
-    gsub(paste0(getwd(), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE)), fixed = TRUE), "config_not_registered.csv"
+    gsub(paste0(normalize_path_winslash(getwd()), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE)), fixed = TRUE), "config_not_registered.csv"
   )
   if (file.exists(csv_file)) {
     cli::cat_rule(paste("Delete", csv_file))
