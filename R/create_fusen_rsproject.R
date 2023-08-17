@@ -125,7 +125,7 @@ create_fusen_gui <- function(path,
                              flat_name = template,
                              with_git) {
   create_fusen(
-    path = file.path(getwd(), path),
+    path = file.path(normalize_path_winslash(getwd()), path),
     template = template,
     flat_name = flat_name,
     open = FALSE, # Project opening is done spontaneously by Rstudio Project Wizard

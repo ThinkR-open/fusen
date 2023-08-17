@@ -53,9 +53,9 @@ unlink(dummypackage, recursive = TRUE)
 alltemp <- tempfile("all.templates.inflate")
 dir.create(alltemp)
 
-# for (pkgname in c("full", "teaching", "minimal")) {
 create_choices_test <- fusen:::create_fusen_choices[!grepl("dev_history", fusen:::create_fusen_choices)]
 for (pkgname in create_choices_test) {
+  # pkgname <- create_choices_test[1]
   # No "additional" with create_fusen
   # {fusen} steps
   path_foosen <- normalize_path_winslash(file.path(alltemp, pkgname), mustWork = FALSE)
@@ -64,7 +64,7 @@ for (pkgname in create_choices_test) {
 
   usethis::with_project(path_foosen, {
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
-    usethis::use_gpl_license()
+    suppressMessages(usethis::use_gpl_license())
 
     test_that("description is good", {
       expect_true(file.exists(file.path(path_foosen, "DESCRIPTION")))
@@ -154,7 +154,9 @@ for (pkgname in create_choices_test) {
       skip_if_not(interactive())
       # Needs MASS, lattice, Matrix installed
       # quiet and checkdir
-      checkdir <- file.path(alltemp, paste0("checkout", pkgname))
+      checkdir <- normalize_path_winslash(
+        file.path(alltemp, paste0("checkout", pkgname)),
+        mustWork = FALSE)
       extra_params <- glue(
         'fusen::inflate(pkg = "{path_foosen}",
       check = TRUE, check_dir = "{checkdir}",
