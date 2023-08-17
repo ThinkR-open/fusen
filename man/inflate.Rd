@@ -44,7 +44,7 @@ Inflate Rmd to package
 }
 \examples{
 # Create a new project
-dummypackage <- tempfile("dummypackage")
+dummypackage <- tempfile("dummy.package")
 dir.create(dummypackage)
 
 # {fusen} steps

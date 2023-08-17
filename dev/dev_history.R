@@ -194,6 +194,7 @@ testthat::test_file("tests/testthat/test-add_flat_template.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
 Sys.setenv("NOT_CRAN" = "false")
 
+# Run line by line
 Sys.setenv("FUSEN_TEST_PUBLISH" = "TRUE")
 testthat::test_file("tests/testthat/test-init_share_on_github.R")
 Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
@@ -206,32 +207,6 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 # Run examples in interactive mode too
 devtools::run_examples()
 
-local <- utils::fileSnapshot(".", timestamp = tempfile("timestamp"), md5sum = TRUE)
-home <- utils::fileSnapshot("~", timestamp = tempfile("timestamp"), md5sum = TRUE)
-
-# run tests or whatever, then ...
-# x <- autotest::autotest_package(test = TRUE)
-devtools::test()
-devtools::run_examples()
-# vignettes
-dircheck <- tempfile("check")
-dir.create(dircheck)
-rcmdcheck::rcmdcheck(check_dir = dircheck)
-# browseURL(dircheck)
-
-the_dir <- list.files(file.path(dircheck), pattern = ".Rcheck", full.names = TRUE)
-# Same tests, no new files
-all(list.files(file.path(the_dir, "tests", "testthat")) %in%
-  list.files(file.path(".", "tests", "testthat")))
-
-devtools::build_vignettes()
-devtools::clean_vignettes()
-
-utils::changedFiles(local, md5sum = TRUE)
-utils::changedFiles(home, md5sum = TRUE)
-
-DT::datatable(x)
-
 # Check package as CRAN
 rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"))
 devtools::check(args = c("--no-manual", "--as-cran"))
@@ -240,9 +215,12 @@ devtools::check(args = c("--no-manual", "--as-cran"))
 # remotes::install_github("ThinkR-open/checkhelper")
 tags <- checkhelper::find_missing_tags()
 View(tags$functions)
+
+# Remettre: Config/testthat/parallel: false dans DESCRIPTION
 out <- checkhelper::check_clean_userspace(pkg = ".")
 out
 checkhelper::check_as_cran()
+# Remettre: Config/testthat/parallel: true dans DESCRIPTION
 
 # Check spelling
 # usethis::use_spell_check()
@@ -260,7 +238,7 @@ usethis::use_version(which = c("patch", "minor", "major", "dev")[2])
 # _rhub
 devtools::check_rhub()
 rhub::platforms()
-rhub::check_on_windows(check_args = "--force-multiarch")
+rhub::check_on_windows(check_args = "--force-multiarch", show_status = FALSE)
 rhub::check_on_solaris(show_status = FALSE)
 rhub::check(platform = "debian-clang-devel", show_status = FALSE)
 rhub::check(platform = "debian-gcc-devel", show_status = FALSE)

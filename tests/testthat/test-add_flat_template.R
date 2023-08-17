@@ -182,7 +182,7 @@ for (template in all_templates) {
     main_flat_file_name <- "teaching"
   }
 
-  dummypackage4 <- tempfile(pattern = "all.templates.knit")
+  dummypackage4 <- tempfile(pattern = paste0("all.templates.knit", gsub("_", ".", template)))
   dir.create(dummypackage4)
 
   orig.proj <- here::here()

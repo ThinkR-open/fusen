@@ -93,7 +93,7 @@ Abbreviated names can also be used for the different templates:
 }
 \examples{
 # Create a new project
-dummypackage <- tempfile("dummypackage")
+dummypackage <- tempfile("dummy.package.flat")
 dir.create(dummypackage)
 
 # Add
