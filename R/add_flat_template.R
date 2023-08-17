@@ -129,7 +129,7 @@ create_fusen_choices <- c("full", "minimal", "teaching", "dev_history")
 #'
 #' @examples
 #' # Create a new project
-#' dummypackage <- tempfile("dummypackage")
+#' dummypackage <- tempfile("dummy.package.flat")
 #' dir.create(dummypackage)
 #'
 #' # Add

@@ -42,7 +42,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #'
 #' @examples
 #' # Create a new project
-#' dummypackage <- tempfile("dummypackage")
+#' dummypackage <- tempfile("dummy.package")
 #' dir.create(dummypackage)
 #'
 #' # {fusen} steps
@@ -127,11 +127,21 @@ inflate <- function(pkg = ".", flat_file,
   }
 
   old <- setwd(pkg)
-  on.exit(setwd(old))
+  if (normalizePath(old, mustWork = FALSE) != normalizePath(pkg, mustWork = FALSE)) {
+    if (dir.exists(old)) {
+      on.exit(setwd(old))
+    } else {
+      on.exit(here::here())
+    }
+  }
 
   old_proj <- usethis::proj_get()
-  if (normalizePath(old_proj) != normalizePath(pkg)) {
-    on.exit(usethis::proj_set(old_proj))
+  if (normalizePath(old_proj, mustWork = FALSE) != normalizePath(pkg, mustWork = FALSE)) {
+    if (dir.exists(old_proj)) {
+      on.exit(usethis::proj_set(old_proj))
+    } else {
+      on.exit(usethis::proj_set(here::here()))
+    }
     usethis::proj_set(pkg)
   }
 

@@ -23,7 +23,7 @@ Fill DESCRIPTION file of the package
 }
 \examples{
 # Create a new project
-dummypackage <- tempfile("dummypackage")
+dummypackage <- tempfile("dummy.package.desc")
 dir.create(dummypackage)
 
 fill_description(
