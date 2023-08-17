@@ -281,3 +281,6 @@ usethis::use_version(which = c("patch", "minor", "major", "dev")[1])
 
 # Verify you're ready for release, and release
 devtools::release()
+
+# Back to dev
+usethis::use_version(which = c("patch", "minor", "major", "dev")[4])

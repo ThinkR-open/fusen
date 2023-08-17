@@ -1,3 +1,28 @@
+# v0.5.2
+## R CMD check results
+
+0 errors | 0 warnings | 0 note
+
+* This is a new release.
+
+### Comment about `packageVersion()`
+
+Thus, With c84610 R-devel now *warns* about such inputs, which will
+typically not show in the check results (but immediately giving errors
+would cause too much disruption).  Some of these warnings can be found
+by code analyis.  I list these uses below, can you please fix as
+necessary?  E.g., for the first issue shown,
+
+  packageVersion("ggplot2") >= 3.3
+
+should be changed to
+
+  packageVersion("ggplot2") >= "3.3"
+
+etc.
+
+=> Fixed where needed. Verified with r-devel on GitHub Actions and winbuilder-devel
+
 # v0.5.1
 ## R CMD check results
 
