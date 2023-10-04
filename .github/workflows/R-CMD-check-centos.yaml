@@ -32,6 +32,7 @@ jobs:
         if: always()
         run: |
           ## --------------------------------------------------------------------
+          lsb_release -a; uname -a & \
           echo $PATH && \
           ln -s /usr/bin/R /usr/local/bin/R && \
           ln -s /usr/bin/Rscript /usr/local/bin/Rscript && \
