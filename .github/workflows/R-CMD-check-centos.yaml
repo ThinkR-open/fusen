@@ -41,11 +41,15 @@ jobs:
         run: |
           print(Sys.getenv("HOME"))
           print(getOption("repos"))
-          cat('\noptions(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/centos7/latest", getOption("repos")))', file = file.path(Sys.getenv("HOME"), ".Rprofile"), append = TRUE)
+          cat('\noptions(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/centos7/latest", "https://cran.rstudio.com"))', file = file.path(Sys.getenv("HOME"), ".Rprofile"), append = TRUE)
+          source(file.path(Sys.getenv("HOME"), ".Rprofile"))
+          print(getOption("repos"))
         shell: Rscript {0}
 
       - name: Check RSPM in R session and try install parsermd
         run: |
+          print(getOption("repos"))
+          options(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/centos7/latest", "https://cran.rstudio.com"))
           print(getOption("repos"))
           install.packages("pak")
           pak::pkg_install("statnmap/parsermd@nocpp")
