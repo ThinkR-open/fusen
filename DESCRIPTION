@@ -45,6 +45,8 @@ Suggests:
     rstudioapi,
     testthat (>= 3.0.0),
     withr
+Remotes: 
+    statnmap/parsermd@nocpp
 VignetteBuilder: 
     knitr
 Config/fusen/version: 0.5.2
