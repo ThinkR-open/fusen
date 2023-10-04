@@ -35,7 +35,8 @@ jobs:
           echo $PATH && \
           ln -s /usr/bin/R /usr/local/bin/R && \
           ln -s /usr/bin/Rscript /usr/local/bin/Rscript && \
-          locate RScript
+          cd /opt/R && \
+          ls -la
         shell: bash
 
       - name: install deps
