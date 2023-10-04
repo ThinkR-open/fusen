@@ -37,6 +37,10 @@ jobs:
 #          http-user-agent: ${{ matrix.config.http-user-agent }}
 #          use-public-rspm: true
 
+      - name: Set RSPM in Rprofile
+        run: |
+          cat('\noptions(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/centos7/latest", getOption("repos")))', file = "~/.Rprofile", append = TRUE)
+        shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
