@@ -43,9 +43,11 @@ jobs:
           cat('\noptions(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/centos7/latest", getOption("repos")))', file = "~/.Rprofile", append = TRUE)
         shell: Rscript {0}
 
-      - name: Check RSPM in R session
+      - name: Check RSPM in R session and try install parsermd
         run: |
           print(getOption("repos"))
+          install.packages("pak")
+          pak::pkg_install("statnmap/parsermd@nocpp")
         shell: Rscript {0}
 
       - uses: r-lib/actions/setup-r-dependencies@v2
