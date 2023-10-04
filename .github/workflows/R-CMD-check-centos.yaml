@@ -11,7 +11,7 @@ name: R-CMD-check-centos
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
-    container: 'rstudio/r-base:centos7'
+    container: 'rstudio/r-base:4.3-centos7'
 
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
@@ -28,25 +28,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Add symlinks
-        if: always()
-        run: |
-          ## --------------------------------------------------------------------
-          yum install redhat-lsb & \
-          lsb_release -a; uname -a & \
-          echo $PATH && \
-          ln -s /usr/bin/R /usr/local/bin/R && \
-          ln -s /usr/bin/Rscript /usr/local/bin/Rscript && \
-          cd /opt/R && \
-          ls -la
-        shell: bash
-
       - name: install deps
         if: always()
         run: |
           ## --------------------------------------------------------------------
           print("hello")
-        shell: /usr/bin/Rscript {0}
+        shell: Rscript {0}
 
 #      - uses: r-lib/actions/setup-pandoc@v2
 
