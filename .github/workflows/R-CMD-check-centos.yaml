@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main, master, centos]
 
-name: R-CMD-check
+name: R-CMD-check-centos
 
 jobs:
   R-CMD-check:
@@ -27,6 +27,15 @@ jobs:
 
     steps:
       - uses: actions/checkout@v3
+
+      - name: Add symlinks
+        if: always()
+        run: |
+          ## --------------------------------------------------------------------
+          echo $PATH && \
+          ln -s /usr/bin/R /usr/local/bin/R && \
+          ln -s /usr/bin/Rscript /usr/local/bin/Rscript
+        shell: bash
 
 #      - uses: r-lib/actions/setup-pandoc@v2
 
