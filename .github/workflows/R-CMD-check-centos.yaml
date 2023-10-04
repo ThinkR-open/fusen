@@ -42,7 +42,7 @@ jobs:
         run: |
           ## --------------------------------------------------------------------
           print("hello")
-        shell: R
+        shell: /usr/bin/Rscript {0}
 
 #      - uses: r-lib/actions/setup-pandoc@v2
 
