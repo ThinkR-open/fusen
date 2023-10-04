@@ -32,6 +32,7 @@ jobs:
         if: always()
         run: |
           ## --------------------------------------------------------------------
+          yum install redhat-lsb & \
           lsb_release -a; uname -a & \
           echo $PATH && \
           ln -s /usr/bin/R /usr/local/bin/R && \
