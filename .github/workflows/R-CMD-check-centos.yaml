@@ -39,8 +39,9 @@ jobs:
 
       - name: Set RSPM in Rprofile
         run: |
+          print(Sys.getenv("HOME"))
           print(getOption("repos"))
-          cat('\noptions(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/centos7/latest", getOption("repos")))', file = "~/.Rprofile", append = TRUE)
+          cat('\noptions(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/centos7/latest", getOption("repos")))', file = file.path(Sys.getenv("HOME"), ".Rprofile"), append = TRUE)
         shell: Rscript {0}
 
       - name: Check RSPM in R session and try install parsermd
