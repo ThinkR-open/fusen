@@ -16,7 +16,7 @@ load_flat_functions <- function(flat_file, envir = globalenv()) {
   if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
     rstudioapi::hasFun("documentPath")) {
     current_file <- rstudioapi::documentPath()
-    if (!is.null(current_file) && grepl("^flat.*[.](R|r|q)md$", basename(current_file))) {
+    if (!is.null(current_file) && grepl("^(flat|dev).*[.](R|r|q)md$", basename(current_file))) {
       flat_file <- current_file
     }
   }
