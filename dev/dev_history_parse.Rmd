@@ -71,6 +71,12 @@ split_rmd <- function(file) {
   parsed
 }
 
+#' Combine a parsed tbl Rmarkdown file into a new Rmd file
+combine_parsed <- function(parsed_tbl) {
+  # equivalent of 'parsermd::as_document()'
+  # Get all code to keep, and combine into a file
+}
+
 #' Groupe parts of Rmarkdown file
 #'
 #' @param file path to Rmarkdown file
@@ -84,12 +90,15 @@ split_rmd <- function(file) {
 #' file <- system.file("dev-template-tests.Rmd", package = "fusen")
 #' group_rmd(file)
 group_rmd <- function(file) {
-  x <- xfun::read_utf8(file)
+  x <- readLines(file)
+  # x <- xfun::read_utf8(file)
 
   # Info
   x_info <- rep(NA_character_, length(x))
+  x_comments <- rep(NA_character_, length(x))
 
   # Yaml
+  if (!grepl("^---$", x[1])) {stop("File parsed needs to have a yaml header starting from line 1 with: ---")}
   yaml_begin <- 1
   yaml_end <- which(grepl("^---", x))[2]
   x_info[yaml_begin:yaml_end] <- "rmd_yaml_list"
@@ -98,6 +107,7 @@ group_rmd <- function(file) {
   chunk.begin <- knitr::all_patterns$md$chunk.begin
   chunk.end <- knitr::all_patterns$md$chunk.end
   blks <- grepl(chunk.begin, x)
+  blks_ends <- grepl(chunk.end, x)
   txts <- utils::getFromNamespace("filter_chunk_end", "knitr")(blks, grepl(chunk.end, x))
   if (length(blks) != length(txts)) {
     stop("You may have let some not closed chunks")
@@ -123,6 +133,10 @@ group_rmd <- function(file) {
   x_info[chunks_lines_vec] <- chunks_lines_nb
 
   # Comments
+  # TODO : See how to take into account comments around titles ?
+  # We need to keep title to separate functions families, but
+  # text needs to be identified as comment to be removed in vignettes
+  # Probably, the function needs to output comments as another output
   comment.begin <- "^<!--"
   comment.end <- "-->"
   starts <- which(grepl(comment.begin, x))
@@ -150,7 +164,7 @@ group_rmd <- function(file) {
     }
   ))
   comments_lines_vec <- unlist(comments_lines_list)
-  x_info[comments_lines_vec] <- comments_lines_nb
+  x_comments[comments_lines_vec] <- comments_lines_nb
 
 
   # hashtags
@@ -170,20 +184,127 @@ group_rmd <- function(file) {
   x_info[all_text] <- texts
 
   # Return groups
-  x_info
+  res <- list(info = x_info,
+       comments = x_comments)
+  return(res)
 }
 ```
 
 ```{r examples}
-file <- system.file("dev-template-tests.Rmd", package = "fusen")
+file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
 # Attribute group to each line
 group_rmd(file)
 # Split Rmd by group into tibble
 split_rmd(file)
 ```
 
+```{r dev, eval=FALSE}
+# What we expect from split_rmd()
+file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
+full_parsed_list <- parsermd::parse_rmd(file)
+full_parsermd_tbl <- parsermd::as_tibble(full_parsed_list)
+saveRDS(full_parsermd_tbl, file = here::here("data-raw/full_parsermd_tbl.rds"))
+dput(full_parsermd_tbl, file = here::here("data-raw/full_parsermd_tbl.dput"))
+class(full_parsermd_tbl$ast)
+# [1] "rmd_ast" "list"  
+full_parsermd_tbl$type[[1]]
+# [1] "rmd_yaml_list"
+full_parsermd_tbl$ast[[1]]
+# $title
+# [1] "dev_history.Rmd for working package"
+# 
+# $output
+# [1] "html_document"
+# 
+# $author
+# [1] "statnmap"
+# 
+# $editor_options
+# $editor_options$chunk_output_type
+# [1] "console"
+# 
+# 
+# attr(,"class")
+# [1] "rmd_yaml_list"
+names(full_parsermd_tbl$ast)
+# NULL
+slotNames(full_parsermd_tbl$ast)
+# character(0)
+full_parsermd_tbl$ast[[2]]
+# $engine
+# [1] "r"
+# 
+# $name
+# [1] "development"
+# 
+# $options
+# $options$include
+# [1] "FALSE"
+# 
+# 
+# $code
+# [1] "library(testthat)"
+# 
+# $indent
+# [1] ""
+# 
+# attr(,"class")
+# [1] "rmd_chunk"
+full_parsermd_tbl$ast[[3]]
+# [1] "<!--"
+# attr(,"class")
+# [1] "rmd_markdown"
+full_parsermd_tbl$sec_h1[[4]]
+full_parsermd_tbl$sec_h2[[4]]
+full_parsermd_tbl$ast[[4]]
+# $name
+# [1] "Description of your package"
+# 
+# $level
+# [1] 1
+# 
+# attr(,"class")
+# [1] "rmd_heading"
+```
+
+
 ```{r tests}
-file <- system.file("dev-template-tests.Rmd", package = "fusen")
+file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
+tbl_rmd <- split_rmd(file)
+
+# TDD
+# split_rmd works as expected ----
+test_that("split_rmd gets yaml header data", {
+  expect_equal(sum(tbl_rmd[["type"]] == "rmd_yaml_list"), 1)
+  tbl_rmd_yaml <- tbl_rmd[tbl_rmd[["type"]] == "rmd_yaml_list", ]
+  expect_equal(tbl_rmd_yaml[["ast"]][["title"]], "dev_history.Rmd for working package")
+  expect_equal(tbl_rmd_yaml[["ast"]][["author"]], "statnmap")
+  expect_equal(tbl_rmd_yaml[["ast"]][["date"]], "2023-10-12")
+  expect_s3_class(tbl_rmd_yaml[["ast"]], "rmd_yaml_list")
+})
+
+test_that("split_rmd gets H1 titles in markdown part only", {
+  expect_equal(sum(tbl_rmd[["type"]] == "rmd_heading"), 6)
+  expect_equal(sum(!is.na(tbl_rmd[["sec_h1"]])), 5)
+  expect_equal(tbl_rmd[["sec_h1"]][!is.na(tbl_rmd[["sec_h1"]])],
+               c("Description of your package", 
+                 "Read data",
+                 "Calculate the median of a vector",
+                 "Calculate the mean of a vector",
+                 "Inflate your package"))
+  expect_s3_class(tbl_rmd_yaml[["ast"]], "rmd_heading")
+})
+
+test_that("split_rmd gets H2 titles in markdown part only", {
+  expect_equal(sum(tbl_rmd[["type"]] == "rmd_heading"), 6)
+  expect_equal(sum(!is.na(tbl_rmd[["sec_h2"]])), 1)
+  expect_equal(tbl_rmd[["sec_h1"]][!is.na(tbl_rmd[["sec_h2"]])],
+               c("Use sub-functions in the same chunk"))
+  expect_s3_class(tbl_rmd_yaml[["ast"]], "rmd_heading")
+})
+
+
+# Sub tests ----
 groups <- group_rmd(file)
 test_that("group_rmd works properly", {
   expect_true(all(groups[1:8] == "rmd_yaml_list"))
