@@ -108,6 +108,7 @@ group_rmd <- function(file) {
   chunk.end <- knitr::all_patterns$md$chunk.end
   blks <- grepl(chunk.begin, x)
   blks_ends <- grepl(chunk.end, x)
+  # get
   txts <- utils::getFromNamespace("filter_chunk_end", "knitr")(blks, grepl(chunk.end, x))
   if (length(blks) != length(txts)) {
     stop("You may have let some not closed chunks")
@@ -186,6 +187,76 @@ group_rmd <- function(file) {
   # Return groups
   res <- list(info = x_info,
        comments = x_comments)
+  return(res)
+}
+
+get_rmd_parts <- function(file) {
+  
+  rmd_lines <- readLines(file)
+  # Use hidden functions of {knitr}
+  knitr::knit_code$restore()
+  options(knitr.duplicate.label = "allow")
+  out <- knitr:::split_file(
+    # c('abc', '```{r foo}', '1+1', '```{r bar}', '3+3', '```', 'def'),
+    rmd_lines,
+    patterns = knitr:::all_patterns$md,
+    set.preamble = TRUE
+  )
+  out
+  options(knitr.duplicate.label = NULL)
+  out[[1]]
+  out[[2]]
+  # knitr::knit_code$get('bar')
+  chunk_labels <- sapply(out[sapply(out, class) == "block"], function(x) x$params$label)
+  lapply(chunk_labels, knitr::knit_code$get)
+  knitr::knit_code$get('development')
+  knitr::knit_code$get('unnamed-chunk-19')
+
+  res <- tibble(
+    type = sapply(out, class),
+    label = sapply(out, function(x)
+      ifelse(
+        !is.null(x$params$label), x$params$label, NA
+      )),
+    params = lapply(out, function(x)
+      if (!is.null(x$params) && 
+          (is.null(x$params$engine) || x$params$engine == "r")) {
+        # if chunk is not 'r' chunk, it must be accounted as text
+        x$params
+      } else {
+        NA
+      }),
+    text = lapply(out, function(x)
+      if (class(x) == "inline") {
+        unlist(strsplit(x$input, "\n"))
+      } else if (!is.null(x$params) && 
+          !is.null(x$params$engine) && x$params$engine != "r") {
+        knitr::knit_code$get(x$params$label)
+      } else {
+        NA
+      }),
+    code = lapply(out, function(x)
+      if (!is.null(x$params) && 
+          !is.null(x$params$engine) && x$params$engine != "r") {
+        NA
+      } else if (class(x) == "block") {
+        knitr::knit_code$get(x$params$label)
+      } else {
+        NA
+      })
+  )
+      
+  res[["code"]][[1]]
+  res[["code"]][[3]]
+  res[["text"]][[3]]
+  res[20,]$params
+  res[20,]$text
+  as.character(res[["code"]][[20]])
+  
+  knitr::knit_code$restore()
+  # Reste à diviser les 'inline' pour détecter les titres
+  # Allez voir dans group_rmd()
+  
   return(res)
 }
 ```
@@ -270,7 +341,15 @@ full_parsermd_tbl$ast[[4]]
 
 ```{r tests}
 file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
+debugonce(group_rmd)
+debugonce(split_rmd)
 tbl_rmd <- split_rmd(file)
+
+# => Try with {knitr} hidden functions
+file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
+debugonce(get_rmd_parts)
+get_rmd_parts(file)
+
 
 # TDD
 # split_rmd works as expected ----
