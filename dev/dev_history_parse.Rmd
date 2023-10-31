@@ -193,24 +193,43 @@ group_rmd <- function(file) {
 get_rmd_parts <- function(file) {
   
   rmd_lines <- readLines(file)
+  # Get yaml header
+  if (!grepl("^---$", rmd_lines[1])) {stop("Flat file parsed needs to have a yaml header starting from line 1 with: ---")}
+  yaml_begin <- 1
+  yaml_end <- which(grepl("^---", rmd_lines))[2]
+  yaml_content <- yaml::yaml.load(rmd_lines[yaml_begin:yaml_end])
+  yaml_tbl <- tibble(
+    type = "yaml",
+    label = NA,
+    params = list(yaml_content),
+    text = NA,
+    code = NA
+  )
+
+  # Get the rest of the document without yaml
+  rmd_lines_no_yaml <- rmd_lines[-c(yaml_begin:yaml_end)]
   # Use hidden functions of {knitr}
+  # Code extracted will be stored in a new environment with `knitr:::split_file()`
+  # Using `knitr::knit_code$restore()` makes sure there is no current Rmd to be splitted
+  # Is it compatible with the function beeing included in a Rmd file ? We'll see.
   knitr::knit_code$restore()
   options(knitr.duplicate.label = "allow")
+  on.exit(options(knitr.duplicate.label = NULL))
+  on.exit(knitr::knit_code$restore())
+  
   out <- knitr:::split_file(
-    # c('abc', '```{r foo}', '1+1', '```{r bar}', '3+3', '```', 'def'),
-    rmd_lines,
+    rmd_lines_no_yaml,
     patterns = knitr:::all_patterns$md,
     set.preamble = TRUE
   )
   out
-  options(knitr.duplicate.label = NULL)
-  out[[1]]
-  out[[2]]
+  # out[[1]]
+  # out[[2]]
   # knitr::knit_code$get('bar')
-  chunk_labels <- sapply(out[sapply(out, class) == "block"], function(x) x$params$label)
-  lapply(chunk_labels, knitr::knit_code$get)
-  knitr::knit_code$get('development')
-  knitr::knit_code$get('unnamed-chunk-19')
+  # chunk_labels <- sapply(out[sapply(out, class) == "block"], function(x) x$params$label)
+  # lapply(chunk_labels, knitr::knit_code$get)
+  # knitr::knit_code$get('development')
+  # knitr::knit_code$get('unnamed-chunk-19')
 
   res <- tibble(
     type = sapply(out, class),
@@ -246,18 +265,43 @@ get_rmd_parts <- function(file) {
       })
   )
       
-  res[["code"]][[1]]
-  res[["code"]][[3]]
-  res[["text"]][[3]]
-  res[20,]$params
-  res[20,]$text
-  as.character(res[["code"]][[20]])
+  # TODO - Extract headers
+  the_text <- res_full[["text"]][[4]]
+  # split_headers_in_text
+  new_group <- rep(FALSE, length(the_text))
+  which_header <- grep("^#", the_text)
+  if (length(which_header) != 0) {
+    new_group[which_header] <- TRUE
+    # Change group just after header
+    which_header_plus <- 1 + which_header[(which_header + 1) <= length(new_group)]
+    if (length(which_header_plus) != 0) {
+      new_group[which_header_plus] <- TRUE
+    }
+    groups <- cumsum(new_group)
+    groups[which_header] <- paste0("heading-", which_header)
+    
+    split_text <- split(the_text, groups)
+  }
+         
+
+
   
-  knitr::knit_code$restore()
+  # Put back yaml in 'res'
+  res_full <- rbind(yaml_tbl, res)
+
+  
+  # res_full[["code"]][[2]]
+  # res_full[["code"]][[4]]
+  # res_full[["text"]][[4]]
+  # res_full[21,]$params
+  # res[20,]$text
+  # as.character(res[["code"]][[20]])
+  
+  
   # Reste à diviser les 'inline' pour détecter les titres
   # Allez voir dans group_rmd()
   
-  return(res)
+  return(res_full)
 }
 ```
 
@@ -340,29 +384,29 @@ full_parsermd_tbl$ast[[4]]
 
 
 ```{r tests}
-file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
-debugonce(group_rmd)
-debugonce(split_rmd)
-tbl_rmd <- split_rmd(file)
+# file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
+# debugonce(group_rmd)
+# debugonce(split_rmd)
+# tbl_rmd <- split_rmd(file)
 
 # => Try with {knitr} hidden functions
 file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
 debugonce(get_rmd_parts)
-get_rmd_parts(file)
+tbl_rmd <- get_rmd_parts(file)
 
 
 # TDD
-# split_rmd works as expected ----
-test_that("split_rmd gets yaml header data", {
-  expect_equal(sum(tbl_rmd[["type"]] == "rmd_yaml_list"), 1)
-  tbl_rmd_yaml <- tbl_rmd[tbl_rmd[["type"]] == "rmd_yaml_list", ]
-  expect_equal(tbl_rmd_yaml[["ast"]][["title"]], "dev_history.Rmd for working package")
-  expect_equal(tbl_rmd_yaml[["ast"]][["author"]], "statnmap")
-  expect_equal(tbl_rmd_yaml[["ast"]][["date"]], "2023-10-12")
-  expect_s3_class(tbl_rmd_yaml[["ast"]], "rmd_yaml_list")
+# get_rmd_parts works as expected ----
+test_that("get_rmd_parts gets yaml header data", {
+  expect_equal(sum(tbl_rmd[["type"]] == "yaml"), 1)
+  w_yaml <- which(tbl_rmd[["type"]] == "yaml")
+  expect_equal(tbl_rmd[["params"]][[w_yaml]]$title, "dev_history.Rmd for working package")
+  expect_equal(tbl_rmd[["params"]][[w_yaml]]$author, "statnmap")
+  expect_equal(tbl_rmd[["params"]][[w_yaml]]$date, "2023-10-12")
+  # expect_s3_class(tbl_rmd[["params"]][[w_yaml]], "rmd_yaml_list")
 })
 
-test_that("split_rmd gets H1 titles in markdown part only", {
+test_that("get_rmd_parts gets H1 titles in markdown part only", {
   expect_equal(sum(tbl_rmd[["type"]] == "rmd_heading"), 6)
   expect_equal(sum(!is.na(tbl_rmd[["sec_h1"]])), 5)
   expect_equal(tbl_rmd[["sec_h1"]][!is.na(tbl_rmd[["sec_h1"]])],
