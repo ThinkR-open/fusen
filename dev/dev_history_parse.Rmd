@@ -203,7 +203,8 @@ get_rmd_parts <- function(file) {
     label = NA,
     params = list(yaml_content),
     text = NA,
-    code = NA
+    code = NA,
+    heading = NA
   )
 
   # Get the rest of the document without yaml
@@ -217,6 +218,7 @@ get_rmd_parts <- function(file) {
   on.exit(options(knitr.duplicate.label = NULL))
   on.exit(knitr::knit_code$restore())
   
+  # Split files
   out <- knitr:::split_file(
     rmd_lines_no_yaml,
     patterns = knitr:::all_patterns$md,
@@ -266,28 +268,42 @@ get_rmd_parts <- function(file) {
   )
       
   # TODO - Extract headers
-  the_text <- res_full[["text"]][[4]]
   # split_headers_in_text
-  new_group <- rep(FALSE, length(the_text))
-  which_header <- grep("^#", the_text)
-  if (length(which_header) != 0) {
-    new_group[which_header] <- TRUE
-    # Change group just after header
-    which_header_plus <- 1 + which_header[(which_header + 1) <= length(new_group)]
-    if (length(which_header_plus) != 0) {
-      new_group[which_header_plus] <- TRUE
+  split_headers_from_text <- function(the_text) {
+    new_group <- rep(FALSE, length(the_text))
+    which_header <- grep("^#", the_text)
+    if (length(which_header) != 0) {
+      new_group[which_header] <- TRUE
+      # Change group just after header
+      which_header_plus <- 1 + which_header[(which_header + 1) <= length(new_group)]
+      if (length(which_header_plus) != 0) {
+        new_group[which_header_plus] <- TRUE
+      }
+      groups <- cumsum(new_group)
+      groups[which_header] <- paste0(groups[which_header], "-heading")
+      
+      split_text <- split(the_text, groups)
+    } else {
+      split_text <- list(the_text)
     }
-    groups <- cumsum(new_group)
-    groups[which_header] <- paste0("heading-", which_header)
-    
-    split_text <- split(the_text, groups)
+    return(split_text)
   }
-         
 
+  res_split <- res
+  res_split$text <- lapply(res_split$text, split_headers_from_text)
+  res_split <- tidyr::unnest(res_split, cols = text)
+  # Get headings
+  res_split$heading <- sapply(
+    1:nrow(res_split),
+    function(x) 
+      if (grepl("heading", names(res_split$text)[x])) {
+        gsub("^#*\\s*", "", res_split$text[x])
+      } else {NA}
+  )
 
   
   # Put back yaml in 'res'
-  res_full <- rbind(yaml_tbl, res)
+  res_full <- rbind(yaml_tbl, res_split)
 
   
   # res_full[["code"]][[2]]
