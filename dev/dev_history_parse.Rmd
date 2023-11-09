@@ -107,7 +107,7 @@ group_rmd <- function(file) {
   chunk.begin <- knitr::all_patterns$md$chunk.begin
   chunk.end <- knitr::all_patterns$md$chunk.end
   blks <- grepl(chunk.begin, x)
-  blks_ends <- grepl(chunk.end, x)
+  # blks_ends <- grepl(chunk.end, x)
   # get
   txts <- utils::getFromNamespace("filter_chunk_end", "knitr")(blks, grepl(chunk.end, x))
   if (length(blks) != length(txts)) {
@@ -294,13 +294,14 @@ get_rmd_parts <- function(file) {
   res_split <- tidyr::unnest(res_split, cols = text)
   # Get headings
   res_split$heading <- sapply(
-    1:nrow(res_split),
+    seq_len(res_split),
     function(x) 
       if (grepl("heading", names(res_split$text)[x])) {
         gsub("^#*\\s*", "", res_split$text[x])
       } else {NA}
   )
 
+  res_split$type[!is.na(res_split$heading)] <- "heading"
   
   # Put back yaml in 'res'
   res_full <- rbind(yaml_tbl, res_split)
@@ -399,6 +400,7 @@ full_parsermd_tbl$ast[[4]]
 ```
 
 
+
 ```{r tests}
 # file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
 # debugonce(group_rmd)
@@ -422,24 +424,18 @@ test_that("get_rmd_parts gets yaml header data", {
   # expect_s3_class(tbl_rmd[["params"]][[w_yaml]], "rmd_yaml_list")
 })
 
-test_that("get_rmd_parts gets H1 titles in markdown part only", {
-  expect_equal(sum(tbl_rmd[["type"]] == "rmd_heading"), 6)
-  expect_equal(sum(!is.na(tbl_rmd[["sec_h1"]])), 5)
-  expect_equal(tbl_rmd[["sec_h1"]][!is.na(tbl_rmd[["sec_h1"]])],
+# Find all headings
+test_that("get_rmd_parts gets titles in markdown part only", {
+  expect_equal(sum(tbl_rmd[["type"]] == "heading"), 6)
+  # expect_equal(sum(!is.na(tbl_rmd[["sec_h1"]])), 5)
+  expect_equal(tbl_rmd[["heading"]][!is.na(tbl_rmd[["heading"]])],
                c("Description of your package", 
                  "Read data",
                  "Calculate the median of a vector",
                  "Calculate the mean of a vector",
+                 "Use sub-functions in the same chunk",
                  "Inflate your package"))
-  expect_s3_class(tbl_rmd_yaml[["ast"]], "rmd_heading")
-})
-
-test_that("split_rmd gets H2 titles in markdown part only", {
-  expect_equal(sum(tbl_rmd[["type"]] == "rmd_heading"), 6)
-  expect_equal(sum(!is.na(tbl_rmd[["sec_h2"]])), 1)
-  expect_equal(tbl_rmd[["sec_h1"]][!is.na(tbl_rmd[["sec_h2"]])],
-               c("Use sub-functions in the same chunk"))
-  expect_s3_class(tbl_rmd_yaml[["ast"]], "rmd_heading")
+  # expect_s3_class(tbl_rmd_yaml[["ast"]], "rmd_heading")
 })
 
 

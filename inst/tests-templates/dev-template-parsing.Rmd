@@ -1,0 +1,165 @@
+---
+title: "dev_history.Rmd for working package"
+output: html_document
+author: statnmap
+date: 2023-10-12
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+<!--
+# Description of your package
+
+This will fill the description of your package.
+-->
+
+```{r description}
+# --> for parse tests
+fusen::fill_description(
+  pkg = here::here(),
+  fields = list(
+    Title = "Build A Package From Rmarkdown file",
+    Description = "Use Rmarkdown First method to build your package. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
+    `Authors@R` = c(
+      person("John", "Doe", email = "john@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000"))
+    )
+  )
+)
+# Define License with use_*_license()
+usethis::use_mit_license("John Doe")
+```
+
+# Read data
+
+<!-- Store your dataset in a directory named "inst/" at the root of your project -->
+<!-- Use it for your tests in this Rmd thanks to `load_all()` to make it available
+and `system.file()` to read it in your examples 
+-->
+
+```{r development-2}
+# Set , error=TRUE for checks() if needed
+# Run all in the console directly
+# Create "inst/" directory
+dir.create(here::here("inst"))
+# Example dataset
+file.copy(system.file("nyc_squirrels_sample.csv", package = "fusen"), here::here("inst"))
+# Make your dataset file available to the current Rmd
+pkgload::load_all(path = here::here(), export_all = FALSE)
+# You will be able to read your example data file in each of your function examples and tests as follows
+# For check() only, we need to shim system.file, otherwise base::system.file does not recognised load_all()
+pkgload:::shim_system.file(package = "<my_package_name>")
+system.file(package = "<my_package_name>")
+list.files(system.file(package = "<my_package_name>"))
+datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
+datafile <- pkgload:::shim_system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
+here::here()
+datafile
+nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
+```
+
+# Calculate the median of a vector
+
+Here is some inline R code : `r 1+1`
+
+```{r function}
+#' My median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_median(2:20)
+my_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+```{r examples}
+my_median(1:12)
+```
+
+```{r tests}
+test_that("my_median works properly and show error if needed", {
+  expect_error(my_median("text"))
+})
+```
+
+# Calculate the mean of a vector
+## Use sub-functions in the same chunk
+
+```{r function-1}
+#' My Other median
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+my_other_median <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {stop("x should be numeric")}
+  sub_median(x, na.rm =na.rm)
+}
+
+#' Core of the median not exported
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+sub_median <- function(x, na.rm = TRUE) {
+  stats::median(x, na.rm)
+}
+```
+
+```{r examples-1}
+my_other_median(1:12)
+my_other_median(8:20)
+my_other_median(20:50)
+```
+
+```{r tests-1}
+test_that("my_median works properly and show error if needed", {
+  expect_true(my_other_median(1:12) == 6.5)
+  expect_error(my_other_median("text"))
+})
+```
+
+```
+not a R chunk that should be kept in vignette, but not in code
+```
+
+
+```{r development-1, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(flat_file = "dev/dev_history.Rmd")
+```
+
+
+# Inflate your package
+
+```{r}
+# duplicate empty name
+```
+
+```{r}
+# duplicate empty name
+```
+
+
+You're one inflate from paper to box.
+Build your package from this very Rmd using `fusen::inflate()`
+
+- Verify your `"DESCRIPTION"` file has been updated
+- Verify your function is in `"R/"` directory
+- Verify your test is in `"tests/testthat/"` directory
+- Verify this Rmd appears in `"vignettes/"` directory
