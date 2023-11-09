@@ -5,6 +5,6 @@ globalVariables(unique(c(
   "fun_name", "rox_filename", "chunk_filename", ".",
   # get_functions
   ".",
-  # split_rmd
-  "type", "lines", "title"
+  # get_rmd_parts
+  "text"
 )))

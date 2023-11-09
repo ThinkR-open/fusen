@@ -9,192 +9,36 @@ output: html_document
 library(testthat)
 ```
 
-# Parse and split a Rmarkdown file, and transform as tibble
+# Parse and split a Rmd / Qmd file, and transform as tibble
+
+This is the core of {fusen}. Where everything starts.  
+{fusen} reads your flat file to detect what is a yaml header, 
+what is a code chunk and its options, what is a text part.  
+Function `get_rmd_parts()` returns a tibble with all these parts.
+
+You're not supposed to use this function directly when working with {fusen}.
+However, since {parsermd} is not maintained anymore, you may be interested in
+having access to these core functions.
 
 ```{r function}
-#' Split Rmarkdown file
+#' Group lines of a Rmd or Qmd file by types in a tibble
 #'
-#' @param file Path to Rmarkdown file
-#' @importFrom utils head tail
+#' @param file A Rmd or Qmd file path
+#' @return A tibble with 6 columns:
+#' - `type`: type of the part (yaml, heading, inline, block)
+#' - `label`: label of the part (if any)
+#' - `params`: parameters of the part (if any)
+#' - `text`: text of the part (if any)
+#' - `code`: code of the part (if any)
+#' - `heading`: heading of the part (if any)
 #'
 #' @export
-#'
-#' @return A tibble with a line for each Rmd part
-split_rmd <- function(file) {
-  x <- xfun::read_utf8(file)
-
-  target_labels <- c("description", "development", "function", "example", "test")
-
-  groups <- group_rmd(file)
-  first_of_group <- c(TRUE, (head(groups, -1)) != tail(groups, -1))
-  count_groups <- cumsum(first_of_group)
-
-  extract_labels <- function(x, type, lines, target_labels) {
-    if (type[[x]] != "rmd_chunk") {
-      return(NA_character_)
-    } else {
-      stringi::stri_extract_first_regex(lines[[x]][1], paste(target_labels, collapse = "|"))
-    }
-  }
-  extract_title <- function(x, type, lines) {
-    if (type[[x]] != "rmd_heading") {
-      return(NA_character_)
-    } else {
-      gsub("^#+\\s+", "", lines[[x]])
-    }
-  }
-  extract_code <- function(x, type, lines) {
-    if (type[[x]] != "rmd_chunk") {
-      return(NA_character_)
-    } else {
-      lines[[x]][-c(1, length(lines[[x]]))]
-    }
-  }
-
-  parsed <- tibble::tibble(
-    groups = groups[first_of_group],
-    type = stringi::stri_extract_first_regex(groups, "(\\w+)"),
-    lines = split(x, count_groups),
-    labels = unlist(
-      lapply(seq_along(type), extract_labels,
-        type = type, lines = lines, target_labels = target_labels
-      )
-    ),
-    title = unlist(lapply(seq_along(type), extract_title,
-      type = type, lines = lines
-    )),
-    section = c(NA_character_, title[!is.na(title)])[1 + cumsum(!is.na(title))],
-    code = lapply(seq_along(type), extract_code,
-      type = type, lines = lines
-    )
-  )
-  parsed
-}
-
-#' Combine a parsed tbl Rmarkdown file into a new Rmd file
-combine_parsed <- function(parsed_tbl) {
-  # equivalent of 'parsermd::as_document()'
-  # Get all code to keep, and combine into a file
-}
-
-#' Groupe parts of Rmarkdown file
-#'
-#' @param file path to Rmarkdown file
-#'
-#' @importFrom utils head tail
-#' @export
-#'
-#' @return Character vector of groups of lines
-#'
-#' @examples
-#' file <- system.file("dev-template-tests.Rmd", package = "fusen")
-#' group_rmd(file)
-group_rmd <- function(file) {
-  x <- readLines(file)
-  # x <- xfun::read_utf8(file)
-
-  # Info
-  x_info <- rep(NA_character_, length(x))
-  x_comments <- rep(NA_character_, length(x))
-
-  # Yaml
-  if (!grepl("^---$", x[1])) {stop("File parsed needs to have a yaml header starting from line 1 with: ---")}
-  yaml_begin <- 1
-  yaml_end <- which(grepl("^---", x))[2]
-  x_info[yaml_begin:yaml_end] <- "rmd_yaml_list"
-
-  # Chunks
-  chunk.begin <- knitr::all_patterns$md$chunk.begin
-  chunk.end <- knitr::all_patterns$md$chunk.end
-  blks <- grepl(chunk.begin, x)
-  # blks_ends <- grepl(chunk.end, x)
-  # get
-  txts <- utils::getFromNamespace("filter_chunk_end", "knitr")(blks, grepl(chunk.end, x))
-  if (length(blks) != length(txts)) {
-    stop("You may have let some not closed chunks")
-  }
-  chunks_lines_list <- lapply(
-    seq_along(which(blks)),
-    function(x) {
-      which(blks)[x]:which(txts)[x]
-    }
-  )
-  count_chunks <- seq_along(chunks_lines_list)
-  count_chunks <- formatC(count_chunks, flag = "0", width = max(nchar(count_chunks)))
-  chunks_lines_nb <- unlist(lapply(
-    seq_along(chunks_lines_list),
-    function(x) {
-      rep(
-        paste0("rmd_chunk-", count_chunks[x]),
-        length(chunks_lines_list[[x]])
-      )
-    }
-  ))
-  chunks_lines_vec <- unlist(chunks_lines_list)
-  x_info[chunks_lines_vec] <- chunks_lines_nb
-
-  # Comments
-  # TODO : See how to take into account comments around titles ?
-  # We need to keep title to separate functions families, but
-  # text needs to be identified as comment to be removed in vignettes
-  # Probably, the function needs to output comments as another output
-  comment.begin <- "^<!--"
-  comment.end <- "-->"
-  starts <- which(grepl(comment.begin, x))
-  starts <- starts[!starts %in% c(yaml_begin:yaml_end, chunks_lines_vec)]
-  ends <- which(grepl(comment.end, x))
-  ends <- ends[!ends %in% c(yaml_begin:yaml_end, chunks_lines_vec)]
-  if (length(starts) != length(ends)) {
-    stop("You may have let some not closed comments tags like <!-- or --> in your text")
-  }
-  comments_lines_list <- lapply(
-    seq_along(starts),
-    function(x) {
-      starts[x]:ends[x]
-    }
-  )
-  count_comments <- seq_along(comments_lines_list)
-  count_comments <- formatC(count_comments, flag = "0", width = max(nchar(count_comments)))
-  comments_lines_nb <- unlist(lapply(
-    seq_along(comments_lines_list),
-    function(x) {
-      rep(
-        paste0("rmd_comment-", count_comments[x]),
-        length(comments_lines_list[[x]])
-      )
-    }
-  ))
-  comments_lines_vec <- unlist(comments_lines_list)
-  x_comments[comments_lines_vec] <- comments_lines_nb
-
-
-  # hashtags
-  hashtag <- which(grepl("^#", x))
-  titles <- hashtag[!hashtag %in%
-    c(yaml_begin:yaml_end, chunks_lines_vec, comments_lines_vec)]
-  count_titles <- seq_along(titles)
-  count_titles <- formatC(count_titles, flag = "0", width = max(nchar(count_titles)))
-  x_info[titles] <- paste0("rmd_heading-", count_titles)
-
-  # text
-  all_text <- which(is.na(x_info))
-  # Prev is text
-  count_text <- cumsum(c(TRUE, (head(all_text, -1) + 1) != tail(all_text, -1)))
-  count_text <- formatC(count_text, flag = "0", width = max(nchar(count_text)))
-  texts <- paste0("rmd_markdown-", count_text)
-  x_info[all_text] <- texts
-
-  # Return groups
-  res <- list(info = x_info,
-       comments = x_comments)
-  return(res)
-}
-
 get_rmd_parts <- function(file) {
-  
   rmd_lines <- readLines(file)
   # Get yaml header
-  if (!grepl("^---$", rmd_lines[1])) {stop("Flat file parsed needs to have a yaml header starting from line 1 with: ---")}
+  if (!grepl("^---$", rmd_lines[1])) {
+    stop("Flat file parsed needs to have a yaml header starting from line 1 with: ---")
+  }
   yaml_begin <- 1
   yaml_end <- which(grepl("^---", rmd_lines))[2]
   yaml_content <- yaml::yaml.load(rmd_lines[yaml_begin:yaml_end])
@@ -210,63 +54,75 @@ get_rmd_parts <- function(file) {
   # Get the rest of the document without yaml
   rmd_lines_no_yaml <- rmd_lines[-c(yaml_begin:yaml_end)]
   # Use hidden functions of {knitr}
-  # Code extracted will be stored in a new environment with `knitr:::split_file()`
-  # Using `knitr::knit_code$restore()` makes sure there is no current Rmd to be splitted
-  # Is it compatible with the function beeing included in a Rmd file ? We'll see.
+  # Code extracted will be stored in a new environment
+  # with `knitr:::split_file()`
+  # Using `knitr::knit_code$restore()` makes sure there is no current Rmd to be
+  # splitted
+  # Is it compatible with the function beeing included in a Rmd file ?
+  # We'll see.
+  getFromNamespace("knit_log", "knitr")$restore()
   knitr::knit_code$restore()
+  getFromNamespace("chunk_counter", "knitr")(reset = TRUE)
   options(knitr.duplicate.label = "allow")
+  # Restore after splitting
   on.exit(options(knitr.duplicate.label = NULL))
+  # restore unnamed-chunk counter
+  on.exit(getFromNamespace("chunk_counter", "knitr")(reset = TRUE))
   on.exit(knitr::knit_code$restore())
-  
+  on.exit(getFromNamespace("knit_log", "knitr")$restore())
+
+
   # Split files
-  out <- knitr:::split_file(
+  out <- getFromNamespace("split_file", "knitr")(
     rmd_lines_no_yaml,
-    patterns = knitr:::all_patterns$md,
+    patterns = getFromNamespace("all_patterns", "knitr")$md,
     set.preamble = TRUE
   )
-  out
-  # out[[1]]
-  # out[[2]]
-  # knitr::knit_code$get('bar')
-  # chunk_labels <- sapply(out[sapply(out, class) == "block"], function(x) x$params$label)
-  # lapply(chunk_labels, knitr::knit_code$get)
-  # knitr::knit_code$get('development')
-  # knitr::knit_code$get('unnamed-chunk-19')
 
   res <- tibble(
     type = sapply(out, class),
-    label = sapply(out, function(x)
+    label = sapply(out, function(x) {
       ifelse(
         !is.null(x$params$label), x$params$label, NA
-      )),
-    params = lapply(out, function(x)
-      if (!is.null(x$params) && 
-          (is.null(x$params$engine) || x$params$engine == "r")) {
+      )
+    }),
+    params = lapply(out, function(x) {
+      if (!is.null(x$params) &&
+        (is.null(x$params$engine) || x$params$engine == "r")) {
         # if chunk is not 'r' chunk, it must be accounted as text
         x$params
       } else {
         NA
-      }),
-    text = lapply(out, function(x)
-      if (class(x) == "inline") {
+      }
+    }),
+    text = lapply(out, function(x) {
+      if (inherits(x, "inline")) {
         unlist(strsplit(x$input, "\n"))
-      } else if (!is.null(x$params) && 
-          !is.null(x$params$engine) && x$params$engine != "r") {
+      } else if (
+        !is.null(x$params) &&
+          !is.null(x$params$engine) &&
+          x$params$engine != "r"
+      ) {
         knitr::knit_code$get(x$params$label)
       } else {
         NA
-      }),
-    code = lapply(out, function(x)
-      if (!is.null(x$params) && 
-          !is.null(x$params$engine) && x$params$engine != "r") {
+      }
+    }),
+    code = lapply(out, function(x) {
+      if (
+        !is.null(x$params) &&
+          !is.null(x$params$engine) &&
+          x$params$engine != "r"
+      ) {
         NA
-      } else if (class(x) == "block") {
+      } else if (inherits(x, "block")) {
         knitr::knit_code$get(x$params$label)
       } else {
         NA
-      })
+      }
+    })
   )
-      
+
   # TODO - Extract headers
   # split_headers_in_text
   split_headers_from_text <- function(the_text) {
@@ -275,13 +131,15 @@ get_rmd_parts <- function(file) {
     if (length(which_header) != 0) {
       new_group[which_header] <- TRUE
       # Change group just after header
-      which_header_plus <- 1 + which_header[(which_header + 1) <= length(new_group)]
+      which_header_plus <- 1 + which_header[
+        (which_header + 1) <= length(new_group)
+      ]
       if (length(which_header_plus) != 0) {
         new_group[which_header_plus] <- TRUE
       }
       groups <- cumsum(new_group)
       groups[which_header] <- paste0(groups[which_header], "-heading")
-      
+
       split_text <- split(the_text, groups)
     } else {
       split_text <- list(the_text)
@@ -294,40 +152,52 @@ get_rmd_parts <- function(file) {
   res_split <- tidyr::unnest(res_split, cols = text)
   # Get headings
   res_split$heading <- sapply(
-    seq_len(res_split),
-    function(x) 
+    seq_len(nrow(res_split)),
+    function(x) {
       if (grepl("heading", names(res_split$text)[x])) {
         gsub("^#*\\s*", "", res_split$text[x])
-      } else {NA}
+      } else {
+        NA
+      }
+    }
   )
 
   res_split$type[!is.na(res_split$heading)] <- "heading"
-  
+
   # Put back yaml in 'res'
   res_full <- rbind(yaml_tbl, res_split)
 
-  
-  # res_full[["code"]][[2]]
-  # res_full[["code"]][[4]]
-  # res_full[["text"]][[4]]
-  # res_full[21,]$params
-  # res[20,]$text
-  # as.character(res[["code"]][[20]])
-  
-  
-  # Reste à diviser les 'inline' pour détecter les titres
-  # Allez voir dans group_rmd()
-  
   return(res_full)
+}
+
+#' Prepare all content from parsedtbl to be combined into a Rmd file
+#' @param parsed_tbl A tibble with 6 columns as issued by `get_rmd_parts()`
+#' @return A tibble with a new column `content` containing the content
+#'  for the future rmd file
+#' @noRd
+get_content_parsedtbl <- function(parsed_tbl) {
+  message(c(
+    "TODO - This function is not yet implemented",
+    "and will be added in get_rmd_parts() directly"
+  ))
+}
+
+#' Combine a parsed tbl Rmarkdown file into a new Rmd file
+#' @param parsed_tbl A tibble with 6 columns as issued by `get_rmd_parts()`
+#' @return A Rmd file
+#' @export
+combine_parsed <- function(parsed_tbl) {
+  # equivalent of 'parsermd::as_document()'
+  # Get all code to keep, and combine into a file
+  print("TODO - This function is not yet implemented")
 }
 ```
 
 ```{r examples}
-file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
-# Attribute group to each line
-group_rmd(file)
-# Split Rmd by group into tibble
-split_rmd(file)
+file <- system.file("tests-templates/dev-template-parsing.Rmd",
+  package = "fusen"
+)
+get_rmd_parts(file)
 ```
 
 ```{r dev, eval=FALSE}
@@ -338,24 +208,24 @@ full_parsermd_tbl <- parsermd::as_tibble(full_parsed_list)
 saveRDS(full_parsermd_tbl, file = here::here("data-raw/full_parsermd_tbl.rds"))
 dput(full_parsermd_tbl, file = here::here("data-raw/full_parsermd_tbl.dput"))
 class(full_parsermd_tbl$ast)
-# [1] "rmd_ast" "list"  
+# [1] "rmd_ast" "list"
 full_parsermd_tbl$type[[1]]
 # [1] "rmd_yaml_list"
 full_parsermd_tbl$ast[[1]]
 # $title
 # [1] "dev_history.Rmd for working package"
-# 
+#
 # $output
 # [1] "html_document"
-# 
+#
 # $author
 # [1] "statnmap"
-# 
+#
 # $editor_options
 # $editor_options$chunk_output_type
 # [1] "console"
-# 
-# 
+#
+#
 # attr(,"class")
 # [1] "rmd_yaml_list"
 names(full_parsermd_tbl$ast)
@@ -365,21 +235,21 @@ slotNames(full_parsermd_tbl$ast)
 full_parsermd_tbl$ast[[2]]
 # $engine
 # [1] "r"
-# 
+#
 # $name
 # [1] "development"
-# 
+#
 # $options
 # $options$include
 # [1] "FALSE"
-# 
-# 
+#
+#
 # $code
 # [1] "library(testthat)"
-# 
+#
 # $indent
 # [1] ""
-# 
+#
 # attr(,"class")
 # [1] "rmd_chunk"
 full_parsermd_tbl$ast[[3]]
@@ -391,30 +261,22 @@ full_parsermd_tbl$sec_h2[[4]]
 full_parsermd_tbl$ast[[4]]
 # $name
 # [1] "Description of your package"
-# 
+#
 # $level
 # [1] 1
-# 
+#
 # attr(,"class")
 # [1] "rmd_heading"
 ```
 
 
-
 ```{r tests}
-# file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
-# debugonce(group_rmd)
-# debugonce(split_rmd)
-# tbl_rmd <- split_rmd(file)
-
-# => Try with {knitr} hidden functions
 file <- system.file("tests-templates/dev-template-parsing.Rmd",
-                    package = "fusen")
-debugonce(get_rmd_parts)
+  package = "fusen"
+)
+# debugonce(get_rmd_parts)
 tbl_rmd <- get_rmd_parts(file)
 
-
-# TDD
 # get_rmd_parts works as expected ----
 test_that("get_rmd_parts gets yaml header data", {
   expect_equal(sum(tbl_rmd[["type"]] == "yaml"), 1)
@@ -428,12 +290,14 @@ test_that("get_rmd_parts gets yaml header data", {
 })
 
 # Find all headings
-headings <- c("Description of your package",
-              "Read data",
-              "Calculate the median of a vector",
-              "Calculate the mean of a vector",
-              "Use sub-functions in the same chunk",
-              "Inflate your package")
+headings <- c(
+  "Description of your package",
+  "Read data",
+  "Calculate the median of a vector",
+  "Calculate the mean of a vector",
+  "Use sub-functions in the same chunk",
+  "Inflate your package"
+)
 
 test_that("get_rmd_parts gets titles in markdown part only", {
   expect_equal(sum(tbl_rmd[["type"]] == "heading"), 6)
@@ -454,43 +318,75 @@ test_that("get_rmd_parts gets text parts without titles", {
   )
   # Verify there is no title in the lists
   expect_false(any(headings %in%
-      unlist(tbl_rmd[tbl_rmd[["type"]] == "inline", ][["text"]])
-  ))
+    unlist(tbl_rmd[tbl_rmd[["type"]] == "inline", ][["text"]])))
 })
 
-
-# Sub tests ----
-groups <- group_rmd(file)
-test_that("group_rmd works properly", {
-  expect_true(all(groups[1:8] == "rmd_yaml_list"))
-  expect_true(all(groups[10:12] == "rmd_chunk-01"))
-  expect_true(all(groups[14:19] == "rmd_comment-1"))
-  expect_true(all(groups[21:35] == "rmd_chunk-02"))
-  expect_true(all(groups[37] == "rmd_heading-1"))
+test_that("get_rmd_parts gets R-only chunks with label and options", {
+  expect_equal(sum(tbl_rmd[["type"]] == "block"), 12)
+  # labels
+  expect_equal(
+    tbl_rmd[["label"]][tbl_rmd[["type"]] == "block"],
+    c(
+      "development", "description", "development-2",
+      "function", "examples", "tests",
+      "function-1", "examples-1", "tests-1",
+      "development-1", "unnamed-chunk-1", "unnamed-chunk-2"
+    )
+  )
+  # options
+  expect_equal(
+    tbl_rmd[["params"]][tbl_rmd[["type"]] == "block"][[1]],
+    list(label = "development", include = FALSE)
+  )
+  expect_equal(
+    tbl_rmd[["params"]][tbl_rmd[["type"]] == "block"][[4]],
+    list(label = "function")
+  )
+  # qmd-like options format
+  expect_equal(
+    tbl_rmd[["params"]][tbl_rmd[["type"]] == "block"][[7]],
+    list(label = "function-1", filename = "the_median_file")
+  )
 })
 
-file <- system.file("dev-template-test-parse-nothing.Rmd", package = "fusen")
-groups <- group_rmd(file)
-test_that("group_rmd does not fail", {
-  expect_true(all(groups[1:8] == "rmd_yaml_list"))
+test_that("get_rmd_parts - chunk code extracted contains R code only", {
+  expect_equal(
+    as.character(tbl_rmd[["code"]][tbl_rmd[["type"]] == "block"][[5]]),
+    c("my_median(1:12)")
+  )
+  # No remaining chunk params in the code extracted
+  expect_equal(
+    as.character(tbl_rmd[["code"]][tbl_rmd[["type"]] == "block"][[7]])[1],
+    c("#' My Other median")
+  )
 })
 
-file <- system.file("dev-template-tests.Rmd", package = "fusen")
-tbl_rmd <- split_rmd(file)
-test_that("split_rmd works", {
-  expect_true(nrow(tbl_rmd) == 47)
-  expect_true(ncol(tbl_rmd) == 7)
-  expect_true(all(tbl_rmd[["lines"]][[3]] ==
-    c("```{r development, include=FALSE}", "library(testthat)", "```")))
-  expect_true(tbl_rmd[["type"]][3] == "rmd_chunk")
-  expect_true(tbl_rmd[["type"]][9] == "rmd_heading")
-  expect_true(tbl_rmd[["labels"]][3] == "development")
-  expect_true(tbl_rmd[["title"]][9] == "Calculate the median of a vector")
-  expect_true(tbl_rmd[["section"]][10] == "Calculate the median of a vector")
-  expect_true(tbl_rmd[["code"]][[3]] == "library(testthat)")
-})
+test_that(
+  "get_rmd_parts gets does not increment unnamed-chunks id when run a 2nd time",
+  {
+    tbl_rmd <- get_rmd_parts(file)
+    tbl_rmd <- get_rmd_parts(file) # 2nd time
+    expect_equal(sum(tbl_rmd[["type"]] == "block"), 12)
+    expect_equal(
+      tbl_rmd[["label"]][tbl_rmd[["type"]] == "block"],
+      c(
+        "development", "description", "development-2",
+        "function", "examples", "tests",
+        "function-1", "examples-1", "tests-1",
+        "development-1", "unnamed-chunk-1", "unnamed-chunk-2"
+      )
+    )
+  }
+)
 ```
 
 ```{r development-2, eval=FALSE}
-fusen::inflate(flat_file = file.path("dev", "dev_history_parse.Rmd"), vignette_name = NA, check = FALSE)
+fusen::inflate(
+  flat_file = file.path("dev", "dev_history_parse.Rmd"),
+  vignette_name = c(
+    "Parse a Rmd or Qmd file into a tibble and vice-versa" =
+      "z-Parse a Rmd or Qmd file into a tibble and vice-versa"
+  ),
+  check = FALSE
+)
 ```

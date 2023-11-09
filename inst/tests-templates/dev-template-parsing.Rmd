@@ -41,24 +41,12 @@ and `system.file()` to read it in your examples
 -->
 
 ```{r development-2}
-# Set , error=TRUE for checks() if needed
+# Set error=TRUE for checks() if needed
 # Run all in the console directly
 # Create "inst/" directory
 dir.create(here::here("inst"))
 # Example dataset
 file.copy(system.file("nyc_squirrels_sample.csv", package = "fusen"), here::here("inst"))
-# Make your dataset file available to the current Rmd
-pkgload::load_all(path = here::here(), export_all = FALSE)
-# You will be able to read your example data file in each of your function examples and tests as follows
-# For check() only, we need to shim system.file, otherwise base::system.file does not recognised load_all()
-pkgload:::shim_system.file(package = "<my_package_name>")
-system.file(package = "<my_package_name>")
-list.files(system.file(package = "<my_package_name>"))
-datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
-datafile <- pkgload:::shim_system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
-here::here()
-datafile
-nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
 ```
 
 # Calculate the median of a vector
@@ -78,7 +66,9 @@ Here is some inline R code : `r 1+1`
 #' @examples
 #' my_median(2:20)
 my_median <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
   stats::median(x, na.rm = na.rm)
 }
 ```
@@ -97,6 +87,8 @@ test_that("my_median works properly and show error if needed", {
 ## Use sub-functions in the same chunk
 
 ```{r function-1}
+#| filename: the_median_file
+
 #' My Other median
 #'
 #' @param x Vector of Numeric values
@@ -108,8 +100,10 @@ test_that("my_median works properly and show error if needed", {
 #'
 #' @examples
 my_other_median <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
-  sub_median(x, na.rm =na.rm)
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
+  sub_median(x, na.rm = na.rm)
 }
 
 #' Core of the median not exported

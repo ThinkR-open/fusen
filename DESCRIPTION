@@ -47,7 +47,7 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
-Config/fusen/version: 0.5.2
+Config/fusen/version: 0.5.2.9000
 Config/Needs/website: ThinkR-open/thinkrtemplate
 Config/testthat/edition: 3
 Config/testthat/parallel: false
