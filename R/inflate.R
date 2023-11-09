@@ -94,8 +94,9 @@ inflate <- function(pkg = ".", flat_file,
 
   # If flat_file empty
   if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
-    rstudioapi::hasFun("documentPath")) {
-    current_file <- rstudioapi::documentPath()
+    rstudioapi::hasFun("getSourceEditorContext")) {
+    curr_editor <- rstudioapi::getSourceEditorContext()
+    current_file <- curr_editor$path
     if (!is.null(current_file) && grepl("^flat.*[.](R|r|q)md$", basename(current_file))) {
       if (overwrite == "ask") {
         sure <- paste0(

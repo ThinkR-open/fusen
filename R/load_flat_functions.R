@@ -14,11 +14,20 @@
 #' }
 load_flat_functions <- function(flat_file, envir = globalenv()) {
   if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
-    rstudioapi::hasFun("documentPath")) {
-    current_file <- rstudioapi::documentPath()
-    if (!is.null(current_file) && grepl("^(flat|dev).*[.](R|r|q)md$", basename(current_file))) {
+    rstudioapi::hasFun("getSourceEditorContext")) {
+    curr_editor <- rstudioapi::getSourceEditorContext()
+    current_file <- curr_editor$path
+
+    if (!is.null(current_file)) {
       flat_file <- current_file
     }
+  }
+
+  if (!grepl("^(flat|dev).*[.](R|r|q)md$", basename(current_file))) {
+    stop(
+      "Please provide a Rmd or qmd flat file to load functions from",
+      " or open a flat file in the current IDE editor."
+    )
   }
 
   parsed_flat_file <- parse_rmd(flat_file)
