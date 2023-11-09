@@ -408,7 +408,8 @@ full_parsermd_tbl$ast[[4]]
 # tbl_rmd <- split_rmd(file)
 
 # => Try with {knitr} hidden functions
-file <- system.file("tests-templates/dev-template-parsing.Rmd", package = "fusen")
+file <- system.file("tests-templates/dev-template-parsing.Rmd",
+                    package = "fusen")
 debugonce(get_rmd_parts)
 tbl_rmd <- get_rmd_parts(file)
 
@@ -418,24 +419,43 @@ tbl_rmd <- get_rmd_parts(file)
 test_that("get_rmd_parts gets yaml header data", {
   expect_equal(sum(tbl_rmd[["type"]] == "yaml"), 1)
   w_yaml <- which(tbl_rmd[["type"]] == "yaml")
-  expect_equal(tbl_rmd[["params"]][[w_yaml]]$title, "dev_history.Rmd for working package")
+  expect_equal(
+    tbl_rmd[["params"]][[w_yaml]]$title,
+    "dev_history.Rmd for working package"
+  )
   expect_equal(tbl_rmd[["params"]][[w_yaml]]$author, "statnmap")
   expect_equal(tbl_rmd[["params"]][[w_yaml]]$date, "2023-10-12")
-  # expect_s3_class(tbl_rmd[["params"]][[w_yaml]], "rmd_yaml_list")
 })
 
 # Find all headings
+headings <- c("Description of your package",
+              "Read data",
+              "Calculate the median of a vector",
+              "Calculate the mean of a vector",
+              "Use sub-functions in the same chunk",
+              "Inflate your package")
+
 test_that("get_rmd_parts gets titles in markdown part only", {
   expect_equal(sum(tbl_rmd[["type"]] == "heading"), 6)
-  # expect_equal(sum(!is.na(tbl_rmd[["sec_h1"]])), 5)
-  expect_equal(tbl_rmd[["heading"]][!is.na(tbl_rmd[["heading"]])],
-               c("Description of your package", 
-                 "Read data",
-                 "Calculate the median of a vector",
-                 "Calculate the mean of a vector",
-                 "Use sub-functions in the same chunk",
-                 "Inflate your package"))
-  # expect_s3_class(tbl_rmd_yaml[["ast"]], "rmd_heading")
+  expect_equal(tbl_rmd[["heading"]][!is.na(tbl_rmd[["heading"]])], headings)
+})
+
+test_that("get_rmd_parts gets text parts without titles", {
+  expect_equal(sum(tbl_rmd[["type"]] == "inline"), 16)
+  expect_equal(
+    sum(tbl_rmd[["type"]] == "inline"),
+    length(tbl_rmd[["text"]][!is.na(tbl_rmd[["text"]])]) -
+      sum(tbl_rmd[["type"]] == "heading")
+  )
+  expect_length(tbl_rmd[tbl_rmd[["type"]] == "inline", ][["text"]][[1]], 0)
+  expect_equal(
+    tbl_rmd[tbl_rmd[["type"]] == "inline", ][["text"]][[3]],
+    c("", "This will fill the description of your package.", "-->")
+  )
+  # Verify there is no title in the lists
+  expect_false(any(headings %in%
+      unlist(tbl_rmd[tbl_rmd[["type"]] == "inline", ][["text"]])
+  ))
 })
 
 
