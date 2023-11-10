@@ -31,7 +31,6 @@ create_content_yaml <- function(params) {
 #' @return A character string of R code chunk content
 #' @noRd
 create_content_r_chunk <- function(params, code) {
-
   other_params <- params[which(names(params) != "label")]
 
   paste0(

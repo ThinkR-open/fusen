@@ -43,7 +43,7 @@ test_that("get_content_parsedtbl can create the Rmd content for each type", {
   # no params and no label
   expect_equal(
     tbl_rmd_content$content[[32]],
-    "```{r}\n# duplicate empty name\n```\n" 
+    "```{r}\n# duplicate empty name\n```\n"
   )
   # test the content of chunk description
   expect_true(

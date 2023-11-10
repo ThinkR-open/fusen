@@ -156,7 +156,8 @@ for (pkgname in create_choices_test) {
       # quiet and checkdir
       checkdir <- normalize_path_winslash(
         file.path(alltemp, paste0("checkout", pkgname)),
-        mustWork = FALSE)
+        mustWork = FALSE
+      )
       extra_params <- glue(
         'fusen::inflate(pkg = "{path_foosen}",
       check = TRUE, check_dir = "{checkdir}",
