@@ -21,7 +21,10 @@ get_rmd_parts <- function(file) {
   rmd_lines <- readLines(file)
   # Get yaml header
   if (!grepl("^---$", rmd_lines[1])) {
-    stop("Flat file parsed needs to have a yaml header starting from line 1 with: ---")
+    stop(
+      "Flat file parsed needs to have a yaml header",
+      " starting from line 1 with: ---"
+    )
   }
   yaml_begin <- 1
   yaml_end <- which(grepl("^---", rmd_lines))[2]
@@ -107,7 +110,6 @@ get_rmd_parts <- function(file) {
     })
   )
 
-  # TODO - Extract headers
   # split_headers_in_text
   split_headers_from_text <- function(the_text) {
     new_group <- rep(FALSE, length(the_text))
@@ -151,39 +153,5 @@ get_rmd_parts <- function(file) {
   # Put back yaml in 'res'
   res_full <- rbind(yaml_tbl, res_split)
 
-
-  # res_full[["code"]][[2]]
-  # res_full[["code"]][[4]]
-  # res_full[["text"]][[4]]
-  # res_full[21,]$params
-  # res[20,]$text
-  # as.character(res[["code"]][[20]])
-
-
-  # Reste à diviser les 'inline' pour détecter les titres
-  # Allez voir dans group_rmd()
-
   return(res_full)
-}
-
-#' Prepare all content from parsedtbl to be combined into a Rmd file
-#' @param parsed_tbl A tibble with 6 columns as issued by `get_rmd_parts()`
-#' @return A tibble with a new column `content` containing the content
-#'  for the future rmd file
-#' @noRd
-get_content_parsedtbl <- function(parsed_tbl) {
-  message(c(
-    "TODO - This function is not yet implemented",
-    "and will be added in get_rmd_parts() directly"
-  ))
-}
-
-#' Combine a parsed tbl Rmarkdown file into a new Rmd file
-#' @param parsed_tbl A tibble with 6 columns as issued by `get_rmd_parts()`
-#' @return A Rmd file
-#' @export
-combine_parsed <- function(parsed_tbl) {
-  # equivalent of 'parsermd::as_document()'
-  # Get all code to keep, and combine into a file
-  print("TODO - This function is not yet implemented")
 }

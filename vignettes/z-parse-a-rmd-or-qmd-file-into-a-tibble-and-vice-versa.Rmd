@@ -41,3 +41,18 @@ file <- system.file("tests-templates/dev-template-parsing.Rmd",
 get_rmd_parts(file)
 ```
 
+# combine_parsed
+
+    
+
+  
+
+```{r example-combine_parsed}
+combine_parsed()
+```
+
+  
+
+  
+
+

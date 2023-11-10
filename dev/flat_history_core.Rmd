@@ -838,16 +838,6 @@ create_vignette <- function(parsed_tbl, pkg, name) {
       grepl("rmd_yaml_list", parsed_tbl[["type"]])),
   ]
 
-  # Make chunk names unique
-  # vignette_tbl[["label"]] <- ifelse(
-  #   is.na(vignette_tbl[["label"]]) & vignette_tbl[["type"]] == "rmd_chunk",
-  #                                   gsub("[.]+", "-", make.names(name)),
-  #                                   vignette_tbl[["label"]])
-  #
-  # vignette_tbl[["label"]] <- make.unique(vignette_tbl[["label"]], sep = "-")
-  # # Not re-used in as_document()
-
-
   cleaned_name <- asciify_name(name)
 
   usethis::use_vignette(name = cleaned_name, title = name)

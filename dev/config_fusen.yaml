@@ -1,8 +1,12 @@
 dev_history_parse.Rmd:
   path: dev/dev_history_parse.Rmd
   state: active
-  R: R/get_rmd_parts.R
-  tests: tests/testthat/test-get_rmd_parts.R
+  R:
+  - R/get_content_parsedtbl.R
+  - R/get_rmd_parts.R
+  tests:
+  - tests/testthat/test-get_rmd_parts.R
+  - tests/testthat/test-get_content_parsedtbl.R
   vignettes: vignettes/z-parse-a-rmd-or-qmd-file-into-a-tibble-and-vice-versa.Rmd
   inflate:
     flat_file: dev/dev_history_parse.Rmd
