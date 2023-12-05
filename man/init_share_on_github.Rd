@@ -4,11 +4,17 @@
 \alias{init_share_on_github}
 \title{Initiate GitHub to share your package on a website}
 \usage{
-init_share_on_github(ask = TRUE)
+init_share_on_github(ask = TRUE, organisation = NULL)
 }
 \arguments{
 \item{ask}{Logical. \code{TRUE} (default) to ask the user to apply the instructions each time needed,
 or \code{FALSE} if the user already know what to do.}
+
+\item{organisation}{If supplied, the repo will be created under this
+organisation, instead of the login associated with the GitHub token
+discovered for this \code{host}. The user's role and the token's scopes must be
+such that you have permission to create repositories in this
+\code{organisation}.}
 }
 \value{
 The URL of the website created
