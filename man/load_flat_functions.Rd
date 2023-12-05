@@ -22,6 +22,10 @@ Load the code of all 'function' chunk in a flat file
 }
 \examples{
 \dontrun{
+# Use this command directly in the console
+fusen::load_flat_functions()
+
+# Or choose a flat file to load functions from
 load_flat_functions(flat_file = "dev/flat_full.Rmd")
 load_flat_functions(flat_file = "dev/flat_clean_fusen_files.Rmd")
 }

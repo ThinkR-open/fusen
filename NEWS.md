@@ -1,5 +1,8 @@
 # fusen (development version)
 
+- Allow `organisation` in `init_share_on_github()` to send to a GitHub organisation
+- Fix `load_flat_functions()` to work with VSCode
+
 # fusen 0.5.2
 
 ## New features

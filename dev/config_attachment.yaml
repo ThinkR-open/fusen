@@ -10,6 +10,7 @@ extra.suggests:
   - rmarkdown
   - knitr
   - gert
+  - styler
 pkg_ignore:
   - testthat
   - dummypackage

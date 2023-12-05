@@ -9,33 +9,54 @@
 #'
 #' @examples
 #' \dontrun{
+#' # Use this command directly in the console
+#' fusen::load_flat_functions()
+#'
+#' # Or choose a flat file to load functions from
 #' load_flat_functions(flat_file = "dev/flat_full.Rmd")
 #' load_flat_functions(flat_file = "dev/flat_clean_fusen_files.Rmd")
 #' }
 load_flat_functions <- function(flat_file, envir = globalenv()) {
-  if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
-    rstudioapi::hasFun("documentPath")) {
-    current_file <- rstudioapi::documentPath()
-    if (!is.null(current_file) && grepl("^flat.*[.](R|r|q)md$", basename(current_file))) {
+  if (
+    missing(flat_file) && requireNamespace("rstudioapi") &&
+      rstudioapi::isAvailable() &&
+      rstudioapi::hasFun("getSourceEditorContext")
+  ) {
+    curr_editor <- rstudioapi::getSourceEditorContext()
+    current_file <- curr_editor$path
+
+    if (!is.null(current_file)) {
       flat_file <- current_file
     }
   }
 
+  if (!grepl("^(flat|dev).*[.](R|r|q)md$", basename(flat_file))) {
+    stop(
+      "Please provide a Rmd or qmd flat file to load functions from",
+      " or open a flat file in the current IDE editor.",
+      "\n'flat_file' name should start with 'flat' or 'dev'",
+      " and end with '.Rmd' or '.qmd'."
+    )
+  }
+
   parsed_flat_file <- parse_rmd(flat_file)
   parsed_tbl <- as_tibble(parsed_flat_file)
-  which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-    grepl(regex_functions, parsed_tbl$label))
+  which_parsed_fun <- which(
+    !is.na(parsed_tbl$label) &
+      grepl(regex_functions, parsed_tbl$label)
+  )
 
   if (nrow(parsed_tbl) > 0) {
-    # to_source <- tempfile()
     content <- unlist(rmd_node_code(parsed_tbl[which_parsed_fun, ][["ast"]]))
 
     eval(parse(text = content), envir)
-    # cat(content, file = to_source)
-    #
-    # source(to_source, ...)
-    # file.remove(to_source)
-    cli_alert_success(paste0("'function' chunks from '", flat_file, "' sourced in global env."))
+
+    cli_alert_success(
+      paste0(
+        "'function' chunks from '",
+        flat_file, "' sourced in global env."
+      )
+    )
   } else {
     cli_alert_warning("Nothing to source")
   }

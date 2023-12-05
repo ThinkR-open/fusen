@@ -7,6 +7,7 @@
 #'
 #' @param ask Logical. `TRUE` (default) to ask the user to apply the instructions each time needed,
 #' or `FALSE` if the user already know what to do.
+#' @inheritParams usethis::use_github
 #'
 #' @details
 #'
@@ -35,7 +36,7 @@
 #' # This modifies the current directory and send it on GitHub
 #' init_share_on_github()
 #' }
-init_share_on_github <- function(ask = TRUE) {
+init_share_on_github <- function(ask = TRUE, organisation = NULL) {
   pkg <- "."
 
   if (!requireNamespace("gert", quietly = TRUE)) {
@@ -88,7 +89,7 @@ init_share_on_github <- function(ask = TRUE) {
       dont_do_it <- FALSE
     }
     if (do_it) {
-      usethis::use_github()
+      usethis::use_github(organisation = organisation)
     } else {
       cli::cli_text(
         cli::cli_alert_info(

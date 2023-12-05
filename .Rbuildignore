@@ -22,3 +22,4 @@ rstudio\_dotrstudio
 ^CONTRIBUTING\.md$
 ^fusen2\.Rproj$
 ^CRAN-SUBMISSION$
+^.vscode$
