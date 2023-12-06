@@ -23,7 +23,7 @@ regex_extract_fun_name <- paste(
 #' @noRd
 parse_fun <- function(x) { # x <- rmd_fun[3,]
 
-  code <- unlist(rmd_node_code(x[["ast"]]))
+  code <- unlist(x[["code"]])
 
   # Clean extra space between #' and @
   code <- gsub(pattern = "#'\\s*@", "#' @", code)

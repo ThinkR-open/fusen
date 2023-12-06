@@ -206,35 +206,31 @@ inflate <- function(pkg = ".", flat_file,
     roxygen2::roxygenise(pkg)
   }
 
+  browser()
   parsed_flat_file <- parse_rmd(flat_file)
-  parsed_tbl <- as_tibble(parsed_flat_file)
+  parsed_tbl_old <- as_tibble(parsed_flat_file)
 
-  parsed_tbl$order <- 1:nrow(parsed_tbl)
+  parsed_tbl <- lightparser::split_to_tbl(flat_file)
+
+  parsed_tbl$order <- seq_len(nrow(parsed_tbl))
+
 
   # Set start for group variables ----
-  parsed_tbl$options <- parsermd::rmd_get_options(parsed_tbl)
+  parsed_tbl$options <- parsed_tbl$params
+
   # Get filename option in chunk
   parsed_tbl$chunk_filename <- unlist(
     lapply(
       parsed_tbl[["options"]],
       function(x) {
-        ifelse(is.null(x[["filename"]]),
+        ifelse(!is.list(x) || is.null(x[["filename"]]),
           NA_character_, gsub('"', "", x[["filename"]])
         )
       }
     )
   )
   # Define sec_title to group functions in same R file
-  sec_title <- paste(parsed_tbl[["sec_h1"]],
-    parsed_tbl[["sec_h2"]],
-    sep = "-"
-  )
-
-  if (length(sec_title) != 0) {
-    parsed_tbl$sec_title <- sec_title
-  } else {
-    parsed_tbl$sec_title <- "fake-section-title"
-  }
+  parsed_tbl$sec_title <- parsed_tbl$section
 
   # Get flat file path relative to package root
   # To be inserted in "DO NOT EDIT" comments
@@ -258,6 +254,7 @@ inflate <- function(pkg = ".", flat_file,
 
   # Create vignette ----
   if (!(is.null(vignette_name) || is.na(vignette_name) || vignette_name == "")) {
+    debugonce(create_vignette)
     vignette_file <- create_vignette(
       parsed_tbl = parsed_tbl,
       pkg = pkg,
@@ -424,7 +421,6 @@ get_functions_tests <- function(parsed_tbl) {
     # At least one function
     fun_code <- lapply(seq_len(nrow(rmd_fun)), function(x) parse_fun(rmd_fun[x, ]))
     fun_code <- do.call("rbind", fun_code)
-    fun_code$sec_h1 <- rmd_fun[["sec_h1"]]
     fun_code$sec_title <- rmd_fun[["sec_title"]]
   } else if (length(which_parsed_tests) != 0) {
     # Some tests but no function at all
@@ -589,17 +585,6 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
   ]
 
   flat_yaml <- parsed_tbl[grepl("rmd_yaml_list", parsed_tbl[["type"]]), ]
-  # Make chunk names unique
-  # vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])] <-
-  #   gsub("unnamed-", "parsermd-", vignette_tbl[["label"]][grepl("unnamed", vignette_tbl[["label"]])])
-  #   is.na(vignette_tbl[["label"]]) & vignette_tbl[["type"]] == "rmd_chunk",
-  #                                   gsub("[.]+", "-", make.names(vignette_name)),
-  #                                   vignette_tbl[["label"]])
-  #
-  # vignette_tbl[["label"]] <- make.unique(vignette_tbl[["label"]], sep = "-")
-  # # /!\ Not re-used in as_document(), this must be in ast
-
-  # ast <- vignette_tbl[["ast"]][[21]]
 
   # To correct for {parsermd} unnamed attribution
   fix_unnamed_chunks <- function(ast) {
