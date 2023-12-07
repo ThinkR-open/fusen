@@ -24,9 +24,9 @@ Imports:
     devtools,
     glue,
     here (>= 1.0.0),
+    lightparser,
     magrittr,
     methods,
-    parsermd (>= 0.1.0),
     roxygen2,
     stats,
     stringi,
@@ -48,6 +48,8 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
+Remotes:
+    ThinkR-open/lightparser
 Config/fusen/version: 0.5.2.9000
 Config/Needs/website: ThinkR-open/thinkrtemplate
 Config/testthat/edition: 3

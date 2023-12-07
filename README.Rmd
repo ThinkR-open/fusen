@@ -195,6 +195,7 @@ Similarly, the {fusen} package uses a flat Rmd template, that you fill in a spec
 
 - Thanks to Deemah who asked me to go further 'Rmd first' after my presentation at useR 2019 in Toulouse: ['The "Rmd first" method: when projects start with documentation'](https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf) (Video on Youtube: https://youtu.be/cB1BCxFbhtk). 
 - Thanks to @rundel and its package {parsermd} who helped me get back in this project with ease : https://github.com/rundel/parsermd
+    + Now replaced with {lightparser} : https://github.com/ThinkR-open/lightparser
 - Thanks to the [ThinkR team](https://rtask.thinkr.fr) who adopted this package for its daily production.
 
 ## Code of Conduct

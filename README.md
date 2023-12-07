@@ -67,39 +67,43 @@ remotes::install_github("ThinkR-open/fusen")
 > *Full documentation for the development version is here:
 > <https://thinkr-open.github.io/fusen/dev/>*
 
-## You are one Rmd away from building a package!
+## You are one Rmd away from building a package\!
 
 *{fusen} is all about correctly separating and naming chunks.*
 
-- Create a new directory / new project with
-  - RStudio template: File \> New Project \> New directory \> Package
-    using {fusen}  
-    <img src="man/figures/fusen_rstudio_project.png" width="50%" />
-- Choose the template
-  - Choose the template `teaching` the first time to see how {fusen}
-    works,
-  - Choose the template `full` the second time to answer most of your
-    questions  
-    <img src="man/figures/create_fusen_rstudio.png" width="50%" />
-  - *Or command line:
-    `create_fusen("path/to/new/project", template = "teaching")`*
-- Open the “dev/flat_teaching.Rmd” to start setting up the package
-- In this flat Rmd template, run the first chunks named `description`
-  asking to describe your package and license it
-  - They look like these lines of code:
+  - Create a new directory / new project with
+      - RStudio template: File \> New Project \> New directory \>
+        Package using {fusen}  
+        <img src="man/figures/fusen_rstudio_project.png" width="50%" />
+  - Choose the template
+      - Choose the template `teaching` the first time to see how {fusen}
+        works,
+      - Choose the template `full` the second time to answer most of
+        your questions  
+        <img src="man/figures/create_fusen_rstudio.png" width="50%" />
+      - *Or command line: `create_fusen("path/to/new/project", template
+        = "teaching")`*
+  - Open the “dev/flat\_teaching.Rmd” to start setting up the package
+  - In this flat Rmd template, run the first chunks named `description`
+    asking to describe your package and license it
+      - They look like these lines of code:
+
+<!-- end list -->
 
 ``` r
 fill_description(fields = list(Title = "My Awesome Package"))
 usethis::use_mit_license("John Doe")
 ```
 
-- Write your analysis and functionalities following the Rmd template
-  - You probably develop them with a few examples and tests
-  - *For the first time, you can let the code as is, this is already the
-    content for a working package*
-- Run the following code to **transform the flat Rmd as an inflated
-  package**
-  - This will open the vignette created
+  - Write your analysis and functionalities following the Rmd template
+      - You probably develop them with a few examples and tests
+      - *For the first time, you can let the code as is, this is already
+        the content for a working package*
+  - Run the following code to **transform the flat Rmd as an inflated
+    package**
+      - This will open the vignette created
+
+<!-- end list -->
 
 ``` r
 fusen::inflate(
@@ -109,27 +113,34 @@ fusen::inflate(
 )
 ```
 
-- Share it on a website on GitHub
+  - Share it on a website on GitHub
+
+<!-- end list -->
 
 ``` r
 fusen::init_share_on_github()
 ```
 
-**That’s it! You built a package! A documented and tested package!**  
-**You even have a website for it!**
+**That’s it\! You built a package\! A documented and tested
+package\!**  
+**You even have a website for it\!**
 
 Let’s test it now:
 
-- Install your package locally
+  - Install your package locally
+
+<!-- end list -->
 
 ``` r
 remotes::install_local()
 ```
 
-- Restart your R session to clean environment
-  - You can restart your RStudio session to let appear the “Build” tab
-    panel
-- Test functions of your package
+  - Restart your R session to clean environment
+      - You can restart your RStudio session to let appear the “Build”
+        tab panel
+  - Test functions of your package
+
+<!-- end list -->
 
 ``` r
 my.package::my_median(1:12)
@@ -140,21 +151,21 @@ my.package::my_median(1:12)
 As I said earlier, this is all about using the correct split and name
 for your chunks.
 
-- Follow the `"dev/flat_template.Rmd"` template to write your
-  documentation and build your functions and test your examples.
-  - Chunk named `function` gets the code of a function
-  - Chunk named `example` gets the code for examples of using the
-    function. This will be used for function `@examples` and will be
-    kept for the vignette.
-    - As chunk names should be unique in the future vignette, you can
-      add function names like `example-myfunction`,
-      `example-myotherfunction`, …
-  - Chunk named `tests` gets the code for unit testing
-  - Chunk named `development` gets the code for development purposes,
-    usually only used once like {usethis} functions
-- **Inflate** the flat Rmd template to transform it as a package with
-  functions, unit tests and the current Rmd transformed as a vignette.
-  And check.
+  - Follow the `"dev/flat_template.Rmd"` template to write your
+    documentation and build your functions and test your examples.
+      - Chunk named `function` gets the code of a function
+      - Chunk named `example` gets the code for examples of using the
+        function. This will be used for function `@examples` and will be
+        kept for the vignette.
+          - As chunk names should be unique in the future vignette, you
+            can add function names like `example-myfunction`,
+            `example-myotherfunction`, …
+      - Chunk named `tests` gets the code for unit testing
+      - Chunk named `development` gets the code for development
+        purposes, usually only used once like {usethis} functions
+  - **Inflate** the flat Rmd template to transform it as a package with
+    functions, unit tests and the current Rmd transformed as a vignette.
+    And check.
 
 *Note that the `"flat*.Rmd"` files created with templates `full` and
 `teaching` are indeed working examples that can directly be inflated.*
@@ -169,11 +180,12 @@ for your chunks.
 There is a dedicated vignette to answer this:
 <https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html>
 
-- **Option 1**: Modifications are only added to the “flat_template.Rmd”
-  file, which then is inflated to update all packages files
-- **Option 2**: Modifications are realized in the package files
-  directly, and the “flat_template.Rmd” file must be protected from any
-  use.
+  - **Option 1**: Modifications are only added to the
+    “flat\_template.Rmd” file, which then is inflated to update all
+    packages files
+  - **Option 2**: Modifications are realized in the package files
+    directly, and the “flat\_template.Rmd” file must be protected from
+    any use.
 
 > Advice : Use git as soon as possible, this will avoid losing your work
 > if you made some modifications in the wrong place
@@ -187,12 +199,12 @@ some unit tests to verify the outputs. This is even more true if you
 follow this guide : [‘Rmd first’: When development starts with
 documentation](https://rtask.thinkr.fr/when-development-starts-with-documentation/)
 After that, you need to move your functions and scripts in the correct
-place. Let {fusen} do that for you!
+place. Let {fusen} do that for you\!
 
 *{fusen} is first addressed to people who never wrote a package before*
 but know how to write a Rmarkdown file. Understanding package
 infrastructure and correctly settling it can be frightening. This
-package may help them do the first step!
+package may help them do the first step\!
 
 *{fusen} is also addressed to more advanced developers who are fed up
 with switching* between R files, tests files, vignettes. In particular,
@@ -201,27 +213,27 @@ tests in multiple places. Here, you can do it in one place. No risk to
 forget one. Think also about code review: everything related to one
 function is at the same place.
 
-## Q&A : All tips and tricks of a {fusen} template
+## Q\&A : All tips and tricks of a {fusen} template
 
-- Can I be lazy in names used?
-- Can I knit the content of the flat template ?
-- How to declare packages with library() for the future vignette ?
-- How to include examples that cannot be run ?
-- Document your internal datasets in a function chunk as usual
-- How to ignore some chunks ?
-- How to create a vignette with different title and Index Entry?
-- How not to create a vignette ?
-- How to get a pre-filled template for a specific function name ?
-- How to Inflate multiple flat files ?
-- How to store multiple functions in a unique R file ?
-- How to read dataset that I usually put in “tests/testthat/” for my
-  unit tests?
-- Can I load all functions of the current flat file during development
-  without having to `inflate()`?
-- Can I inflate a Quarto qmd file?
-- Can I use {fusen} with {golem}?
+  - Can I be lazy in names used?
+  - Can I knit the content of the flat template ?
+  - How to declare packages with library() for the future vignette ?
+  - How to include examples that cannot be run ?
+  - Document your internal datasets in a function chunk as usual
+  - How to ignore some chunks ?
+  - How to create a vignette with different title and Index Entry?
+  - How not to create a vignette ?
+  - How to get a pre-filled template for a specific function name ?
+  - How to Inflate multiple flat files ?
+  - How to store multiple functions in a unique R file ?
+  - How to read dataset that I usually put in “tests/testthat/” for my
+    unit tests?
+  - Can I load all functions of the current flat file during development
+    without having to `inflate()`?
+  - Can I inflate a Quarto qmd file?
+  - Can I use {fusen} with {golem}?
 
-=\> See vignette Tips and Tricks:
+\=\> See vignette Tips and Tricks:
 <https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html>
 
 ## Why is this package named {fusen} ?
@@ -237,23 +249,25 @@ in a specific way so that at the end, you can magically `inflate()` it
 to let a nice package appear.
 
 <details>
-<summary>
-Click here to fold your {fusen}…
-</summary>
-<img src="man/figures/fusen-fold-origami.gif" />
+
+<summary> Click here to fold your
+{fusen}…</summary><img src="man/figures/fusen-fold-origami.gif" />
+
 </details>
 
 ## Acknowledgments
 
-- Thanks to Deemah who asked me to go further ‘Rmd first’ after my
-  presentation at useR 2019 in Toulouse: [‘The “Rmd first” method: when
-  projects start with
-  documentation’](https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf)
-  (Video on Youtube: <https://youtu.be/cB1BCxFbhtk>).
-- Thanks to @rundel and its package {parsermd} who helped me get back in
-  this project with ease : <https://github.com/rundel/parsermd>
-- Thanks to the [ThinkR team](https://rtask.thinkr.fr) who adopted this
-  package for its daily production.
+  - Thanks to Deemah who asked me to go further ‘Rmd first’ after my
+    presentation at useR 2019 in Toulouse: [‘The “Rmd first” method:
+    when projects start with
+    documentation’](https://github.com/statnmap/prez/blob/master/2019-07_useR_Toulouse.pdf)
+    (Video on Youtube: <https://youtu.be/cB1BCxFbhtk>).
+  - Thanks to @rundel and its package {parsermd} who helped me get back
+    in this project with ease : <https://github.com/rundel/parsermd>
+      - Now replaced with {lightparser} :
+        <https://github.com/ThinkR-open/lightparser>
+  - Thanks to the [ThinkR team](https://rtask.thinkr.fr) who adopted
+    this package for its daily production.
 
 ## Code of Conduct
 

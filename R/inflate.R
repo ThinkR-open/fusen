@@ -28,7 +28,6 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #'     For example, you can do `inflate(check = TRUE, quiet = TRUE)`, where `quiet` is
 #'     passed to `devtools::check()`.
 #'
-#' @importFrom parsermd parse_rmd as_tibble
 #' @importFrom utils getFromNamespace
 #' @importFrom glue glue
 #' @importFrom methods formalArgs
@@ -206,10 +205,6 @@ inflate <- function(pkg = ".", flat_file,
     roxygen2::roxygenise(pkg)
   }
 
-  browser()
-  parsed_flat_file <- parse_rmd(flat_file)
-  parsed_tbl_old <- as_tibble(parsed_flat_file)
-
   parsed_tbl <- lightparser::split_to_tbl(flat_file)
 
   parsed_tbl$order <- seq_len(nrow(parsed_tbl))
@@ -231,6 +226,7 @@ inflate <- function(pkg = ".", flat_file,
   )
   # Define sec_title to group functions in same R file
   parsed_tbl$sec_title <- parsed_tbl$section
+  parsed_tbl$sec_title[is.na(parsed_tbl$sec_title)] <- "fake-section-title"
 
   # Get flat file path relative to package root
   # To be inserted in "DO NOT EDIT" comments
@@ -254,7 +250,6 @@ inflate <- function(pkg = ".", flat_file,
 
   # Create vignette ----
   if (!(is.null(vignette_name) || is.na(vignette_name) || vignette_name == "")) {
-    debugonce(create_vignette)
     vignette_file <- create_vignette(
       parsed_tbl = parsed_tbl,
       pkg = pkg,
@@ -407,7 +402,6 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg, relative_flat_file) 
 
 #' Get function names ----
 #' @param parsed_tbl tibble of a parsed Rmd
-#' @importFrom parsermd rmd_get_chunk
 #' @noRd
 get_functions_tests <- function(parsed_tbl) {
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
@@ -482,7 +476,6 @@ create_r_files <- function(fun_code, pkg, relative_flat_file) {
 #' @param pkg Path to package
 #' @param relative_flat_file Path to the flat file to show in R scripts
 #'
-#' @importFrom parsermd rmd_node_code
 #'
 #' @noRd
 create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
@@ -506,7 +499,6 @@ create_tests_files <- function(parsed_tbl, pkg, relative_flat_file) {
     }
 
     # Group code by file_name
-    rmd_test[["code"]] <- rmd_node_code(rmd_test[["ast"]])
     rmd_test <- group_code(rmd_test, group_col = "file_name", code_col = "code")
 
     # Filter if code is still empty after code grouped
@@ -580,34 +572,23 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
       regex_functions
     ), collapse = "|")
   vignette_tbl <- parsed_tbl[
-    !(grepl(not_in_vignette, parsed_tbl[["label"]]) |
-      grepl("rmd_yaml_list", parsed_tbl[["type"]])),
+    !(
+      grepl(not_in_vignette, parsed_tbl[["label"]]) |
+        grepl("yaml", parsed_tbl[["type"]])
+    ),
   ]
 
-  flat_yaml <- parsed_tbl[grepl("rmd_yaml_list", parsed_tbl[["type"]]), ]
-
-  # To correct for {parsermd} unnamed attribution
-  fix_unnamed_chunks <- function(ast) {
-    if (inherits(ast, "rmd_chunk") && grepl("unnamed-chunk-", ast[["name"]])) {
-      ast[["name"]] <- gsub("unnamed-", "parsermd-", ast[["name"]])
-    }
-    ast
-  }
-
-  ast_class <- class(vignette_tbl[["ast"]])
-  vignette_tbl[["ast"]] <- lapply(vignette_tbl[["ast"]], fix_unnamed_chunks)
-  class(vignette_tbl[["ast"]]) <- ast_class
+  flat_yaml <- parsed_tbl[grepl("yaml", parsed_tbl[["type"]]), ]
 
   # File to save
   cleaned_vignette_name <- asciify_name(vignette_name)
   vignette_file <- file.path("vignettes", paste0(cleaned_vignette_name, ".Rmd"))
 
   # Yaml info
-  yaml_options <- flat_yaml[["ast"]][[1]]
+  yaml_options <- flat_yaml$params[[1]]
   # Vignette
   # Copied from usethis::use_vignette() to allow to not open vignette created
   usethis::use_package("knitr", "Suggests")
-  # desc <- desc::desc(file = usethis::proj_get())
   desc <- desc::desc(file = pkg)
   desc$set("VignetteBuilder", "knitr")
   desc$write()
@@ -632,7 +613,7 @@ create_vignette <- function(parsed_tbl, pkg, relative_flat_file, vignette_name, 
   if (nrow(vignette_tbl) != 0) {
     lines <- c(
       lines,
-      parsermd::as_document(vignette_tbl)
+      lightparser::combine_tbl_to_file(vignette_tbl)
     )
   }
 

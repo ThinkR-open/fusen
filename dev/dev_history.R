@@ -132,8 +132,8 @@ attachment::att_amend_desc(
 chameleon::create_pkg_desc_file(out.dir = "inst", source = c("archive"), to = "html")
 thinkridentity::create_pkg_biblio_file_thinkr()
 
-# Update parsermd
-remotes::install_github("rundel/parsermd")
+# Update lightparser
+remotes::install_github("ThinkR-open/lightparser")
 # Utils for dev ----
 devtools::install(upgrade = "never")
 # devtools::load_all()
@@ -202,7 +202,6 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 # Test no output generated in the user files
 # pkgload::load_all(export_all = FALSE)
 # remotes::install_github("ropensci-review-tools/autotest")
-# debugonce(autotest:::rm_not_parseable)
 
 # Run examples in interactive mode too
 devtools::run_examples()
@@ -250,7 +249,6 @@ rhub::check_for_cran(show_status = FALSE)
 # docker pull rhub/debian-clang-devel
 # docker run -ti rhub/debian-clang-devel bash
 # docker run -v /mnt/Data/github/ThinkR-open/fusen:/home/root/toto -ti rhub/debian-clang-devel bash
-# debugonce(rhub::local_check_linux)
 rhub::local_check_linux(image = "rhub/debian-clang-devel")
 rhub::local_check_linux(image = "rhub/fedora-clang-devel")
 # a55df815-38f2-4854-a3bc-29cdcac878cc-2

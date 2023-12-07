@@ -718,7 +718,6 @@ usethis::with_project(dummypackage, {
     )
 
     # register everything
-    # debugonce(register_all_to_config)
     suppressMessages(register_all_to_config())
 
     expect_message(

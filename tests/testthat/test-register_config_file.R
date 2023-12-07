@@ -11,8 +11,6 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 usethis::with_project(dummypackage, {
   test_that("check_not_registered_files returns message if empty", {
     expect_true(inherits(check_not_registered_files, "function"))
-
-    # debugonce(check_not_registered_files)
     expect_message(check_not_registered_files(open = FALSE), "There are no files in the package")
   })
 
