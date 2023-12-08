@@ -1,6 +1,6 @@
 Package: fusen
 Title: Build a Package from Rmarkdown Files
-Version: 0.5.2.9000
+Version: 0.6.0
 Authors@R: c(
     person("Sebastien", "Rochette", , "sebastien@thinkr.fr", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1565-9313")),
@@ -24,9 +24,9 @@ Imports:
     devtools,
     glue,
     here (>= 1.0.0),
+    lightparser,
     magrittr,
     methods,
-    parsermd (>= 0.1.0),
     roxygen2,
     stats,
     stringi,
@@ -48,6 +48,8 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
+Remotes:
+    ThinkR-open/lightparser
 Config/fusen/version: 0.5.2.9000
 Config/Needs/website: ThinkR-open/thinkrtemplate
 Config/testthat/edition: 3

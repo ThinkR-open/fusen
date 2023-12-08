@@ -39,15 +39,15 @@ load_flat_functions <- function(flat_file, envir = globalenv()) {
     )
   }
 
-  parsed_flat_file <- parse_rmd(flat_file)
-  parsed_tbl <- as_tibble(parsed_flat_file)
+  parsed_tbl <- lightparser::split_to_tbl(flat_file)
+
   which_parsed_fun <- which(
     !is.na(parsed_tbl$label) &
       grepl(regex_functions, parsed_tbl$label)
   )
 
-  if (nrow(parsed_tbl) > 0) {
-    content <- unlist(rmd_node_code(parsed_tbl[which_parsed_fun, ][["ast"]]))
+  if (nrow(parsed_tbl) > 0 && length(which_parsed_fun) > 0) {
+    content <- unlist(parsed_tbl[which_parsed_fun, ][["code"]])
 
     eval(parse(text = content), envir)
 

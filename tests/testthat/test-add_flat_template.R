@@ -63,11 +63,19 @@ dir.create(dummypackage)
 # Add
 test_that("add dev_history template works", {
   withr::with_dir(dummypackage, {
-    dev_file_path <- expect_error(add_flat_template(pkg = dummypackage, template = "dev_history", open = FALSE), regexp = NA)
+    dev_file_path <- expect_error(
+      add_flat_template(
+        pkg = dummypackage,
+        template = "dev_history",
+        open = FALSE
+      ),
+      regexp = NA
+    )
 
     expect_true(file.exists(dev_file_path))
 
     usethis::with_project(dummypackage, {
+
       # Extract and test the description chunk
       dev_lines <- readLines(dev_file_path)
       # Change path of project
@@ -75,16 +83,27 @@ test_that("add dev_history template works", {
         "here::here()",
         # To correct for Windows path
         paste0('"', gsub("\\\\", "\\\\\\\\", dummypackage), '"'), dev_lines,
-        # paste0('"', newdir, '"'), dev_lines,
         fixed = TRUE
       )
-      dev_parse <- parsermd::parse_rmd(dev_lines)
+
+      devlines_file <- tempfile(pattern = "devlines")
+      cat(dev_lines, file = devlines_file, sep = "\n")
+      dev_parse <- lightparser::split_to_tbl(devlines_file)
+      file.remove(devlines_file)
+
       desc_code <- tempfile("desc")
-      parsermd::rmd_select(dev_parse, "description")[[1]] %>%
-        parsermd::rmd_node_code() %>%
-        cat(., sep = "\n", file = desc_code)
+
+      cat(
+        unlist(
+          dev_parse[which(dev_parse[["label"]] == "description"), ][["code"]]
+        ),
+        sep = "\n",
+        file = desc_code
+      )
+
       # Execute code
       expect_error(source(desc_code), regexp = NA)
+      file.remove(desc_code)
     })
     expect_true(file.exists(file.path(dummypackage, "DESCRIPTION")))
     expect_true(file.exists(file.path(dummypackage, "LICENSE")))
@@ -125,11 +144,23 @@ test_that("add dev_history template works with windows \\users path", {
         # paste0('"', newdir_uu, '"'), dev_lines,
         fixed = TRUE
       )
-      dev_parse <- parsermd::parse_rmd(dev_lines)
+
+
+      devlines_file <- tempfile(pattern = "devlines")
+      cat(dev_lines, file = devlines_file, sep = "\n")
+      dev_parse <- lightparser::split_to_tbl(devlines_file)
+      file.remove(devlines_file)
+
       desc_code <- tempfile("desc", fileext = ".R")
-      parsermd::rmd_select(dev_parse, "description")[[1]] %>%
-        parsermd::rmd_node_code() %>%
-        cat(., sep = "\n", file = desc_code)
+
+      cat(
+        unlist(
+          dev_parse[which(dev_parse[["label"]] == "description"), ][["code"]]
+        ),
+        sep = "\n",
+        file = desc_code
+      )
+
       # Execute code
       expect_error(source(desc_code), regexp = NA)
     })

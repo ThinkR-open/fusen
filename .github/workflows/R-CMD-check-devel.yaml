@@ -74,7 +74,7 @@ jobs:
         run: |
           remotes::install_deps(dependencies = TRUE, upgrade = "always")
           # remotes::install_cran("rcmdcheck")
-          remotes::install_github("rundel/parsermd", upgrade = "always")
+          remotes::install_github("ThinkR-open/lightparser", upgrade = "always")
         shell: Rscript {0}
 
       # - name: Setup tmate session

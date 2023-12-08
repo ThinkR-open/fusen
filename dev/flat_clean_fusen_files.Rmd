@@ -74,8 +74,6 @@ usethis::with_project(dummypackage, {
       open_vignette = FALSE
     )
   )
-
-  # debugonce(inflate)
 })
 ```
 

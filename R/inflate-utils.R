@@ -19,11 +19,10 @@ regex_extract_fun_name <- paste(
 
 #' Parse function code as tibble and get positions
 #' @param x One row out of function parsed tibble
-#' @importFrom parsermd rmd_node_code
 #' @noRd
 parse_fun <- function(x) { # x <- rmd_fun[3,]
 
-  code <- unlist(rmd_node_code(x[["ast"]]))
+  code <- unlist(x[["code"]])
 
   # Clean extra space between #' and @
   code <- gsub(pattern = "#'\\s*@", "#' @", code)
@@ -276,7 +275,7 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
 #' Add examples in function code
 #' @param parsed_tbl tibble of a parsed Rmd
 #' @param fun_code R code of functions in Rmd as character
-#' @importFrom parsermd rmd_node_code
+#' @importFrom tibble as_tibble
 #' @noRd
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
   # Example in separate chunk
@@ -323,9 +322,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 
   if (nrow(rmd_ex) != 0) {
     # Group rmd_ex for the same function
-    rmd_ex$rmd_ex_code <- lapply(1:nrow(rmd_ex), function(x) {
-      rmd_node_code(rmd_ex[x, ][["ast"]])
-    })
+    rmd_ex$rmd_ex_code <- rmd_ex[["code"]]
+
     rmd_ex_group <- group_code(df = rmd_ex, group_col = "fun_name", code_col = "rmd_ex_code")
 
     # Get example code
@@ -353,7 +351,6 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
 
   # Remove if example is empty
   fun_code[["example"]] <- lapply(fun_code[["example"]], function(example) {
-    # example <- fun_code[["example"]][[1]]
     example <- gsub("^#' $", "#'", example) # clean empty lines
 
     if (length(example) == 0) {
@@ -370,32 +367,37 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   })
 
   # Add to function code
-  fun_code[["code_example"]] <- lapply(seq_len(nrow(fun_code)), function(x) {
-    fun_code_x <- fun_code[x, ]
-    if (is.na(fun_code_x[["fun_name"]])) {
-      return(
-        unlist(fun_code_x[["code"]])
+  fun_code[["code_example"]] <- lapply(
+    seq_len(nrow(fun_code)),
+    function(x) {
+      fun_code_x <- fun_code[x, ]
+      if (is.na(fun_code_x[["fun_name"]])) {
+        return(
+          unlist(fun_code_x[["code"]])
+        )
+      }
+
+      end_skeleton <- ifelse(is.na(fun_code_x[["example_pos_start"]]),
+        fun_code_x[["example_pos_end"]],
+        fun_code_x[["example_pos_start"]] - 1
       )
+
+      all_fun_code <- stats::na.omit(c(
+        # begin
+        if (!is.na(end_skeleton)) {
+          unlist(fun_code_x[["code"]])[1:end_skeleton]
+        },
+        # examples
+        unlist(fun_code_x[["example"]]),
+        # end
+        unlist(fun_code_x[["code"]])[
+          (fun_code_x[["example_pos_end"]] + 1):
+          length(unlist(fun_code_x[["code"]]))
+        ]
+      ))
+      return(all_fun_code)
     }
-
-    end_skeleton <- ifelse(is.na(fun_code_x[["example_pos_start"]]),
-      fun_code_x[["example_pos_end"]],
-      fun_code_x[["example_pos_start"]] - 1
-    )
-
-    all_fun_code <- stats::na.omit(c(
-      # begin
-      if (!is.na(end_skeleton)) {
-        unlist(fun_code_x[["code"]])[1:end_skeleton]
-      },
-      # examples
-      unlist(fun_code_x[["example"]]),
-      # end
-      unlist(fun_code_x[["code"]])[
-        (fun_code_x[["example_pos_end"]] + 1):length(unlist(fun_code_x[["code"]]))
-      ]
-    ))
-  })
+  )
 
   # Clean double #' due to dontrun
   fun_code[["code_example"]] <- lapply(fun_code[["code_example"]], function(example) {
