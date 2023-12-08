@@ -37,6 +37,9 @@ jobs:
   #        r-version: ${{ matrix.config.r }}
   #        http-user-agent: ${{ matrix.config.http-user-agent }}
   #        use-public-rspm: true
+  
+      - name: Install qpdf
+        run: sudo yum -y install qpdf
 
       - name: Set RSPM in Rprofile
         run: |
