@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -148,7 +148,7 @@
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># {fusen} steps</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp0PDCZ2/clean16f1f3d6ed4/DESCRIPTION"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpRdZTFT/clean9b3c3a8efddb/DESCRIPTION"</span>
 <span class="r-in"><span><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/message.html" class="external-link">suppressMessages</a></span><span class="op">(</span><span class="fu"><a href="add_flat_template.html">add_flat_template</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span>, open <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">dev_file</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"flat_"</span>, <span class="va">dev_file</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="co"># Inflate once</span></span></span>
@@ -176,7 +176,7 @@
 <span class="r-in"><span>  <span class="co"># Open the out_config file to see what's going on</span></span></span>
 <span class="r-in"><span>  <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="va">out_config</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmp0PDCZ2/clean16f1f3d6ed4'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpRdZTFT/clean9b3c3a8efddb'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── config file for dev/flat_full.Rmd ───────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Some files in your package are not registered in the configuration file: dev/config_fusen.yaml</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #0000BB;">fusen</span> uses a configuration file to store the structure of your package and help you clean it when needed.</span>
@@ -184,7 +184,7 @@
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Delete unregistered files that you do not need anymore. Then run `fusen::register_all_to_config()`.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> After that, this message should not appear in your next `fusen::inflate_all()` calls.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> For more information, read `vignette('register-files-in-config (`vignette(fusen::register-files-in-config)`)', package = 'fusen')`</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> cli-145-60</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> cli-6544-60</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> path: keep was added to the config file</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> state: active was added to the config file</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> R: R/to_keep.R was added to the config file</span>

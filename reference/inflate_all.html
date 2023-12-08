@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -146,7 +146,7 @@ Whether to overwrite vignette and functions if already exists.</p></dd>
 
 
 <dt>stylers</dt>
-<dd><p>Function to be run at the end of the process, like <code>styler::style_pkg</code> or <code>lintr::lint_package</code> or a lambda function combining functions like: <code>function() {styler::style_pkg(); lintr::lint_package()}</code>. For a unique function, use the format without parenthesis <code>()</code> at the end of the command.</p></dd>
+<dd><p>Function to be run at the end of the process, like <code><a href="https://styler.r-lib.org/reference/style_pkg.html" class="external-link">styler::style_pkg</a></code> or <code>lintr::lint_package</code> or a lambda function combining functions like: <code>function() {styler::style_pkg(); lintr::lint_package()}</code>. For a unique function, use the format without parenthesis <code>()</code> at the end of the command.</p></dd>
 
 
 <dt>...</dt>
@@ -183,7 +183,7 @@ passed to <code><a href="https://devtools.r-lib.org/reference/check.html" class=
 <span class="r-in"><span><span class="co"># Or inflate_all_no_check() to prevent checks to run</span></span></span>
 <span class="r-in"><span><span class="fu">inflate_all_no_check</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="co"># Or inflate with the styler you want</span></span></span>
-<span class="r-in"><span><span class="fu">inflate_all</span><span class="op">(</span>stylers <span class="op">=</span> <span class="fu">styler</span><span class="fu">::</span><span class="va">style_pkg</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">inflate_all</span><span class="op">(</span>stylers <span class="op">=</span> <span class="fu">styler</span><span class="fu">::</span><span class="va"><a href="https://styler.r-lib.org/reference/style_pkg.html" class="external-link">style_pkg</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># You can also inflate_all flats of another package as follows</span></span></span>
@@ -191,13 +191,13 @@ passed to <code><a href="https://devtools.r-lib.org/reference/check.html" class=
 <span class="r-in"><span><span class="va">dummypackage</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/tempfile.html" class="external-link">tempfile</a></span><span class="op">(</span><span class="st">"inflateall.otherpkg"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/files2.html" class="external-link">dir.create</a></span><span class="op">(</span><span class="va">dummypackage</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/Rtmp0PDCZ2/inflateall.otherpkg16f16322cb0f/DESCRIPTION"</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "/tmp/RtmpRdZTFT/inflateall.otherpkg9b3c6382b26a/DESCRIPTION"</span>
 <span class="r-in"><span><span class="va">flat_files</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_flat_template.html">add_minimal_package</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  pkg <span class="op">=</span> <span class="va">dummypackage</span>,</span></span>
 <span class="r-in"><span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  open <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/Rtmp0PDCZ2/inflateall.otherpkg16f16322cb0f . Please start a new R session in the new project directory.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpRdZTFT/inflateall.otherpkg9b3c6382b26a . Please start a new R session in the new project directory.</span>
 <span class="r-in"><span><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">flat_files</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"flat"</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">flat_files</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="co"># Inflate the flat file once</span></span></span>
 <span class="r-in"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">with_project</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="op">{</span></span></span>
@@ -224,12 +224,12 @@ passed to <code><a href="https://devtools.r-lib.org/reference/check.html" class=
 <span class="r-in"><span>  <span class="va">config_yml_ref</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>    <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"fusen.config_file"</span>, default <span class="op">=</span> <span class="st">"dev/config_fusen.yaml"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmp0PDCZ2/inflateall.otherpkg16f16322cb0f'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpRdZTFT/inflateall.otherpkg9b3c6382b26a'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'MIT + file LICENSE'</span> to <span style="color: #00BB00;">License</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Writing <span style="color: #0000BB;">'LICENSE'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Writing <span style="color: #0000BB;">'LICENSE.md'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'^LICENSE\\.md$'</span> to <span style="color: #0000BB;">'.Rbuildignore'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg16f16322cb0f</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg9b3c6382b26a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'knitr'</span> to <span style="color: #00BB00;">Suggests</span> field in DESCRIPTION</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Use <span style="color: #555555;">`requireNamespace("knitr", quietly = TRUE)`</span> to test if package is installed</span>
@@ -243,30 +243,30 @@ passed to <code><a href="https://devtools.r-lib.org/reference/check.html" class=
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> vignettes: vignettes/get-started.Rmd was added to the config file</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> inflate: each parameter was added to the config file</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Saving attachment parameters to yaml config file</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg16f16322cb0f documentation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg16f16322cb0f</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg9b3c6382b26a documentation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg9b3c6382b26a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">my_fun.Rd</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg16f16322cb0f</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg9b3c6382b26a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> [+] 2 package(s) added: rmarkdown, testthat.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmp0PDCZ2/dummy.package16f12a9dc54c'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpRdZTFT/dummy.package9b3c213d9f8b'</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Next time, you can run inflate_all() directly</span></span></span>
 <span class="r-in"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">with_project</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="co"># now you can run inflate_all()</span></span></span>
 <span class="r-in"><span>  <span class="fu">inflate_all</span><span class="op">(</span>check <span class="op">=</span> <span class="cn">FALSE</span>, document <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmp0PDCZ2/inflateall.otherpkg16f16322cb0f'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpRdZTFT/inflateall.otherpkg9b3c6382b26a'</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> The flat file flat_minimal.Rmd is going to be inflated</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── config file for dev/flat_minimal.Rmd ────────────────────────────────────────</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── check not registered files ──────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There are no unregistered files.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Documentation parameters were restored from attachment config file.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg16f16322cb0f documentation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg16f16322cb0f</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg9b3c6382b26a documentation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg9b3c6382b26a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg16f16322cb0f</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmp0PDCZ2/dummy.package16f12a9dc54c'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg9b3c6382b26a</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpRdZTFT/dummy.package9b3c213d9f8b'</span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Clean the temporary directory</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>

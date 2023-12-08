@@ -32,7 +32,7 @@
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -91,7 +91,19 @@
     </div>
 
     <div class="section level2">
-<h2 class="page-header" data-toc-text="0.5.2" id="fusen-052">fusen 0.5.2<a class="anchor" aria-label="anchor" href="#fusen-052"></a></h2>
+<h2 class="page-header" data-toc-text="0.6.0" id="fusen-060">fusen 0.6.0<a class="anchor" aria-label="anchor" href="#fusen-060"></a></h2>
+<div class="section level3">
+<h3 id="breaking-changes-0-6-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-6-0"></a></h3>
+<ul><li>{fusen} now relies on {lightparser} instead of {parsermd} to parse flat file. This allows to avoid installation problems with {parsermd}, which is not updated anymore. As {lightparser} is lighter, this may have unattended effects on specific flat file cases. Please report any issue you may encounter. (<a href="https://github.com/Thinkr-open/fusen/issues/233" class="external-link">#233</a>)</li>
+</ul></div>
+<div class="section level3">
+<h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>
+<ul><li>Allow <code>organisation</code> in <code><a href="../reference/init_share_on_github.html">init_share_on_github()</a></code> to send to a GitHub organisation</li>
+<li>Fix <code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code> to work with VSCode</li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="page-header" data-toc-text="0.5.2" id="fusen-052">fusen 0.5.2<small>2023-08-17</small><a class="anchor" aria-label="anchor" href="#fusen-052"></a></h2>
 <div class="section level3">
 <h3 id="new-features-0-5-2">New features<a class="anchor" aria-label="anchor" href="#new-features-0-5-2"></a></h3>
 <ul><li>Allow a styler function with parameter <code>stylers</code> in <code>inflate_all*()</code> (e.g <code>inflate_all(stylers = styler::style_pkg)</code>)</li>

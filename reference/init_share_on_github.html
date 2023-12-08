@@ -33,7 +33,7 @@ You may need to run usethis::create_github_token(), then gitcreds::gitcreds_set(
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">fusen</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.5.2</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="Released version">0.6.0</span>
       </span>
     </div>
 
@@ -98,7 +98,7 @@ You may need to run <code><a href="https://usethis.r-lib.org/reference/github-to
     </div>
 
     <div id="ref-usage">
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">init_share_on_github</span><span class="op">(</span>ask <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">init_share_on_github</span><span class="op">(</span>ask <span class="op">=</span> <span class="cn">TRUE</span>, organisation <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div id="arguments">
@@ -106,6 +106,14 @@ You may need to run <code><a href="https://usethis.r-lib.org/reference/github-to
     <dl><dt>ask</dt>
 <dd><p>Logical. <code>TRUE</code> (default) to ask the user to apply the instructions each time needed,
 or <code>FALSE</code> if the user already know what to do.</p></dd>
+
+
+<dt>organisation</dt>
+<dd><p>If supplied, the repo will be created under this
+organisation, instead of the login associated with the GitHub token
+discovered for this <code>host</code>. The user's role and the token's scopes must be
+such that you have permission to create repositories in this
+<code>organisation</code>.</p></dd>
 
 </dl></div>
     <div id="value">
