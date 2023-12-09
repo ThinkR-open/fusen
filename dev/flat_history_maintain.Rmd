@@ -56,12 +56,6 @@ This does not remove or modify previous functions, tests or vignettes, provided 
 
 
 ```{r development-2, eval=FALSE}
-fusen::inflate(flat_file = file.path("dev", "dev_history_maintain.Rmd"), name = "Maintain packages with {fusen}", check = FALSE)
-attachment::att_amend_desc(
-  pkg_ignore = "testthat",
-  extra.suggests = c("testthat", "pkgload")
-)
-
-rcmdcheck::rcmdcheck(check_dir = "check")
-rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "warning", check_dir = "check")
+# inflate inactive - Modify directly in vignette "Maintain packages with {fusen}"
+# fusen::inflate(flat_file = file.path("dev", "flat_history_maintain.Rmd"), vignette_name = "Maintain packages with {fusen}", check = FALSE)
 ```

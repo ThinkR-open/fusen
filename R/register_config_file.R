@@ -133,12 +133,13 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, 
     write.csv(res_new, csv_file, row.names = FALSE)
     cli::cli_text(
       cli::cli_alert_info(c(
-        "\nSome files in your package are not registered in the configuration file: {config_file}",
+        "\nSome files in your package are not registered in the configuration file stored in {config_file}: ",
+        paste(res_new$path, collapse = ", "),
         "\n{.pkg fusen} uses a configuration file to store the structure of your package and help you clean it when needed.",
         "\nYou will find a list of unregistered files there: {.path csv_file}",
         " that you can open with {.run file.edit('{csv_file}')}",
-        "\nDelete unregistered files that you do not need anymore. Then run {.fn fusen::register_all_to_config}.",
-        "\nAfter that, this message should not appear in your next {.fn fusen::inflate_all} calls.",
+        "\n\nDelete unregistered files that you do not need anymore. Then run {.fn fusen::register_all_to_config}.",
+        "\nAfter that, this message should not appear in your next {.fn fusen::check_not_registered_files} or {.fn fusen::inflate_all} calls.",
         "\nFor more information, read `vignette('{.vignette [register-files-in-config](fusen::register-files-in-config)}', package = 'fusen')`"
       ))
     )

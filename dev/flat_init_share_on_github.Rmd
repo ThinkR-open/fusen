@@ -74,6 +74,7 @@ fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
 #'
 #' @param ask Logical. `TRUE` (default) to ask the user to apply the instructions each time needed,
 #' or `FALSE` if the user already know what to do.
+#' @inheritParams usethis::use_github
 #'
 #' @details
 #'
@@ -98,7 +99,7 @@ fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
 #' @export
 #'
 #' @examples
-init_share_on_github <- function(ask = TRUE) {
+init_share_on_github <- function(ask = TRUE, organisation = NULL) {
   pkg <- "."
 
   if (!requireNamespace("gert", quietly = TRUE)) {
@@ -151,7 +152,7 @@ init_share_on_github <- function(ask = TRUE) {
       dont_do_it <- FALSE
     }
     if (do_it) {
-      usethis::use_github()
+      usethis::use_github(organisation = organisation)
     } else {
       cli::cli_text(
         cli::cli_alert_info(
