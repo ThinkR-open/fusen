@@ -1,8 +1,6 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# fusen <img src="man/figures/logo.png" align="right" alt="" width="120" />
-
 <!-- badges: start -->
 
 [![fusen status
@@ -13,6 +11,8 @@ status](https://www.r-pkg.org/badges/version/fusen)](https://CRAN.R-project.org/
 [![codecov](https://codecov.io/gh/ThinkR-open/fusen/branch/main/graph/badge.svg)](https://app.codecov.io/gh/ThinkR-open/fusen)
 [![](https://cranlogs.r-pkg.org/badges/fusen)](https://cran.r-project.org/package=fusen)
 <!-- badges: end -->
+
+# fusen <img src="man/figures/logo.png" align="right" alt="" width="120" />
 
 {fusen} inflates a Rmarkdown file to magically create a package.
 

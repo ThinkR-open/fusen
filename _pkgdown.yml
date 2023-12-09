@@ -1,7 +1,13 @@
-template:
-  package: thinkrtemplate
-
 url: https://thinkr-open.github.io/fusen/
 
 development:
   mode: auto
+
+template:
+  bootstrap: 5
+  bslib:
+    bg: "#ffffff"
+    fg: "#3b4450"
+    primary: "#DE633C"
+    secondary: "#15b7d6"
+    body-color: "#28292B"
