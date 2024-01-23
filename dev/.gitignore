@@ -1,3 +1,3 @@
 *.html
 *.R
-!dev_history.R
+!dev_history*.R
