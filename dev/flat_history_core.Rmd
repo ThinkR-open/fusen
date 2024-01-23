@@ -74,7 +74,7 @@ Deprecated. See `add_flat_template()` instead.
 #' Choose `name` among the different templates available:
 #'
 #' - "full": the full template with a reproducible package to inflate directly. Default.
-#' - "minimal": Minimal template to start a new package when you already know {fusen}.
+#' - "minimal": Minimal template to start a new package when you already know 'fusen'.
 #' - "additional": Template for an additional vignette, thus additional functions.
 #' - "teaching": Template with a reproducible package, simpler than "full", but everything to
 #'  teach the minimal structure of a package.

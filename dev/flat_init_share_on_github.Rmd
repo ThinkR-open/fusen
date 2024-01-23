@@ -69,7 +69,7 @@ fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
 ```{r function-init_share_on_github}
 #' Initiate GitHub to share your package on a website
 #'
-#' This uses {pkgdown} to share the documentation of the package through GitHub Actions.
+#' This uses 'pkgdown' to share the documentation of the package through GitHub Actions.
 #' You may need to run `usethis::create_github_token()`, then `gitcreds::gitcreds_set()` before.
 #'
 #' @param ask Logical. `TRUE` (default) to ask the user to apply the instructions each time needed,
@@ -89,7 +89,7 @@ fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
 #' - Init continuous integration (CI)
 #'   + Check the package on Linux, Windows and MacOS
 #'   + Calculate code coverage. Note that you may need to connect to <https://about.codecov.io/> to see the results of the code coverage.
-#' - Init continuous deployment (CD) of the {pkgdown} website documentation
+#' - Init continuous deployment (CD) of the 'pkgdown' website documentation
 #' - Commit and push to GitHub
 #' - List remaining manual steps to make the website public
 #'

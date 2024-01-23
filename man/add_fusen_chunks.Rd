@@ -2,7 +2,7 @@
 % Please edit documentation in R/build_fusen_chunks.R
 \name{add_fusen_chunks}
 \alias{add_fusen_chunks}
-\title{Add \code{{fusen}} chunks}
+\title{Add 'fusen' chunks}
 \usage{
 add_fusen_chunks(
   function_name = NULL,
@@ -21,7 +21,7 @@ user will be prompted to enter it.}
 A list with the context and the content, invisibly.
 }
 \description{
-Create \code{{fusen}} chunks inside your Rmd
+Create 'fusen' chunks inside your Rmd
 }
 \examples{
 \dontrun{

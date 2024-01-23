@@ -130,7 +130,12 @@ for (pkgname in create_choices_test) {
         skip_on_cran()
         expect_true(length(check_out[["notes"]]) <= 1)
         if (length(check_out[["notes"]]) == 1) {
-          expect_true(grepl("future file timestamps", check_out[["notes"]]))
+          note_expected <- grepl("future file timestamps", check_out[["notes"]])
+          expect_true(note_expected)
+          if (!note_expected) {
+            # Keep here to see the notes when CI fails
+            expect_equal(check_out[["notes"]], expected = "future file timestamps")
+          }
         }
       } else {
         print(" ==== Interactive ====")
@@ -397,7 +402,8 @@ usethis::with_project(dummypackage, {
       # Do not check inside check if on CRAN
       skip_on_os(os = c("windows", "solaris"))
 
-      # If this check is run inside a not "--as-cran" check, then it wont work as expected
+      # If this check is run inside a not "--as-cran" check,
+      #  then it wont work as expected
       check_out <- rcmdcheck::rcmdcheck(dummypackage,
         quiet = TRUE,
         args = c("--no-manual"),
@@ -408,13 +414,22 @@ usethis::with_project(dummypackage, {
       expect_true(length(check_out[["errors"]]) == 0)
       expect_true(length(check_out[["warnings"]]) <= 1)
       if (length(check_out[["warnings"]]) == 1) {
-        expect_true(grepl("there is no package called", check_out[["warnings"]]))
+        expect_true(grepl(
+          "there is no package called",
+          check_out[["warnings"]]
+        ))
       }
-      #  ‘MASS’
-      # print(" -- warnings --")
-      # print(check_out[["warnings"]])
+
+      # Notes are different on CRAN
       skip_on_cran()
-      expect_true(length(check_out[["notes"]]) == 0)
+
+      length_notes <- length(check_out[["notes"]])
+      expect_true(length_notes == 0)
+
+      if (length_notes != 0) {
+        # Keep here to see the notes when CI fails
+        expect_equal(check_out[["notes"]], expected = "zero notes")
+      }
     } else {
       expect_error(
         suppressMessages(
@@ -429,7 +444,12 @@ usethis::with_project(dummypackage, {
       )
 
       # Should not be any errors with templates in interactive
-      check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
+      check_lines <- readLines(
+        file.path(
+          checkdir, paste0(basename(dummypackage), ".Rcheck"),
+          "00check.log"
+        )
+      )
       expect_equal(check_lines[length(check_lines)], "Status: OK")
       unlink(checkdir, recursive = TRUE)
     }
@@ -443,7 +463,12 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(
+  add_flat_template(
+    pkg = dummypackage,
+    overwrite = TRUE, open = FALSE
+  )
+)
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
