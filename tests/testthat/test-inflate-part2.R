@@ -53,6 +53,9 @@ unlink(dummypackage, recursive = TRUE)
 alltemp <- tempfile("all.templates.inflate")
 dir.create(alltemp)
 
+# TODO - For debug only - To remove
+here_directory <- getwd()
+
 create_choices_test <- fusen:::create_fusen_choices[!grepl("dev_history", fusen:::create_fusen_choices)]
 for (pkgname in create_choices_test) {
   # pkgname <- create_choices_test[1]
@@ -117,6 +120,12 @@ for (pkgname in create_choices_test) {
           quiet = TRUE,
           args = c("--no-manual")
         )
+
+        # TODO - For debug only - To remove
+#         alltestsfiles <- list.files("tests/testthat", pattern = "test.*[.]R", full.names = TRUE)
+#         file.remove(alltestsfiles[!grepl("part2", alltestsfiles)])
+        file.copy(path_foosen, file.path(here_directory, "devtests"), recursive = TRUE, overwrite = TRUE)
+
 
         # No errors
         expect_true(length(check_out[["errors"]]) == 0)
