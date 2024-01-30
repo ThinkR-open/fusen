@@ -77,10 +77,6 @@ jobs:
           remotes::install_github("ThinkR-open/lightparser", upgrade = "always")
         shell: Rscript {0}
 
-      # - name: Setup tmate session
-      #   if: runner.os == 'Windows'
-      #   uses: mxschmitt/action-tmate@v3
-
       # - name: Check
       #   env:
       #     _R_CHECK_CRAN_INCOMING_REMOTE_: false
@@ -93,6 +89,10 @@ jobs:
       #   with:
       #     name: ${{ runner.os }}-r${{ matrix.config.r }}-results
       #     path: check
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
 
       - uses: r-lib/actions/check-r-package@v2
         with:
