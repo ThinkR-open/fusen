@@ -92,7 +92,7 @@ jobs:
 
       - name: Setup tmate session
         uses: mxschmitt/action-tmate@v3
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }}
+        # if: ${{ github.event_name == 'workflow_dispatch' && inputs.debug_enabled }} # Works on 'main' only
 
       - uses: r-lib/actions/check-r-package@v2
         with:
