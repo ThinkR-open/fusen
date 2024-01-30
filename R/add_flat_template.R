@@ -110,7 +110,7 @@ create_fusen_choices <- c("full", "minimal", "teaching", "dev_history")
 #'
 #' - "full": The full template with a reproducible package that can directly be inflated.
 #' It comes along with the "dev_history" template. Default.
-#' - "minimal_package": Minimal template to start a new package when you already know {fusen}, along with the "dev_history" template. Note that this is called "minimal" in `create_fusen()`.
+#' - "minimal_package": Minimal template to start a new package when you already know 'fusen', along with the "dev_history" template. Note that this is called "minimal" in `create_fusen()`.
 #' - "minimal_flat" or "additional": Template for a new minimal flat file only.
 #' - "teaching": Template with a reproducible package, simpler than "full", but everything to
 #'  teach the minimal structure of a package.

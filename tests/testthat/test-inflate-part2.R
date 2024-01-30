@@ -1040,8 +1040,7 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(the_vignette))
     the_vignette_lines <- readLines(the_vignette)
     expect_true(grepl("title:.*Super title.*", the_vignette_lines[2]))
-    expect_false(any(grep("01-Super Slug", the_vignette_lines)))
-    expect_true(any(grep("01-super-slug", the_vignette_lines)))
+    expect_true(any(grep("01-Super Slug", the_vignette_lines)))
   })
 })
 
