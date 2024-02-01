@@ -122,10 +122,14 @@ for (pkgname in create_choices_test) {
         )
 
         # TODO - For debug only - To remove
-#         alltestsfiles <- list.files("tests/testthat", pattern = "test.*[.]R", full.names = TRUE)
-#         file.remove(alltestsfiles[!grepl("part2", alltestsfiles)])
-        file.copy(path_foosen, file.path(here_directory, "devtests"), recursive = TRUE, overwrite = TRUE)
-
+        #         alltestsfiles <- list.files("tests/testthat", pattern = "test.*[.]R", full.names = TRUE)
+        #         file.remove(alltestsfiles[!grepl("part2", alltestsfiles)])
+        store_dir <- file.path(here_directory, "devtests")
+        if (!dir.exists(store_dir)) {
+          dir.create(store_dir)
+        }
+        file.copy(path_foosen, store_dir, recursive = TRUE, overwrite = TRUE)
+        stop(here_directory)
 
         # No errors
         expect_true(length(check_out[["errors"]]) == 0)
