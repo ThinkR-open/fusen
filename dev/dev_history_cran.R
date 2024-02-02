@@ -39,6 +39,10 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 # pkgload::load_all(export_all = FALSE)
 # remotes::install_github("ropensci-review-tools/autotest")
 
+# Run with r-devel using {rig}
+#> rig run
+devtools::check()
+
 
 # > Copy from Prepare-for-cran - https://github.com/ThinkR-open/prepare-for-cran ====================
 

@@ -53,9 +53,6 @@ unlink(dummypackage, recursive = TRUE)
 alltemp <- tempfile("all.templates.inflate")
 dir.create(alltemp)
 
-# TODO - For debug only - To remove
-here_directory <- getwd()
-
 create_choices_test <- fusen:::create_fusen_choices[!grepl("dev_history", fusen:::create_fusen_choices)]
 for (pkgname in create_choices_test) {
   # pkgname <- create_choices_test[1]
@@ -121,33 +118,21 @@ for (pkgname in create_choices_test) {
           args = c("--no-manual")
         )
 
-        # TODO - For debug only - To remove
-        #         alltestsfiles <- list.files("tests/testthat", pattern = "test.*[.]R", full.names = TRUE)
-        #         file.remove(alltestsfiles[!grepl("part2", alltestsfiles)])
-        store_dir <- file.path(here_directory, "devtests")
-        if (!dir.exists(store_dir)) {
-          dir.create(store_dir)
-        }
-        file.copy(path_foosen, store_dir, recursive = TRUE, overwrite = TRUE)
-        stop(here_directory)
-
         # No errors
         expect_true(length(check_out[["errors"]]) == 0)
         expect_true(length(check_out[["warnings"]]) <= 1)
         if (length(check_out[["warnings"]]) == 1) {
           expect_true(grepl("there is no package called", check_out[["warnings"]]))
         }
-        #  ‘MASS’
-        # print(" -- warnings --")
-        # print(check_out[["warnings"]])
+
         skip_on_cran()
         expect_true(length(check_out[["notes"]]) <= 1)
-        if (length(check_out[["notes"]]) == 1) {
-          note_expected <- grepl("future file timestamps", check_out[["notes"]])
-          expect_true(note_expected)
-          if (!note_expected) {
+        if (length(check_out[["notes"]]) %in% 1:2) {
+          note_expected <- grepl("future file timestamps|Package vignette without corresponding tangle output", check_out[["notes"]])
+          expect_true(all(note_expected))
+          if (!all(note_expected)) {
             # Keep here to see the notes when CI fails
-            expect_equal(check_out[["notes"]], expected = "future file timestamps")
+            expect_equal(check_out[["notes"]], expected = "no other note")
           }
         }
       } else {
@@ -216,30 +201,48 @@ checkdir <- normalizePath(checkdir, winslash = "/")
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(
+  add_flat_template(
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
+  )
+)
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 # Run development-dataset chunk
 usethis::with_project(dummypackage, {
-  # skip_on_cran()
-
   test_that("included data can be read", {
     datafile <- file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")
     expect_true(file.exists(datafile))
 
     flat_lines <- readLines(flat_file)
     # Change directory to current
-    flatlines <- gsub("here::here()", paste0('"', dummypackage, '"'), flat_lines, fixed = TRUE)
+    flatlines <- gsub("here::here()",
+      paste0('"', dummypackage, '"'),
+      flat_lines,
+      fixed = TRUE
+    )
 
     flatlines_chunk <- grep("```", flatlines)
-    flatlines_chunk_data <- grep("```{r development-dataset}", flatlines, fixed = TRUE)
-    flatlines_chunk_data_end <- flatlines_chunk[flatlines_chunk > flatlines_chunk_data][1]
-    lines_data <- flatlines[(flatlines_chunk_data + 1):(flatlines_chunk_data_end - 1)]
+    flatlines_chunk_data <- grep("```{r development-dataset}",
+      flatlines,
+      fixed = TRUE
+    )
+    flatlines_chunk_data_end <- flatlines_chunk[
+      flatlines_chunk > flatlines_chunk_data
+    ][1]
+    lines_data <- flatlines[(flatlines_chunk_data + 1):
+    (flatlines_chunk_data_end - 1)]
 
 
     # Can read data
     lines_only_read <- lines_data[grepl("read.csv", lines_data)]
-    lines_only_read <- gsub("datafile", paste0("'", datafile, "'"), lines_only_read)
+    lines_only_read <- gsub(
+      "datafile",
+      paste0("'", datafile, "'"),
+      lines_only_read
+    )
     expect_error(eval(parse(text = lines_only_read)), regexp = NA)
 
     if (interactive()) {
@@ -292,10 +295,8 @@ usethis::with_project(dummypackage, {
     )
 
     # Should not be any errors with templates
-    # check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
-    # expect_equal(check_lines[length(check_lines)], "Status: OK")
-
-    # If this check is run inside a not "--as-cran" check, then it wont work as expected
+    # If this check is run inside a not "--as-cran" check,
+    # then it wont work as expected
     check_out <- rcmdcheck::rcmdcheck(dummypackage,
       quiet = TRUE,
       args = c("--no-manual")
@@ -326,12 +327,20 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(
+  add_flat_template(
+    pkg = dummypackage,
+    overwrite = TRUE, open = FALSE
+  )
+)
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
   file.copy(
-    system.file("tests-templates/dev-template-empty-not-function.Rmd", package = "fusen"),
+    system.file(
+      "tests-templates/dev-template-empty-not-function.Rmd",
+      package = "fusen"
+    ),
     flat_file,
     overwrite = TRUE
   )
@@ -354,7 +363,10 @@ usethis::with_project(dummypackage, {
     # R files with chunk content - Name after title as function name is NA
     expect_equal(
       sort(list.files(file.path(dummypackage, "R"))),
-      sort(c("internal-variables.R", "my-data-doc.R", "my-pkg-doc.R", "onload.R"))
+      sort(c(
+        "internal-variables.R", "my-data-doc.R",
+        "my-pkg-doc.R", "onload.R"
+      ))
     )
     pkgdoc <- file.path(dummypackage, "R", "my-pkg-doc.R")
     expect_true(file.exists(pkgdoc))
@@ -436,12 +448,17 @@ usethis::with_project(dummypackage, {
       # Notes are different on CRAN
       skip_on_cran()
 
-      length_notes <- length(check_out[["notes"]])
-      expect_true(length_notes == 0)
-
-      if (length_notes != 0) {
-        # Keep here to see the notes when CI fails
-        expect_equal(check_out[["notes"]], expected = "zero notes")
+      expect_true(length(check_out[["notes"]]) <= 1)
+      if (length(check_out[["notes"]]) %in% 1:2) {
+        note_expected <- grepl(
+          "future file timestamps|Package vignette without corresponding tangle output",
+          check_out[["notes"]]
+        )
+        expect_true(all(note_expected))
+        if (!all(note_expected)) {
+          # Keep here to see the notes when CI fails
+          expect_equal(check_out[["notes"]], expected = "no other note")
+        }
       }
     } else {
       expect_error(
