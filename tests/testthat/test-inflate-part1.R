@@ -480,11 +480,6 @@ usethis::with_project(dummypackage, {
     ))
   })
 
-  # Clean R, tests and vignettes
-  unlink(file.path(dummypackage, "R"), recursive = TRUE)
-  unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
-  unlink(file.path(dummypackage, "tests"), recursive = TRUE)
-  unlink(file.path(dummypackage, "dev", "config_fusen.yaml"), recursive = TRUE)
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -503,10 +498,11 @@ usethis::with_project(dummypackage, {
   suppressMessages(
     inflate(
       pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "# y  _ p n@ \u00E9 ! 1", check = FALSE,
+      vignette_name = "# y \\  _ p n@ \u00E9 ! 1", check = FALSE,
       open_vignette = FALSE
     )
   )
+
   # Vignette name is also cleaned by {usethis} for special characters
   vignette_path <- file.path(dummypackage, "vignettes", "y-p-n-e-1.Rmd")
 
@@ -514,16 +510,11 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(vignette_path))
     # usethis::use_vignette writes in UTF-8
     vig_lines <- readLines(vignette_path, encoding = "UTF-8")
-    expect_true(sum(grepl(enc2utf8("# y  _ p n@ \u00E9 ! 1"), vig_lines, fixed = TRUE)) == 1)
-    expect_equal(vig_lines[2], enc2utf8('title: "# y  _ p n@ \u00E9 ! 1"'))
-    expect_true(sum(grepl("y-p-n-e-1", vig_lines, fixed = TRUE)) == 1)
+    expect_true(sum(grepl(enc2utf8("# y -  _ p n@ \u00E9 ! 1"), vig_lines, fixed = TRUE)) == 2)
+    expect_equal(vig_lines[2], enc2utf8('title: "# y -  _ p n@ \u00E9 ! 1"'))
+    expect_equal(vig_lines[5], enc2utf8('  %\\VignetteIndexEntry{# y -  _ p n@ \u00E9 ! 1}'))
   })
 
-  # Clean R, tests and vignettes
-  unlink(file.path(dummypackage, "R"), recursive = TRUE)
-  unlink(file.path(dummypackage, "vignettes"), recursive = TRUE)
-  unlink(file.path(dummypackage, "tests"), recursive = TRUE)
-  unlink(file.path(dummypackage, "dev", "config_fusen.yaml"), recursive = TRUE)
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)

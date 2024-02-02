@@ -20,7 +20,7 @@ such that you have permission to create repositories in this
 The URL of the website created
 }
 \description{
-This uses {pkgdown} to share the documentation of the package through GitHub Actions.
+This uses 'pkgdown' to share the documentation of the package through GitHub Actions.
 You may need to run \code{usethis::create_github_token()}, then \code{gitcreds::gitcreds_set()} before.
 }
 \details{
@@ -39,7 +39,7 @@ You may need to run \code{usethis::create_github_token()}, then \code{gitcreds::
 \item Check the package on Linux, Windows and MacOS
 \item Calculate code coverage. Note that you may need to connect to \url{https://about.codecov.io/} to see the results of the code coverage.
 }
-\item Init continuous deployment (CD) of the {pkgdown} website documentation
+\item Init continuous deployment (CD) of the 'pkgdown' website documentation
 \item Commit and push to GitHub
 \item List remaining manual steps to make the website public
 }

@@ -17,9 +17,9 @@ pkgload::load_all(export_all = FALSE)
 # Add fusen chunk
 
 ```{r function, filename="build_fusen_chunks"}
-#' Add `{fusen}` chunks
+#' Add 'fusen' chunks
 #'
-#' Create `{fusen}` chunks inside your Rmd
+#' Create 'fusen' chunks inside your Rmd
 #'
 #' @param function_name Name of the function to create.
 #'     If NULL (the  default), the user will be prompted to enter it.

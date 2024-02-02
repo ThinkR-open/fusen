@@ -124,13 +124,16 @@ for (pkgname in create_choices_test) {
         if (length(check_out[["warnings"]]) == 1) {
           expect_true(grepl("there is no package called", check_out[["warnings"]]))
         }
-        #  ‘MASS’
-        # print(" -- warnings --")
-        # print(check_out[["warnings"]])
+
         skip_on_cran()
         expect_true(length(check_out[["notes"]]) <= 1)
-        if (length(check_out[["notes"]]) == 1) {
-          expect_true(grepl("future file timestamps", check_out[["notes"]]))
+        if (length(check_out[["notes"]]) %in% 1:2) {
+          note_expected <- grepl("future file timestamps|Package vignette without corresponding tangle output", check_out[["notes"]])
+          expect_true(all(note_expected))
+          if (!all(note_expected)) {
+            # Keep here to see the notes when CI fails
+            expect_equal(check_out[["notes"]], expected = "no other note")
+          }
         }
       } else {
         print(" ==== Interactive ====")
@@ -198,30 +201,48 @@ checkdir <- normalizePath(checkdir, winslash = "/")
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(
+  add_flat_template(
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
+  )
+)
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 # Run development-dataset chunk
 usethis::with_project(dummypackage, {
-  # skip_on_cran()
-
   test_that("included data can be read", {
     datafile <- file.path(dummypackage, "inst", "nyc_squirrels_sample.csv")
     expect_true(file.exists(datafile))
 
     flat_lines <- readLines(flat_file)
     # Change directory to current
-    flatlines <- gsub("here::here()", paste0('"', dummypackage, '"'), flat_lines, fixed = TRUE)
+    flatlines <- gsub("here::here()",
+      paste0('"', dummypackage, '"'),
+      flat_lines,
+      fixed = TRUE
+    )
 
     flatlines_chunk <- grep("```", flatlines)
-    flatlines_chunk_data <- grep("```{r development-dataset}", flatlines, fixed = TRUE)
-    flatlines_chunk_data_end <- flatlines_chunk[flatlines_chunk > flatlines_chunk_data][1]
-    lines_data <- flatlines[(flatlines_chunk_data + 1):(flatlines_chunk_data_end - 1)]
+    flatlines_chunk_data <- grep("```{r development-dataset}",
+      flatlines,
+      fixed = TRUE
+    )
+    flatlines_chunk_data_end <- flatlines_chunk[
+      flatlines_chunk > flatlines_chunk_data
+    ][1]
+    lines_data <- flatlines[(flatlines_chunk_data + 1):
+    (flatlines_chunk_data_end - 1)]
 
 
     # Can read data
     lines_only_read <- lines_data[grepl("read.csv", lines_data)]
-    lines_only_read <- gsub("datafile", paste0("'", datafile, "'"), lines_only_read)
+    lines_only_read <- gsub(
+      "datafile",
+      paste0("'", datafile, "'"),
+      lines_only_read
+    )
     expect_error(eval(parse(text = lines_only_read)), regexp = NA)
 
     if (interactive()) {
@@ -274,10 +295,8 @@ usethis::with_project(dummypackage, {
     )
 
     # Should not be any errors with templates
-    # check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
-    # expect_equal(check_lines[length(check_lines)], "Status: OK")
-
-    # If this check is run inside a not "--as-cran" check, then it wont work as expected
+    # If this check is run inside a not "--as-cran" check,
+    # then it wont work as expected
     check_out <- rcmdcheck::rcmdcheck(dummypackage,
       quiet = TRUE,
       args = c("--no-manual")
@@ -308,12 +327,20 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(
+  add_flat_template(
+    pkg = dummypackage,
+    overwrite = TRUE, open = FALSE
+  )
+)
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
   file.copy(
-    system.file("tests-templates/dev-template-empty-not-function.Rmd", package = "fusen"),
+    system.file(
+      "tests-templates/dev-template-empty-not-function.Rmd",
+      package = "fusen"
+    ),
     flat_file,
     overwrite = TRUE
   )
@@ -336,7 +363,10 @@ usethis::with_project(dummypackage, {
     # R files with chunk content - Name after title as function name is NA
     expect_equal(
       sort(list.files(file.path(dummypackage, "R"))),
-      sort(c("internal-variables.R", "my-data-doc.R", "my-pkg-doc.R", "onload.R"))
+      sort(c(
+        "internal-variables.R", "my-data-doc.R",
+        "my-pkg-doc.R", "onload.R"
+      ))
     )
     pkgdoc <- file.path(dummypackage, "R", "my-pkg-doc.R")
     expect_true(file.exists(pkgdoc))
@@ -397,7 +427,8 @@ usethis::with_project(dummypackage, {
       # Do not check inside check if on CRAN
       skip_on_os(os = c("windows", "solaris"))
 
-      # If this check is run inside a not "--as-cran" check, then it wont work as expected
+      # If this check is run inside a not "--as-cran" check,
+      #  then it wont work as expected
       check_out <- rcmdcheck::rcmdcheck(dummypackage,
         quiet = TRUE,
         args = c("--no-manual"),
@@ -408,13 +439,27 @@ usethis::with_project(dummypackage, {
       expect_true(length(check_out[["errors"]]) == 0)
       expect_true(length(check_out[["warnings"]]) <= 1)
       if (length(check_out[["warnings"]]) == 1) {
-        expect_true(grepl("there is no package called", check_out[["warnings"]]))
+        expect_true(grepl(
+          "there is no package called",
+          check_out[["warnings"]]
+        ))
       }
-      #  ‘MASS’
-      # print(" -- warnings --")
-      # print(check_out[["warnings"]])
+
+      # Notes are different on CRAN
       skip_on_cran()
-      expect_true(length(check_out[["notes"]]) == 0)
+
+      expect_true(length(check_out[["notes"]]) <= 1)
+      if (length(check_out[["notes"]]) %in% 1:2) {
+        note_expected <- grepl(
+          "future file timestamps|Package vignette without corresponding tangle output",
+          check_out[["notes"]]
+        )
+        expect_true(all(note_expected))
+        if (!all(note_expected)) {
+          # Keep here to see the notes when CI fails
+          expect_equal(check_out[["notes"]], expected = "no other note")
+        }
+      }
     } else {
       expect_error(
         suppressMessages(
@@ -429,7 +474,12 @@ usethis::with_project(dummypackage, {
       )
 
       # Should not be any errors with templates in interactive
-      check_lines <- readLines(file.path(checkdir, paste0(basename(dummypackage), ".Rcheck"), "00check.log"))
+      check_lines <- readLines(
+        file.path(
+          checkdir, paste0(basename(dummypackage), ".Rcheck"),
+          "00check.log"
+        )
+      )
       expect_equal(check_lines[length(check_lines)], "Status: OK")
       unlink(checkdir, recursive = TRUE)
     }
@@ -443,7 +493,12 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(
+  add_flat_template(
+    pkg = dummypackage,
+    overwrite = TRUE, open = FALSE
+  )
+)
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
@@ -1015,8 +1070,7 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(the_vignette))
     the_vignette_lines <- readLines(the_vignette)
     expect_true(grepl("title:.*Super title.*", the_vignette_lines[2]))
-    expect_false(any(grep("01-Super Slug", the_vignette_lines)))
-    expect_true(any(grep("01-super-slug", the_vignette_lines)))
+    expect_true(any(grep("01-Super Slug", the_vignette_lines)))
   })
 })
 

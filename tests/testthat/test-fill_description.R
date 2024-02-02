@@ -39,7 +39,7 @@ test_that("fill_description adds DESCRIPTION", {
   expect_true(lines[1] == paste0("Package: ", pkg_name))
 
   # Title Case changed
-  expect_equal(lines[3], "Title: Build A Package From Rmarkdown File")
+  expect_equal(lines[3], "Title: Build a Package from Rmarkdown File")
 })
 
 # Fill description message and corrected if malformed, and set overwrite
@@ -104,7 +104,7 @@ test_that("curly bracket in title and description works", {
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
 
-# Test capwords ----
-test_that("capwords works", {
-  expect_equal(capwords("using AIC for model selection"), "Using AIC For Model Selection")
+# Test tools::toTitleCase ----
+test_that("tools::toTitleCase works", {
+  expect_equal(tools::toTitleCase("Using AIC for model selection and other things"), "Using AIC for Model Selection and Other Things")
 })
