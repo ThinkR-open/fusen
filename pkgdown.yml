@@ -1,14 +1,14 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   How-to-use-fusen: How-to-use-fusen.html
-  Maintain-packages-with-fusen: Maintain-packages-with-fusen.html
   inflate-all-your-flat-files: inflate-all-your-flat-files.html
+  Maintain-packages-with-fusen: Maintain-packages-with-fusen.html
   register-files-in-config: register-files-in-config.html
   share-on-a-github-website: share-on-a-github-website.html
   tips-and-tricks: tips-and-tricks.html
-last_built: 2023-12-09T19:55Z
+last_built: 2024-04-22T08:08Z
 urls:
   reference: https://thinkr-open.github.io/fusen/reference
   article: https://thinkr-open.github.io/fusen/articles
