@@ -463,10 +463,11 @@ create_vignette_head <- function(pkg, vignette_name, yaml_options = NULL) {
     !names(yaml_options) %in% c("output", "title", "editor_options")
   ]
 
+  vignette_name <- gsub("\\\\", "-", vignette_name)
   if (is.null(names(vignette_name)) || names(vignette_name) == "") {
     vignette_title <- vignette_name
   } else {
-    vignette_title <- names(vignette_name)
+    vignette_title <- gsub("\\\\", "-", names(vignette_name))
   }
 
   enc2utf8(
@@ -485,7 +486,7 @@ output: rmarkdown::html_vignette',
         "\n"
       ),
       'vignette: >
-  %\\VignetteIndexEntry{.{asciify_name(vignette_name)}.}
+  %\\VignetteIndexEntry{.{vignette_name}.}
   %\\VignetteEngine{knitr::rmarkdown}
   %\\VignetteEncoding{UTF-8}
 ---
