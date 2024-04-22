@@ -313,7 +313,7 @@ add_flat_template <- function(template = c("full", "minimal_package", "minimal_f
 
   # Add a gitignore file in dev_dir ----
   # Files to ignore
-  ignores <- c("*.html", "*.R")
+  ignores <- c("*.html")
   local_file_ignore(file = file.path(full_dev_dir, ".gitignore"), ignores)
 
   if (length(list.files(pkg, pattern = "[.]Rproj")) == 0 &

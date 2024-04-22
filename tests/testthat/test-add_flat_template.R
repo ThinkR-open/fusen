@@ -22,6 +22,11 @@ test_that("add_flat_template adds flat_template.Rmd and co.", {
   rbuildignore_lines <- readLines(rbuildignore_file)
   expect_true(any(grepl("^dev$", rbuildignore_lines, fixed = TRUE)))
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
+  
+  gitignore_file <- file.path(dummypackage, "dev", ".gitignore")
+  expect_true(file.exists(gitignore_file))
+  gitignore_lines <- readLines(gitignore_file)
+  expect_equal(object = gitignore_lines, expected = "*.html")
 
   dev_lines <- readLines(flat_file)
   expect_equal(length(grep(pkg_name, dev_lines)), 3)
