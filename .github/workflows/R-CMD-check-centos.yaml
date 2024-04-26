@@ -60,6 +60,8 @@ jobs:
       #    extra-packages: any::rcmdcheck
       #    needs: check
 
+      # Avoid upload-artifact@v4 that requires newer C++
       - uses: r-lib/actions/check-r-package@v2
         with:
-          upload-snapshots: true
+          upload-snapshots: false
+
