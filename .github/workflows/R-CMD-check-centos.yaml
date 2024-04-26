@@ -13,6 +13,9 @@ jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
     # See images on https://github.com/rstudio/r-docker
+    # Test locally :
+    # docker run -v /home/seb/fusen:/home/root/fusen -it rstudio/r-base:4.4-centos7 bash
+
     container: 'rstudio/r-base:4.4-centos7'
 
     name: r-base:4.4-centos7
@@ -41,10 +44,20 @@ jobs:
           print(getOption("repos"))
         shell: Rscript {0}
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck
-          needs: check
+
+      - name: Install deps
+        run: |
+          install.packages("pak")
+          library(pak)
+          pak::local_install_deps(dependencies = TRUE)
+          pak::pkg_install("devtools")
+        shell: Rscript {0}
+
+      # checkout@v4 used here requires newer version for centos and C++
+      #- uses: r-lib/actions/setup-r-dependencies@v2
+      #  with:
+      #    extra-packages: any::rcmdcheck
+      #    needs: check
 
       - uses: r-lib/actions/check-r-package@v2
         with:
