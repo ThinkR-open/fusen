@@ -1,8 +1,9 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+# This workflow is created manually
+# Please modify R-version when needed
 on:
   push:
-    branches: [main, master, centos]
+    branches: [main, master, centos-4.4]
   pull_request:
     branches: [main, master, centos]
 
@@ -11,9 +12,13 @@ name: R-CMD-check-centos
 jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
-    container: 'rstudio/r-base:4.3-centos7'
+    # See images on https://github.com/rstudio/r-docker
+    # Test locally :
+    # docker run -v /home/seb/fusen:/home/root/fusen -it rstudio/r-base:4.4-centos7 bash
 
-    name: r-base:4.3-centos7
+    container: 'rstudio/r-base:4.4-centos7'
+
+    name: r-base:4.4-centos7
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
@@ -22,6 +27,7 @@ jobs:
       CRAN: "https://packagemanager.posit.co/cran/__linux__/centos7/latest"
 
     steps:
+      # Keep checkout v3 for centos7 as C++ is not recent enough
       - uses: actions/checkout@v3
 
   #    - uses: r-lib/actions/setup-pandoc@v2
@@ -39,11 +45,23 @@ jobs:
           print(getOption("repos"))
         shell: Rscript {0}
 
-      - uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          extra-packages: any::rcmdcheck
-          needs: check
 
+      - name: Install deps
+        run: |
+          options(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/centos7/latest", "https://cran.rstudio.com"))
+          install.packages("pak")
+          pak::local_install_deps(dependencies = TRUE)
+          pak::pkg_install("devtools")
+        shell: Rscript {0}
+
+      # checkout@v4 used here requires newer version for centos and C++
+      #- uses: r-lib/actions/setup-r-dependencies@v2
+      #  with:
+      #    extra-packages: any::rcmdcheck
+      #    needs: check
+
+      # Avoid upload-artifact@v4 that requires newer C++
       - uses: r-lib/actions/check-r-package@v2
         with:
-          upload-snapshots: true
+          upload-snapshots: false
+
