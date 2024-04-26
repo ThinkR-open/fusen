@@ -1,8 +1,9 @@
 # Workflow derived from https://github.com/r-lib/actions/tree/v2/examples
-# Need help debugging build failures? Start at https://github.com/r-lib/actions#where-to-find-help
+# This workflow is created manually
+# Please modify R-version when needed
 on:
   push:
-    branches: [main, master, centos]
+    branches: [main, master, centos-4.4]
   pull_request:
     branches: [main, master, centos]
 
@@ -11,9 +12,10 @@ name: R-CMD-check-centos
 jobs:
   R-CMD-check:
     runs-on: ubuntu-latest
-    container: 'rstudio/r-base:4.3-centos7'
+    # See images on https://github.com/rstudio/r-docker
+    container: 'rstudio/r-base:4.4-centos7'
 
-    name: r-base:4.3-centos7
+    name: r-base:4.4-centos7
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
