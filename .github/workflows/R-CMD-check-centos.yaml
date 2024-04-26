@@ -48,8 +48,8 @@ jobs:
 
       - name: Install deps
         run: |
+          options(repos = c(RSPM = "https://packagemanager.posit.co/cran/__linux__/centos7/latest", "https://cran.rstudio.com"))
           install.packages("pak")
-          library(pak)
           pak::local_install_deps(dependencies = TRUE)
           pak::pkg_install("devtools")
         shell: Rscript {0}
