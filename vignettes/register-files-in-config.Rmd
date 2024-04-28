@@ -3,7 +3,7 @@ title: "Register files in config"
 output: rmarkdown::html_vignette
 inflate_state: "active"
 vignette: >
-  %\VignetteIndexEntry{register-files-in-config}
+  %\VignetteIndexEntry{Register files in config}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

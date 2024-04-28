@@ -2,7 +2,7 @@
 title: "Inflate all your flat files"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{inflate-all-your-flat-files}
+  %\VignetteIndexEntry{Inflate all your flat files}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

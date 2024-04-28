@@ -104,9 +104,9 @@ inflate <- function(pkg = ".", flat_file,
           "With vignette name: ", vignette_name, "\n",
           "Are you sure this is what you planned? (y/n)\n"
         )
-        do_it <- readline(sure) == "y"
+        do_it <- readline(sure) == "y" || readline(sure) == "yes"
       } else {
-        do_it <- isTRUE(overwrite)
+        do_it <- isTRUE(overwrite) || overwrite == "yes"
       }
       if (do_it) {
         message(
