@@ -11,7 +11,7 @@ inflate_all(
   check = TRUE,
   open_vignette = FALSE,
   overwrite = TRUE,
-  clean = TRUE,
+  check_unregistered = TRUE,
   stylers,
   ...
 )
@@ -21,7 +21,7 @@ inflate_all_no_check(
   document = TRUE,
   open_vignette = FALSE,
   overwrite = TRUE,
-  clean = TRUE,
+  check_unregistered = TRUE,
   stylers,
   ...
 )
@@ -38,9 +38,15 @@ inflate_all_no_check(
 \item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 Whether to overwrite vignette and functions if already exists.}
 
-\item{clean}{Logical. Whether to help detect unregistered files.}
+\item{check_unregistered}{Logical. Whether to help detect unregistered files.
+Typically files not created from a flat file and added manually in the repository.}
 
-\item{stylers}{Function to be run at the end of the process, like \code{styler::style_pkg} or \code{lintr::lint_package} or a lambda function combining functions like: \code{function() {styler::style_pkg(); lintr::lint_package()}}. For a unique function, use the format without parenthesis \verb{()} at the end of the command.}
+\item{stylers}{Function to be run at the end of the process,
+like \code{styler::style_pkg} or \code{lintr::lint_package}
+or a lambda function combining functions like:
+\code{function() {styler::style_pkg(); lintr::lint_package()}}.
+For a unique function, use the format without parenthesis \verb{()}
+at the end of the command.}
 
 \item{...}{Arguments passed to \code{devtools::check()}.
 For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is
@@ -53,11 +59,19 @@ side effect. Inflates all your flat files that can be inflated.
 Inflate all the flat files stored in "dev/" and starting with "flat_"
 }
 \details{
-This requires to \code{\link[=inflate]{inflate()}} all flat files individually at least once, so that their specific inflate configurations are stored.
+This requires to \code{\link[=inflate]{inflate()}} all flat files
+individually at least once, so that their specific
+inflate configurations are stored.
 
-This also requires to register all R, tests and vignettes files of your package, even if not created with an inflate. Run \code{\link[=inflate_all]{inflate_all()}} once and read the messages. The first time, you will probably need to run \code{\link[=register_all_to_config]{register_all_to_config()}} if your package is not new.
+This also requires to register all R,
+tests and vignettes files of your package,
+even if not created with an inflate.
+Run \code{\link[=inflate_all]{inflate_all()}} once and read the messages.
+The first time, you will probably need to run
+\code{\link[=register_all_to_config]{register_all_to_config()}} if your package is not new.
 
-For more information, read the \code{vignette("inflate-all-your-flat-files", package = "fusen")}
+For more information, read the
+\code{vignette("inflate-all-your-flat-files", package = "fusen")}
 }
 \examples{
 \dontrun{
@@ -118,6 +132,8 @@ unlink(dummypackage, recursive = TRUE)
 }
 \seealso{
 \code{\link[=inflate]{inflate()}} for the options of a single file inflate,
-\code{\link[=check_not_registered_files]{check_not_registered_files()}} for the list of files not already associated with a flat file in the config file,
-\code{\link[=register_all_to_config]{register_all_to_config()}} for automatically registering all files already present in the project before the first \code{inflate_all()}
+\code{\link[=check_not_registered_files]{check_not_registered_files()}} for the list of files
+not already associated with a flat file in the config file,
+\code{\link[=register_all_to_config]{register_all_to_config()}} for automatically registering
+all files already present in the project before the first \code{inflate_all()}
 }

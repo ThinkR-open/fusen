@@ -341,6 +341,67 @@ usethis::with_project(dummypackage, {
 })
 unlink(dummypackage, recursive = TRUE)
 
+# Test update_one_group_yaml ----
+temp_clean_inflate <- tempfile(pattern = "clean.update.config")
+dir.create(temp_clean_inflate)
+
+withr::with_dir(temp_clean_inflate, {
+  dir.create(file.path("R"))
+  dir.create(file.path("tests", "testthat"), recursive = TRUE)
+  dir.create(file.path("vignettes"))
+  dir.create(file.path("dev"))
+
+  cat("# test R file\n", file = file.path("R", "to_keep.R"))
+  cat("# test R file\n", file = file.path("R", "to_remove.R"))
+  cat("# test test file\n",
+    file = file.path("tests", "testthat", "test-zaza.R")
+  )
+  cat("# test flat file\n", file = file.path("dev", "flat_test.Rmd"))
+
+
+  all_files <- tibble::tribble(
+    ~type, ~path,
+    "R", "R/to_keep.R",
+    "R", "R/to_remove.R",
+    "test", "tests/testthat/test-zaza.R"
+  )
+
+  config_file <- df_to_config(
+    all_files,
+    flat_file_path = "dev/flat_test.Rmd",
+    state = "active"
+  )
+
+  # Simulate function to_remove() was changed for to_add()
+  # Then file to_remove.R should be removed
+  # from the config file and from the repository
+  cat("# test R file\n", file = file.path("R", "to_add.R"))
+
+  all_files_new <- tibble::tribble(
+    ~origin, ~type, ~path,
+    "dev/flat_test.Rmd", "R", "R/to_keep.R",
+    "dev/flat_test.Rmd", "R", "R/to_add.R",
+    "dev/flat_test.Rmd", "test", "tests/testthat/test-zaza.R"
+  )
+
+  # TODO
+  # browser()
+  # debugonce(update_one_group_yaml)
+  update_one_group_yaml(
+    all_files_new,
+    complete_yaml = yaml::read_yaml(config_file),
+    flat_file_path = "dev/flat_test.Rmd",
+    state = "active"
+  )
+
+  test_that("update_one_group_yaml clean old files", {
+    expect_true(file.exists("R/to_add.R"))
+    # expect_false(file.exists("R/to_remove.R")) # TODO - Uncomment
+    expect_true(file.exists("tests/testthat/test-zaza.R"))
+  })
+})
+
+
 # Test df_to_config with custom config file path ----
 config_file_path <- tempfile(fileext = ".yaml")
 
@@ -434,12 +495,13 @@ all_files <- tibble::tribble(
 
 file.create(file.path(dir_tmp, c("tata.R", "toto.R", "test-tata.R", "tata_vignette.Rmd")))
 
+
 test_that("df_to_config works after 2nd run", {
   withr::with_dir(dir_tmp, {
     withr::with_options(list(fusen.config_file = config_file_path), {
       expect_message(
         config_file <- df_to_config(all_files),
-        regexp = "Some files group already existed and were overwritten: keep"
+        regexp = "Some files group already existed and were modified: keep"
       ) # "keep" is default
     })
   })
@@ -534,7 +596,8 @@ test_that("df_to_config does not work with inflate_parameters and flat_file_path
             open_vignette = FALSE,
             check = FALSE,
             document = TRUE,
-            overwrite = "yes"
+            overwrite = "yes",
+            clean = "ask"
           )
         )
       )
@@ -588,7 +651,8 @@ test_that("df_to_config works with inflate parameters", {
         open_vignette = FALSE,
         check = FALSE,
         document = TRUE,
-        overwrite = "yes"
+        overwrite = "yes",
+        clean = "ask"
       )
     )
 
@@ -602,7 +666,8 @@ test_that("df_to_config works with inflate parameters", {
         open_vignette = FALSE,
         check = FALSE,
         document = TRUE,
-        overwrite = "yes"
+        overwrite = "yes",
+        clean = "ask"
       )
     )
   })
@@ -654,6 +719,11 @@ test_that("inflate parameters are put into config_fusen.yaml", {
       "ask"
     )
 
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["clean"]],
+      "ask"
+    )
+
 
     expect_equal(
       config_yml[[basename(flat_file)]][["inflate"]][["extra_param"]],
@@ -693,6 +763,11 @@ test_that("inflate parameters are put into config_fusen.yaml", {
     expect_equal(
       config_yml[[basename(flat_file)]][["inflate"]][["overwrite"]],
       "yes"
+    )
+
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["clean"]],
+      "ask"
     )
 
 

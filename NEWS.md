@@ -3,6 +3,7 @@
 ## Breaking changes
 
 - {fusen} now relies on {lightparser} instead of {parsermd} to parse flat file. This allows to avoid installation problems with {parsermd}, which is not updated anymore. As {lightparser} is lighter, this may have unattended effects on specific flat file cases. Please report any issue you may encounter. (#233)
+- `inflate_all*()` does not use parameter `clean` anymore. Use `check_unregistered` instead to check if all files are registered in the configuration file.
 
 ## New features
 

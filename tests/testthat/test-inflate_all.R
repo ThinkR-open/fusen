@@ -396,7 +396,10 @@ usethis::with_project(dummypackage, {
       file = file.path(dummypackage, "R", "unregistered_r.R")
     )
     cat("# unregistered file in test\n",
-      file = file.path(dummypackage, "tests", "testthat", "test-unregistered_r.R")
+      file = file.path(
+        dummypackage,
+        "tests", "testthat", "test-unregistered_r.R"
+      )
     )
 
     expect_message(
@@ -424,11 +427,14 @@ usethis::with_project(dummypackage, {
       row.names = 1:2,
       class = "data.frame"
     )
-    csv_content_expected <- csv_content_expected[order(csv_content_expected[["path"]]), ]
+    csv_content_expected <-
+      csv_content_expected[order(csv_content_expected[["path"]]), ]
 
     expect_equal(csv_content, csv_content_expected)
 
-    config_content <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+    config_content <- yaml::read_yaml(
+      file.path(dummypackage, "dev", "config_fusen.yaml")
+    )
 
     expect_true(
       !is.null(config_content[["flat_minimal.Rmd"]][["inflate"]])
@@ -439,7 +445,9 @@ usethis::with_project(dummypackage, {
     # register everything
     register_all_to_config()
 
-    config_content <- yaml::read_yaml(file.path(dummypackage, "dev", "config_fusen.yaml"))
+    config_content <- yaml::read_yaml(
+      file.path(dummypackage, "dev", "config_fusen.yaml")
+    )
 
     expect_true(
       !is.null(config_content[["flat_minimal.Rmd"]][["inflate"]])
@@ -460,7 +468,7 @@ usethis::with_project(dummypackage, {
   })
 
   test_that("inflate_all is does not check registered if FALSE", {
-    output <- capture.output(inflate_all_no_check(clean = FALSE))
+    output <- capture.output(inflate_all_no_check(check_unregistered = FALSE))
     expect_false(any(grepl("registered", output)))
   })
 
@@ -539,7 +547,7 @@ usethis::with_project(dummypackage, {
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
         "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite"
+        "check", "document", "overwrite", "clean"
       )
     )
   })
@@ -589,7 +597,7 @@ usethis::with_project(dummypackage, {
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
         "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite"
+        "check", "document", "overwrite", "clean"
       )
     )
     expect_true(is.na(config_content[["flat_full.Rmd"]][["inflate"]][["vignette_name"]]))

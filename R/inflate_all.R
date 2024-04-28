@@ -5,8 +5,14 @@
 #' Inflate all the flat files stored in "dev/" and starting with "flat_"
 #'
 #' @param pkg Path to package
-#' @param clean Logical. Whether to help detect unregistered files.
-#' @param stylers Function to be run at the end of the process, like `styler::style_pkg` or `lintr::lint_package` or a lambda function combining functions like: `function() {styler::style_pkg(); lintr::lint_package()}`. For a unique function, use the format without parenthesis `()` at the end of the command.
+#' @param check_unregistered Logical. Whether to help detect unregistered files.
+#' Typically files not created from a flat file and added manually in the repository.
+#' @param stylers Function to be run at the end of the process,
+#' like `styler::style_pkg` or `lintr::lint_package`
+#' or a lambda function combining functions like:
+#' `function() {styler::style_pkg(); lintr::lint_package()}`.
+#' For a unique function, use the format without parenthesis `()`
+#' at the end of the command.
 #' @inheritParams inflate
 #'
 #' @importFrom yaml read_yaml
@@ -15,16 +21,26 @@
 #'
 #' @return side effect. Inflates all your flat files that can be inflated.
 #'
-#' @details This requires to [inflate()] all flat files individually at least once, so that their specific inflate configurations are stored.
+#' @details This requires to [inflate()] all flat files
+#'  individually at least once, so that their specific
+#'  inflate configurations are stored.
 #'
-#' This also requires to register all R, tests and vignettes files of your package, even if not created with an inflate. Run [inflate_all()] once and read the messages. The first time, you will probably need to run [register_all_to_config()] if your package is not new.
+#' This also requires to register all R,
+#'  tests and vignettes files of your package,
+#' even if not created with an inflate.
+#' Run [inflate_all()] once and read the messages.
+#' The first time, you will probably need to run
+#' [register_all_to_config()] if your package is not new.
 #'
-#' For more information, read the `vignette("inflate-all-your-flat-files", package = "fusen")`
+#' For more information, read the
+#'  `vignette("inflate-all-your-flat-files", package = "fusen")`
 #'
 #' @seealso
 #'   [inflate()] for the options of a single file inflate,
-#'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
-#'   [register_all_to_config()] for automatically registering all files already present in the project before the first `inflate_all()`
+#'   [check_not_registered_files()] for the list of files
+#' not already associated with a flat file in the config file,
+#'   [register_all_to_config()] for automatically registering
+#' all files already present in the project before the first `inflate_all()`
 #'
 #' @export
 #' @examples
@@ -83,7 +99,14 @@
 #'
 #' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
-inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette = FALSE, overwrite = TRUE, clean = TRUE, stylers, ...) {
+inflate_all <- function(
+    pkg = ".",
+    document = TRUE,
+    check = TRUE,
+    open_vignette = FALSE,
+    overwrite = TRUE,
+    check_unregistered = TRUE,
+    stylers, ...) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
@@ -120,7 +143,9 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
     message("No flat files were inflated")
   } else {
     apply_inflate <- function(inflate_params, pkg, overwrite, open_vignette) {
-      config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
+      config_file <- getOption("fusen.config_file",
+        default = "dev/config_fusen.yaml"
+      )
       # Change config option temporary, to be able to modify it on the fly
       config_file_tmp <- tempfile(pattern = "tempconfig")
       on.exit(file.remove(config_file_tmp))
@@ -140,10 +165,13 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
       )
     }
 
-    apply_inflate(inflate_params, pkg = pkg, overwrite = overwrite, open_vignette = open_vignette)
+    apply_inflate(inflate_params,
+      pkg = pkg, overwrite = overwrite,
+      open_vignette = open_vignette
+    )
   }
 
-  if (isTRUE(clean)) {
+  if (isTRUE(check_unregistered)) {
     cli::cat_rule("check not registered files")
     invisible(check_not_registered_files(path = pkg))
   }
@@ -172,6 +200,6 @@ inflate_all <- function(pkg = ".", document = TRUE, check = TRUE, open_vignette 
 
 #' @rdname inflate_all
 #' @export
-inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, clean = TRUE, stylers, ...) {
-  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, clean = clean, stylers, ...)
+inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, check_unregistered = TRUE, stylers, ...) {
+  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, check_unregistered = check_unregistered, stylers, ...)
 }

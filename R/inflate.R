@@ -24,6 +24,10 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
 #' @param overwrite Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 #' Whether to overwrite vignette and functions if already exists.
+#' @param clean Logical (TRUE, FALSE) or character ("ask", "yes", "no)
+#' Whether to delete files that are not anymore created by the current
+#'  flat file. Typically, if you have deleted or renamed a function
+#'  in the flat file. Default to "ask".
 #' @param ... Arguments passed to `devtools::check()`.
 #'     For example, you can do `inflate(check = TRUE, quiet = TRUE)`, where `quiet` is
 #'     passed to `devtools::check()`.
@@ -64,19 +68,23 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 inflate <- function(pkg = ".", flat_file,
                     vignette_name = "Get started",
                     open_vignette = TRUE,
-                    check = TRUE, document = TRUE,
+                    check = TRUE,
+                    document = TRUE,
                     overwrite = "ask",
+                    clean = "ask",
                     ...) {
   if (!is.null(list(...)[["name"]])) {
     stop(paste0(
-      "The `name` argument to `inflate()` is deprecated since {fusen} version 0.3.0.",
+      "The `name` argument to `inflate()`",
+      " is deprecated since {fusen} version 0.3.0.",
       "\nPlease use `vignette_name = '", list(...)[["name"]], "'` instead.\n"
     ))
     vignette_name <- list(...)[["name"]]
   }
   if (!is.null(list(...)[["rmd"]])) {
     stop(paste0(
-      "The `rmd` argument to `inflate()` is deprecated since {fusen} version 0.3.0.",
+      "The `rmd` argument to `inflate()`",
+      " is deprecated since {fusen} version 0.3.0.",
       "\nPlease use `flat_file = '", list(...)[["rmd"]], "'` instead.\n"
     ))
     flat_file <- list(...)[["rmd"]]
@@ -92,14 +100,17 @@ inflate <- function(pkg = ".", flat_file,
   }
 
   # If flat_file empty
-  if (missing(flat_file) && requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
+  if (missing(flat_file) &&
+    requireNamespace("rstudioapi") && rstudioapi::isAvailable() &&
     rstudioapi::hasFun("getSourceEditorContext")) {
     curr_editor <- rstudioapi::getSourceEditorContext()
     current_file <- curr_editor$path
-    if (!is.null(current_file) && grepl("^flat.*[.](R|r|q)md$", basename(current_file))) {
+    if (!is.null(current_file) &&
+      grepl("^flat.*[.](R|r|q)md$", basename(current_file))) {
       if (overwrite == "ask") {
         sure <- paste0(
-          "You did not specify parameter 'flat_file'. The current file will be inflated:\n",
+          "You did not specify parameter 'flat_file'.",
+          " The current file will be inflated:\n",
           current_file, ".\n",
           "With vignette name: ", vignette_name, "\n",
           "Are you sure this is what you planned? (y/n)\n"
@@ -127,7 +138,10 @@ inflate <- function(pkg = ".", flat_file,
   }
 
   old <- setwd(pkg)
-  if (normalizePath(old, mustWork = FALSE) != normalizePath(pkg, mustWork = FALSE)) {
+  if (
+    normalizePath(old, mustWork = FALSE) !=
+      normalizePath(pkg, mustWork = FALSE)
+  ) {
     if (dir.exists(old)) {
       on.exit(setwd(old))
     } else {
@@ -136,7 +150,10 @@ inflate <- function(pkg = ".", flat_file,
   }
 
   old_proj <- usethis::proj_get()
-  if (normalizePath(old_proj, mustWork = FALSE) != normalizePath(pkg, mustWork = FALSE)) {
+  if (
+    normalizePath(old_proj, mustWork = FALSE) !=
+      normalizePath(pkg, mustWork = FALSE)
+  ) {
     if (dir.exists(old_proj)) {
       on.exit(usethis::proj_set(old_proj))
     } else {
@@ -151,8 +168,10 @@ inflate <- function(pkg = ".", flat_file,
 
   if (!file.exists(file.path(normalizePath(pkg), "DESCRIPTION"))) {
     stop(
-      "DESCRIPTION file does not exist in your directory:", normalize_path_winslash(pkg), ".\n",
-      "Have you run the content of the 'description' chunk of your {fusen} template?"
+      "DESCRIPTION file does not exist in your directory:",
+      normalize_path_winslash(pkg), ".\n",
+      "Have you run the content of the 'description'",
+      " chunk of your {fusen} template?"
     )
   }
 
@@ -160,7 +179,6 @@ inflate <- function(pkg = ".", flat_file,
     if (!file.exists(".Rbuildignore")) {
       file.create(".Rbuildignore")
     }
-    # usethis::use_build_ignore(basename(flat_file))
     usethis::use_build_ignore(paste0(basename(pkg), ".Rproj"))
     usethis::use_build_ignore(".Rproj.user")
   }
@@ -173,7 +191,10 @@ inflate <- function(pkg = ".", flat_file,
   }
 
   if (!file.exists(flat_file_path)) {
-    stop(flat_file, " does not exists, please use fusen::add_flat_template() to create it.")
+    stop(
+      flat_file, " does not exists, ",
+      "please use fusen::add_flat_template() to create it."
+    )
   }
 
   # Are you sure ?
@@ -182,10 +203,14 @@ inflate <- function(pkg = ".", flat_file,
   }
   overwrite <- match.arg(overwrite, choices = c("ask", "yes", "no"))
   cleaned_vignette_name <- asciify_name(vignette_name)
-  vignette_path <- file.path(pkg, "vignettes", paste0(cleaned_vignette_name, ".Rmd"))
+  vignette_path <- file.path(
+    pkg, "vignettes",
+    paste0(cleaned_vignette_name, ".Rmd")
+  )
   if (file.exists(vignette_path)) {
     if (overwrite == "ask") {
-      rm_exist_vignette <- getFromNamespace("can_overwrite", "usethis")(vignette_path)
+      rm_exist_vignette <-
+        getFromNamespace("can_overwrite", "usethis")(vignette_path)
     } else {
       rm_exist_vignette <- ifelse(overwrite == "yes", TRUE, FALSE)
     }
@@ -242,14 +267,21 @@ inflate <- function(pkg = ".", flat_file,
 
   # Get functions and create R and tests files ----s
   if (!is.null(fun_code)) {
-    script_files <- create_functions_all(parsed_tbl, fun_code, pkg, relative_flat_file)
+    script_files <- create_functions_all(
+      parsed_tbl, fun_code, pkg, relative_flat_file
+    )
   } else {
-    message("No chunks named 'function-xx' or 'fun-xx' were found in the Rmarkdown file: ", flat_file)
+    message(
+      "No chunks named 'function-xx' or 'fun-xx'",
+      " were found in the Rmarkdown file: ", flat_file
+    )
     script_files <- tibble::tibble(type = character(0), path = character(0))
   }
 
   # Create vignette ----
-  if (!(is.null(vignette_name) || is.na(vignette_name) || vignette_name == "")) {
+  if (!(is.null(vignette_name) ||
+    is.na(vignette_name) ||
+    vignette_name == "")) {
     vignette_file <- create_vignette(
       parsed_tbl = parsed_tbl,
       pkg = pkg,
@@ -295,7 +327,7 @@ inflate <- function(pkg = ".", flat_file,
   config_file <- df_to_config(
     df_files = all_files,
     flat_file_path = relative_flat_file,
-    clean = TRUE,
+    clean = clean,
     state = "active",
     # TODO - Set to force = FALSE when there is a possibility to clean the config
     # when there are manually deleted file ----

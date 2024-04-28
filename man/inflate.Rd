@@ -12,6 +12,7 @@ inflate(
   check = TRUE,
   document = TRUE,
   overwrite = "ask",
+  clean = "ask",
   ...
 )
 }
@@ -31,6 +32,11 @@ Use \code{NA} if you do not want to create a vignette.}
 
 \item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 Whether to overwrite vignette and functions if already exists.}
+
+\item{clean}{Logical (TRUE, FALSE) or character ("ask", "yes", "no)
+Whether to delete files that are not anymore created by the current
+flat file. Typically, if you have deleted or renamed a function
+in the flat file. Default to "ask".}
 
 \item{...}{Arguments passed to \code{devtools::check()}.
 For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is
