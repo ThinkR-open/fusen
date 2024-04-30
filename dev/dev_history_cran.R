@@ -26,13 +26,15 @@ testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate-part1.R")
 testthat::test_file("tests/testthat/test-inflate-part2.R")
 testthat::test_file("tests/testthat/test-inflate_all.R")
+testthat::test_file("tests/testthat/test-inflate_all_utils.R")
 testthat::test_file("tests/testthat/test-add_flat_template.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
+testthat::test_file("tests/testthat/test-register_config_file.R") # interactivity
 Sys.setenv("NOT_CRAN" = "false")
 
 # Run line by line
 Sys.setenv("FUSEN_TEST_PUBLISH" = "TRUE")
-testthat::test_file("tests/testthat/test-init_share_on_github.R")
+testthat::test_file("tests/testthat/test-init_share_on_github.R") # interactivity
 Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 # testthat::test_file("tests/testthat/test-build_fusen_chunks.R")
 # Test no output generated in the user files

@@ -51,9 +51,10 @@ flat_inflate_all.Rmd:
     flat_file: dev/flat_inflate_all.Rmd
     vignette_name: Inflate all your flat files
     open_vignette: false
-    check: true
+    check: false
     document: true
     overwrite: 'yes'
+    clean: ask
 flat_inflate_all_utils.Rmd:
   path: dev/flat_inflate_all_utils.Rmd
   state: active
@@ -71,6 +72,7 @@ flat_inflate_all_utils.Rmd:
     check: false
     document: true
     overwrite: 'yes'
+    clean: ask
 flat_init_share_on_github.Rmd:
   path: dev/flat_init_share_on_github.Rmd
   state: active
@@ -97,6 +99,7 @@ flat_register_config_file.Rmd:
     check: false
     document: true
     overwrite: 'yes'
+    clean: ask
 keep:
   path: keep
   state: active

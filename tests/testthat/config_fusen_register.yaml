@@ -15,6 +15,7 @@ flat_full.Rmd:
     check: no
     document: yes
     overwrite: ask
+    clean: ask
 flat_new_one.Rmd:
   path: dev/flat_new_one.Rmd
   state: active
@@ -28,6 +29,7 @@ flat_new_one.Rmd:
     check: no
     document: yes
     overwrite: ask
+    clean: ask
 keep:
   path: keep
   state: active

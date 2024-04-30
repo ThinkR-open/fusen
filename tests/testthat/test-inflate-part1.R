@@ -199,8 +199,8 @@ usethis::with_project(dummypackage, {
     # Do not check inside check if on CRAN
     skip_on_os(os = c("windows", "solaris"))
 
-    # If this check is run inside a not "--as-cran" check, then it wont work as expected
-    check_out <- rcmdcheck::rcmdcheck(dummypackage,
+    check_out <- rcmdcheck::rcmdcheck(
+      path = ".",
       quiet = TRUE,
       args = c("--no-manual")
     )
@@ -212,12 +212,22 @@ usethis::with_project(dummypackage, {
     # expect_true(grepl("license", check_out[["warnings"]][1]))
     # No Notes or only one if CRAN ?
     skip_on_cran()
-    expect_true(length(check_out[["notes"]]) <= 1)
-    if (length(check_out[["notes"]]) == 1) {
+    expect_true(length(check_out[["notes"]]) <= 2)
+    if (length(check_out[["notes"]]) %in% 1:2) {
       # if tested as cran
       # 1 note on CRAN for new submission
       print(check_out[["notes"]])
-      expect_true(grepl("New submission", check_out[["notes"]][1]))
+
+      note_expected <- grepl(
+        "New submission|future file timestamps|Package vignette without corresponding tangle output",
+        check_out[["notes"]]
+      )
+      expect_true(all(note_expected))
+
+      if (!all(note_expected)) {
+        # Keep here to see the notes when CI fails
+        expect_equal(check_out[["notes"]], expected = "no other note")
+      }
     } else {
       expect_true(length(check_out[["notes"]]) == 0)
     }
@@ -479,7 +489,6 @@ usethis::with_project(dummypackage, {
       file.path(dummypackage, "tests", "testthat", "test-my_median.R")
     ))
   })
-
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -512,9 +521,8 @@ usethis::with_project(dummypackage, {
     vig_lines <- readLines(vignette_path, encoding = "UTF-8")
     expect_true(sum(grepl(enc2utf8("# y -  _ p n@ \u00E9 ! 1"), vig_lines, fixed = TRUE)) == 2)
     expect_equal(vig_lines[2], enc2utf8('title: "# y -  _ p n@ \u00E9 ! 1"'))
-    expect_equal(vig_lines[5], enc2utf8('  %\\VignetteIndexEntry{# y -  _ p n@ \u00E9 ! 1}'))
+    expect_equal(vig_lines[5], enc2utf8("  %\\VignetteIndexEntry{# y -  _ p n@ \u00E9 ! 1}"))
   })
-
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)

@@ -794,13 +794,20 @@ unlink(dummypackage, recursive = TRUE)
 #' @param df_files A data.frame with 'type' and 'path' columns
 #' or a csv file path as issued from `[check_not_registered_files()]`
 #' or nothing (and it will take the csv file in "dev/")
-#' @param flat_file_path Character. Usually set to `"keep"` for users. You can use the name of the origin flat file but this is more of an internal use, as inflating the flat file should have the same result.
+#' @param flat_file_path Character. Usually set to `"keep"` for users.
+#' You can use the name of the origin flat file but this is more of
+#' an internal use, as inflating the flat file should have the same result.
 #' @param state Character. Whether if the flat file is `active` or `deprecated`.
-#' @param force Logical. Whether to force writing the configuration file even is some files do not exist.
-#' @param clean Logical. Delete list associated to a specific flat file before updating the whole list.
-#' Default is set to TRUE during `inflate()` of a specific flat file, as the list should only contain files created during the inflate.
-#' This could be set to FALSE with a direct use of `df_to_config()` too. This is forced to FALSE for "keep" section.
-#' @param inflate_parameters list of parameters passed through a call to `inflate()`
+#' @param force Logical. Whether to force writing the configuration
+#' file even is some files do not exist.
+#' @param clean Logical (TRUE, FALSE) or character ("ask", "yes", "no).
+#' Whether to delete files created in a previous version of this flat file
+#' Default is set to "ask" during `inflate()` of a specific flat file,
+#' as the list should only contain files created during the inflate.
+#' This could be set to FALSE with a direct use of `df_to_config()` too.
+#' This is forced to FALSE for the "keep" section.
+#' @param inflate_parameters list of parameters passed through
+#' a call to `inflate()`
 
 #' @importFrom stats setNames
 #' @importFrom utils read.csv
@@ -810,8 +817,10 @@ unlink(dummypackage, recursive = TRUE)
 #' Side effect: create a yaml config file.
 #'
 #' @seealso
-#'   [check_not_registered_files()] for the list of files not already associated with a flat file in the config file,
-#'   [register_all_to_config()] for automatically registering all files already present in the project
+#'   [check_not_registered_files()] for the list of files not already
+#'  associated with a flat file in the config file,
+#'   [register_all_to_config()] for automatically registering
+#'  all files already present in the project
 #'
 #' @noRd
 
@@ -819,9 +828,12 @@ df_to_config <- function(df_files,
                          flat_file_path = "keep",
                          state = c("active", "deprecated"),
                          force = FALSE,
-                         clean = TRUE,
+                         clean = "ask",
                          inflate_parameters = NULL) {
-  config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
+  config_file <- getOption(
+    "fusen.config_file",
+    default = "dev/config_fusen.yaml"
+  )
   state <- match.arg(state, several.ok = FALSE)
 
   # User entry verifications
@@ -833,7 +845,10 @@ df_to_config <- function(df_files,
   if (!is.data.frame(df_files) && file.exists(df_files)) {
     df_files <- read.csv(df_files, stringsAsFactors = FALSE)
   } else if (!is.data.frame(df_files) && !file.exists(df_files)) {
-    stop("'", df_files, "' does not exist. You can run `check_not_registered_files()` before.")
+    stop(
+      "'", df_files, "' does not exist. You can run ",
+      "`check_not_registered_files()` before."
+    )
   }
 
   # Then if is.data.frame(df_files)
@@ -861,7 +876,11 @@ df_to_config <- function(df_files,
       )
       if (isTRUE(force)) {
         cli_alert_warning(
-          paste(msg, "\nHowever, you forced to write it in the yaml file with `force = TRUE`.")
+          paste(
+            msg,
+            "\nHowever, you forced to write it in the yaml",
+            " file with `force = TRUE`."
+          )
         )
       } else {
         stop(msg)
@@ -878,7 +897,12 @@ df_to_config <- function(df_files,
     )
   }
 
-  if (!all(grepl("^R$|^r$|^test$|^tests$|^vignette$|^vignettes$", df_files[["type"]]))) {
+  if (!all(
+    grepl(
+      "^R$|^r$|^test$|^tests$|^vignette$|^vignettes$",
+      df_files[["type"]]
+    )
+  )) {
     stop("Only types 'R', 'test' or 'vignette' are allowed")
   }
   all_exists <- file.exists(df_files[["path"]])
@@ -897,7 +921,10 @@ df_to_config <- function(df_files,
 
     if (isTRUE(force)) {
       cli_alert_warning(
-        paste(msg, "\nHowever, you forced to write it in the yaml file with `force = TRUE`.")
+        paste(
+          msg,
+          "\nHowever, you forced to write it in the yaml file with `force = TRUE`."
+        )
       )
     } else {
       stop(msg)
@@ -905,7 +932,11 @@ df_to_config <- function(df_files,
   }
 
   if (!is.null(inflate_parameters) & flat_file_path == "keep") {
-    stop("The purpose of using \"keep\" is to store files created without inflate(). Therefore it is not allowed to provide inflate_parameters")
+    stop(
+      "The purpose of using \"keep\" is to store files",
+      " created without inflate(). ",
+      " Therefore it is not allowed to provide inflate_parameters"
+    )
   }
 
   # Remove common part between config_file and all path
@@ -924,30 +955,47 @@ df_to_config <- function(df_files,
   }
 
   # All origin path should exist, if not "keep"
-  if (!isTRUE(force) || isTRUE(all(file.exists(df_files$origin[df_files$origin != "keep"])))) {
+  if (
+    !isTRUE(force) ||
+      isTRUE(all(file.exists(df_files$origin[df_files$origin != "keep"])))
+  ) {
     df_files$origin[df_files$origin != "keep"] <- gsub(
       paste0(normalize_path_winslash("."), "/"),
       "",
-      normalize_path_winslash(df_files$origin[df_files$origin != "keep"], mustWork = TRUE),
+      normalize_path_winslash(
+        df_files$origin[df_files$origin != "keep"],
+        mustWork = TRUE
+      ),
       fixed = TRUE
     )
-  } else if (isFALSE(all(file.exists(df_files$origin[df_files$origin != "keep"])))) {
+  } else if (
+    isFALSE(all(file.exists(df_files$origin[df_files$origin != "keep"])))
+  ) {
     warning(
       "Please open a bug on {fusen} package with this complete message:\n",
       "There is an error in the df_to_config process.\n",
       "Files origin do not exist but will be registered as is in the config file:\n",
-      paste(df_files$origin[!file.exists(df_files$origin[df_files$origin != "keep"])],
+      paste(
+        df_files$origin[
+          !file.exists(df_files$origin[df_files$origin != "keep"])
+        ],
         collapse = ", "
       )
     )
   }
 
   if (any(duplicated(df_files$path))) {
-    msg <- paste("Some paths appear multiple times in df_files. Please remove duplicated rows: ", paste(unique(df_files$path[duplicated(df_files$path)]), collapse = ", "))
+    msg <- paste(
+      "Some paths appear multiple times in df_files. Please remove duplicated rows: ",
+      paste(unique(df_files$path[duplicated(df_files$path)]), collapse = ", ")
+    )
 
     if (isTRUE(force)) {
       cli_alert_warning(
-        paste(msg, "\nHowever, you forced to write it in the yaml file with `force = TRUE`.")
+        paste(
+          msg,
+          "\nHowever, you forced to write it in the yaml file with `force = TRUE`."
+        )
       )
     } else {
       stop(msg)
@@ -967,11 +1015,16 @@ df_to_config <- function(df_files,
           yaml_paths[!all_exists],
           collapse = ", "
         ), ".\n",
-        "Please open the configuration file: ", config_file, " to verify, and delete the non-existing files if needed."
+        "Please open the configuration file: ",
+        config_file,
+        " to verify, and delete the non-existing files if needed."
       )
       if (isTRUE(force)) {
         cli_alert_warning(
-          paste(msg, "However, you forced to write it in the yaml file with `force = TRUE`.")
+          paste(
+            msg,
+            "However, you forced to write it in the yaml file with `force = TRUE`."
+          )
         )
       } else {
         stop(msg)
@@ -1004,7 +1057,7 @@ df_to_config <- function(df_files,
   if (length(all_modified) != 0) {
     cli_alert_info(
       paste0(
-        "Some files group already existed and were ", ifelse(isTRUE(clean), "overwritten: ", "modified: "),
+        "Some files group already existed and were modified: ",
         paste(all_modified, collapse = ", ")
       )
     )
@@ -1073,16 +1126,18 @@ files_list_to_vector <- function(list_of_files) {
 #' @param complete_yaml The list as output of config_yaml file
 #' @param flat_file_path The group to update
 #' @param state Character. See `df_to_config()`.
-#' @param clean Logical. See `df_to_config()`.
+#' @param clean Logical (TRUE, FALSE) or character ("ask", "yes", "no).
+#'  See `df_to_config()`.
 #' @param inflate_parameters See `df_to_config()`.
 #' @importFrom cli cli_alert_warning cli_alert_success
 #' @noRd
-update_one_group_yaml <- function(df_files,
-                                  complete_yaml,
-                                  flat_file_path,
-                                  state = c("active", "deprecated"),
-                                  clean = TRUE,
-                                  inflate_parameters = NULL) {
+update_one_group_yaml <- function(
+    df_files,
+    complete_yaml,
+    flat_file_path,
+    state = c("active", "deprecated"),
+    clean = "ask",
+    inflate_parameters = NULL) {
   state <- match.arg(state, several.ok = FALSE)
   all_keep_before <- complete_yaml[[basename(flat_file_path)]]
 
@@ -1090,7 +1145,7 @@ update_one_group_yaml <- function(df_files,
   df_files_filtered <- df_files[df_files[["origin"]] == flat_file_path, ]
 
   # All already in the list will be deleted except if clean is FALSE
-  if (isTRUE(clean)) {
+  if (isTRUE(clean) || clean %in% c("yes", "ask")) {
     this_group_list <- list(
       path = flat_file_path,
       state = state,
@@ -1104,7 +1159,7 @@ update_one_group_yaml <- function(df_files,
         grepl("^vignette$|^vignettes$", df_files_filtered[["type"]])
       ])
     )
-  } else {
+  } else if (isFALSE(clean) || clean %in% c("no")) {
     this_group_list <- list(
       path = flat_file_path,
       state = state,
@@ -1126,51 +1181,111 @@ update_one_group_yaml <- function(df_files,
       )),
       vignettes = unique(c(
         # new ones
-        df_files_filtered[["path"]][grepl("^vignette$|^vignettes$", df_files_filtered[["type"]])],
+        df_files_filtered[["path"]][
+          grepl(
+            "^vignette$|^vignettes$",
+            df_files_filtered[["type"]]
+          )
+        ],
         # previous ones
         unlist(all_keep_before[["vignettes"]])
       ))
     )
+  } else {
+    stop("clean should be TRUE, FALSE, 'yes', 'no' or 'ask'")
   }
 
   this_group_list_return <- this_group_list
-  this_group_list_message <- this_group_list
   if (!is.null(inflate_parameters)) {
-    this_group_list_return <- c(this_group_list, list(inflate = inflate_parameters))
-    this_group_list_message <- c(this_group_list, list(inflate = "each parameter"))
+    this_group_list_return <- c(
+      this_group_list, list(inflate = inflate_parameters)
+    )
   }
 
   # Messages only
-  all_names <- names(this_group_list_message)
-  those_removed <- lapply(
+  all_names <- c("R", "tests", "vignettes")
+  # names(this_group_list_message)
+  files_removed <- lapply(
     all_names,
     function(x) {
       setdiff(
         all_keep_before[[x]],
-        this_group_list_message[[x]]
+        this_group_list_return[[x]]
       )
     }
   ) %>%
     setNames(all_names)
+  files_removed_vec <- files_list_to_vector(files_removed)
 
-  those_removed_vec <- files_list_to_vector(those_removed)
-  those_added <- lapply(
+  files_added <- lapply(
     all_names,
     function(x) {
       setdiff(
-        this_group_list_message[[x]],
+        this_group_list_return[[x]],
         all_keep_before[[x]]
       )
     }
   ) %>%
     setNames(all_names)
-  those_added_vec <- files_list_to_vector(those_added)
+  files_added_vec <- files_list_to_vector(files_added)
 
-  if (!is.null(those_removed_vec) || length(those_removed_vec) != 0) {
-    silent <- lapply(paste(those_removed_vec, "was removed from the config file"), cli_alert_warning)
+  if (!is.null(files_removed_vec) || length(files_removed_vec) != 0) {
+    if (clean == "ask") {
+      cli_alert_warning(
+        paste0(
+          "Some files are not anymore created from ",
+          flat_file_path, ".\n",
+          "You may have rename some functions or moved them to another flat:",
+          "\n",
+          paste(files_removed_vec, collapse = ", "), ".\n\n",
+          "Below, you are ask if you want to remove them from the repository.",
+          "\n\n",
+          "Note: to not see this message again, use `clean = TRUE` in the ",
+          "`inflate()` command of this flat file : ", flat_file_path, ".\n",
+          "Use with caution. ",
+          "It is recommended to use git to check the changes...\n"
+        )
+      )
+      sure <- paste(
+        paste(files_removed_vec, collapse = ", "),
+        "\nDo you want to remove all these files from the repository? (y/n)\n"
+      )
+
+      do_it <- readline(sure) == "y" || readline(sure) == "yes"
+    } else if (isTRUE(clean) || clean == "yes") {
+      do_it <- TRUE
+    } else if (isFALSE(clean) || clean == "no") {
+      do_it <- FALSE
+    } else {
+      stop("clean should be TRUE, FALSE, 'yes', 'no' or 'ask'")
+    }
+
+    if (isTRUE(do_it)) {
+      files_removed_filename <- unlist(files_removed)
+      file.remove(files_removed_filename)
+
+      silent <- lapply(
+        paste(
+          files_removed_vec, "was removed from the config file",
+          "and from the repository"
+        ),
+        cli_alert_warning
+      )
+    } else if (isFALSE(do_it)) {
+      silent <- lapply(
+        paste(
+          files_removed_vec, "was removed from the config file",
+          "but kept in the repository"
+        ),
+        cli_alert_warning
+      )
+    }
   }
-  if (!is.null(those_added_vec) || length(those_added_vec) != 0) {
-    silent <- lapply(paste(those_added_vec, "was added to the config file"), cli_alert_success)
+  if (!is.null(files_added_vec) || length(files_added_vec) != 0) {
+    silent <- lapply(
+      paste(files_added_vec, "was added to the config file"),
+      cli_alert_success
+    )
   }
 
   return(this_group_list_return)
@@ -1233,13 +1348,150 @@ config_file <- df_to_config(
     open_vignette = FALSE,
     check = FALSE,
     document = TRUE,
-    overwrite = "yes"
+    overwrite = "yes",
+    clean = "ask"
   )
 )
 #' }
 ```
 
 ```{r tests-df_to_config}
+# Test update_one_group_yaml ----
+temp_clean_inflate <- tempfile(pattern = "clean.update.config")
+dir.create(temp_clean_inflate)
+
+withr::with_dir(temp_clean_inflate, {
+  # Need to force edition to allow expect_snapshot
+  # As we are in another directory using with_dir()
+  local_edition(3)
+  # Fix output conditions for this test for snapshots
+  local_reproducible_output(
+    width = 100,
+    crayon = FALSE,
+    unicode = FALSE,
+    rstudio = FALSE,
+    hyperlinks = FALSE,
+    lang = "en",
+    .env = parent.frame()
+  )
+
+  dir.create(file.path("R"))
+  dir.create(file.path("tests", "testthat"), recursive = TRUE)
+  dir.create(file.path("vignettes"))
+  dir.create(file.path("dev"))
+
+  cat("# test R file\n", file = file.path("R", "to_keep.R"))
+  cat("# test R file\n", file = file.path("R", "to_remove.R"))
+  cat("# test test file\n",
+    file = file.path("tests", "testthat", "test-zaza.R")
+  )
+  cat("# test flat file\n", file = file.path("dev", "flat_test.Rmd"))
+
+
+  all_files <- tibble::tribble(
+    ~type, ~path,
+    "R", "R/to_keep.R",
+    "R", "R/to_remove.R",
+    "test", "tests/testthat/test-zaza.R"
+  )
+
+
+  # Get all messages once
+  expect_snapshot(
+    df_to_config(
+      all_files,
+      flat_file_path = "dev/flat_test.Rmd",
+      state = "active",
+      inflate_parameters = list(
+        flat_file = "dev/flat_test.Rmd",
+        vignette_name = "My new vignette",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "yes",
+        clean = "ask"
+      )
+    )
+  )
+
+  config_file <- "dev/config_fusen.yaml"
+
+
+  # Simulate function to_remove() was changed for to_add()
+  # Then file to_remove.R should be removed
+  # from the config file and from the repository
+  cat("# test R file\n", file = file.path("R", "to_add.R"))
+
+  all_files_new <- tibble::tribble(
+    ~origin, ~type, ~path,
+    "dev/flat_test.Rmd", "R", "R/to_keep.R",
+    "dev/flat_test.Rmd", "R", "R/to_add.R",
+    "dev/flat_test.Rmd", "test", "tests/testthat/test-zaza.R"
+  )
+
+  # Get all messages once with snapshot
+  expect_snapshot(
+    update_one_group_yaml(
+      all_files_new,
+      complete_yaml = yaml::read_yaml(config_file),
+      flat_file_path = "dev/flat_test.Rmd",
+      state = "active",
+      clean = TRUE,
+      inflate_parameters = list(
+        flat_file = "dev/flat_test.Rmd",
+        vignette_name = "My new vignette",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "yes",
+        clean = TRUE
+      )
+    )
+  )
+
+  test_that("update_one_group_yaml clean old files", {
+    expect_true(file.exists("R/to_add.R"))
+    expect_false(file.exists("R/to_remove.R"))
+    expect_true(file.exists("tests/testthat/test-zaza.R"))
+  })
+
+  if (interactive()) {
+    # Allows to test in interactive session
+    # to see if you were asked to remove the file
+    file.create(file.path("R", "to_remove.R"))
+    test_that("update_one_group_yaml file is back before interactive", {
+      expect_true(file.exists("R/to_add.R"))
+      expect_true(file.exists("R/to_remove.R"))
+      expect_true(file.exists("tests/testthat/test-zaza.R"))
+    })
+
+    update_one_group_yaml(
+      all_files_new,
+      complete_yaml = yaml::read_yaml(config_file),
+      flat_file_path = "dev/flat_test.Rmd",
+      state = "active",
+      # Allows to test in interactive session
+      clean = "ask",
+      inflate_parameters = list(
+        flat_file = "dev/flat_test.Rmd",
+        vignette_name = "My new vignette",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "yes",
+        clean = TRUE
+      )
+    )
+
+    test_that("update_one_group_yaml clean old files after interactive", {
+      expect_true(file.exists("R/to_add.R"))
+      expect_false(file.exists("R/to_remove.R"))
+      expect_true(file.exists("tests/testthat/test-zaza.R"))
+    })
+  }
+})
+
+
 # Test df_to_config with custom config file path ----
 config_file_path <- tempfile(fileext = ".yaml")
 
@@ -1269,9 +1521,9 @@ test_that("df_to_config fails when appropriate", {
       "Some 'path' in df_files do not exist: row 1- R: zaza.R, row 2- R: zozo.R, row 3- test: test-zaza.R"
     )
 
-    expect_error(
-      config_file_out <- df_to_config(all_files, force = TRUE),
-      regexp = NA
+
+    expect_no_error(
+      config_file_out <- df_to_config(all_files, force = TRUE)
     )
 
     expect_equal(config_file_out, config_file_path)
@@ -1313,7 +1565,10 @@ test_that("df_to_config works", {
     expect_equal(config_file_out, config_file_path)
     all_keep <- yaml::read_yaml(config_file_out)
     expect_equal(names(all_keep), "keep")
-    expect_equal(names(all_keep$keep), c("path", "state", "R", "tests", "vignettes"))
+    expect_equal(
+      names(all_keep$keep),
+      c("path", "state", "R", "tests", "vignettes")
+    )
     expect_equal(all_keep$keep$path, c("keep"))
     expect_equal(all_keep$keep$state, c("active"))
     expect_equal(all_keep$keep$R, c("zaza.R", "zozo.R"))
@@ -1331,14 +1586,18 @@ all_files <- tibble::tribble(
   "vignettes", "tata_vignette.Rmd"
 )
 
-file.create(file.path(dir_tmp, c("tata.R", "toto.R", "test-tata.R", "tata_vignette.Rmd")))
+file.create(file.path(
+  dir_tmp,
+  c("tata.R", "toto.R", "test-tata.R", "tata_vignette.Rmd")
+))
+
 
 test_that("df_to_config works after 2nd run", {
   withr::with_dir(dir_tmp, {
     withr::with_options(list(fusen.config_file = config_file_path), {
       expect_message(
         config_file <- df_to_config(all_files),
-        regexp = "Some files group already existed and were overwritten: keep"
+        regexp = "Some files group already existed and were modified: keep"
       ) # "keep" is default
     })
   })
@@ -1367,15 +1626,20 @@ test_that("df_to_config works with files having no content", {
         "vignette", file.path("vignettes", "my-vignette.Rmd")
       )
 
-      expect_message(config_file_out <- df_to_config(all_files),
-        regexp = "vignettes: vignettes/my-vignette.Rmd was added to the config file"
+      expect_message(
+        config_file_out <- df_to_config(all_files),
+        regexp =
+          "vignettes: vignettes/my-vignette.Rmd was added to the config file"
       )
     })
 
     expect_equal(config_file_out, config_file_path)
     all_keep <- yaml::read_yaml(config_file_out)
     expect_equal(names(all_keep), "keep")
-    expect_equal(names(all_keep$keep), c("path", "state", "R", "tests", "vignettes"))
+    expect_equal(
+      names(all_keep$keep),
+      c("path", "state", "R", "tests", "vignettes")
+    )
     expect_equal(all_keep$keep$path, c("keep"))
     expect_equal(all_keep$keep$state, c("active"))
     # Relative path
@@ -1415,40 +1679,46 @@ dir_tmp <- tempfile()
 dir.create(dir_tmp)
 file.create(file.path(dir_tmp, c("zaza.R", "zozo.R", "test-zaza.R")))
 
-test_that("df_to_config does not work with inflate_parameters and flat_file_path = \"keep\"", {
-  withr::with_dir(dir_tmp, {
-    withr::with_options(list(fusen.config_file = config_file_path), {
-      all_files <- tibble::tribble(
-        ~type, ~path,
-        "R", "zaza.R",
-        "R", "zozo.R",
-        "test", "test-zaza.R"
-      )
+test_that(
+  "df_to_config fails with inflate_parameters and flat_file_path = \"keep\"",
+  {
+    withr::with_dir(dir_tmp, {
+      withr::with_options(list(fusen.config_file = config_file_path), {
+        all_files <- tibble::tribble(
+          ~type, ~path,
+          "R", "zaza.R",
+          "R", "zozo.R",
+          "test", "test-zaza.R"
+        )
 
-      expect_error(
-        df_to_config(all_files,
-          inflate_parameters = list(
-            flat_file = "dev/my_flat.Rmd",
-            vignette_name = "My new vignette",
-            open_vignette = FALSE,
-            check = FALSE,
-            document = TRUE,
-            overwrite = "yes"
+        expect_error(
+          df_to_config(all_files,
+            inflate_parameters = list(
+              flat_file = "dev/my_flat.Rmd",
+              vignette_name = "My new vignette",
+              open_vignette = FALSE,
+              check = FALSE,
+              document = TRUE,
+              overwrite = "yes",
+              clean = "ask"
+            )
           )
         )
-      )
+      })
     })
-  })
-})
+  }
+)
 
 unlink(dir_tmp, recursive = TRUE)
 
 # df to config with inflate_parameters
-# unlink(dummypackage, recursive = TRUE)
 dummypackage <- tempfile("dftoconfig")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- (add_minimal_package(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- (add_minimal_package(
+  pkg = dummypackage,
+  overwrite = TRUE, open = FALSE
+))
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
@@ -1487,7 +1757,8 @@ test_that("df_to_config works with inflate parameters", {
         open_vignette = FALSE,
         check = FALSE,
         document = TRUE,
-        overwrite = "yes"
+        overwrite = "yes",
+        clean = "ask"
       )
     )
 
@@ -1501,7 +1772,8 @@ test_that("df_to_config works with inflate parameters", {
         open_vignette = FALSE,
         check = FALSE,
         document = TRUE,
-        overwrite = "yes"
+        overwrite = "yes",
+        clean = "ask"
       )
     )
   })
@@ -1514,7 +1786,9 @@ dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(
+  add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+)
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 test_that("inflate parameters are put into config_fusen.yaml", {
@@ -1529,7 +1803,9 @@ test_that("inflate parameters are put into config_fusen.yaml", {
       )
     )
 
-    config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+    config_yml <- yaml::read_yaml(
+      file.path(dummypackage, "dev/config_fusen.yaml")
+    )
 
     expect_equal(
       config_yml[[basename(flat_file)]][["inflate"]][["vignette_name"]],
@@ -1553,6 +1829,11 @@ test_that("inflate parameters are put into config_fusen.yaml", {
       "ask"
     )
 
+    expect_equal(
+      config_yml[[basename(flat_file)]][["inflate"]][["clean"]],
+      "ask"
+    )
+
 
     expect_equal(
       config_yml[[basename(flat_file)]][["inflate"]][["extra_param"]],
@@ -1560,22 +1841,33 @@ test_that("inflate parameters are put into config_fusen.yaml", {
     )
 
     # Let's inflate a second time with different parameters
-
     suppressMessages(
       inflate(
         pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "Get started again", check = FALSE,
+        vignette_name = "Get started again",
+        clean = TRUE, # clean previous vignette
+        check = FALSE,
         open_vignette = FALSE, overwrite = "yes",
         extra_param = "tutu", document = FALSE
       )
     )
 
-    config_yml <- yaml::read_yaml(file.path(dummypackage, "dev/config_fusen.yaml"))
+    config_yml <- yaml::read_yaml(
+      file.path(dummypackage, "dev/config_fusen.yaml")
+    )
 
     expect_equal(
       config_yml[[basename(flat_file)]][["inflate"]][["vignette_name"]],
       "Get started again"
     )
+    # Previous vignette deleted
+    expect_true(
+      file.exists(file.path("vignettes", "get-started-again.Rmd"))
+    )
+    expect_false(
+      file.exists(file.path("vignettes", "get-started.Rmd"))
+    )
+
 
     expect_false(
       config_yml[[basename(flat_file)]][["inflate"]][["check"]]
@@ -1594,6 +1886,9 @@ test_that("inflate parameters are put into config_fusen.yaml", {
       "yes"
     )
 
+    expect_true(
+      config_yml[[basename(flat_file)]][["inflate"]][["clean"]]
+    )
 
     expect_equal(
       config_yml[[basename(flat_file)]][["inflate"]][["extra_param"]],

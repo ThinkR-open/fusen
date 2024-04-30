@@ -443,7 +443,8 @@ usethis::with_project(dummypackage, {
         open_vignette = FALSE,
         check = FALSE,
         document = TRUE,
-        overwrite = "ask"
+        overwrite = "ask",
+        clean = "ask"
       )
     )
 
@@ -455,7 +456,8 @@ usethis::with_project(dummypackage, {
         open_vignette = FALSE,
         check = FALSE,
         document = TRUE,
-        overwrite = "ask"
+        overwrite = "ask",
+        clean = "ask"
       )
     )
   })

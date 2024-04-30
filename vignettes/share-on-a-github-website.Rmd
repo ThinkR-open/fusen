@@ -2,7 +2,7 @@
 title: "Share on a GitHub website"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{share-on-a-github-website}
+  %\VignetteIndexEntry{Share on a GitHub website}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
