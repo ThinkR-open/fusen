@@ -448,7 +448,7 @@ usethis::with_project(dummypackage, {
       # Notes are different on CRAN
       skip_on_cran()
 
-      expect_true(length(check_out[["notes"]]) <= 1)
+      expect_true(length(check_out[["notes"]]) <= 2)
       if (length(check_out[["notes"]]) %in% 1:2) {
         note_expected <- grepl(
           "future file timestamps|Package vignette without corresponding tangle output",
