@@ -60,10 +60,14 @@
 <div class="section level3">
 <h3 id="breaking-changes-0-6-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-6-0"></a></h3>
 <ul><li>{fusen} now relies on {lightparser} instead of {parsermd} to parse flat file. This allows to avoid installation problems with {parsermd}, which is not updated anymore. As {lightparser} is lighter, this may have unattended effects on specific flat file cases. Please report any issue you may encounter. (<a href="https://github.com/Thinkr-open/fusen/issues/233" class="external-link">#233</a>)</li>
+<li>
+<code>inflate_all*()</code> does not use parameter <code>clean</code> anymore. Use <code>check_unregistered</code> instead to check if all files are registered in the configuration file.</li>
 </ul></div>
 <div class="section level3">
 <h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>
-<ul><li>Allow <code>organisation</code> in <code><a href="../reference/init_share_on_github.html">init_share_on_github()</a></code> to send to a GitHub organisation</li>
+<ul><li>
+<code><a href="../reference/inflate.html">inflate()</a></code> detects functions renamed or removed and allow to clean the package repository (<a href="https://github.com/Thinkr-open/fusen/issues/24" class="external-link">#24</a>)</li>
+<li>Allow <code>organisation</code> in <code><a href="../reference/init_share_on_github.html">init_share_on_github()</a></code> to send to a GitHub organisation</li>
 <li>Fix <code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code> to work with VSCode</li>
 </ul></div>
 </div>
