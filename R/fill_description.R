@@ -77,5 +77,5 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
 
   desc$write(file = desc_file)
 
-  desc_file
+  invisible(desc_file)
 }

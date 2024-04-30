@@ -29,7 +29,7 @@ Note: when you will use other flat templates, this part will be in a separate fi
 fusen::fill_description(
   pkg = here::here(),
   fields = list(
-    Title = "Learn how to build A Package From Rmarkdown file",
+    Title = "Learn How to Build a Package from Rmarkdown File",
     Description = "A Set of tools to understand packages structure. Use Rmarkdown First method to build a package from a defined template. Start your package with documentation. Everything can be set from a Rmarkdown file in your project.",
     `Authors@R` = c(
       person("John", "Doe", email = "john@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000"))
@@ -55,7 +55,7 @@ This first section shows:
 
 ```{r function-add_one}
 #' Add one to any value
-#' 
+#'
 #' @param value A numeric value
 #'
 #' @return Numeric. value + 1
