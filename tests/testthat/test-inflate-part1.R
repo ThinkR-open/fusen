@@ -217,6 +217,8 @@ usethis::with_project(dummypackage, {
       # if tested as cran
       # 1 note on CRAN for new submission
       print(check_out[["notes"]])
+      # DEBUG ----
+      saveRDS(check_out, "/mnt/Data/github/ThinkR-open/fusen/check_note.rds")
       expect_true(grepl("New submission", check_out[["notes"]][1]))
     } else {
       expect_true(length(check_out[["notes"]]) == 0)
@@ -479,7 +481,6 @@ usethis::with_project(dummypackage, {
       file.path(dummypackage, "tests", "testthat", "test-my_median.R")
     ))
   })
-
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
@@ -512,9 +513,8 @@ usethis::with_project(dummypackage, {
     vig_lines <- readLines(vignette_path, encoding = "UTF-8")
     expect_true(sum(grepl(enc2utf8("# y -  _ p n@ \u00E9 ! 1"), vig_lines, fixed = TRUE)) == 2)
     expect_equal(vig_lines[2], enc2utf8('title: "# y -  _ p n@ \u00E9 ! 1"'))
-    expect_equal(vig_lines[5], enc2utf8('  %\\VignetteIndexEntry{# y -  _ p n@ \u00E9 ! 1}'))
+    expect_equal(vig_lines[5], enc2utf8("  %\\VignetteIndexEntry{# y -  _ p n@ \u00E9 ! 1}"))
   })
-
 })
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)

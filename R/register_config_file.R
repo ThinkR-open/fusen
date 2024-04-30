@@ -605,54 +605,94 @@ update_one_group_yaml <- function(
   }
 
   this_group_list_return <- this_group_list
-  this_group_list_message <- this_group_list
   if (!is.null(inflate_parameters)) {
     this_group_list_return <- c(
       this_group_list, list(inflate = inflate_parameters)
     )
-    this_group_list_message <- c(
-      this_group_list, list(inflate = "each parameter")
-    )
   }
 
   # Messages only
-  all_names <- names(this_group_list_message)
-  those_removed <- lapply(
+  all_names <- c("R", "tests", "vignettes")
+  # names(this_group_list_message)
+  files_removed <- lapply(
     all_names,
     function(x) {
       setdiff(
         all_keep_before[[x]],
-        this_group_list_message[[x]]
+        this_group_list_return[[x]]
       )
     }
   ) %>%
     setNames(all_names)
+  files_removed_vec <- files_list_to_vector(files_removed)
 
-  those_removed_vec <- files_list_to_vector(those_removed)
-  those_added <- lapply(
+  files_added <- lapply(
     all_names,
     function(x) {
       setdiff(
-        this_group_list_message[[x]],
+        this_group_list_return[[x]],
         all_keep_before[[x]]
       )
     }
   ) %>%
     setNames(all_names)
-  those_added_vec <- files_list_to_vector(those_added)
+  files_added_vec <- files_list_to_vector(files_added)
 
-  if (!is.null(those_removed_vec) || length(those_removed_vec) != 0) {
-    silent <- lapply(
-      paste(those_removed_vec, "was removed from the config file"),
-      cli_alert_warning
-    )
+  if (!is.null(files_removed_vec) || length(files_removed_vec) != 0) {
     if (clean == "ask") {
-      # TODO
+      cli_alert_warning(
+        paste0(
+          "Some files are not anymore created from ",
+          flat_file_path, ".\n",
+          "You may have rename some functions or moved them to another flat:",
+          "\n",
+          paste(files_removed_vec, collapse = ", "), ".\n\n",
+          "Below, you are ask if you want to remove them from the repository.",
+          "\n\n",
+          "Note: to not see this message again, use `clean = TRUE` in the ",
+          "`inflate()` command of this flat file : ", flat_file_path, ".\n",
+          "Use with caution. ",
+          "It is recommended to use git to check the changes...\n"
+        )
+      )
+      sure <- paste(
+        paste(files_removed_vec, collapse = ", "),
+        "\nDo you want to remove all these files from the repository? (y/n)\n"
+      )
+
+      do_it <- readline(sure) == "y" || readline(sure) == "yes"
+    } else if (isTRUE(clean) || clean == "yes") {
+      do_it <- TRUE
+    } else if (isFALSE(clean) || clean == "no") {
+      do_it <- FALSE
+    } else {
+      stop("clean should be TRUE, FALSE, 'yes', 'no' or 'ask'")
+    }
+
+    if (isTRUE(do_it)) {
+      files_removed_filename <- unlist(files_removed)
+      file.remove(files_removed_filename)
+
+      silent <- lapply(
+        paste(
+          files_removed_vec, "was removed from the config file",
+          "and from the repository"
+        ),
+        cli_alert_warning
+      )
+    } else if (isFALSE(do_it)) {
+      silent <- lapply(
+        paste(
+          files_removed_vec, "was removed from the config file",
+          "but kept in the repository"
+        ),
+        cli_alert_warning
+      )
     }
   }
-  if (!is.null(those_added_vec) || length(those_added_vec) != 0) {
+  if (!is.null(files_added_vec) || length(files_added_vec) != 0) {
     silent <- lapply(
-      paste(those_added_vec, "was added to the config file"),
+      paste(files_added_vec, "was added to the config file"),
       cli_alert_success
     )
   }
