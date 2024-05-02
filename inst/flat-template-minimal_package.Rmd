@@ -38,7 +38,7 @@ my_fun()
 
 ```{r tests-my_fun}
 test_that("my_fun works", {
-
+  expect_true(inherits(my_fun, "function"))
 })
 ```
 
