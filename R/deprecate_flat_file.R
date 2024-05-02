@@ -72,7 +72,7 @@ deprecate_flat_file <- function(flat_file) {
     "# WARNING - flat file now deprecated. do not edit by hand, do not inflate",
     lines
   )
-  writeLines(lines, flat_file)
+  write_utf8(lines = lines, path = flat_file)
 
   # Update linked files
   all_linked_files <- unlist(
@@ -113,7 +113,7 @@ deprecate_flat_file <- function(flat_file) {
       )
     }
 
-    writeLines(lines, file)
+    write_utf8(lines = lines, path = file)
   }
 
   # Move flat file to flat_history

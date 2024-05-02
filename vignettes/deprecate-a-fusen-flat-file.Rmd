@@ -23,8 +23,32 @@ library(fusen)
 
 
 
+## Rename a flat file
 
-## Deprecate flat files after inflate
+'fusen' provides a function `rename_flat_file()` to rename a flat file. This function updates the file name in the configuration file, modifies the inflating files if needed and renames the flat file itself. 
+This function should avoid remaining inflated files in the repository, and ensure that the configuration file is up-to-date.
+
+```{r example-rename_flat_file}
+#| eval: no
+
+#' \dontrun{
+# These functions change the current user workspace
+dev_file <- suppressMessages(
+  add_flat_template(
+    template = "add",
+    pkg = dummypackage, overwrite = TRUE, open = FALSE
+  )
+)
+rename_flat_file(
+  flat_file = "dev/flat_additional.Rmd",
+  new_name = "flat_new.Rmd"
+)
+#' }
+```
+
+
+
+## Fully deprecate a flat file after inflate
 
 'fusen' serves as a framework to ensure that developers prioritize end-users during the function development process. By employing 'fusen' within Rmd/Qmd files, developers can conceptualize their product and articulate their ideas in plain text before initiating any code. This approach encourages consideration of the package's users: their intended actions, and the potential impact on their experiences. Consequently, developers can draft function documentation prior to its implementation, thinking about explaining what's behind the black box, as well as reminding that this may end into the vignette.
 
