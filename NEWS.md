@@ -7,6 +7,8 @@
 
 ## New features
 
+- `deprecate_flat_file()` helps properly deprecate a flat file, modifies the config file
+and cleans the previously inflated files
 - `inflate()` detects functions renamed or removed and allow to clean the package repository (#24)
 - Allow `organisation` in `init_share_on_github()` to send to a GitHub organisation
 - Fix `load_flat_functions()` to work with VSCode
