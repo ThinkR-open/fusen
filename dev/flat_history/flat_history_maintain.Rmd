@@ -1,3 +1,4 @@
+# WARNING - flat file now deprecated. do not edit by hand, do not inflate
 ---
 title: "dev_history.Rmd for working package"
 author: "Sébastien Rochette"
