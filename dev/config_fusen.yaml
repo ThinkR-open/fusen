@@ -24,6 +24,20 @@ flat_create_flat.Rmd:
     check: false
     document: true
     overwrite: ask
+flat_deprecate_flat_files.Rmd:
+  path: dev/flat_deprecate_flat_files.Rmd
+  state: active
+  R: R/deprecate_flat_file.R
+  tests: tests/testthat/test-deprecate_flat_file.R
+  vignettes: vignettes/deprecate-a-fusen-flat-file.Rmd
+  inflate:
+    flat_file: dev/flat_deprecate_flat_files.Rmd
+    vignette_name: Deprecate a 'fusen' flat file
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
+    clean: true
 flat_history_core.Rmd:
   path: dev/flat_history_core.Rmd
   state: inactive
