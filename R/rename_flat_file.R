@@ -15,7 +15,7 @@
 #' dev_file <- suppressMessages(
 #'   add_flat_template(
 #'     template = "add",
-#'     pkg = dummypackage, overwrite = TRUE, open = FALSE
+#'     pkg = ".", overwrite = TRUE, open = FALSE
 #'   )
 #' )
 #' rename_flat_file(
@@ -73,13 +73,14 @@ rename_flat_file <- function(flat_file, new_name) {
     config[[basename(new_name_path)]]$inflate$flat_file <- new_name_path
     config[[basename(flat_file)]] <- NULL
     write_yaml_verbatim(config, config_file)
-  }
-  cli_alert_info(
-    paste0(
-      "The flat file ", basename(flat_file),
-      " has been updated in the config file."
+
+    cli_alert_info(
+      paste0(
+        "The flat file ", basename(flat_file),
+        " has been updated in the config file."
+      )
     )
-  )
+  }
 
   # Update inflated files
   all_linked_files <- unlist(

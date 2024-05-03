@@ -24,7 +24,7 @@ Rename a flat file
 dev_file <- suppressMessages(
   add_flat_template(
     template = "add",
-    pkg = dummypackage, overwrite = TRUE, open = FALSE
+    pkg = ".", overwrite = TRUE, open = FALSE
   )
 )
 rename_flat_file(
