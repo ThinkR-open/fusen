@@ -30,6 +30,7 @@ testthat::test_file("tests/testthat/test-inflate_all_utils.R")
 testthat::test_file("tests/testthat/test-add_flat_template.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
 testthat::test_file("tests/testthat/test-register_config_file.R") # interactivity
+testthat::test_file("tests/testthat/test-rename_flat_file.R")
 Sys.setenv("NOT_CRAN" = "false")
 
 # Run line by line

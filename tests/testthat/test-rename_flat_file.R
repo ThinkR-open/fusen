@@ -33,6 +33,26 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(new_path))
   })
 
+  test_that("rename_flat_file renames inside the flat file", {
+    lines <- readLines(new_path)
+    expect_equal(
+      length(grep(flat_file, lines)),
+      0
+    )
+    expect_equal(
+      length(grep(basename(flat_file), lines)),
+      0
+    )
+    expect_equal(
+      length(grep(new_path, lines)),
+      1
+    )
+    expect_equal(
+      length(grep(new_name, lines)),
+      2
+    )
+  })
+
   test_that(
     "rename_flat_file does not update config file if not previously present",
     {
@@ -117,10 +137,31 @@ usethis::with_project(dummypackage, {
     )
   })
 
+  new_name_path <- file.path("otherdev", "flat_new_with_path.Rmd")
+  dir.create("otherdev")
   test_that("rename_flat_file accept path as a new name", {
-    new_name_path <- file.path("dev", "flat_new_with_path.Rmd")
     rename_flat_file(flat_file = new_name2_path, new_name = new_name_path)
     expect_false(file.exists(new_name2_path))
     expect_true(file.exists(new_name_path))
+  })
+
+  test_that("rename_flat_file still renames inside the flat file with path", {
+    lines <- readLines(new_name_path)
+    expect_equal(
+      length(grep("flat_new2.Rmd", lines)),
+      0
+    )
+    expect_equal(
+      length(grep("dev/flat_new2.Rmd", lines)),
+      0
+    )
+    expect_equal(
+      length(grep("flat_new_with_path.Rmd", lines)),
+      2
+    )
+    expect_equal(
+      length(grep("otherdev/flat_new_with_path.Rmd", lines)),
+      1
+    )
   })
 })

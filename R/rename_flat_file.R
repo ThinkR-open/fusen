@@ -50,8 +50,31 @@ rename_flat_file <- function(flat_file, new_name) {
   }
 
 
+
+  # Get smaller relative paths in
+  flat_file_small <- gsub(
+    paste0(normalize_path_winslash("."), "/"),
+    "",
+    normalize_path_winslash(flat_file, mustWork = TRUE),
+    fixed = TRUE
+  )
   # Rename flat file
   file.rename(flat_file, new_name_path)
+
+  # Get smaller relative paths out
+  new_name_path_small <- gsub(
+    paste0(normalize_path_winslash("."), "/"),
+    "",
+    normalize_path_winslash(new_name_path, mustWork = TRUE),
+    fixed = TRUE
+  )
+  # Rename inside the flat file
+  lines <- readLines(new_name_path_small)
+  lines <- gsub(flat_file_small, new_name_path_small, lines)
+  lines <- gsub(basename(flat_file_small), basename(new_name_path_small), lines)
+  write_utf8(lines = lines, path = new_name_path_small)
+
+
   cli_alert_info(
     paste0(
       "The flat file ", flat_file,
