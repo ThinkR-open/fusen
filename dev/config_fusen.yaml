@@ -27,8 +27,12 @@ flat_create_flat.Rmd:
 flat_deprecate_flat_files.Rmd:
   path: dev/flat_deprecate_flat_files.Rmd
   state: active
-  R: R/deprecate_flat_file.R
-  tests: tests/testthat/test-deprecate_flat_file.R
+  R:
+  - R/deprecate_flat_file.R
+  - R/rename_flat_file.R
+  tests:
+  - tests/testthat/test-rename_flat_file.R
+  - tests/testthat/test-deprecate_flat_file.R
   vignettes: vignettes/deprecate-a-fusen-flat-file.Rmd
   inflate:
     flat_file: dev/flat_deprecate_flat_files.Rmd
