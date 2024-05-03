@@ -198,7 +198,8 @@ get_list_paths <- function(config_list) {
   }))
 }
 
-#' Add a tibble of files and types to add to the 'fusen' config file along with inflate parameters
+#' Add a tibble of files and types to add to the 'fusen'
+#'  config file along with inflate parameters
 #'
 #' @param df_files A data.frame with 'type' and 'path' columns
 #' or a csv file path as issued from `[check_not_registered_files()]`
@@ -217,6 +218,8 @@ get_list_paths <- function(config_list) {
 #' This is forced to FALSE for the "keep" section.
 #' @param inflate_parameters list of parameters passed through
 #' a call to `inflate()`
+#' @param update_params Logical. Whether to update the inflate parameters
+#' along with other information in the config file.
 
 #' @importFrom stats setNames
 #' @importFrom utils read.csv
@@ -238,7 +241,8 @@ df_to_config <- function(df_files,
                          state = c("active", "deprecated"),
                          force = FALSE,
                          clean = "ask",
-                         inflate_parameters = NULL) {
+                         inflate_parameters = NULL,
+                         update_params = TRUE) {
   config_file <- getOption(
     "fusen.config_file",
     default = "dev/config_fusen.yaml"
@@ -455,7 +459,8 @@ df_to_config <- function(df_files,
         each_flat_file_path[x],
         state = state[x],
         clean = ifelse(each_flat_file_path[x] == "keep", FALSE, clean),
-        inflate_parameters = inflate_parameters
+        inflate_parameters = inflate_parameters,
+        update_params = update_params
       )
     }
   ) %>%
@@ -538,6 +543,7 @@ files_list_to_vector <- function(list_of_files) {
 #' @param clean Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 #'  See `df_to_config()`.
 #' @param inflate_parameters See `df_to_config()`.
+#' @param update_params Logical. See `df_to_config()`.
 #' @importFrom cli cli_alert_warning cli_alert_success
 #' @noRd
 update_one_group_yaml <- function(
@@ -546,7 +552,8 @@ update_one_group_yaml <- function(
     flat_file_path,
     state = c("active", "deprecated"),
     clean = "ask",
-    inflate_parameters = NULL) {
+    inflate_parameters = NULL,
+    update_params = TRUE) {
   state <- match.arg(state, several.ok = FALSE)
   all_keep_before <- complete_yaml[[basename(flat_file_path)]]
 
@@ -606,8 +613,19 @@ update_one_group_yaml <- function(
 
   this_group_list_return <- this_group_list
   if (!is.null(inflate_parameters)) {
+    if (isFALSE(update_params)) {
+      inflate_parameters_new <-
+        all_keep_before[["inflate"]]
+      # Still modify flat_file_path and vignette_name
+      inflate_parameters_new[["flat_file"]] <-
+        inflate_parameters$flat_file
+      inflate_parameters_new[["vignette_name"]] <-
+        inflate_parameters$vignette_name
+    } else if (isTRUE(update_params)) {
+      inflate_parameters_new <- inflate_parameters
+    }
     this_group_list_return <- c(
-      this_group_list, list(inflate = inflate_parameters)
+      this_group_list, list(inflate = inflate_parameters_new)
     )
   }
 
@@ -671,7 +689,9 @@ update_one_group_yaml <- function(
 
     if (isTRUE(do_it)) {
       files_removed_filename <- unlist(files_removed)
-      file.remove(files_removed_filename)
+      files_removed_filename_exists <-
+        files_removed_filename[file.exists(files_removed_filename)]
+      file.remove(files_removed_filename_exists)
 
       silent <- lapply(
         paste(

@@ -19,18 +19,22 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @param flat_file Path to Rmarkdown file to inflate
 #' @param vignette_name Character. Title of the resulting vignette.
 #' Use `NA` if you do not want to create a vignette.
-#' @param open_vignette Logical. Whether to open vignette file at the end of the process
+#' @param open_vignette Logical. Whether to open vignette file at the end
+#'  of the process
 #' @param check Logical. Whether to check package after Rmd inflating
-#' @param document Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}
+#' @param document Logical. Whether to document your package using
+#'  \code{\link[attachment:att_amend_desc]{att_amend_desc}}
 #' @param overwrite Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 #' Whether to overwrite vignette and functions if already exists.
 #' @param clean Logical (TRUE, FALSE) or character ("ask", "yes", "no)
 #' Whether to delete files that are not anymore created by the current
 #'  flat file. Typically, if you have deleted or renamed a function
 #'  in the flat file. Default to "ask".
+#' @param update_params Logical. Whether to update the inflate parameters
+#'  in the configuration file.
 #' @param ... Arguments passed to `devtools::check()`.
-#'     For example, you can do `inflate(check = TRUE, quiet = TRUE)`, where `quiet` is
-#'     passed to `devtools::check()`.
+#'  For example, you can do `inflate(check = TRUE, quiet = TRUE)`,
+#'  where `quiet` is passed to `devtools::check()`.
 #'
 #' @importFrom utils getFromNamespace
 #' @importFrom glue glue
@@ -65,6 +69,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' # pkgdown::build_site(dummypackage)
 #' # Delete dummy package
 #' unlink(dummypackage, recursive = TRUE)
+#'
 inflate <- function(pkg = ".", flat_file,
                     vignette_name = "Get started",
                     open_vignette = TRUE,
@@ -72,6 +77,7 @@ inflate <- function(pkg = ".", flat_file,
                     document = TRUE,
                     overwrite = "ask",
                     clean = "ask",
+                    update_params = TRUE,
                     ...) {
   if (!is.null(list(...)[["name"]])) {
     stop(paste0(
@@ -307,12 +313,20 @@ inflate <- function(pkg = ".", flat_file,
   the_desc$write(file = desc_file)
 
   # config file store ----
-
   inflate_default_parameters <- formalArgs(fusen::inflate)
-  inflate_default_parameters <- inflate_default_parameters[which(inflate_default_parameters != "...")]
-  inflate_default_parameters <- inflate_default_parameters[which(inflate_default_parameters != "pkg")]
+  inflate_default_parameters <- inflate_default_parameters[
+    which(inflate_default_parameters != "...")
+  ]
+  inflate_default_parameters <- inflate_default_parameters[
+    which(inflate_default_parameters != "pkg")
+  ]
+  inflate_default_parameters <- inflate_default_parameters[
+    which(inflate_default_parameters != "update_params")
+  ]
 
-  inflate_default_parameters <- lapply(inflate_default_parameters, function(param) get(param)) %>%
+  inflate_default_parameters <- lapply(
+    inflate_default_parameters, function(param) get(param)
+  ) %>%
     setNames(inflate_default_parameters)
 
   inflate_dots_parameters <- list(...)
@@ -329,10 +343,9 @@ inflate <- function(pkg = ".", flat_file,
     flat_file_path = relative_flat_file,
     clean = clean,
     state = "active",
-    # TODO - Set to force = FALSE when there is a possibility to clean the config
-    # when there are manually deleted file ----
     force = TRUE,
-    inflate_parameters = inflate_default_parameters
+    inflate_parameters = inflate_default_parameters,
+    update_params = update_params
   )
 
   # TODO - Propose to clean all files with 'clean_fusen_files()' ----

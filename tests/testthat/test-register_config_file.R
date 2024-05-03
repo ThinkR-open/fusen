@@ -144,7 +144,7 @@ dummypackage <- tempfile("register")
 dir.create(dummypackage)
 dir.create(file.path(dummypackage, "fusentest"))
 dummypackage_fixed <- file.path(dummypackage, "fusentest")
-# unlink(dummypackage, recursive = TRUE)
+
 # {fusen} steps
 fill_description(pkg = dummypackage_fixed, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(add_flat_template(pkg = dummypackage_fixed, overwrite = TRUE, open = FALSE))
@@ -159,6 +159,7 @@ usethis::with_project(dummypackage_fixed, {
     )
   )
 })
+
 # Add a not registered file to the package
 cat("# test R file\n", file = file.path(dummypackage_fixed, "R", "to_keep.R"))
 
@@ -700,7 +701,7 @@ unlink(dir_tmp, recursive = TRUE)
 dummypackage <- tempfile("dftoconfig")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- (add_minimal_package(
+dev_file <- suppressMessages(add_minimal_package(
   pkg = dummypackage,
   overwrite = TRUE, open = FALSE
 ))
@@ -717,38 +718,39 @@ file.create(file.path(dummypackage, "tests/testthat", "test-my_fun.R"))
 dir.create(file.path(dummypackage, "vignettes"))
 file.create(file.path(dummypackage, "vignettes", "minimal.Rmd"))
 
-test_that("df_to_config works with inflate parameters", {
-  usethis::with_project(dummypackage, {
-    all_files <- structure(list(
-      type = c("R", "test", "vignette"),
-      path = c(
-        file.path(dummypackage, "R", "my_fun.R"),
-        file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
-        "vignettes/minimal.Rmd"
-      )
-    ), row.names = c(NA, -3L), class = c("tbl_df", "tbl", "data.frame"))
 
-    relative_flat_file <- "dev/flat_minimal.Rmd"
-
-    config_file <- df_to_config(
-      df_files = all_files,
-      flat_file_path = relative_flat_file,
-      clean = TRUE,
-      state = "active",
-      force = TRUE,
-      inflate_parameters = list(
-        flat_file = "dev/flat_minimal.Rmd",
-        vignette_name = "My new vignette",
-        open_vignette = FALSE,
-        check = FALSE,
-        document = TRUE,
-        overwrite = "yes",
-        clean = "ask"
-      )
+usethis::with_project(dummypackage, {
+  all_files <- structure(list(
+    type = c("R", "test", "vignette"),
+    path = c(
+      file.path(dummypackage, "R", "my_fun.R"),
+      file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
+      "vignettes/minimal.Rmd"
     )
+  ), row.names = c(NA, -3L), class = c("tbl_df", "tbl", "data.frame"))
 
-    config_file_content <- yaml::read_yaml(config_file)
+  relative_flat_file <- "dev/flat_minimal.Rmd"
 
+  config_file <- df_to_config(
+    df_files = all_files,
+    flat_file_path = relative_flat_file,
+    clean = TRUE,
+    state = "active",
+    force = TRUE,
+    inflate_parameters = list(
+      flat_file = "dev/flat_minimal.Rmd",
+      vignette_name = "My new vignette",
+      open_vignette = FALSE,
+      check = FALSE,
+      document = TRUE,
+      overwrite = "yes",
+      clean = "ask"
+    )
+  )
+
+  config_file_content <- yaml::read_yaml(config_file)
+
+  test_that("df_to_config works with inflate parameters", {
     expect_equal(
       config_file_content[[basename(flat_file)]][["inflate"]],
       list(
@@ -762,8 +764,81 @@ test_that("df_to_config works with inflate parameters", {
       )
     )
   })
+
+  # df_to_config with inflate_parameters, but with update_params=FALSE
+  # so that inflate parameters are not updated but kept as is
+  # Add new files
+  file.create(file.path(dummypackage, "R", "my_fun2.R"))
+  file.create(file.path(dummypackage, "tests/testthat", "test-my_fun2.R"))
+  file.rename(
+    file.path(dummypackage, "vignettes", "minimal.Rmd"),
+    file.path(dummypackage, "vignettes", "minimal2.Rmd")
+  )
+
+  all_files <- structure(list(
+    type = c("R", "R", "test", "test", "vignette"),
+    path = c(
+      file.path(dummypackage, "R", "my_fun.R"),
+      file.path(dummypackage, "R", "my_fun2.R"),
+      file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
+      file.path(dummypackage, "tests/testthat", "test-my_fun2.R"),
+      "vignettes/minimal2.Rmd"
+    )
+  ), row.names = c(NA, -5L), class = c("tbl_df", "tbl", "data.frame"))
+
+  config_file <- df_to_config(
+    df_files = all_files,
+    flat_file_path = relative_flat_file,
+    clean = TRUE,
+    state = "active",
+    force = TRUE,
+    inflate_parameters = list(
+      flat_file = "dev/flat_minimal2.Rmd",
+      vignette_name = "My other vignette",
+      open_vignette = FALSE,
+      check = TRUE,
+      document = FALSE,
+      overwrite = "yes",
+      clean = TRUE
+    ),
+    update_params = FALSE
+  )
+
+  test_that("df_to_config changed all but inflate params, except names", {
+    config_file_content <- yaml::read_yaml(config_file)
+    expect_equal(
+      config_file_content[[basename(flat_file)]][["inflate"]],
+      list(
+        flat_file = "dev/flat_minimal2.Rmd",
+        vignette_name = "My other vignette",
+        open_vignette = FALSE,
+        check = FALSE,
+        document = TRUE,
+        overwrite = "yes",
+        clean = "ask"
+      )
+    )
+    expect_equal(
+      config_file_content[[basename(flat_file)]][["R"]],
+      c("R/my_fun.R", "R/my_fun2.R")
+    )
+    expect_equal(
+      config_file_content[[basename(flat_file)]][["tests"]],
+      c(
+        "tests/testthat/test-my_fun.R",
+        "tests/testthat/test-my_fun2.R"
+      )
+    )
+    expect_equal(
+      config_file_content[[basename(flat_file)]][["vignettes"]],
+      c("vignettes/minimal2.Rmd")
+    )
+  })
 })
 unlink(dummypackage, recursive = TRUE)
+
+
+
 
 # Verify df_to_config was run during ìnflate()
 dummypackage <- tempfile("clean")

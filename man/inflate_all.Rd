@@ -29,11 +29,13 @@ inflate_all_no_check(
 \arguments{
 \item{pkg}{Path to package}
 
-\item{document}{Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}}
+\item{document}{Logical. Whether to document your package using
+\code{\link[attachment:att_amend_desc]{att_amend_desc}}}
 
 \item{check}{Logical. Whether to check package after Rmd inflating}
 
-\item{open_vignette}{Logical. Whether to open vignette file at the end of the process}
+\item{open_vignette}{Logical. Whether to open vignette file at the end
+of the process}
 
 \item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 Whether to overwrite vignette and functions if already exists.}
@@ -49,8 +51,8 @@ For a unique function, use the format without parenthesis \verb{()}
 at the end of the command.}
 
 \item{...}{Arguments passed to \code{devtools::check()}.
-For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is
-passed to \code{devtools::check()}.}
+For example, you can do \code{inflate(check = TRUE, quiet = TRUE)},
+where \code{quiet} is passed to \code{devtools::check()}.}
 }
 \value{
 side effect. Inflates all your flat files that can be inflated.
