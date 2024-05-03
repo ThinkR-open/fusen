@@ -24,6 +24,24 @@ flat_create_flat.Rmd:
     check: false
     document: true
     overwrite: ask
+flat_deal_with_flat_files.Rmd:
+  path: dev/flat_deal_with_flat_files.Rmd
+  state: active
+  R:
+  - R/deprecate_flat_file.R
+  - R/rename_flat_file.R
+  tests:
+  - tests/testthat/test-rename_flat_file.R
+  - tests/testthat/test-deprecate_flat_file.R
+  vignettes: vignettes/deal-with-a-fusen-flat-file.Rmd
+  inflate:
+    flat_file: dev/flat_deal_with_flat_files.Rmd
+    vignette_name: Deal with a 'fusen' flat file
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
+    clean: true
 flat_history_core.Rmd:
   path: dev/flat_history_core.Rmd
   state: inactive
@@ -36,11 +54,13 @@ flat_history_core.Rmd:
   - tests/testthat/test-inflate-part2.R
   vignettes: vignettes/How-to-use-fusen.Rmd
 flat_history_maintain.Rmd:
-  path: dev/flat_history_maintain.Rmd
-  state: inactive
+  path: dev/flat_history/flat_history_maintain.Rmd
+  state: deprecated
   R: []
   tests: []
   vignettes: vignettes/Maintain-packages-with-fusen.Rmd
+  inflate:
+    flat_file: dev/flat_history/flat_history_maintain.Rmd
 flat_inflate_all.Rmd:
   path: dev/flat_inflate_all.Rmd
   state: active

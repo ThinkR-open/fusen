@@ -13,6 +13,7 @@ inflate(
   document = TRUE,
   overwrite = "ask",
   clean = "ask",
+  update_params = TRUE,
   ...
 )
 }
@@ -24,11 +25,13 @@ inflate(
 \item{vignette_name}{Character. Title of the resulting vignette.
 Use \code{NA} if you do not want to create a vignette.}
 
-\item{open_vignette}{Logical. Whether to open vignette file at the end of the process}
+\item{open_vignette}{Logical. Whether to open vignette file at the end
+of the process}
 
 \item{check}{Logical. Whether to check package after Rmd inflating}
 
-\item{document}{Logical. Whether to document your package using \code{\link[attachment:att_amend_desc]{att_amend_desc}}}
+\item{document}{Logical. Whether to document your package using
+\code{\link[attachment:att_amend_desc]{att_amend_desc}}}
 
 \item{overwrite}{Logical (TRUE, FALSE) or character ("ask", "yes", "no).
 Whether to overwrite vignette and functions if already exists.}
@@ -38,9 +41,12 @@ Whether to delete files that are not anymore created by the current
 flat file. Typically, if you have deleted or renamed a function
 in the flat file. Default to "ask".}
 
+\item{update_params}{Logical. Whether to update the inflate parameters
+in the configuration file.}
+
 \item{...}{Arguments passed to \code{devtools::check()}.
-For example, you can do \code{inflate(check = TRUE, quiet = TRUE)}, where \code{quiet} is
-passed to \code{devtools::check()}.}
+For example, you can do \code{inflate(check = TRUE, quiet = TRUE)},
+where \code{quiet} is passed to \code{devtools::check()}.}
 }
 \value{
 Package structure. Return path to current package.
@@ -70,6 +76,7 @@ inflate(
 # pkgdown::build_site(dummypackage)
 # Delete dummy package
 unlink(dummypackage, recursive = TRUE)
+
 }
 \seealso{
 \code{\link[=inflate_all]{inflate_all()}} to inflate every flat files according to the configuration file.

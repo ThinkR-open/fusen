@@ -146,6 +146,19 @@ usethis::with_project(dummypackage, {
       list.files(file.path(dummypackage, "tests/testthat")),
       c("test-my_fun.R", "test-new_fun2.R")
     )
+
+    # R and test files are listed in the config file
+    config_content <- yaml::read_yaml(
+      file.path(dummypackage, "dev", "config_fusen.yaml")
+    )
+    expect_equal(
+      config_content[["flat_minimal.Rmd"]][["R"]],
+      c("R/my_fun.R", "R/new_fun2.R")
+    )
+    expect_equal(
+      config_content[["flat_minimal.Rmd"]][["tests"]],
+      c("tests/testthat/test-my_fun.R", "tests/testthat/test-new_fun2.R")
+    )
   })
 
   test_that("A second flat file works", {

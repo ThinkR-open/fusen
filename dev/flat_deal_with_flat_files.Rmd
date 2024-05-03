@@ -1,0 +1,621 @@
+---
+title: "flat_deal_with_flat_files.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+## Rename a flat file
+
+'fusen' provides a function `rename_flat_file()` to rename a flat file. This function updates the file name in the configuration file, modifies the inflating files if needed and renames the flat file itself. 
+This function should avoid remaining inflated files in the repository, and ensure that the configuration file is up-to-date.
+
+```{r function-rename_flat_file, filename="rename_flat_file"}
+#' Rename a flat file
+#'
+#' @param flat_file Path to the flat file to rename
+#' @param new_name New name for the flat file
+#'
+#' @return Used for side effect. Flat file renamed, config file updated,
+#' inflated files modified when needed.
+#'
+#' @export
+
+rename_flat_file <- function(flat_file, new_name) {
+  if (!file.exists(flat_file)) {
+    stop(
+      paste0(
+        "The flat file ", basename(flat_file),
+        " does not exist."
+      )
+    )
+  }
+
+  if (new_name == basename(new_name)) {
+    new_name_path <- file.path(dirname(flat_file), new_name)
+  } else if (new_name != basename(new_name)) {
+    new_name_path <- new_name
+  }
+
+  if (file.exists(new_name_path)) {
+    stop(
+      paste0(
+        "The new file ", new_name_path,
+        " already exists."
+      )
+    )
+  }
+
+
+
+  # Get smaller relative paths in
+  flat_file_small <- gsub(
+    paste0(normalize_path_winslash("."), "/"),
+    "",
+    normalize_path_winslash(flat_file, mustWork = TRUE),
+    fixed = TRUE
+  )
+  # Rename flat file
+  file.rename(flat_file, new_name_path)
+
+  # Get smaller relative paths out
+  new_name_path_small <- gsub(
+    paste0(normalize_path_winslash("."), "/"),
+    "",
+    normalize_path_winslash(new_name_path, mustWork = TRUE),
+    fixed = TRUE
+  )
+  # Rename inside the flat file
+  lines <- readLines(new_name_path_small)
+  lines <- gsub(flat_file_small, new_name_path_small, lines)
+  lines <- gsub(basename(flat_file_small), basename(new_name_path_small), lines)
+  write_utf8(lines = lines, path = new_name_path_small)
+
+
+  cli_alert_info(
+    paste0(
+      "The flat file ", flat_file,
+      " has been renamed to ", new_name_path
+    )
+  )
+
+  config_file <- getOption("fusen.config_file", "dev/config_fusen.yaml")
+
+  if (!file.exists(config_file)) {
+    return(invisible(new_name_path))
+  }
+
+  config <- yaml::read_yaml(config_file)
+
+  if (basename(flat_file) %in% names(config)) {
+    names(config)[names(config) == basename(flat_file)] <-
+      basename(new_name_path)
+    config[[basename(new_name_path)]]$path <- new_name_path
+    config[[basename(new_name_path)]]$inflate$flat_file <- new_name_path
+    config[[basename(flat_file)]] <- NULL
+
+    write_yaml_verbatim(config, config_file)
+
+    cli_alert_info(
+      paste0(
+        "The flat file ", basename(flat_file),
+        " has been updated in the config file."
+      )
+    )
+  }
+
+  # Update inflated files
+  all_linked_files <- unlist(
+    config[[basename(new_name_path)]][
+      c("R", "tests", "vignettes")
+    ]
+  )
+
+  if (length(all_linked_files) > 0) {
+    for (file in all_linked_files) {
+      lines <- readLines(file)
+      lines <- gsub(
+        basename(flat_file),
+        basename(new_name_path),
+        lines
+      )
+      write_utf8(lines = lines, path = file)
+    }
+    cli_alert_info(
+      paste0(
+        "The flat file ", basename(new_name_path),
+        " has been updated in the inflated files."
+      )
+    )
+  }
+
+  return(invisible(new_name_path))
+}
+```
+
+```{r example-rename_flat_file, eval=FALSE}
+#' \dontrun{
+# These functions change the current user workspace
+dev_file <- suppressMessages(
+  add_flat_template(
+    template = "add",
+    pkg = ".", overwrite = TRUE, open = FALSE
+  )
+)
+rename_flat_file(
+  flat_file = "dev/flat_additional.Rmd",
+  new_name = "flat_new.Rmd"
+)
+#' }
+``` 
+
+```{r tests-rename_flat_file}
+dummypackage <- tempfile("rename")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(
+  add_flat_template(
+    template = "full",
+    pkg = dummypackage, overwrite = TRUE, open = FALSE
+  )
+)
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  # Create empty config file
+  config_file <- file.path("dev", "config_fusen.yaml")
+  write_yaml_verbatim(list(), config_file)
+
+  test_that("rename_flat_file fails if file does not exists", {
+    expect_error(rename_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
+      regexp = "does not exist"
+    )
+  })
+
+  new_name <- "flat_new.Rmd"
+  new_path <- file.path("dev", new_name)
+
+  test_that("rename_flat_file changes the name of the flat file", {
+    rename_flat_file(flat_file = flat_file, new_name = new_name)
+    expect_false(file.exists(flat_file))
+    expect_true(file.exists(new_path))
+  })
+
+  test_that("rename_flat_file renames inside the flat file", {
+    lines <- readLines(new_path)
+    expect_equal(
+      length(grep(flat_file, lines)),
+      0
+    )
+    expect_equal(
+      length(grep(basename(flat_file), lines)),
+      0
+    )
+    expect_equal(
+      length(grep(new_path, lines)),
+      1
+    )
+    expect_equal(
+      length(grep(new_name, lines)),
+      2
+    )
+  })
+
+  test_that(
+    "rename_flat_file does not update config file if not previously present",
+    {
+      config <- yaml::read_yaml(config_file)
+      expect_false(new_name %in% names(config))
+    }
+  )
+
+  write_yaml_verbatim(
+    list("flat_new.Rmd" = list(
+      path = file.path("dev", "flat_new.Rmd")
+    )),
+    config_file
+  )
+
+  other_new_name <- "flat_other_new.Rmd"
+  other_new_path <- file.path("dev", other_new_name)
+
+  test_that("rename_flat_file changes the name of the flat file", {
+    rename_flat_file(flat_file = new_path, new_name = other_new_name)
+    expect_false(file.exists(new_path))
+    expect_true(file.exists(other_new_path))
+  })
+
+  test_that("rename_flat_file updates the config file", {
+    config <- yaml::read_yaml(config_file)
+    expect_true(basename(other_new_path) %in% names(config))
+    expect_true(is.null(config[[basename(new_path)]]))
+    expect_equal(
+      config[[basename(other_new_path)]][["path"]],
+      other_new_path
+    )
+  })
+
+  new_name2 <- "flat_new2.Rmd"
+  new_name2_path <- file.path("dev", new_name2)
+
+
+  test_that("rename_flat_file updates the inflated files in config", {
+    # Inflate the new file
+    suppressMessages(
+      inflate(
+        pkg = dummypackage, flat_file = other_new_path,
+        vignette_name = "Get started", check = FALSE,
+        open_vignette = FALSE
+      )
+    )
+
+    # Rename the flat file
+    rename_flat_file(flat_file = other_new_path, new_name = new_name2)
+
+    # Check that the inflated files are updated
+    config <- yaml::read_yaml(config_file)
+    expect_equal(
+      config[[basename(new_name2_path)]][["R"]],
+      c("R/my_median.R", "R/my_other_median.R")
+    )
+  })
+
+  test_that("rename_flat_file modifies sentence in inflated files", {
+    config <- yaml::read_yaml(config_file)
+    # Check that the inflated files are updated
+    all_linked_files <- unlist(
+      config[[basename(new_name2_path)]][
+        c("R", "tests", "vignettes")
+      ]
+    )
+    for (file in all_linked_files) {
+      lines <- readLines(file)
+      expect_false(
+        any(grepl("flat_other_new.Rmd", lines))
+      )
+      expect_true(
+        any(grepl("flat_new2.Rmd", lines))
+      )
+    }
+  })
+
+  test_that("rename_flat_file stops if new name already exists", {
+    expect_error(
+      rename_flat_file(flat_file = new_name2_path, new_name = new_name2),
+      regexp = "already exists"
+    )
+  })
+
+  new_name_path <- file.path("otherdev", "flat_new_with_path.Rmd")
+  dir.create("otherdev")
+  test_that("rename_flat_file accept path as a new name", {
+    rename_flat_file(flat_file = new_name2_path, new_name = new_name_path)
+    expect_false(file.exists(new_name2_path))
+    expect_true(file.exists(new_name_path))
+  })
+
+  test_that("rename_flat_file still renames inside the flat file with path", {
+    lines <- readLines(new_name_path)
+    expect_equal(
+      length(grep("flat_new2.Rmd", lines)),
+      0
+    )
+    expect_equal(
+      length(grep("dev/flat_new2.Rmd", lines)),
+      0
+    )
+    expect_equal(
+      length(grep("flat_new_with_path.Rmd", lines)),
+      2
+    )
+    expect_equal(
+      length(grep("otherdev/flat_new_with_path.Rmd", lines)),
+      1
+    )
+  })
+})
+``` 
+
+## Fully deprecate a flat file after inflate
+
+'fusen' serves as a framework to ensure that developers prioritize end-users during the function development process. By employing 'fusen' within Rmd/Qmd files, developers can conceptualize their product and articulate their ideas in plain text before initiating any code. This approach encourages consideration of the package's users: their intended actions, and the potential impact on their experiences. Consequently, developers can draft function documentation prior to its implementation, thinking about explaining what's behind the black box, as well as reminding that this may end into the vignette.
+
+Additionally, 'fusen' offers a minimal template comprising 'function', 'doc', and 'test' components. We advocate for Test Driven Development (TDD), where writing tests precedes function implementation. This practice aids in function design and enables anticipation of future behavior.
+
+Subsequently, you can proceed to implement the function itself, thereafter inflating the flat file to generate R, test, and vignette files. This initial iteration yields comprehensive documentation, a complete test suite, and a functional implementation.
+
+Following this initial phase, you have the option to:
+
+- Continue iterating on the function, documentation, and tests within the flat file, updating the R, test, and vignette files accordingly through inflation.
+- Opt to iterate directly within the "R/", "tests/", and "vignette/" directories.
+
+If the preference is to transition away from the flat file and conduct further development in the specified directories, proper deprecation of the flat file is recommended.
+
+To facilitate this transition, the function `deprecate_flat_file()` is provided. This function cleans script files by removing "do not edit" markers, updates the 'fusen' configuration file, and relocates the flat file to a "dev/flat_history/" directory, preserving the cleanliness of the "dev/" directory.
+
+```{r function-deprecate_flat_file, filename="deprecate_flat_file"}
+#' Deprecate a flat file
+#'
+#' It is not inflated again during `[inflate_all()]` as it is
+#' identified as deprecated in the config file.
+#' Previously generated files get "do not edit by hand" message removed.
+#' The flat file is moved to "dev/flat_history".
+#'
+#' @param flat_file Path to the flat file to deprecate
+#'
+#' @return Used for side effect.
+#' Move flat file to "dev/flat_history", update config file,
+#' and remove "do not edit by hand" message.
+#'
+#' @export
+deprecate_flat_file <- function(flat_file) {
+  # Read config file
+  config_file <- getOption("fusen.config_file", "dev/config_fusen.yaml")
+  config <- yaml::read_yaml(config_file)
+
+  if (!file.exists(flat_file)) {
+    stop(
+      paste0(
+        "The flat file ", basename(flat_file),
+        " does not exist."
+      )
+    )
+  } else if (!basename(flat_file) %in% names(config)) {
+    stop(
+      paste0(
+        "The flat file ", basename(flat_file),
+        " is not in the config file.",
+        "Did you inflate it with {fusen}?"
+      )
+    )
+  } else if (config[[basename(flat_file)]]$state == "deprecated") {
+    cli_alert_warning(
+      paste0(
+        "The flat file ", basename(flat_file),
+        " is already deprecated."
+      )
+    )
+    return(invisible())
+  }
+
+  if (!dir.exists(file.path(dirname(config_file), "flat_history"))) {
+    dir.create(file.path(dirname(config_file), "flat_history"))
+  }
+
+  # Update config file
+  config[[basename(flat_file)]]$state <- "deprecated"
+  config[[basename(flat_file)]]$path <-
+    file.path("dev", "flat_history", basename(flat_file))
+  config[[basename(flat_file)]]$inflate$flat_file <-
+    file.path("dev", "flat_history", basename(flat_file))
+
+  # Update flat file after the yaml header
+  lines <- readLines(flat_file)
+  lines <- c(
+    "# WARNING - flat file now deprecated. do not edit by hand, do not inflate",
+    lines
+  )
+  write_utf8(lines = lines, path = flat_file)
+
+  # Update linked files
+  all_linked_files <- unlist(
+    config[[basename(flat_file)]][
+      c("R", "tests", "vignettes")
+    ]
+  )
+  for (file in all_linked_files) {
+    lines <- readLines(file)
+    lines <- lines[!grepl("# do not edit by hand", lines)]
+    yaml_pos <- grep("^---$", lines)[2]
+
+    if (
+      grepl("(R|r)md|(Q|q)md", tools::file_ext(file)) &&
+        !is.na(yaml_pos) && length(yaml_pos) > 0) {
+      # add just after the yaml header
+
+      lines <- c(
+        lines[1:yaml_pos],
+        paste0(
+          "\n",
+          "<!-- # Previously generated by {fusen} from ",
+          file.path("dev", "flat_history", basename(flat_file)),
+          ": now deprecated. -->",
+          "\n"
+        ),
+        lines[(yaml_pos + 1):length(lines)]
+      )
+    } else {
+      # first line
+      lines <- c(
+        paste0(
+          "# Previously generated by {fusen} from ",
+          file.path("dev", "flat_history", basename(flat_file)),
+          ": now deprecated."
+        ),
+        lines
+      )
+    }
+
+    write_utf8(lines = lines, path = file)
+  }
+
+  # Move flat file to flat_history
+  dir.create(file.path("dev", "flat_history"), showWarnings = FALSE)
+  file.copy(flat_file, file.path("dev", "flat_history", basename(flat_file)))
+  file.remove(flat_file)
+
+  # Write config file
+  write_yaml_verbatim(config, config_file)
+
+  cli_alert_success(
+    paste0(
+      "The flat file ", basename(flat_file),
+      " has been deprecated."
+    )
+  )
+}
+```
+
+
+```{r example-deprecate_flat_file, eval=FALSE}
+#' \dontrun{
+#' # These functions change the current user workspace
+dev_file <- suppressMessages(
+  add_flat_template(
+    template = "add",
+    pkg = dummypackage, overwrite = TRUE, open = FALSE
+  )
+)
+deprecate_flat_file(flat_file = "dev/flat_additional.Rmd")
+#' }
+```
+
+
+```{r tests-deprecate_flat_file}
+dummypackage <- tempfile("deprecate")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(
+  add_flat_template(
+    template = "full",
+    pkg = dummypackage, overwrite = TRUE, open = FALSE
+  )
+)
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+# Detect all files created ----
+usethis::with_project(dummypackage, {
+  # Create empty config file
+
+  # Inflate once
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  config_file <- file.path("dev", "config_fusen.yaml")
+  config_origin <- yaml::read_yaml(config_file)
+
+  deprecate_flat_file(flat_file = flat_file)
+
+  test_that("deprecate_flat_file is moved to flat_history", {
+    expect_false(file.exists(flat_file))
+    expect_true(
+      file.exists(file.path("dev", "flat_history", basename(flat_file)))
+    )
+    expect_equal(
+      readLines(file.path("dev", "flat_history", basename(flat_file)))[1],
+      "# WARNING - flat file now deprecated. do not edit by hand, do not inflate"
+    )
+  })
+
+  config <- yaml::read_yaml(config_file)
+
+  test_that("deprecate_flat_file is updated in config file", {
+    expect_true(config[[basename(flat_file)]]$state == "deprecated")
+    # path and flat_file are modified in config file
+    expect_equal(
+      config[[basename(flat_file)]]$path,
+      file.path("dev", "flat_history", basename(flat_file))
+    )
+    expect_equal(
+      config[[basename(flat_file)]]$inflate$flat_file,
+      file.path("dev", "flat_history", basename(flat_file))
+    )
+    # The rest does not change
+    expect_equal(
+      config[[basename(flat_file)]][
+        c("R", "tests", "vignettes")
+      ],
+      config_origin[[basename(flat_file)]][
+        c("R", "tests", "vignettes")
+      ]
+    )
+  })
+
+  test_that("deprecate_flat_file changes 'do not edit by hand'", {
+    # Search for "do not edit by hand" in files generated by the flat file
+    # and listed in the config file
+    all_linked_files <- unlist(
+      config[[basename(flat_file)]][
+        c("R", "tests", "vignettes")
+      ]
+    )
+    expect_false(
+      any(
+        sapply(all_linked_files, function(file) {
+          any(grepl("# do not edit by hand", readLines(file)))
+        })
+      )
+    )
+    expect_true(
+      all(
+        sapply(all_linked_files, function(file) {
+          any(
+            grepl(
+              paste0(
+                "# Previously generated by \\{fusen\\} from ",
+                file.path("dev", "flat_history", basename(flat_file)),
+                ": now deprecated."
+              ),
+              readLines(file)
+            )
+          )
+        })
+      )
+    )
+  })
+
+  test_that("deprecate_flat_file stops if flat file does not exist", {
+    expect_error(deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
+      regexp = "does not exist"
+    )
+  })
+
+  file.create("dev/flat_nonexistent.Rmd")
+  test_that("deprecate_flat_file stops if flat file is not in config file", {
+    expect_error(deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
+      regexp = "is not in the config file"
+    )
+  })
+
+  file.create("dev/flat_full.Rmd")
+  config[[basename(flat_file)]]$state <- "deprecated"
+  write_yaml_verbatim(config, config_file)
+  test_that("deprecate_flat_file stops if flat file is already deprecated", {
+    expect_message(
+      deprecate_flat_file(flat_file = flat_file),
+      "is already deprecated"
+    )
+  })
+})
+```
+
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_deal_with_flat_files.Rmd",
+  vignette_name = "Deal with a 'fusen' flat file", check = FALSE,
+  overwrite = TRUE, open_vignette = FALSE,
+  clean = TRUE
+)
+```

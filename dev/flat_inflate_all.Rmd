@@ -151,11 +151,12 @@ inflate_all <- function(
         default = "dev/config_fusen.yaml"
       )
       # Change config option temporary, to be able to modify it on the fly
-      config_file_tmp <- tempfile(pattern = "tempconfig")
-      on.exit(file.remove(config_file_tmp))
-      file.copy(config_file, to = config_file_tmp)
-      options("fusen.config_file" = config_file_tmp)
-      on.exit(options("fusen.config_file" = config_file))
+      # config_file_tmp <- tempfile(pattern = "tempconfig")
+      # on.exit(file.remove(config_file_tmp))
+      # file.copy(config_file, to = config_file_tmp)
+      # options("fusen.config_file" = config_file_tmp)
+      # on.exit(options("fusen.config_file" = config_file))
+      # => Instead allow inflate to not modify the config file for inflate params
 
       invisible(
         lapply(inflate_params, function(flat_file) {
@@ -164,6 +165,7 @@ inflate_all <- function(
           flat_file$open_vignette <- open_vignette
           flat_file$document <- FALSE
           flat_file$check <- FALSE
+          flat_file$update_params <- FALSE
           suppressMessages(do.call(inflate, flat_file))
         })
       )
@@ -413,6 +415,19 @@ usethis::with_project(dummypackage, {
     expect_equal(
       list.files(file.path(dummypackage, "tests/testthat")),
       c("test-my_fun.R", "test-new_fun2.R")
+    )
+
+    # R and test files are listed in the config file
+    config_content <- yaml::read_yaml(
+      file.path(dummypackage, "dev", "config_fusen.yaml")
+    )
+    expect_equal(
+      config_content[["flat_minimal.Rmd"]][["R"]],
+      c("R/my_fun.R", "R/new_fun2.R")
+    )
+    expect_equal(
+      config_content[["flat_minimal.Rmd"]][["tests"]],
+      c("tests/testthat/test-my_fun.R", "tests/testthat/test-new_fun2.R")
     )
   })
 

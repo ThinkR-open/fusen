@@ -147,11 +147,12 @@ inflate_all <- function(
         default = "dev/config_fusen.yaml"
       )
       # Change config option temporary, to be able to modify it on the fly
-      config_file_tmp <- tempfile(pattern = "tempconfig")
-      on.exit(file.remove(config_file_tmp))
-      file.copy(config_file, to = config_file_tmp)
-      options("fusen.config_file" = config_file_tmp)
-      on.exit(options("fusen.config_file" = config_file))
+      # config_file_tmp <- tempfile(pattern = "tempconfig")
+      # on.exit(file.remove(config_file_tmp))
+      # file.copy(config_file, to = config_file_tmp)
+      # options("fusen.config_file" = config_file_tmp)
+      # on.exit(options("fusen.config_file" = config_file))
+      # => Instead allow inflate to not modify the config file for inflate params
 
       invisible(
         lapply(inflate_params, function(flat_file) {
@@ -160,6 +161,7 @@ inflate_all <- function(
           flat_file$open_vignette <- open_vignette
           flat_file$document <- FALSE
           flat_file$check <- FALSE
+          flat_file$update_params <- FALSE
           suppressMessages(do.call(inflate, flat_file))
         })
       )

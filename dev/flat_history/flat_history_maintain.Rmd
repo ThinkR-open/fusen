@@ -1,5 +1,6 @@
+# WARNING - flat file now deprecated. do not edit by hand, do not inflate
 ---
-title: "dev_history.Rmd for working package"
+title: "flat_history_maintain.Rmd for working package"
 author: "Sébastien Rochette"
 date: "23/01/2021"
 output: html_document
@@ -57,5 +58,5 @@ This does not remove or modify previous functions, tests or vignettes, provided 
 
 ```{r development-2, eval=FALSE}
 # inflate inactive - Modify directly in vignette "Maintain packages with {fusen}"
-# fusen::inflate(flat_file = file.path("dev", "flat_history_maintain.Rmd"), vignette_name = "Maintain packages with {fusen}", check = FALSE)
+# fusen::inflate(flat_file = file.path("dev/flat_history/flat_history_maintain.Rmd"), vignette_name = "Maintain packages with {fusen}", check = FALSE)
 ```
