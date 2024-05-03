@@ -1,5 +1,5 @@
 ---
-title: "flat_deprecate_flat_files.Rmd empty"
+title: "flat_deal_with_flat_files.Rmd empty"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -97,10 +97,12 @@ rename_flat_file <- function(flat_file, new_name) {
   config <- yaml::read_yaml(config_file)
 
   if (basename(flat_file) %in% names(config)) {
-    config[[basename(new_name_path)]] <- config[[basename(flat_file)]]
+    names(config)[names(config) == basename(flat_file)] <-
+      basename(new_name_path)
     config[[basename(new_name_path)]]$path <- new_name_path
     config[[basename(new_name_path)]]$inflate$flat_file <- new_name_path
     config[[basename(flat_file)]] <- NULL
+
     write_yaml_verbatim(config, config_file)
 
     cli_alert_info(
@@ -246,6 +248,7 @@ usethis::with_project(dummypackage, {
 
   new_name2 <- "flat_new2.Rmd"
   new_name2_path <- file.path("dev", new_name2)
+
 
   test_that("rename_flat_file updates the inflated files in config", {
     # Inflate the new file
@@ -610,7 +613,7 @@ usethis::with_project(dummypackage, {
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(
-  flat_file = "dev/flat_deprecate_flat_files.Rmd",
+  flat_file = "dev/flat_deal_with_flat_files.Rmd",
   vignette_name = "Deprecate a 'fusen' flat file", check = FALSE,
   overwrite = TRUE, open_vignette = FALSE,
   clean = TRUE
