@@ -1,8 +1,8 @@
 ---
-title: "Deprecate a 'fusen' flat file"
+title: "Deal with a 'fusen' flat file"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Deprecate a 'fusen' flat file}
+  %\VignetteIndexEntry{Deal with a 'fusen' flat file}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

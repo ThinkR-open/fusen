@@ -614,7 +614,7 @@ usethis::with_project(dummypackage, {
 # Execute in the console directly
 fusen::inflate(
   flat_file = "dev/flat_deal_with_flat_files.Rmd",
-  vignette_name = "Deprecate a 'fusen' flat file", check = FALSE,
+  vignette_name = "Deal with a 'fusen' flat file", check = FALSE,
   overwrite = TRUE, open_vignette = FALSE,
   clean = TRUE
 )

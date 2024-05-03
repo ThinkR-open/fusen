@@ -33,10 +33,10 @@ flat_deal_with_flat_files.Rmd:
   tests:
   - tests/testthat/test-rename_flat_file.R
   - tests/testthat/test-deprecate_flat_file.R
-  vignettes: vignettes/deprecate-a-fusen-flat-file.Rmd
+  vignettes: vignettes/deal-with-a-fusen-flat-file.Rmd
   inflate:
     flat_file: dev/flat_deal_with_flat_files.Rmd
-    vignette_name: Deprecate a 'fusen' flat file
+    vignette_name: Deal with a 'fusen' flat file
     open_vignette: false
     check: false
     document: true
