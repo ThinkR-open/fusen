@@ -24,6 +24,7 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
+    <a class="dropdown-item" href="../articles/deal-with-a-fusen-flat-file.html">Deal with a 'fusen' flat file</a>
     <a class="dropdown-item" href="../articles/How-to-use-fusen.html">How to use fusen</a>
     <a class="dropdown-item" href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
     <a class="dropdown-item" href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
@@ -66,6 +67,10 @@
 <div class="section level3">
 <h3 id="new-features-0-6-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0"></a></h3>
 <ul><li>
+<code><a href="../reference/rename_flat_file.html">rename_flat_file()</a></code> allows to rename a flat file, and deals with config and inflated files</li>
+<li>
+<code><a href="../reference/deprecate_flat_file.html">deprecate_flat_file()</a></code> helps properly deprecate a flat file, modifies the config file and cleans the previously inflated files</li>
+<li>
 <code><a href="../reference/inflate.html">inflate()</a></code> detects functions renamed or removed and allow to clean the package repository (<a href="https://github.com/Thinkr-open/fusen/issues/24" class="external-link">#24</a>)</li>
 <li>Allow <code>organisation</code> in <code><a href="../reference/init_share_on_github.html">init_share_on_github()</a></code> to send to a GitHub organisation</li>
 <li>Fix <code><a href="../reference/load_flat_functions.html">load_flat_functions()</a></code> to work with VSCode</li>

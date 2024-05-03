@@ -22,6 +22,9 @@
     <loc>https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html</loc>
   </url>
   <url>
+    <loc>https://thinkr-open.github.io/fusen/articles/deal-with-a-fusen-flat-file.html</loc>
+  </url>
+  <url>
     <loc>https://thinkr-open.github.io/fusen/articles/index.html</loc>
   </url>
   <url>
@@ -58,6 +61,9 @@
     <loc>https://thinkr-open.github.io/fusen/reference/create_fusen.html</loc>
   </url>
   <url>
+    <loc>https://thinkr-open.github.io/fusen/reference/deprecate_flat_file.html</loc>
+  </url>
+  <url>
     <loc>https://thinkr-open.github.io/fusen/reference/fill_description.html</loc>
   </url>
   <url>
@@ -83,5 +89,8 @@
   </url>
   <url>
     <loc>https://thinkr-open.github.io/fusen/reference/register_all_to_config.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/reference/rename_flat_file.html</loc>
   </url>
 </urlset>
