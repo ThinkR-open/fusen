@@ -68,6 +68,7 @@ usethis::use_roxygen_md()
 roxygen2md::roxygen2md(scope = "simple")
 # _Readme
 usethis::use_readme_rmd()
+devtools::build_readme()
 # _News
 usethis::use_news_md()
 # _Vignette
