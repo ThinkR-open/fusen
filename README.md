@@ -255,6 +255,15 @@ to let a nice package appear.
 
 </details>
 
+## Contributing
+
+‘fusen’ is partially built using ‘fusen’ itself.  
+If you’re not sure on how to contribute using ‘fusen’, you can
+contribute as for any other package: a package made with the help of
+‘fusen’ does have exactly the same structure as a classical package.  
+Knowing that, if you want to contribute to ‘fusen’, you can follow the
+instructions in the CONTRIBUTING.md file.
+
 ## Acknowledgments
 
   - Thanks to Deemah who asked me to go further ‘Rmd first’ after my
