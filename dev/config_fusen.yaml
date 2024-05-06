@@ -106,6 +106,24 @@ flat_init_share_on_github.Rmd:
     check: false
     document: true
     overwrite: 'yes'
+flat_map_the_package.Rmd:
+  path: dev/flat_map_the_package.Rmd
+  state: active
+  R:
+  - R/get_all_created_funs.R
+  - R/map_the_package.R
+  tests:
+  - tests/testthat/test-map_the_package.R
+  - tests/testthat/test-get_all_created_funs.R
+  vignettes: vignettes/draw-a-map-of-your-package-files-and-functions.Rmd
+  inflate:
+    flat_file: dev/flat_map_the_package.Rmd
+    vignette_name: Draw a map of your package files and functions
+    open_vignette: true
+    check: true
+    document: true
+    overwrite: ask
+    clean: ask
 flat_register_config_file.Rmd:
   path: dev/flat_register_config_file.Rmd
   state: active

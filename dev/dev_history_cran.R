@@ -46,6 +46,14 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 #> rig run
 devtools::check()
 
+# Update the map of the package
+map <- map_the_package()
+draw_the_map(map)
+
+rmarkdown::render("dev/README.Rmd",
+  output_format = "github_document", output_file = "README.md"
+)
+
 
 # > Copy from Prepare-for-cran - https://github.com/ThinkR-open/prepare-for-cran ====================
 

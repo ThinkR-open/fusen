@@ -1,0 +1,320 @@
+---
+title: "flat_map_the_package.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+# Map the package structure to help developers
+
+`map_the_package()` is a function that helps developers understand the package structure. It reads the `dev/config_fusen.yaml` file, adds the list of resulting functions and extra description of files.  
+
+You can know:
+
+- The description of the flat file as issued from its Title when exists
+- If the flat file is still active
+- The list of R files issued from the flat file
+- The list of functions inside these R files
+- The list of files of tests issued from the flat file
+- There is a possibility to list all functions that are called in the test files
+- The vignette issued from the flat file
+
+```{r function-map_the_package}
+#' Map information of a 'fusen' built package for developers
+#'
+#' @param yaml_fusen_file The path to the yaml file
+#' to get the map from
+#' @param emoji Add emojis to the output
+#'
+#' @return A list of information about the package
+#' @export
+#'
+#' @examples
+map_the_package <- function(yaml_fusen_file, emoji = TRUE) {
+  if (missing(yaml_fusen_file)) {
+    yaml_fusen_file <- getOption("fusen_config_file", "dev/config_fusen.yaml")
+  }
+  print(normalize_path_winslash(yaml_fusen_file))
+  yaml_fusen <- yaml::read_yaml(yaml_fusen_file)
+  # For each element, add the title of the flat file
+  if (file.exists("NAMESPACE")) {
+    namespace <- readLines("NAMESPACE")
+    cat_rule("Reading NAMESPACE file")
+  } else {
+    cat_rule("No NAMESPACE file found there: ", getwd())
+  }
+
+  for (flat_file in names(yaml_fusen)) {
+    cat_rule(flat_file)
+    yaml_fusen[[flat_file]]$inflate <- NULL
+
+    # Extract title from the flat Rmd file
+    if (flat_file != "keep") {
+      flat_lines <- readLines(yaml_fusen[[flat_file]]$path)
+      yaml_begin <- which(grepl("^---", flat_lines))[1]
+      yaml_end <- which(grepl("^---", flat_lines))[2]
+      flat_yaml <- yaml::yaml.load(flat_lines[yaml_begin:yaml_end])
+      yaml_fusen[[flat_file]] <- c(
+        list(flat_title = flat_yaml$title),
+        yaml_fusen[[flat_file]]
+      )
+    }
+
+    # Add emoji
+    if (emoji) {
+      flat_state <- yaml_fusen[[flat_file]]$state
+      yaml_fusen[[flat_file]]$state <-
+        paste(ifelse(flat_state == "active",
+          "\U0001f34f", "\U0001f6d1"
+        ), flat_state)
+    }
+
+    # Get the list of R files with their functions
+    r_files <- yaml_fusen[[flat_file]][["R"]]
+    list_r_files <- list()
+    for (r_file in r_files) {
+      functions <- get_all_created_funs(r_file)
+      # Get if function is exported from namespace
+      exported <- paste0("export(", functions, ")") %in% namespace
+      if (emoji) {
+        functions <- paste(
+          ifelse(exported,
+            "\U0001f440", "\U0001f648"
+          ), functions
+        )
+      } else {
+        functions <- paste(
+          ifelse(exported, "exported", "not exported"),
+          functions
+        )
+      }
+
+      list_r_files <- c(
+        list_r_files,
+        setNames(list(functions), r_file)
+      )
+    }
+
+    yaml_fusen[[flat_file]][["R"]] <- list_r_files
+  }
+
+  return(yaml_fusen)
+}
+
+draw_the_map <- function(x) {
+  # Calculate the depth of a list
+  depth <- function(x) {
+    if (!is.list(x)) {
+      return(0)
+    }
+    if (length(x) == 0) {
+      return(1)
+    }
+    return(1 + max(sapply(x, depth)))
+  }
+
+  to_tree <- function(xlist) {
+    to_tree_max(xlist, maxdepth = depth(xlist))
+  }
+
+  to_tree_max <- function(xlist, maxdepth) {
+    d <- depth(xlist)
+    if (d > 0) {
+      result <- lapply(
+        seq_along(xlist),
+        function(w) {
+          paste0(
+            "\n",
+            paste(rep("    ", maxdepth - d), collapse = ""),
+            "- ",
+            names(xlist)[w],
+            paste0(
+              unlist(to_tree_max(xlist[[w]], maxdepth)),
+              collapse = ""
+            )
+          )
+        }
+      )
+      return(result)
+    } else if (d == 0) {
+      paste0(
+        "\n",
+        paste(
+          paste0(
+            paste0(rep("    ", maxdepth), collapse = ""),
+            "+ ",
+            xlist
+          ),
+          collapse = "\n"
+        )
+      )
+    }
+  }
+
+  cat(unlist(to_tree(map)))
+}
+```
+
+```{r examples-map_the_package, eval=FALSE}
+#' \dontrun{
+#' # This only works inside a 'fusen' built package
+#' map <- map_the_package()
+#' draw_the_map(map)
+#' }
+#'
+#' # Example with a dummy package
+dummypackage <- tempfile("drawmap")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(
+  add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+)
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  map <- map_the_package()
+  draw_the_map(map)
+})
+```
+
+```{r tests-map_the_package}
+test_that("map_the_package works", {
+  expect_true(inherits(map_the_package, "function"))
+})
+
+# Test full ----
+dummypackage <- tempfile("drawmap")
+dir.create(dummypackage)
+
+# {fusen} steps
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+flat_file <- dev_file[grepl("flat_", dev_file)]
+
+usethis::with_project(dummypackage, {
+  suppressMessages(
+    inflate(
+      pkg = dummypackage, flat_file = flat_file,
+      vignette_name = "Get started", check = FALSE,
+      open_vignette = FALSE
+    )
+  )
+
+  test_that("map_the_package works", {
+    # Need to force edition to allow expect_snapshot
+    # As we are in another directory using with_dir()
+    local_edition(3)
+    # Fix output conditions for this test for snapshots
+    local_reproducible_output(
+      width = 100,
+      crayon = FALSE,
+      unicode = FALSE,
+      rstudio = FALSE,
+      hyperlinks = FALSE,
+      lang = "en",
+      .env = parent.frame()
+    )
+
+    map <- map_the_package()
+
+    expect_snapshot(map)
+
+    expect_snapshot(draw_the_map(map))
+  })
+})
+```
+
+# Get the list of functions from a R file
+    
+```{r function-get_all_created_funs}
+#' Get all functions created in a R file
+#'
+#' @param file A R file
+#'
+#' @return A character vector of function names
+#'
+#' @export
+get_all_created_funs <- function(file) {
+  stopifnot(tools::file_ext(file) %in% c("R", "r"))
+  # Get each bloc of code
+  parts_parsed <- parse(file)
+  # We cannot directly get as.character as it would
+  # remove character quotes from text only lines
+  # like a line with : "_example" fails
+  parts <- lapply(attr(parts_parsed, "srcref"), as.character)
+
+  all_functions <- lapply(
+    seq_along(parts), function(x) {
+      out <- list()
+      out$code <- as.character(parts[x])
+      name <- parse_fun(out)$fun_name
+      return(name)
+    }
+  ) %>% unlist()
+
+  all_functions_no_na <- all_functions[!is.na(all_functions)]
+
+  return(all_functions_no_na)
+}
+```
+  
+```{r example-get_all_created_funs}
+file_path <- tempfile(fileext = ".R")
+cat(
+  "my_fun <- function() {1}",
+  "my_fun2 <- function() {2}",
+  sep = "\n",
+  file = file_path
+)
+get_all_created_funs(file_path)
+```
+  
+```{r tests-get_all_created_funs}
+test_that("get_all_created_funs works", {
+  expect_true(inherits(get_all_created_funs, "function"))
+
+  file_path <- tempfile(fileext = ".R")
+  cat(
+    "my_fun <- function() {1}",
+    "my_fun2 <- function() {2}",
+    sep = "\n",
+    file = file_path
+  )
+  expect_equal(
+    get_all_created_funs(file_path),
+    c("my_fun", "my_fun2")
+  )
+})
+```
+  
+
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_map_the_package.Rmd",
+  vignette_name = "Draw a map of your package files and functions",
+  check = TRUE, open_vignette = TRUE
+)
+```
+

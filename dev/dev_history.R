@@ -145,6 +145,7 @@ rcmdcheck::rcmdcheck()
 rcmdcheck::rcmdcheck(args = "--as-cran")
 # ascii
 stringi::stri_trans_general("é", "hex")
+stringi::stri_escape_unicode("é") # Remember to remove a "\""
 
 # Review PR ----
 usethis::pr_fetch(41)
