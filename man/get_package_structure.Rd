@@ -5,7 +5,7 @@
 \alias{draw_the_tree}
 \title{Get structure and information of a 'fusen' built package for developers}
 \usage{
-get_package_structure(path, emoji = TRUE)
+get_package_structure(path, emoji = TRUE, silent = FALSE)
 
 draw_the_tree(structure_list)
 }

@@ -7,7 +7,7 @@ output: github_document
 ```{r, message=FALSE, results='asis'}
 pkgload::load_all()
 withr::with_dir(here::here(), {
-  pkg_structure <- get_package_structure()
+  pkg_structure <- get_package_structure(silent = TRUE)
   draw_the_tree(pkg_structure)
 })
 ```
