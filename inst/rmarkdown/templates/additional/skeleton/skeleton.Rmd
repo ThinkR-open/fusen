@@ -34,7 +34,7 @@ skeleton()
 
 ```{r tests-skeleton}
 test_that("skeleton works", {
-
+  expect_true(inherits(skeleton, "function"))
 })
 ```
 

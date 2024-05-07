@@ -81,9 +81,9 @@ usethis::with_project(here::here(), {
       - flat\_title
           - dev\_history.Rmd
       - path
-          - dev/flat\_history\_core.Rmd
+          - dev/flat\_history/flat\_history\_core.Rmd
       - state
-          - 🛑 inactive
+          - 🛑 deprecated
       - R
           - R/fill\_description.R
               - 👀 fill\_description

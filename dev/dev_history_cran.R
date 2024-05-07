@@ -21,12 +21,18 @@ unlink(skeleton_dir, recursive = TRUE)
 # _Check in interactive test-inflate for templates and Addins ----
 pkgload::load_all()
 
+# /!\ While running these tests manually with `test_file()`,
+# do not do anything else in your IDE /!\
+# Do not change file open, do not change text in the current file, nothing...
+# Unit tests open files interactively and close them
+# The focus needs to be kept on what the test is doing
 Sys.setenv("NOT_CRAN" = "true")
 testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate-part1.R")
 testthat::test_file("tests/testthat/test-inflate-part2.R")
 testthat::test_file("tests/testthat/test-inflate_all.R")
 testthat::test_file("tests/testthat/test-inflate_all_utils.R")
+testthat::test_file("tests/testthat/test-build_fusen_chunks.R") # Opens files
 testthat::test_file("tests/testthat/test-add_flat_template.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
 testthat::test_file("tests/testthat/test-register_config_file.R") # interactivity

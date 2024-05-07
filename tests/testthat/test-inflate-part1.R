@@ -457,7 +457,10 @@ usethis::with_project(dummypackage, {
 usethis::with_project(dummypackage, {
   file.remove(file.path(dummypackage, ".here"))
   file.remove(file.path(dummypackage, ".Rbuildignore"))
-  cat("", file = file.path(dummypackage, "dummy.Rproj"))
+  cat("", file = file.path(
+    dummypackage,
+    paste0(basename(dummypackage), ".Rproj")
+  ))
 
   # Add
   # {fusen} steps

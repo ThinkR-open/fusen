@@ -498,7 +498,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r}
 library(.{pkgname}.)
 ```
     ',

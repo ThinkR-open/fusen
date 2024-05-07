@@ -365,7 +365,9 @@ inflate <- function(pkg = ".", flat_file,
 
 
   # Restart RStudio
-  if (needs_restart) {
+  is_rstudio <- Sys.getenv("RSTUDIO") == "1"
+
+  if (needs_restart & is_rstudio) {
     cli::cat_rule("RStudio restart needed")
     getFromNamespace("restart_rstudio", "usethis")("A restart of RStudio is required to activate the Build pane")
   }

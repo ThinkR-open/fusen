@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-```{r setup}
+```{r}
 library(fusen)
 ```
 
@@ -40,8 +40,6 @@ You can know:
 With `draw_the_map()`, you can draw a tree of the package structure in the console.
 
 ```{r examples-get_package_structure}
-#| eval: no
-
 #' \dontrun{
 #' # This only works inside a 'fusen' built package
 #' pkg_structure <- get_package_structure()
