@@ -28,6 +28,25 @@
       [1] "vignettes/get-started.Rmd"
       
       
+      $keep
+      $keep$path
+      [1] "keep"
+      
+      $keep$state
+      [1] "🍏 active"
+      
+      $keep$R
+      $keep$R$`R/my_extra_fun.R`
+      [1] "🙈 extra_fun"
+      
+      
+      $keep$tests
+      list()
+      
+      $keep$vignettes
+      list()
+      
+      
 
 ---
 
@@ -53,4 +72,14 @@
             + tests/testthat/test-my_other_median.R
         - vignettes
             + vignettes/get-started.Rmd
+      - keep
+        - path
+            + keep
+        - state
+            + 🍏 active
+        - R
+          - R/my_extra_fun.R
+            + 🙈 extra_fun
+        - tests
+        - vignettes
 

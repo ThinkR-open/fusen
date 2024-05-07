@@ -20,6 +20,10 @@ usethis::with_project(dummypackage, {
     )
   )
 
+  # Add an extra R file
+  cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
+
+
   test_that("get_package_structure works", {
     # Need to force edition to allow expect_snapshot
     # As we are in another directory using with_dir()

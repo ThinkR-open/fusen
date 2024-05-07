@@ -4,10 +4,12 @@
 \alias{register_all_to_config}
 \title{Include all existing package files in the config file}
 \usage{
-register_all_to_config(pkg = ".")
+register_all_to_config(pkg = ".", config_file)
 }
 \arguments{
 \item{pkg}{Path to the package from which to add file to configuration file}
+
+\item{config_file}{Path to the configuration file}
 }
 \value{
 Invisible path to 'fusen' configuration file

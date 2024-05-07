@@ -5,13 +5,15 @@
 \alias{draw_the_tree}
 \title{Get structure and information of a 'fusen' built package for developers}
 \usage{
-get_package_structure(path, emoji = TRUE, silent = FALSE)
+get_package_structure(path, pkg = ".", emoji = TRUE, silent = FALSE)
 
 draw_the_tree(structure_list)
 }
 \arguments{
 \item{path}{The path to the yaml file
 to get the structure from}
+
+\item{pkg}{The package directory}
 
 \item{emoji}{Add emojis to the output}
 
@@ -52,6 +54,9 @@ usethis::with_project(dummypackage, {
       open_vignette = FALSE
     )
   )
+
+  # Add an extra R file to list in "keep"
+  cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
 
   pkg_structure <- get_package_structure()
   draw_the_tree(pkg_structure)

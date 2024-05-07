@@ -6,6 +6,7 @@
 \usage{
 check_not_registered_files(
   path = ".",
+  config_file,
   guess = TRUE,
   to_csv = TRUE,
   open = FALSE
@@ -13,6 +14,8 @@ check_not_registered_files(
 }
 \arguments{
 \item{path}{Path to package to check for not registered files}
+
+\item{config_file}{Path to the configuration file}
 
 \item{guess}{Logical. Guess if the file was inflated by a specific flat file}
 

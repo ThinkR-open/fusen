@@ -5,6 +5,7 @@
 #' If user start their package without 'fusen' or with version < 0.4, they need to create the config file, with already existing functions.
 #'
 #' @param path Path to package to check for not registered files
+#' @param config_file Path to the configuration file
 #' @param guess Logical. Guess if the file was inflated by a specific flat file
 #' @param to_csv Logical. Whether to store along the config file, the outputs in a csv for the user to clean it manually
 #' @param open Logical. Whether to open the csv of unregistered files.
@@ -57,7 +58,7 @@
 #'   yaml::read_yaml(out_config)
 #' })
 #' unlink(dummypackage, recursive = TRUE)
-check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, open = FALSE) {
+check_not_registered_files <- function(path = ".", config_file, guess = TRUE, to_csv = TRUE, open = FALSE) {
   path <- normalize_path_winslash(path)
 
   all_r <- list.files(file.path(path, "R"), pattern = "[.]R$|[.]r$", full.names = TRUE)
@@ -81,7 +82,9 @@ check_not_registered_files <- function(path = ".", guess = TRUE, to_csv = TRUE, 
     return(NULL)
   }
 
-  config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
+  if (missing(config_file)) {
+    config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
+  }
 
   if (file.exists(config_file)) {
     # Read config file, and remove those already there
@@ -208,6 +211,7 @@ get_list_paths <- function(config_list) {
 #' You can use the name of the origin flat file but this is more of
 #' an internal use, as inflating the flat file should have the same result.
 #' @param state Character. Whether if the flat file is `active` or `deprecated`.
+#' @param config_file Path to the configuration file
 #' @param force Logical. Whether to force writing the configuration
 #' file even is some files do not exist.
 #' @param clean Logical (TRUE, FALSE) or character ("ask", "yes", "no).
@@ -239,14 +243,18 @@ get_list_paths <- function(config_list) {
 df_to_config <- function(df_files,
                          flat_file_path = "keep",
                          state = c("active", "deprecated"),
+                         config_file,
                          force = FALSE,
                          clean = "ask",
                          inflate_parameters = NULL,
                          update_params = TRUE) {
-  config_file <- getOption(
-    "fusen.config_file",
-    default = "dev/config_fusen.yaml"
-  )
+  if (missing(config_file)) {
+    config_file <- getOption(
+      "fusen.config_file",
+      default = "dev/config_fusen.yaml"
+    )
+  }
+
   state <- match.arg(state, several.ok = FALSE)
 
   # User entry verifications
@@ -725,6 +733,7 @@ update_one_group_yaml <- function(
 #' Helps transition from non-fusen packages or made with earlier version
 #'
 #' @param pkg Path to the package from which to add file to configuration file
+#' @param config_file Path to the configuration file
 #' @return Invisible path to 'fusen' configuration file
 #'
 #' @seealso
@@ -760,11 +769,18 @@ update_one_group_yaml <- function(
 #'   # Look at the output
 #'   yaml::read_yaml(out_path)
 #' })
-register_all_to_config <- function(pkg = ".") {
-  # Use the function to check the list of files
-  out_df <- check_not_registered_files(pkg, to_csv = FALSE, open = FALSE)
+register_all_to_config <- function(pkg = ".", config_file) {
+  if (missing(config_file)) {
+    config_file <- getOption(
+      "fusen.config_file",
+      default = "dev/config_fusen.yaml"
+    )
+  }
 
-  config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
+  # Use the function to check the list of files
+  out_df <- check_not_registered_files(pkg, config_file = config_file, to_csv = FALSE, open = FALSE)
+
+
   if (is.null(out_df)) {
     message("There is no file to register or everything was already registered")
     return(config_file)
@@ -773,11 +789,20 @@ register_all_to_config <- function(pkg = ".") {
   # Deal with files linked to a flat file that is already registered
   # Change them to "keep"
   out_df_keep <- deal_with_registered_keep(out_df)
-  out_config <- df_to_config(df_files = out_df_keep, clean = FALSE)
+  out_config <- df_to_config(
+    df_files = out_df_keep,
+    clean = FALSE,
+    config_file = config_file
+  )
 
   # Delete out_df
   csv_file <- file.path(
-    gsub(paste0(normalize_path_winslash(getwd()), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE)), fixed = TRUE), "config_not_registered.csv"
+    gsub(
+      paste0(normalize_path_winslash(getwd()), "/"), "",
+      dirname(normalize_path_winslash(config_file, mustWork = FALSE)),
+      fixed = TRUE
+    ),
+    "config_not_registered.csv"
   )
   if (file.exists(csv_file)) {
     cli::cat_rule(paste("Delete", csv_file))

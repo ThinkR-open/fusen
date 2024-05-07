@@ -4,6 +4,7 @@
 #'
 #' @param path The path to the yaml file
 #' to get the structure from
+#' @param pkg The package directory
 #' @param emoji Add emojis to the output
 #'
 #' @return A list of information about the package
@@ -36,14 +37,37 @@
 #'     )
 #'   )
 #'
+#'   # Add an extra R file to list in "keep"
+#'   cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
+#'
 #'   pkg_structure <- get_package_structure()
 #'   draw_the_tree(pkg_structure)
 #' })
-get_package_structure <- function(path, emoji = TRUE, silent = FALSE) {
+get_package_structure <- function(
+    path,
+    pkg = ".",
+    emoji = TRUE,
+    silent = FALSE) {
   if (missing(path)) {
-    yaml_fusen_file <- getOption("fusen_config_file", "dev/config_fusen.yaml")
+    yaml_fusen_file_orig <- getOption(
+      "fusen_config_file",
+      default = "dev/config_fusen.yaml"
+    )
   }
+
+  # Add not registered files in a copy of the config file
+  yaml_fusen_file <- tempfile(fileext = ".yaml")
+  file.copy(yaml_fusen_file_orig, yaml_fusen_file)
+  suppressMessages(
+    register_all_to_config(
+      pkg = ".",
+      config_file = yaml_fusen_file
+    )
+  )
+
   yaml_fusen <- yaml::read_yaml(yaml_fusen_file)
+  file.remove(yaml_fusen_file)
+
   # For each element, add the title of the flat file
   if (file.exists("NAMESPACE")) {
     namespace <- readLines("NAMESPACE")
