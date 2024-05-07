@@ -61,8 +61,8 @@ flat_get_package_structure.Rmd:
     overwrite: ask
     clean: ask
 flat_history_core.Rmd:
-  path: dev/flat_history_core.Rmd
-  state: inactive
+  path: dev/flat_history/flat_history_core.Rmd
+  state: deprecated
   R:
   - R/fill_description.R
   - R/inflate.R
@@ -71,6 +71,8 @@ flat_history_core.Rmd:
   - tests/testthat/test-inflate-part1.R
   - tests/testthat/test-inflate-part2.R
   vignettes: vignettes/How-to-use-fusen.Rmd
+  inflate:
+    flat_file: dev/flat_history/flat_history_core.Rmd
 flat_history_maintain.Rmd:
   path: dev/flat_history/flat_history_maintain.Rmd
   state: deprecated

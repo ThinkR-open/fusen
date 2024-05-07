@@ -1,4 +1,4 @@
-# WARNING - flat file now deprecated. do not edit by hand, do not inflate
+<!-- # WARNING - flat file now deprecated. do not edit by hand, do not inflate -->
 ---
 title: "flat_history_maintain.Rmd for working package"
 author: "Sébastien Rochette"
