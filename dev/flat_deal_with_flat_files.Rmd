@@ -46,6 +46,10 @@ rename_flat_file <- function(flat_file, new_name) {
     new_name_path <- new_name
   }
 
+  if (!grepl("[.](R|r|q|Q)md$", new_name_path)) {
+    new_name_path <- paste0(new_name_path, ".Rmd")
+  }
+
   if (file.exists(new_name_path)) {
     stop(
       paste0(
@@ -403,7 +407,7 @@ deprecate_flat_file <- function(flat_file) {
   # Update flat file after the yaml header
   lines <- readLines(flat_file)
   lines <- c(
-    "# WARNING - flat file now deprecated. do not edit by hand, do not inflate",
+    "<!-- # WARNING - flat file now deprecated. do not edit by hand, do not inflate -->",
     lines
   )
   write_utf8(lines = lines, path = flat_file)
@@ -521,7 +525,7 @@ usethis::with_project(dummypackage, {
     )
     expect_equal(
       readLines(file.path("dev", "flat_history", basename(flat_file)))[1],
-      "# WARNING - flat file now deprecated. do not edit by hand, do not inflate"
+      "<!-- # WARNING - flat file now deprecated. do not edit by hand, do not inflate -->"
     )
   })
 

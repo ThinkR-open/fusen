@@ -38,7 +38,7 @@ usethis::with_project(dummypackage, {
     )
     expect_equal(
       readLines(file.path("dev", "flat_history", basename(flat_file)))[1],
-      "# WARNING - flat file now deprecated. do not edit by hand, do not inflate"
+      "<!-- # WARNING - flat file now deprecated. do not edit by hand, do not inflate -->"
     )
   })
 

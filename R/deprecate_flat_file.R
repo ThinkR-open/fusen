@@ -69,7 +69,7 @@ deprecate_flat_file <- function(flat_file) {
   # Update flat file after the yaml header
   lines <- readLines(flat_file)
   lines <- c(
-    "# WARNING - flat file now deprecated. do not edit by hand, do not inflate",
+    "<!-- # WARNING - flat file now deprecated. do not edit by hand, do not inflate -->",
     lines
   )
   write_utf8(lines = lines, path = flat_file)

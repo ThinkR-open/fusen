@@ -1,0 +1,13 @@
+---
+output: github_document
+---
+
+# Here is a map of the architecture of the 'fusen' project
+
+```{r, message=FALSE, results='asis'}
+pkgload::load_all()
+
+usethis::with_project(here::here(), {
+  draw_the_tree(silent = TRUE)
+})
+```

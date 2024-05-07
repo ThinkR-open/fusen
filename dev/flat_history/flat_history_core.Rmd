@@ -1,4 +1,4 @@
-<!-- do not edit by hand, everything is modified in R and tests files now -->
+<!-- # WARNING - flat file now deprecated. do not edit by hand, do not inflate -->
 
 ---
 title: "dev_history.Rmd"

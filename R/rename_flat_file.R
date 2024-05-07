@@ -40,6 +40,10 @@ rename_flat_file <- function(flat_file, new_name) {
     new_name_path <- new_name
   }
 
+  if (!grepl("[.](R|r|q|Q)md$", new_name_path)) {
+    new_name_path <- paste0(new_name_path, ".Rmd")
+  }
+
   if (file.exists(new_name_path)) {
     stop(
       paste0(
