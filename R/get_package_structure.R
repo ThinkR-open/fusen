@@ -5,7 +5,7 @@
 #' @param config_file Path to a source configuration file
 #' to get the structure from
 #' @param emoji Add emojis to the output
-#' @param silent Do not print messages
+#' @param silent Whether to print messages
 #'
 #' @return A list of information about the package
 #' @export
@@ -159,12 +159,12 @@ get_package_structure <- function(
 #'
 #' @param structure_list A list of information about the package as issued
 #' from `[get_package_structure()]`
-#' @param silent Do not print messages
+#' @param silent Whether to print messages
 #'
 #' @export
 #' @rdname get_package_structure
 #'
-draw_the_tree <- function(structure_list, silent) {
+draw_the_tree <- function(structure_list, silent = FALSE) {
   if (missing(structure_list)) {
     structure_list <- get_package_structure(silent = silent)
   }
