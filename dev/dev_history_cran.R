@@ -31,6 +31,7 @@ testthat::test_file("tests/testthat/test-add_flat_template.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
 testthat::test_file("tests/testthat/test-register_config_file.R") # interactivity
 testthat::test_file("tests/testthat/test-rename_flat_file.R")
+testthat::test_file("tests/testthat/test-deprecate_flat_file.R")
 testthat::test_file("tests/testthat/test-get_package_structure.R")
 Sys.setenv("NOT_CRAN" = "false")
 
