@@ -19,7 +19,7 @@
 get_all_created_funs <- function(file) {
   stopifnot(tools::file_ext(file) %in% c("R", "r"))
   # Get each bloc of code
-  parts_parsed <- parse(file)
+  parts_parsed <- parse(file, keep.source = TRUE)
   # We cannot directly get as.character as it would
   # remove character quotes from text only lines
   # like a line with : "_example" fails

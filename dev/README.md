@@ -3,9 +3,9 @@
 
 ``` r
 pkgload::load_all()
-withr::with_dir(here::here(), {
-  pkg_structure <- get_package_structure(silent = TRUE)
-  draw_the_tree(pkg_structure)
+
+usethis::with_project(here::here(), {
+  draw_the_tree(silent = TRUE)
 })
 ```
 

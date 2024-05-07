@@ -60,6 +60,18 @@ dev_file <- suppressMessages(
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
+  # Add an extra R file with internal function
+  # to list in "keep"
+  dir.create("R")
+  cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
+
+  # Works with classical package
+  pkg_structure <- get_package_structure()
+  draw_the_tree(pkg_structure)
+})
+
+usethis::with_project(dummypackage, {
+  # Works with 'fusen' package
   suppressMessages(
     inflate(
       pkg = dummypackage, flat_file = flat_file,
@@ -67,9 +79,6 @@ usethis::with_project(dummypackage, {
       open_vignette = FALSE
     )
   )
-
-  # Add an extra R file to list in "keep"
-  cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
 
   pkg_structure <- get_package_structure()
   draw_the_tree(pkg_structure)

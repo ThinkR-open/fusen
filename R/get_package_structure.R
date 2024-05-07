@@ -2,10 +2,10 @@
 
 #' Get structure and information of a 'fusen' built package for developers
 #'
-#' @param path The path to the yaml file
+#' @param config_file Path to a source configuration file
 #' to get the structure from
-#' @param pkg The package directory
 #' @param emoji Add emojis to the output
+#' @param silent Do not print messages
 #'
 #' @return A list of information about the package
 #' @export
@@ -29,6 +29,18 @@
 #' flat_file <- dev_file[grepl("flat_", dev_file)]
 #'
 #' usethis::with_project(dummypackage, {
+#'   # Add an extra R file with internal function
+#'   # to list in "keep"
+#'   dir.create("R")
+#'   cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
+#'
+#'   # Works with classical package
+#'   pkg_structure <- get_package_structure()
+#'   draw_the_tree(pkg_structure)
+#' })
+#'
+#' usethis::with_project(dummypackage, {
+#'   # Works with 'fusen' package
 #'   suppressMessages(
 #'     inflate(
 #'       pkg = dummypackage, flat_file = flat_file,
@@ -37,27 +49,29 @@
 #'     )
 #'   )
 #'
-#'   # Add an extra R file to list in "keep"
-#'   cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
-#'
 #'   pkg_structure <- get_package_structure()
 #'   draw_the_tree(pkg_structure)
 #' })
 get_package_structure <- function(
-    path,
-    pkg = ".",
+    config_file,
     emoji = TRUE,
     silent = FALSE) {
-  if (missing(path)) {
+  if (missing(config_file)) {
     yaml_fusen_file_orig <- getOption(
       "fusen_config_file",
       default = "dev/config_fusen.yaml"
     )
   }
 
-  # Add not registered files in a copy of the config file
   yaml_fusen_file <- tempfile(fileext = ".yaml")
-  file.copy(yaml_fusen_file_orig, yaml_fusen_file)
+  if (!file.exists(yaml_fusen_file_orig)) {
+    # Not 'fusen' package or not inflated
+    file.create(yaml_fusen_file)
+  } else {
+    file.copy(yaml_fusen_file_orig, yaml_fusen_file)
+  }
+
+  # Add not registered files in a copy of the config file
   suppressMessages(
     register_all_to_config(
       pkg = ".",
@@ -75,8 +89,9 @@ get_package_structure <- function(
       cat_rule("Reading NAMESPACE file")
     }
   } else {
+    namespace <- NULL
     if (isFALSE(silent)) {
-      cat_rule("No NAMESPACE file found there: ", getwd())
+      cat_rule(paste("No NAMESPACE file found there: ", getwd()))
     }
   }
 
@@ -102,7 +117,8 @@ get_package_structure <- function(
     if (emoji) {
       flat_state <- yaml_fusen[[flat_file]]$state
       yaml_fusen[[flat_file]]$state <-
-        paste(ifelse(flat_state == "active",
+        paste(ifelse(
+          flat_state == "active",
           "\U0001f34f", "\U0001f6d1"
         ), flat_state)
     }
@@ -143,11 +159,15 @@ get_package_structure <- function(
 #'
 #' @param structure_list A list of information about the package as issued
 #' from `[get_package_structure()]`
+#' @param silent Do not print messages
 #'
 #' @export
 #' @rdname get_package_structure
 #'
-draw_the_tree <- function(structure_list) {
+draw_the_tree <- function(structure_list, silent) {
+  if (missing(structure_list)) {
+    structure_list <- get_package_structure(silent = silent)
+  }
   # Calculate the depth of a list
   depth <- function(structure_list) {
     if (!is.list(structure_list)) {

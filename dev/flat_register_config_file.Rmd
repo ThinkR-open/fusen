@@ -185,13 +185,21 @@ check_not_registered_files <- function(path = ".", config_file, guess = TRUE, to
   if (file.exists(config_file)) {
     # Read config file, and remove those already there
     config_list <- yaml::read_yaml(config_file)
-    config_list_path <- normalize_path_winslash(get_list_paths(config_list), mustWork = FALSE)
-    res_existing <- res[res$path %in% config_list_path, ]
-    res_new <- res[!res$path %in% config_list_path, ]
-    config_flat_paths <- sapply(config_list, function(x) x[["path"]])
-    config_flat_paths <- config_flat_paths[!names(config_flat_paths) == "keep"]
+    all_paths_in_config <- get_list_paths(config_list)
+    if (any(!is.null(all_paths_in_config))) {
+      config_list_path <- normalize_path_winslash(
+        all_paths_in_config,
+        mustWork = FALSE
+      )
+      res_new <- res[!res$path %in% config_list_path, ]
+      config_flat_paths <- sapply(config_list, function(x) x[["path"]])
+      config_flat_paths <-
+        config_flat_paths[!names(config_flat_paths) == "keep"]
+    } else {
+      res_new <- res
+      config_flat_paths <- NULL
+    }
   } else {
-    res_existing <- res[FALSE, ]
     res_new <- res
     config_flat_paths <- NULL
   }
@@ -519,7 +527,9 @@ register_all_to_config <- function(pkg = ".", config_file) {
   }
 
   # Use the function to check the list of files
-  out_df <- check_not_registered_files(pkg, config_file = config_file, to_csv = FALSE, open = FALSE)
+  out_df <- check_not_registered_files(pkg,
+    config_file = config_file, to_csv = FALSE, open = FALSE
+  )
 
 
   if (is.null(out_df)) {
@@ -1036,28 +1046,32 @@ df_to_config <- function(df_files,
     complete_yaml <- read_yaml(config_file)
 
     yaml_paths <- get_list_paths(complete_yaml)
-    yaml_paths <- yaml_paths[!grepl("inflate\\.", names(yaml_paths))]
-    all_exists <- file.exists(yaml_paths)
-    if (!all(all_exists)) {
-      msg <- paste(
-        "Some paths in config_file do not exist:",
-        paste(
-          yaml_paths[!all_exists],
-          collapse = ", "
-        ), ".\n",
-        "Please open the configuration file: ",
-        config_file,
-        " to verify, and delete the non-existing files if needed."
-      )
-      if (isTRUE(force)) {
-        cli_alert_warning(
+    if (all(is.null(yaml_paths))) {
+      complete_yaml <- list()
+    } else if (any(!is.null(yaml_paths))) {
+      yaml_paths <- yaml_paths[!grepl("inflate\\.", names(yaml_paths))]
+      all_exists <- file.exists(yaml_paths)
+      if (!all(all_exists)) {
+        msg <- paste(
+          "Some paths in config_file do not exist:",
           paste(
-            msg,
-            "However, you forced to write it in the yaml file with `force = TRUE`."
-          )
+            yaml_paths[!all_exists],
+            collapse = ", "
+          ), ".\n",
+          "Please open the configuration file: ",
+          config_file,
+          " to verify, and delete the non-existing files if needed."
         )
-      } else {
-        stop(msg)
+        if (isTRUE(force)) {
+          cli_alert_warning(
+            paste(
+              msg,
+              "However, you forced to write it in the yaml file with `force = TRUE`."
+            )
+          )
+        } else {
+          stop(msg)
+        }
       }
     }
   } else {

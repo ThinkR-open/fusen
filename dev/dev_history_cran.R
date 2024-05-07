@@ -48,8 +48,7 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 devtools::check()
 
 # Update the map of the package
-pkg_structure <- get_package_structure()
-draw_the_tree(pkg_structure)
+fusen::draw_the_tree()
 
 rmarkdown::render("dev/README.Rmd",
   output_format = "github_document", output_file = "README.md"

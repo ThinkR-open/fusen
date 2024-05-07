@@ -5,17 +5,17 @@
 \alias{draw_the_tree}
 \title{Get structure and information of a 'fusen' built package for developers}
 \usage{
-get_package_structure(path, pkg = ".", emoji = TRUE, silent = FALSE)
+get_package_structure(config_file, emoji = TRUE, silent = FALSE)
 
-draw_the_tree(structure_list)
+draw_the_tree(structure_list, silent)
 }
 \arguments{
-\item{path}{The path to the yaml file
+\item{config_file}{Path to a source configuration file
 to get the structure from}
 
-\item{pkg}{The package directory}
-
 \item{emoji}{Add emojis to the output}
+
+\item{silent}{Do not print messages}
 
 \item{structure_list}{A list of information about the package as issued
 from \verb{[get_package_structure()]}}
@@ -47,6 +47,18 @@ dev_file <- suppressMessages(
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
+  # Add an extra R file with internal function
+  # to list in "keep"
+  dir.create("R")
+  cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
+
+  # Works with classical package
+  pkg_structure <- get_package_structure()
+  draw_the_tree(pkg_structure)
+})
+
+usethis::with_project(dummypackage, {
+  # Works with 'fusen' package
   suppressMessages(
     inflate(
       pkg = dummypackage, flat_file = flat_file,
@@ -54,9 +66,6 @@ usethis::with_project(dummypackage, {
       open_vignette = FALSE
     )
   )
-
-  # Add an extra R file to list in "keep"
-  cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
 
   pkg_structure <- get_package_structure()
   draw_the_tree(pkg_structure)

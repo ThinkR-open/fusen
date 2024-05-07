@@ -1,4 +1,46 @@
-# get_package_structure works
+# get_package_structure allows classical package
+
+    Code
+      pkg_structure
+    Output
+      $keep
+      $keep$path
+      [1] "keep"
+      
+      $keep$state
+      [1] "🍏 active"
+      
+      $keep$R
+      $keep$R$`R/my_extra_fun.R`
+      [1] "🙈 extra_fun"
+      
+      
+      $keep$tests
+      list()
+      
+      $keep$vignettes
+      list()
+      
+      
+
+---
+
+    Code
+      draw_the_tree(pkg_structure)
+    Output
+      
+      - keep
+        - path
+            + keep
+        - state
+            + 🍏 active
+        - R
+          - R/my_extra_fun.R
+            + 🙈 extra_fun
+        - tests
+        - vignettes
+
+# get_package_structure allows fusen structure
 
     Code
       pkg_structure

@@ -7,6 +7,8 @@
 
 ## New features
 
+- `draw_the_tree()` along with `get_package_structure()` allows to draw the package structure with
+all functions created in each R file, and whether they are exported (#189)
 - `rename_flat_file()` allows to rename a flat file, and deals with config and inflated files
 - `deprecate_flat_file()` helps properly deprecate a flat file, modifies the config file
 and cleans the previously inflated files

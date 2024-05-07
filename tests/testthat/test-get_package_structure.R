@@ -12,6 +12,18 @@ dev_file <- suppressMessages(
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
+  # Add an random R file with internal function
+  dir.create("R")
+  cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
+
+  test_that("get_package_structure allows classical package", {
+    pkg_structure <- get_package_structure()
+
+    expect_snapshot(pkg_structure)
+    expect_snapshot(draw_the_tree(pkg_structure))
+  })
+
+
   suppressMessages(
     inflate(
       pkg = dummypackage, flat_file = flat_file,
@@ -20,11 +32,7 @@ usethis::with_project(dummypackage, {
     )
   )
 
-  # Add an extra R file
-  cat("extra_fun <- function() {1}\n", file = "R/my_extra_fun.R")
-
-
-  test_that("get_package_structure works", {
+  test_that("get_package_structure allows fusen structure", {
     # Need to force edition to allow expect_snapshot
     # As we are in another directory using with_dir()
     local_edition(3)
