@@ -7,7 +7,7 @@
 \usage{
 get_package_structure(config_file, emoji = TRUE, silent = FALSE)
 
-draw_the_tree(structure_list, silent)
+draw_the_tree(structure_list, silent = FALSE)
 }
 \arguments{
 \item{config_file}{Path to a source configuration file
@@ -15,7 +15,7 @@ to get the structure from}
 
 \item{emoji}{Add emojis to the output}
 
-\item{silent}{Do not print messages}
+\item{silent}{Whether to print messages}
 
 \item{structure_list}{A list of information about the package as issued
 from \verb{[get_package_structure()]}}
