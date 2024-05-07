@@ -69,7 +69,7 @@ Draw a tree of the package structure in the console"><meta property="og:image" c
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">get_package_structure</span><span class="op">(</span><span class="va">config_file</span>, emoji <span class="op">=</span> <span class="cn">TRUE</span>, silent <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">draw_the_tree</span><span class="op">(</span><span class="va">structure_list</span>, <span class="va">silent</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">draw_the_tree</span><span class="op">(</span><span class="va">structure_list</span>, silent <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -84,7 +84,7 @@ to get the structure from</p></dd>
 
 
 <dt>silent</dt>
-<dd><p>Do not print messages</p></dd>
+<dd><p>Whether to print messages</p></dd>
 
 
 <dt>structure_list</dt>
@@ -128,8 +128,8 @@ from <code>[get_package_structure()]</code></p></dd>
 <span class="r-in"><span>  <span class="va">pkg_structure</span> <span class="op">&lt;-</span> <span class="fu">get_package_structure</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu">draw_the_tree</span><span class="op">(</span><span class="va">pkg_structure</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpTKjiUA/drawpkg.structure17ba40e4381c'</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ── No NAMESPACE file found there:  /tmp/RtmpTKjiUA/drawpkg.structure17ba40e4381c</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmpg6zp3N/drawpkg.structure17d7187684b2'</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> ── No NAMESPACE file found there:  /tmp/Rtmpg6zp3N/drawpkg.structure17d7187684b2</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── keep ────────────────────────────────────────────────────────────────────────</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> - keep</span>
@@ -157,7 +157,7 @@ from <code>[get_package_structure()]</code></p></dd>
 <span class="r-in"><span>  <span class="va">pkg_structure</span> <span class="op">&lt;-</span> <span class="fu">get_package_structure</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu">draw_the_tree</span><span class="op">(</span><span class="va">pkg_structure</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpTKjiUA/drawpkg.structure17ba40e4381c'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/Rtmpg6zp3N/drawpkg.structure17d7187684b2'</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── config file for dev/flat_full.Rmd ───────────────────────────────────────────</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── Reading NAMESPACE file ──────────────────────────────────────────────────────</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── flat_full.Rmd ───────────────────────────────────────────────────────────────</span>
