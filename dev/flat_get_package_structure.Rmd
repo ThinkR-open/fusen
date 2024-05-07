@@ -1,5 +1,5 @@
 ---
-title: "flat_map_the_package.Rmd empty"
+title: "flat_get_package_structure.Rmd empty"
 output: html_document
 editor_options: 
   chunk_output_type: console
@@ -14,9 +14,9 @@ library(testthat)
 pkgload::load_all(export_all = FALSE)
 ```
 
-# Map the package structure to help developers
+# Get a tree of the package structure to help developers
 
-`map_the_package()` is a function that helps developers understand the package structure. It reads the `dev/config_fusen.yaml` file, adds the list of resulting functions and extra description of files.  
+`get_package_structure()` is a function that helps developers understand the package structure. It reads the `dev/config_fusen.yaml` file, adds the list of resulting functions and extra description of files.  
 
 You can know:
 
@@ -28,22 +28,24 @@ You can know:
 - There is a possibility to list all functions that are called in the test files
 - The vignette issued from the flat file
 
-```{r function-map_the_package}
-#' Map information of a 'fusen' built package for developers
+With `draw_the_map()`, you can draw a tree of the package structure in the console.
+
+```{r function-get_package_structure}
+#' Get structure and information of a 'fusen' built package for developers
 #'
-#' @param yaml_fusen_file The path to the yaml file
-#' to get the map from
+#' @param path The path to the yaml file
+#' to get the structure from
 #' @param emoji Add emojis to the output
 #'
 #' @return A list of information about the package
 #' @export
 #'
 #' @examples
-map_the_package <- function(yaml_fusen_file, emoji = TRUE) {
-  if (missing(yaml_fusen_file)) {
+get_package_structure <- function(path, emoji = TRUE) {
+  if (missing(path)) {
     yaml_fusen_file <- getOption("fusen_config_file", "dev/config_fusen.yaml")
   }
-  print(normalize_path_winslash(yaml_fusen_file))
+  cat_rule(normalize_path_winslash(yaml_fusen_file))
   yaml_fusen <- yaml::read_yaml(yaml_fusen_file)
   # For each element, add the title of the flat file
   if (file.exists("NAMESPACE")) {
@@ -110,16 +112,24 @@ map_the_package <- function(yaml_fusen_file, emoji = TRUE) {
   return(yaml_fusen)
 }
 
-draw_the_map <- function(x) {
+#' Draw a tree of the package structure in the console
+#'
+#' @param structure_list A list of information about the package as issued
+#' from `[get_package_structure()]`
+#'
+#' @export
+#' @rdname get_package_structure
+#'
+draw_the_tree <- function(structure_list) {
   # Calculate the depth of a list
-  depth <- function(x) {
-    if (!is.list(x)) {
+  depth <- function(structure_list) {
+    if (!is.list(structure_list)) {
       return(0)
     }
-    if (length(x) == 0) {
+    if (length(structure_list) == 0) {
       return(1)
     }
-    return(1 + max(sapply(x, depth)))
+    return(1 + max(sapply(structure_list, depth)))
   }
 
   to_tree <- function(xlist) {
@@ -134,7 +144,7 @@ draw_the_map <- function(x) {
         function(w) {
           paste0(
             "\n",
-            paste(rep("    ", maxdepth - d), collapse = ""),
+            paste(rep("  ", maxdepth - d), collapse = ""),
             "- ",
             names(xlist)[w],
             paste0(
@@ -150,7 +160,7 @@ draw_the_map <- function(x) {
         "\n",
         paste(
           paste0(
-            paste0(rep("    ", maxdepth), collapse = ""),
+            paste0(rep("  ", maxdepth), collapse = ""),
             "+ ",
             xlist
           ),
@@ -160,19 +170,19 @@ draw_the_map <- function(x) {
     }
   }
 
-  cat(unlist(to_tree(map)))
+  cat(unlist(to_tree(structure_list)), sep = "")
 }
 ```
 
-```{r examples-map_the_package, eval=FALSE}
+```{r examples-get_package_structure, eval=FALSE}
 #' \dontrun{
 #' # This only works inside a 'fusen' built package
-#' map <- map_the_package()
-#' draw_the_map(map)
+#' pkg_structure <- get_package_structure()
+#' draw_the_tree(pkg_structure)
 #' }
 #'
 #' # Example with a dummy package
-dummypackage <- tempfile("drawmap")
+dummypackage <- tempfile("drawpkg.structure")
 dir.create(dummypackage)
 
 # {fusen} steps
@@ -191,23 +201,21 @@ usethis::with_project(dummypackage, {
     )
   )
 
-  map <- map_the_package()
-  draw_the_map(map)
+  pkg_structure <- get_package_structure()
+  draw_the_tree(pkg_structure)
 })
 ```
 
-```{r tests-map_the_package}
-test_that("map_the_package works", {
-  expect_true(inherits(map_the_package, "function"))
-})
-
+```{r tests-get_package_structure}
 # Test full ----
-dummypackage <- tempfile("drawmap")
+dummypackage <- tempfile("drawpkg.structure")
 dir.create(dummypackage)
 
 # {fusen} steps
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
-dev_file <- suppressMessages(add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE))
+dev_file <- suppressMessages(
+  add_flat_template(pkg = dummypackage, overwrite = TRUE, open = FALSE)
+)
 flat_file <- dev_file[grepl("flat_", dev_file)]
 
 usethis::with_project(dummypackage, {
@@ -219,7 +227,7 @@ usethis::with_project(dummypackage, {
     )
   )
 
-  test_that("map_the_package works", {
+  test_that("get_package_structure works", {
     # Need to force edition to allow expect_snapshot
     # As we are in another directory using with_dir()
     local_edition(3)
@@ -234,11 +242,11 @@ usethis::with_project(dummypackage, {
       .env = parent.frame()
     )
 
-    map <- map_the_package()
+    pkg_structure <- get_package_structure()
 
-    expect_snapshot(map)
+    expect_snapshot(pkg_structure)
 
-    expect_snapshot(draw_the_map(map))
+    expect_snapshot(draw_the_tree(pkg_structure))
   })
 })
 ```
@@ -312,8 +320,8 @@ test_that("get_all_created_funs works", {
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
 fusen::inflate(
-  flat_file = "dev/flat_map_the_package.Rmd",
-  vignette_name = "Draw a map of your package files and functions",
+  flat_file = "dev/flat_get_package_structure.Rmd",
+  vignette_name = "Draw a tree of your package files and functions",
   check = TRUE, open_vignette = TRUE
 )
 ```

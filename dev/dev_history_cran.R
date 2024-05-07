@@ -31,6 +31,7 @@ testthat::test_file("tests/testthat/test-add_flat_template.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
 testthat::test_file("tests/testthat/test-register_config_file.R") # interactivity
 testthat::test_file("tests/testthat/test-rename_flat_file.R")
+testthat::test_file("tests/testthat/test-get_package_structure.R")
 Sys.setenv("NOT_CRAN" = "false")
 
 # Run line by line
@@ -47,8 +48,8 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 devtools::check()
 
 # Update the map of the package
-map <- map_the_package()
-draw_the_map(map)
+pkg_structure <- get_package_structure()
+draw_the_tree(pkg_structure)
 
 rmarkdown::render("dev/README.Rmd",
   output_format = "github_document", output_file = "README.md"
