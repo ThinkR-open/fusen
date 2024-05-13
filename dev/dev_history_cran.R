@@ -54,7 +54,7 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 #> rig run
 devtools::check()
 
-# Update the map of the package
+# Update the tree structure of the package
 fusen::draw_the_tree()
 
 rmarkdown::render("dev/README.Rmd",

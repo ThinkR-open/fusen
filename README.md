@@ -180,15 +180,18 @@ There is a dedicated vignette to answer this:
 
   - **Option 1**: After a first inflate of your flat file, you can
     continue developing in the “flat\_template.Rmd” file, and then
-    inflate it using `fusen::inflat_all()`
+    inflate it using `fusen::inflate_all()`
   - **Option 2**: After you’re done with inflating, you can decide to
     deprecate your flat file with `fusen::deprecate_flat_file()` and
     develop in the package files directly, as for any other R package.
     ‘fusen’ has no impact on the structure of a classical package once
     inflated.
 
-> Advice : Use git as soon as possible, this will avoid losing your work
+> Advice: Use git as soon as possible, this will avoid losing your work
 > if you made some modifications in the wrong place
+
+> Advice: Show the package structure with `fusen::draw_the_tree()` in a
+> “dev/Readme.md” file to help developers
 
 ## Who is {fusen} for?
 
