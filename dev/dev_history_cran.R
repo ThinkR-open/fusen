@@ -58,9 +58,11 @@ suppressMessages(devtools::test()) # interactivity
 # Update the tree structure of the package
 fusen::draw_package_structure()
 
+# Update Readmes
 rmarkdown::render("dev/README.Rmd",
   output_format = "github_document", output_file = "README.md"
 )
+
 rmarkdown::render("README.Rmd",
   output_format = "github_document", output_file = "README.md"
 )
@@ -115,37 +117,10 @@ urlchecker::url_update()
 
 # check on other distributions
 # _rhub
-devtools::check_rhub()
-# List all R-hub platforms:
-rhub::platforms()
-buildpath <- devtools::build()
-rhub::check_on_windows(
-  check_args = "--force-multiarch",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check_on_solaris(show_status = FALSE, path = buildpath)
-rhub::check(
-  platform = "debian-clang-devel",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check(
-  platform = "debian-gcc-devel",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check(
-  platform = "fedora-clang-devel",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check(
-  platform = "macos-highsierra-release-cran",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check_for_cran(show_status = FALSE, path = buildpath)
+rhub::rhub_setup(overwrite = TRUE)
+rhub::rhub_doctor()
+rhub::rhub_platforms()
+rhub::rhub_check()
 
 # _win devel CRAN
 devtools::check_win_devel()
