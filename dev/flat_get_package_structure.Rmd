@@ -211,7 +211,7 @@ draw_the_tree <- function(structure_list, silent = FALSE) {
 }
 ```
 
-```{r examples-get_package_structure}
+```{r examples-get_package_structure, eval=TRUE}
 #' \dontrun{
 #' # This only works inside a 'fusen' built package
 #' pkg_structure <- get_package_structure()

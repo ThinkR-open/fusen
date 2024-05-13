@@ -65,7 +65,9 @@ I created a chunk `example` but I do not want the example to be run in the funct
 
 ````
 ```{r function-myfunction}`r ''`
-myfunction <- function(x) {x}
+myfunction <- function(x) {
+  x
+}
 ```
 
 ```{r example-myfunction, eval=FALSE}`r ''`
@@ -174,7 +176,7 @@ flat_rmd <- sub("^HERE$", chunks, flat_rmd)
 writeLines(flat_rmd, path_flat_rmd)
 ```
 
-# How to Inflate multiple flat files ?
+# How to inflate multiple flat files ?
 
 - Use `inflate_all()`
 
@@ -239,7 +241,9 @@ The code and tests for the second function
 #' @examples
 #' my_fun_rdname1(2:20)
 my_fun_rdname1 <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
   stats::median(x, na.rm = na.rm)
 }
 ```
@@ -260,7 +264,9 @@ my_fun_rdname1 <- function(x, na.rm = TRUE) {
 #' @examples
 #' my_fun_rdname2(2:20)
 my_fun_rdname2 <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
   stats::median(x, na.rm = na.rm)
 }
 ```
@@ -289,7 +295,9 @@ This code line is removed in the resulting "R/" files to avoid any interference 
 #' @examples
 #' my_fun_filename1(2:20)
 my_fun_filename1 <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
   stats::median(x, na.rm = na.rm)
 }
 ```
@@ -310,7 +318,9 @@ my_fun_filename1 <- function(x, na.rm = TRUE) {
 #' @examples
 #' my_fun_filename2(2:20)
 my_fun_filename2 <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
   stats::median(x, na.rm = na.rm)
 }
 ```
@@ -410,3 +420,8 @@ golem::add_module(name = "page1")
 ```
 
 Although default {golem} "dev/" files already contain the main actions to maintain your package, you can still add the "0-dev_history.Rmd" file recommended with {fusen} using `add_dev_history()`. Note that some sections will be redundant with the {golem} dev files.
+
+# How can I know if R files were created from a flat or not ?
+
+You can draw the structure of your package with `fusen:::draw_the_tree().  
+Read vignette "Draw a tree of your package files and functions"" for more details. 

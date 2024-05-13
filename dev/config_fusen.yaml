@@ -51,10 +51,10 @@ flat_get_package_structure.Rmd:
   tests:
   - tests/testthat/test-get_package_structure.R
   - tests/testthat/test-get_all_created_funs.R
-  vignettes: vignettes/draw-a-map-of-your-package-files-and-functions.Rmd
+  vignettes: vignettes/draw-a-tree-of-your-package-files-and-functions.Rmd
   inflate:
     flat_file: dev/flat_get_package_structure.Rmd
-    vignette_name: Draw a map of your package files and functions
+    vignette_name: Draw a tree of your package files and functions
     open_vignette: true
     check: true
     document: true

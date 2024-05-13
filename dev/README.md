@@ -1,11 +1,14 @@
 
 # Here is a map of the architecture of the ‘fusen’ project
 
+The *keep* section is for independent files, which were not issued from
+a flat file.
+
 ``` r
 pkgload::load_all()
 
 usethis::with_project(here::here(), {
-  draw_the_tree(silent = TRUE)
+  fusen::draw_the_tree(silent = TRUE)
 })
 ```
 
@@ -76,7 +79,7 @@ usethis::with_project(here::here(), {
           - tests/testthat/test-get\_package\_structure.R
           - tests/testthat/test-get\_all\_created\_funs.R
       - vignettes
-          - vignettes/draw-a-map-of-your-package-files-and-functions.Rmd
+          - vignettes/draw-a-tree-of-your-package-files-and-functions.Rmd
   - flat\_history\_core.Rmd
       - flat\_title
           - dev\_history.Rmd
