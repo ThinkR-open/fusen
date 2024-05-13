@@ -49,7 +49,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/deal-with-a-fusen-flat-file.html">Deal with a 'fusen' flat file</a>
-    <a class="dropdown-item" href="../articles/draw-a-map-of-your-package-files-and-functions.html">Draw a map of your package files and functions</a>
+    <a class="dropdown-item" href="../articles/draw-a-tree-of-your-package-files-and-functions.html">Draw a tree of your package files and functions</a>
     <a class="dropdown-item" href="../articles/How-to-use-fusen.html">How to use fusen</a>
     <a class="dropdown-item" href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
     <a class="dropdown-item" href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
@@ -177,7 +177,9 @@ run in the vignette</li>
 so that examples in the function example will not be run</li>
 </ul>
 <pre><code>```{r function-myfunction}
-myfunction &lt;- function(x) {x}
+myfunction &lt;- function(x) {
+  x
+}
 ```
 
 ```{r example-myfunction, eval=FALSE}
@@ -306,7 +308,7 @@ fusen chunks for all your future functions to be.</p>
 </div>
 </div>
 <div class="section level2">
-<h2 id="how-to-inflate-multiple-flat-files">How to Inflate multiple flat files ?<a class="anchor" aria-label="anchor" href="#how-to-inflate-multiple-flat-files"></a>
+<h2 id="how-to-inflate-multiple-flat-files">How to inflate multiple flat files ?<a class="anchor" aria-label="anchor" href="#how-to-inflate-multiple-flat-files"></a>
 </h2>
 <ul>
 <li>Use <code><a href="../reference/inflate_all.html">inflate_all()</a></code>
@@ -368,31 +370,35 @@ title structure, use roxygen tags or use chunk parameter.</p>
 <span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a><span class="in">#' @examples</span></span>
 <span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a><span class="in">#' my_fun_rdname1(2:20)</span></span>
 <span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a><span class="in">my_fun_rdname1 &lt;- function(x, na.rm = TRUE) {</span></span>
-<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
-<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
-<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a></span>
-<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="fu"># Title  2 for function 2</span></span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a><span class="in">    stop("x should be numeric")</span></span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a><span class="in">  }</span></span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a></span>
-<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="in">```{r function-fun_rdname2}</span></span>
-<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a><span class="in">#' My fun_rdname2</span></span>
-<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a><span class="in">#'</span></span>
-<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a><span class="in">#' @param x Vector of Numeric values</span></span>
-<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a><span class="in">#' @inheritParams stats::median</span></span>
-<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a><span class="in">#'</span></span>
-<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a><span class="in">#' @rdname same_rdname</span></span>
-<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a><span class="in">#' @return</span></span>
-<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a><span class="in">#' Median of vector x</span></span>
-<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a><span class="in">#' @export</span></span>
-<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a><span class="in">#'</span></span>
-<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="in">#' @examples</span></span>
-<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="in">#' my_fun_rdname2(2:20)</span></span>
-<span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="in">my_fun_rdname2 &lt;- function(x, na.rm = TRUE) {</span></span>
-<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
-<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
-<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a><span class="fu"># Title  2 for function 2</span></span>
+<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a><span class="in">```{r function-fun_rdname2}</span></span>
+<span id="cb11-27"><a href="#cb11-27" tabindex="-1"></a><span class="in">#' My fun_rdname2</span></span>
+<span id="cb11-28"><a href="#cb11-28" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb11-29"><a href="#cb11-29" tabindex="-1"></a><span class="in">#' @param x Vector of Numeric values</span></span>
+<span id="cb11-30"><a href="#cb11-30" tabindex="-1"></a><span class="in">#' @inheritParams stats::median</span></span>
+<span id="cb11-31"><a href="#cb11-31" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb11-32"><a href="#cb11-32" tabindex="-1"></a><span class="in">#' @rdname same_rdname</span></span>
+<span id="cb11-33"><a href="#cb11-33" tabindex="-1"></a><span class="in">#' @return</span></span>
+<span id="cb11-34"><a href="#cb11-34" tabindex="-1"></a><span class="in">#' Median of vector x</span></span>
+<span id="cb11-35"><a href="#cb11-35" tabindex="-1"></a><span class="in">#' @export</span></span>
+<span id="cb11-36"><a href="#cb11-36" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb11-37"><a href="#cb11-37" tabindex="-1"></a><span class="in">#' @examples</span></span>
+<span id="cb11-38"><a href="#cb11-38" tabindex="-1"></a><span class="in">#' my_fun_rdname2(2:20)</span></span>
+<span id="cb11-39"><a href="#cb11-39" tabindex="-1"></a><span class="in">my_fun_rdname2 &lt;- function(x, na.rm = TRUE) {</span></span>
+<span id="cb11-40"><a href="#cb11-40" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {</span></span>
+<span id="cb11-41"><a href="#cb11-41" tabindex="-1"></a><span class="in">    stop("x should be numeric")</span></span>
+<span id="cb11-42"><a href="#cb11-42" tabindex="-1"></a><span class="in">  }</span></span>
+<span id="cb11-43"><a href="#cb11-43" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
+<span id="cb11-44"><a href="#cb11-44" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb11-45"><a href="#cb11-45" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="use-same-filename-in-function-roxygen">Use same <code>@filename</code> in function roxygen<a class="anchor" aria-label="anchor" href="#use-same-filename-in-function-roxygen"></a>
@@ -418,31 +424,35 @@ interference with Roxygenize.</p>
 <span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a><span class="in">#' @examples</span></span>
 <span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a><span class="in">#' my_fun_filename1(2:20)</span></span>
 <span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a><span class="in">my_fun_filename1 &lt;- function(x, na.rm = TRUE) {</span></span>
-<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
-<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
-<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="in">```</span></span>
-<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a></span>
-<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="fu"># Title  2 for function 2</span></span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {</span></span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a><span class="in">    stop("x should be numeric")</span></span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a><span class="in">  }</span></span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb12-22"><a href="#cb12-22" tabindex="-1"></a><span class="in">```</span></span>
 <span id="cb12-23"><a href="#cb12-23" tabindex="-1"></a></span>
-<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="in">```{r function-fun_filename2}</span></span>
-<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a><span class="in">#' My fun_filename2</span></span>
-<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="in">#'</span></span>
-<span id="cb12-27"><a href="#cb12-27" tabindex="-1"></a><span class="in">#' @param x Vector of Numeric values</span></span>
-<span id="cb12-28"><a href="#cb12-28" tabindex="-1"></a><span class="in">#' @inheritParams stats::median</span></span>
-<span id="cb12-29"><a href="#cb12-29" tabindex="-1"></a><span class="in">#'</span></span>
-<span id="cb12-30"><a href="#cb12-30" tabindex="-1"></a><span class="in">#' @filename same_filename</span></span>
-<span id="cb12-31"><a href="#cb12-31" tabindex="-1"></a><span class="in">#' @return</span></span>
-<span id="cb12-32"><a href="#cb12-32" tabindex="-1"></a><span class="in">#' Median of vector x</span></span>
-<span id="cb12-33"><a href="#cb12-33" tabindex="-1"></a><span class="in">#' @export</span></span>
-<span id="cb12-34"><a href="#cb12-34" tabindex="-1"></a><span class="in">#'</span></span>
-<span id="cb12-35"><a href="#cb12-35" tabindex="-1"></a><span class="in">#' @examples</span></span>
-<span id="cb12-36"><a href="#cb12-36" tabindex="-1"></a><span class="in">#' my_fun_filename2(2:20)</span></span>
-<span id="cb12-37"><a href="#cb12-37" tabindex="-1"></a><span class="in">my_fun_filename2 &lt;- function(x, na.rm = TRUE) {</span></span>
-<span id="cb12-38"><a href="#cb12-38" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {stop("x should be numeric")}</span></span>
-<span id="cb12-39"><a href="#cb12-39" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
-<span id="cb12-40"><a href="#cb12-40" tabindex="-1"></a><span class="in">}</span></span>
-<span id="cb12-41"><a href="#cb12-41" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
+<span id="cb12-24"><a href="#cb12-24" tabindex="-1"></a><span class="fu"># Title  2 for function 2</span></span>
+<span id="cb12-25"><a href="#cb12-25" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" tabindex="-1"></a><span class="in">```{r function-fun_filename2}</span></span>
+<span id="cb12-27"><a href="#cb12-27" tabindex="-1"></a><span class="in">#' My fun_filename2</span></span>
+<span id="cb12-28"><a href="#cb12-28" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb12-29"><a href="#cb12-29" tabindex="-1"></a><span class="in">#' @param x Vector of Numeric values</span></span>
+<span id="cb12-30"><a href="#cb12-30" tabindex="-1"></a><span class="in">#' @inheritParams stats::median</span></span>
+<span id="cb12-31"><a href="#cb12-31" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb12-32"><a href="#cb12-32" tabindex="-1"></a><span class="in">#' @filename same_filename</span></span>
+<span id="cb12-33"><a href="#cb12-33" tabindex="-1"></a><span class="in">#' @return</span></span>
+<span id="cb12-34"><a href="#cb12-34" tabindex="-1"></a><span class="in">#' Median of vector x</span></span>
+<span id="cb12-35"><a href="#cb12-35" tabindex="-1"></a><span class="in">#' @export</span></span>
+<span id="cb12-36"><a href="#cb12-36" tabindex="-1"></a><span class="in">#'</span></span>
+<span id="cb12-37"><a href="#cb12-37" tabindex="-1"></a><span class="in">#' @examples</span></span>
+<span id="cb12-38"><a href="#cb12-38" tabindex="-1"></a><span class="in">#' my_fun_filename2(2:20)</span></span>
+<span id="cb12-39"><a href="#cb12-39" tabindex="-1"></a><span class="in">my_fun_filename2 &lt;- function(x, na.rm = TRUE) {</span></span>
+<span id="cb12-40"><a href="#cb12-40" tabindex="-1"></a><span class="in">  if (!is.numeric(x)) {</span></span>
+<span id="cb12-41"><a href="#cb12-41" tabindex="-1"></a><span class="in">    stop("x should be numeric")</span></span>
+<span id="cb12-42"><a href="#cb12-42" tabindex="-1"></a><span class="in">  }</span></span>
+<span id="cb12-43"><a href="#cb12-43" tabindex="-1"></a><span class="in">  stats::median(x, na.rm = na.rm)</span></span>
+<span id="cb12-44"><a href="#cb12-44" tabindex="-1"></a><span class="in">}</span></span>
+<span id="cb12-45"><a href="#cb12-45" tabindex="-1"></a><span class="in">```</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="use-chunk-param-filename-the_comon_filename">Use chunk param <code>filename = "the_comon_filename"</code><a class="anchor" aria-label="anchor" href="#use-chunk-param-filename-the_comon_filename"></a>
@@ -548,6 +558,14 @@ actions to maintain your package, you can still add the
 “0-dev_history.Rmd” file recommended with {fusen} using
 <code><a href="../reference/add_flat_template.html">add_dev_history()</a></code>. Note that some sections will be
 redundant with the {golem} dev files.</p>
+</div>
+<div class="section level2">
+<h2 id="how-can-i-know-if-r-files-were-created-from-a-flat-or-not">How can I know if R files were created from a flat or not ?<a class="anchor" aria-label="anchor" href="#how-can-i-know-if-r-files-were-created-from-a-flat-or-not"></a>
+</h2>
+<p>You can draw the structure of your package with
+`fusen:::draw_package_structure().<br>
+Read vignette “Draw a tree of your package files and functions”” for
+more details.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

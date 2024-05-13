@@ -49,7 +49,7 @@
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
     <a class="dropdown-item" href="../articles/deal-with-a-fusen-flat-file.html">Deal with a 'fusen' flat file</a>
-    <a class="dropdown-item" href="../articles/draw-a-map-of-your-package-files-and-functions.html">Draw a map of your package files and functions</a>
+    <a class="dropdown-item" href="../articles/draw-a-tree-of-your-package-files-and-functions.html">Draw a tree of your package files and functions</a>
     <a class="dropdown-item" href="../articles/How-to-use-fusen.html">How to use fusen</a>
     <a class="dropdown-item" href="../articles/inflate-all-your-flat-files.html">Inflate all your flat files</a>
     <a class="dropdown-item" href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
@@ -135,30 +135,38 @@ Maintaining such a package requires a choice:</p>
 files</li>
 <li>
 <strong>Option 2</strong>: Modifications are realized in the package
-files directly, and the “flat_template.Rmd” file must be protected from
-any use.</li>
+files directly as for any other package, and the “flat_template.Rmd”
+file must be deprecated using <code><a href="../reference/deprecate_flat_file.html">deprecate_flat_file()</a></code>.</li>
 </ul>
 <p>Your first <code><a href="../reference/inflate.html">inflate()</a></code> may not directly work as expected
 as with any R code that you write. In this case, you can continue to
 implement your functionality using <strong>Option 1</strong>.</p>
 <blockquote>
-<p>Advice 1 : Use Option 1 until you find it too complicated to be used
-! I assure you, you will find the moment when you say : ok this is not
+<p>Advice 1: Use Option 1 until you find it too complicated to be used !
+I assure you, you will find the moment when you say : ok this is not
 possible anymore…</p>
 </blockquote>
 <blockquote>
-<p>Advice 2 : Use git as soon as possible, this will avoid losing your
+<p>Advice 2: Use git as soon as possible, this will avoid losing your
 work if you made some modifications in the wrong place</p>
+</blockquote>
+<blockquote>
+<p>Advice 3: Create a Readme.Rmd in the “dev/” directory with a chunk
+having <code><a href="../reference/get_package_structure.html">fusen::draw_package_structure()</a></code> and knit it. This
+will help to understand the structure of your package and see what is
+inflated or not. Have a look at the {fusen} package itself on GitHub to
+see how it looks like.</p>
 </blockquote>
 <div class="section level3">
 <h3 id="option-1-continue-with-the-flat_template-rmd">Option 1: Continue with the “flat_template.Rmd”<a class="anchor" aria-label="anchor" href="#option-1-continue-with-the-flat_template-rmd"></a>
 </h3>
 <ul>
+<li>(+) You are encouraged to start with documenting and testing your
+package before you start coding, which is generally a good practice for
+prototyping.</li>
 <li>(+) This does not require to fully understand the package structure
 and files to continue building your package, and you continue to develop
 in a unique file</li>
-<li>(+) You are encouraged to continue documenting and testing all parts
-of your package</li>
 <li>(-) You need to pay attention to checking and debugging tools that
 may direct you to the R file directly. This requires to pay attention
 and always be sure you are modifying code in the flat template file, to
@@ -166,7 +174,9 @@ be inflated.</li>
 <li>(-) This may trouble co-developers who already built packages</li>
 </ul>
 <p>=&gt; {fusen} itself is built as is. Each modification is added to
-the dedicated dev_history file and then inflated</p>
+the dedicated dev_history file and then inflated =&gt; The tree
+structure in the “dev/Readme.md” file is very useful to understand what
+is inflated or not, and to see the structure of the package</p>
 </div>
 <div class="section level3">
 <h3 id="option-2-maintain-like-a-classical-package">Option 2: Maintain like a classical package<a class="anchor" aria-label="anchor" href="#option-2-maintain-like-a-classical-package"></a>
@@ -177,17 +187,17 @@ particular in RStudio. There are built to direct you as quickly as
 possible to the source of the problem</li>
 <li>(+) This allows collaboration with more advanced developers who are
 used to debug in the package structure directly</li>
+<li>(-) You need to remember that you need to care about your users and
+maintainers, and that you need to document and test your code as soon as
+possible, in a different place than the code itself.</li>
 <li>(-) This requires to understand the structure and files of a package
 and how they interact each other, and be able to jump from one file to
 the other, in the correct folder. This may drives you lazy to continue
 documenting and testing your modifications</li>
-<li>This requires to protect the flat template file, so that you never
-use it again. <code>&lt;!-- Do not edit by hand--&gt;</code> is the
-minimum. Then you can add
-<code>&lt;!-- File used to start new functionalities, do not use anymore, go directly to appropriate files in the package --&gt;</code>,
-and you can rename the old template with “old-flat_template.Rmd” for
-instance.</li>
 </ul>
+<p>You can use <code><a href="../reference/deprecate_flat_file.html">deprecate_flat_file()</a></code> to protect the
+original flat template file, so that you never use it again. Inflated
+files are also unprotected, so that you can modify them directly.</p>
 <p>=&gt; This is the way I add new functionalities in packages that
 started in the old way, and in specific cases where inflating is now too
 complicated, like for function <code><a href="../reference/inflate.html">inflate()</a></code> and all its unit
