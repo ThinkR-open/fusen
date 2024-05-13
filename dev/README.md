@@ -8,7 +8,7 @@ a flat file.
 pkgload::load_all()
 
 usethis::with_project(here::here(), {
-  fusen::draw_the_tree(silent = TRUE)
+  fusen::draw_package_structure(silent = TRUE)
 })
 ```
 
@@ -74,7 +74,7 @@ usethis::with_project(here::here(), {
               - 👀 get\_all\_created\_funs
           - R/get\_package\_structure.R
               - 👀 get\_package\_structure
-              - 👀 draw\_the\_tree
+              - 👀 draw\_package\_structure
       - tests
           - tests/testthat/test-get\_package\_structure.R
           - tests/testthat/test-get\_all\_created\_funs.R

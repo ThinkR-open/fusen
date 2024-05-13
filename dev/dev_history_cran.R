@@ -53,11 +53,15 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 # Run with r-devel using {rig}
 #> rig run
 devtools::check()
+suppressMessages(devtools::test()) # interactivity
 
 # Update the tree structure of the package
-fusen::draw_the_tree()
+fusen::draw_package_structure()
 
 rmarkdown::render("dev/README.Rmd",
+  output_format = "github_document", output_file = "README.md"
+)
+rmarkdown::render("README.Rmd",
   output_format = "github_document", output_file = "README.md"
 )
 

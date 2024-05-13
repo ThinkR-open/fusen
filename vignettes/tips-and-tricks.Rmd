@@ -423,5 +423,5 @@ Although default {golem} "dev/" files already contain the main actions to mainta
 
 # How can I know if R files were created from a flat or not ?
 
-You can draw the structure of your package with `fusen:::draw_the_tree().  
+You can draw the structure of your package with `fusen:::draw_package_structure().  
 Read vignette "Draw a tree of your package files and functions"" for more details. 

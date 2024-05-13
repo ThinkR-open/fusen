@@ -2,12 +2,12 @@
 % Please edit documentation in R/get_package_structure.R
 \name{get_package_structure}
 \alias{get_package_structure}
-\alias{draw_the_tree}
+\alias{draw_package_structure}
 \title{Get structure and information of a 'fusen' built package for developers}
 \usage{
 get_package_structure(config_file, emoji = TRUE, silent = FALSE)
 
-draw_the_tree(structure_list, silent = FALSE)
+draw_package_structure(structure_list, silent = FALSE)
 }
 \arguments{
 \item{config_file}{Path to a source configuration file
@@ -32,7 +32,7 @@ Draw a tree of the package structure in the console
 \dontrun{
 # This only works inside a 'fusen' built package
 pkg_structure <- get_package_structure()
-draw_the_tree(pkg_structure)
+draw_package_structure(pkg_structure)
 }
 
 # Example with a dummy package
@@ -54,7 +54,7 @@ usethis::with_project(dummypackage, {
 
   # Works with classical package
   pkg_structure <- get_package_structure()
-  draw_the_tree(pkg_structure)
+  draw_package_structure(pkg_structure)
 })
 
 usethis::with_project(dummypackage, {
@@ -68,6 +68,6 @@ usethis::with_project(dummypackage, {
   )
 
   pkg_structure <- get_package_structure()
-  draw_the_tree(pkg_structure)
+  draw_package_structure(pkg_structure)
 })
 }

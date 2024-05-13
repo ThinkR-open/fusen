@@ -56,7 +56,7 @@ Your first `inflate()` may not directly work as expected as with any R code that
 
 > Advice 2: Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place
 
-> Advice 3: Create a Readme.Rmd in the "dev/" directory with a chunk having `fusen::draw_the_tree()` and knit it. This will help to understand the structure of your package and see what is inflated or not. Have a look at the {fusen} package itself on GitHub to see how it looks like.
+> Advice 3: Create a Readme.Rmd in the "dev/" directory with a chunk having `fusen::draw_package_structure()` and knit it. This will help to understand the structure of your package and see what is inflated or not. Have a look at the {fusen} package itself on GitHub to see how it looks like.
 
 
 ## Option 1: Continue with the "flat_template.Rmd"

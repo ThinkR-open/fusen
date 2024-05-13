@@ -26,7 +26,7 @@
 ---
 
     Code
-      draw_the_tree(pkg_structure)
+      draw_package_structure(pkg_structure)
     Output
       
       - keep
@@ -93,7 +93,7 @@
 ---
 
     Code
-      draw_the_tree(pkg_structure)
+      draw_package_structure(pkg_structure)
     Output
       
       - flat_full.Rmd

@@ -190,8 +190,9 @@ There is a dedicated vignette to answer this:
 > Advice: Use git as soon as possible, this will avoid losing your work
 > if you made some modifications in the wrong place
 
-> Advice: Show the package structure with `fusen::draw_the_tree()` in a
-> “dev/Readme.md” file to help developers
+> Advice: Show the package structure with
+> `fusen::draw_package_structure()` in a “dev/Readme.md” file to help
+> developers
 
 ## Who is {fusen} for?
 

@@ -14,7 +14,7 @@
 #' \dontrun{
 #' # This only works inside a 'fusen' built package
 #' pkg_structure <- get_package_structure()
-#' draw_the_tree(pkg_structure)
+#' draw_package_structure(pkg_structure)
 #' }
 #'
 #' # Example with a dummy package
@@ -36,7 +36,7 @@
 #'
 #'   # Works with classical package
 #'   pkg_structure <- get_package_structure()
-#'   draw_the_tree(pkg_structure)
+#'   draw_package_structure(pkg_structure)
 #' })
 #'
 #' usethis::with_project(dummypackage, {
@@ -50,7 +50,7 @@
 #'   )
 #'
 #'   pkg_structure <- get_package_structure()
-#'   draw_the_tree(pkg_structure)
+#'   draw_package_structure(pkg_structure)
 #' })
 get_package_structure <- function(
     config_file,
@@ -164,7 +164,7 @@ get_package_structure <- function(
 #' @export
 #' @rdname get_package_structure
 #'
-draw_the_tree <- function(structure_list, silent = FALSE) {
+draw_package_structure <- function(structure_list, silent = FALSE) {
   if (missing(structure_list)) {
     structure_list <- get_package_structure(silent = silent)
   }
