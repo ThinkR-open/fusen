@@ -28,7 +28,8 @@ You can know:
 - There is a possibility to list all functions that are called in the test files
 - The vignette issued from the flat file
 
-With `draw_the_map()`, you can draw a tree of the package structure in the console.
+With `draw_package_structure()`, you can draw a tree of the package structure in the console.  
+This also works for any R package, not only for `fusen` built packages.
 
 ```{r function-get_package_structure}
 #' Get structure and information of a 'fusen' built package for developers
