@@ -28,7 +28,8 @@ You can know:
 - There is a possibility to list all functions that are called in the test files
 - The vignette issued from the flat file
 
-With `draw_the_map()`, you can draw a tree of the package structure in the console.
+With `draw_package_structure()`, you can draw a tree of the package structure in the console.  
+This also works for any R package, not only for `fusen` built packages.
 
 ```{r function-get_package_structure}
 #' Get structure and information of a 'fusen' built package for developers
@@ -154,7 +155,7 @@ get_package_structure <- function(
 #' @export
 #' @rdname get_package_structure
 #'
-draw_the_tree <- function(structure_list, silent = FALSE) {
+draw_package_structure <- function(structure_list, silent = FALSE) {
   if (missing(structure_list)) {
     structure_list <- get_package_structure(silent = silent)
   }
@@ -211,11 +212,11 @@ draw_the_tree <- function(structure_list, silent = FALSE) {
 }
 ```
 
-```{r examples-get_package_structure, eval=FALSE}
+```{r examples-get_package_structure, eval=TRUE}
 #' \dontrun{
 #' # This only works inside a 'fusen' built package
 #' pkg_structure <- get_package_structure()
-#' draw_the_tree(pkg_structure)
+#' draw_package_structure(pkg_structure)
 #' }
 #'
 #' # Example with a dummy package
@@ -237,7 +238,7 @@ usethis::with_project(dummypackage, {
 
   # Works with classical package
   pkg_structure <- get_package_structure()
-  draw_the_tree(pkg_structure)
+  draw_package_structure(pkg_structure)
 })
 
 usethis::with_project(dummypackage, {
@@ -251,7 +252,7 @@ usethis::with_project(dummypackage, {
   )
 
   pkg_structure <- get_package_structure()
-  draw_the_tree(pkg_structure)
+  draw_package_structure(pkg_structure)
 })
 ```
 
@@ -276,7 +277,7 @@ usethis::with_project(dummypackage, {
     pkg_structure <- get_package_structure()
 
     expect_snapshot(pkg_structure)
-    expect_snapshot(draw_the_tree(pkg_structure))
+    expect_snapshot(draw_package_structure(pkg_structure))
   })
 
 
@@ -307,7 +308,7 @@ usethis::with_project(dummypackage, {
 
     expect_snapshot(pkg_structure)
 
-    expect_snapshot(draw_the_tree(pkg_structure))
+    expect_snapshot(draw_package_structure(pkg_structure))
   })
 })
 ```

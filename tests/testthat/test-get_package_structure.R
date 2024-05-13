@@ -20,7 +20,7 @@ usethis::with_project(dummypackage, {
     pkg_structure <- get_package_structure()
 
     expect_snapshot(pkg_structure)
-    expect_snapshot(draw_the_tree(pkg_structure))
+    expect_snapshot(draw_package_structure(pkg_structure))
   })
 
 
@@ -51,6 +51,6 @@ usethis::with_project(dummypackage, {
 
     expect_snapshot(pkg_structure)
 
-    expect_snapshot(draw_the_tree(pkg_structure))
+    expect_snapshot(draw_package_structure(pkg_structure))
   })
 })

@@ -1,3 +1,12 @@
+# v0.6.0
+## R CMD check results
+
+0 errors | 0 warnings | 1 note
+
+* Maintainer email was changed for my personal address, instead of my professional one.
+* OK on GitHub Actions, rhub, winbuilder and macbuilder
+
+
 # v0.5.2
 ## R CMD check results
 

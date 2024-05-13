@@ -4,10 +4,12 @@ output: github_document
 
 # Here is a map of the architecture of the 'fusen' project
 
+The _keep_ section is for independent files, which were not issued from a flat file.
+
 ```{r, message=FALSE, results='asis'}
 pkgload::load_all()
 
 usethis::with_project(here::here(), {
-  draw_the_tree(silent = TRUE)
+  fusen::draw_package_structure(silent = TRUE)
 })
 ```

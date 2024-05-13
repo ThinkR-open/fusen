@@ -34,10 +34,10 @@ knitr::include_graphics("man/figures/fusen_inflate_functions.png")
 
 _Fill the flat Rmd (or qmd) template with everything in one place and {fusen} will inflate the identified parts in the correct package files and directories._
 
-> The {fusen} Rmarkdown template encourages users to fill their documentation and tests at the same time of writing their functions code. Thanks to the R package structure used by {fusen}, you can built a robust workflow or R package. {fusen} simplifies and reduces the number of steps towards a full R package.   
+> The {fusen} Rmarkdown template encourages users to fill their documentation and tests at the same time of writing their functions code. Thanks to the R package structure used by {fusen}, you can build a robust workflow or R package. {fusen} simplifies and reduces the number of steps towards a full R package.   
 > After that, your {pkgdown} documentation website is one command away to be shared with all your users.
 
-This {fusen} package is a real-world example of {fusen} use as it was itself created from the flat templates available in `"dev/"` folder in its GitHub repository.
+This {fusen} package is a real-world example of {fusen} use as it is itself created from the flat templates available in `"dev/"` folder in its GitHub repository. You can have a look at its architecture in the [Readme of the "dev" directory](https://github.com/ThinkR-open/fusen/blob/main/dev/README.md).
 
 ## Installation
 
@@ -49,20 +49,15 @@ install.packages("fusen")
 > *Full documentation for the CRAN version is here: https://thinkr-open.github.io/fusen/*
 
 
-You can install the development version of {fusen} from GitHub:
+You can install the development version of {fusen} from r-universe or GitHub:
 
 ```{r, eval=FALSE}
 # From r-universe.dev (No need for GITHUB_PAT)
-options(repos = c(
-  thinkropen = "https://thinkr-open.r-universe.dev",
-  CRAN = "https://cloud.r-project.org"
-))
-# Download and install {fusen} in R
-install.packages("fusen")
+install.packages("fusen", repos = c("https://thinkr-open.r-universe.dev", "https://cloud.r-project.org"))
 
-# With {remotes} using GitHub API - Need for GITHUB_PAT
-# install.packages("remotes")
-remotes::install_github("ThinkR-open/fusen")
+# Or with {pak} using GitHub API - Need for GITHUB_PAT
+# install.packages("pak")
+pak::pak("ThinkR-open/fusen")
 ```
 > *Full documentation for the development version is here: https://thinkr-open.github.io/fusen/dev/*
 
@@ -144,19 +139,23 @@ _Note that the `"flat*.Rmd"` files created with templates `full` and `teaching` 
 
 There is a dedicated vignette to answer this: https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html
 
-- **Option 1**: Modifications are only added to the "flat_template.Rmd" file, which then is inflated to update all packages files
-- **Option 2**: Modifications are realized in the package files directly, and the "flat_template.Rmd" file must be protected from any use.
+- **Option 1**: After a first inflate of your flat file, you can continue developing in the "flat_template.Rmd" file, and then inflate it using `fusen::inflate_all()`
+- **Option 2**: After you're done with inflating, you can decide to deprecate your flat file with `fusen::deprecate_flat_file()` and develop in the package files directly, as for any other R package. 'fusen' has no impact on the structure of a classical package once inflated.
 
-> Advice : Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place
+> Advice: Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place
+
+> Advice: Show the package structure with `fusen::draw_package_structure()` in a "dev/Readme.md" file to help developers
 
 ## Who is {fusen} for?
 
-When you write a Rmarkdown file (or a vignette), you create a documentation for your analysis (or package). Inside, you write some functions, you test your functions with examples and you maybe write some unit tests to verify the outputs. This is even more true if you follow this guide : ['Rmd first': When development starts with documentation](https://rtask.thinkr.fr/when-development-starts-with-documentation/)
-After that, you need to move your functions and scripts in the correct place. Let {fusen} do that for you!
+If you mind about documentation for your users and tests for your maintainers, {fusen} is for you. Start writing documentation and tests while you conceive your functionalities, so that there are directly available for your users and maintainers.
 
-*{fusen} is first addressed to people who never wrote a package before* but know how to write a Rmarkdown file. Understanding package infrastructure and correctly settling it can be frightening. This package may help them do the first step!
+Indeed, when you write a Rmarkdown file (or a vignette), you create a documentation for your analysis (or package). When you write some functions, you check your functions with examples and you maybe write some unit tests to verify the outputs. This is even more true if you follow this guide : ['Rmd first': When development starts with documentation](https://rtask.thinkr.fr/when-development-starts-with-documentation/)
+Write them all in the same file while you explore the possibilities and let {fusen} store them in the right place for you!
 
-*{fusen} is also addressed to more advanced developers who are fed up with switching* between R files, tests files, vignettes. In particular, when changing arguments of a function, we need to change examples, unit tests in multiple places. Here, you can do it in one place. No risk to forget one. Think also about code review: everything related to one function is at the same place.  
+*{fusen} was first addressed to people who never wrote a package before* and know how to write a Rmarkdown file. Understanding package infrastructure and correctly settling it can be frightening. This package may help them do the first step!
+
+*{fusen} is also addressed to more advanced developers who care about their users and the sustainability of their products, and are fed up with switching* between R files, tests files, vignettes while they prototype their functions. In particular, when changing arguments of a function, we need to change examples, unit tests in multiple places. Here, you can do it in one place. No risk to forget one. Think also about code review: everything related to one function is at the same place.  
 
 ## Q&A : All tips and tricks of a {fusen} template
 
@@ -169,12 +168,13 @@ After that, you need to move your functions and scripts in the correct place. Le
 - How to create a vignette with different title and Index Entry?
 - How not to create a vignette ?
 - How to get a pre-filled template for a specific function name ?
-- How to Inflate multiple flat files ?
+- How to inflate multiple flat files ?
 - How to store multiple functions in a unique R file ?
 - How to read dataset that I usually put in “tests/testthat/” for my unit tests? 
 - Can I load all functions of the current flat file during development without having to `inflate()`?
 - Can I inflate a Quarto qmd file?
 - Can I use {fusen} with {golem}?
+- How can I know if R files were created from a flat or not ?
 
 => See vignette Tips and Tricks: https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html
 

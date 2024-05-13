@@ -2,7 +2,7 @@ Package: fusen
 Title: Build a Package from Rmarkdown Files
 Version: 0.6.0
 Authors@R: c(
-    person("Sebastien", "Rochette", , "sebastien@thinkr.fr", role = c("aut", "cre"),
+    person("Sebastien", "Rochette", , "sebastienrochettefr@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1565-9313")),
     person("ThinkR", role = "cph")
   )

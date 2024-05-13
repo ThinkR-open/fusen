@@ -48,33 +48,37 @@ Take it as a documentation for the other developers.
 Maintaining such a package requires a choice:  
 
 - **Option 1**: Modifications are only added to the "flat_template.Rmd" file, which then is inflated to update all packages files
-- **Option 2**: Modifications are realized in the package files directly, and the "flat_template.Rmd" file must be protected from any use. 
+- **Option 2**: Modifications are realized in the package files directly as for any other package, and the "flat_template.Rmd" file must be deprecated using `deprecate_flat_file()`. 
 
 Your first `inflate()` may not directly work as expected as with any R code that you write. In this case, you can continue to implement your functionality using **Option 1**. 
 
-> Advice 1 : Use Option 1 until you find it too complicated to be used ! I assure you, you will find the moment when you say : ok this is not possible anymore...
+> Advice 1: Use Option 1 until you find it too complicated to be used ! I assure you, you will find the moment when you say : ok this is not possible anymore...
 
-> Advice 2 : Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place
+> Advice 2: Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place
+
+> Advice 3: Create a Readme.Rmd in the "dev/" directory with a chunk having `fusen::draw_package_structure()` and knit it. This will help to understand the structure of your package and see what is inflated or not. Have a look at the {fusen} package itself on GitHub to see how it looks like.
 
 
 ## Option 1: Continue with the "flat_template.Rmd"
 
+- (+) You are encouraged to start with documenting and testing your package before you start coding, which is generally a good practice for prototyping.
 - (+) This does not require to fully understand the package structure and files to continue building your package, and you continue to develop in a unique file
-- (+) You are encouraged to continue documenting and testing all parts of your package
 - (-) You need to pay attention to checking and debugging tools that may direct you to the R file directly. This requires to pay attention and always be sure you are modifying code in the flat template file, to be inflated.
 - (-) This may trouble co-developers who already built packages
 
 
 => {fusen} itself is built as is. Each modification is added to the dedicated dev_history file and then inflated
-
+=> The tree structure in the "dev/Readme.md" file is very useful to understand what is inflated or not, and to see the structure of the package
 
 
 ## Option 2: Maintain like a classical package
 
 - (+) You can use dedicated checking and debugging tools as is, in particular in RStudio. There are built to direct you as quickly as possible to the source of the problem
 - (+) This allows collaboration with more advanced developers who are used to debug in the package structure directly
+- (-) You need to remember that you need to care about your users and maintainers, and that you need to document and test your code as soon as possible, in a different place than the code itself.
 - (-) This requires to understand the structure and files of a package and how they interact each other, and be able to jump from one file to the other, in the correct folder. This may drives you lazy to continue documenting and testing your modifications
-- This requires to protect the flat template file, so that you never use it again. `<!-- Do not edit by hand-->` is the minimum. Then you can add `<!-- File used to start new functionalities, do not use anymore, go directly to appropriate files in the package -->`, and you can rename the old template with "old-flat_template.Rmd" for instance.
+
+You can use `deprecate_flat_file()` to protect the original flat template file, so that you never use it again. Inflated files are also unprotected, so that you can modify them directly.
 
 
 => This is the way I add new functionalities in packages that started in the old way, and in specific cases where inflating is now too complicated, like for function `inflate()` and all its unit tests in this very {fusen} package. 

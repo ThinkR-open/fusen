@@ -21,12 +21,18 @@ unlink(skeleton_dir, recursive = TRUE)
 # _Check in interactive test-inflate for templates and Addins ----
 pkgload::load_all()
 
+# /!\ While running these tests manually with `test_file()`,
+# do not do anything else in your IDE /!\
+# Do not change file open, do not change text in the current file, nothing...
+# Unit tests open files interactively and close them
+# The focus needs to be kept on what the test is doing
 Sys.setenv("NOT_CRAN" = "true")
 testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate-part1.R")
 testthat::test_file("tests/testthat/test-inflate-part2.R")
 testthat::test_file("tests/testthat/test-inflate_all.R")
 testthat::test_file("tests/testthat/test-inflate_all_utils.R")
+testthat::test_file("tests/testthat/test-build_fusen_chunks.R") # Opens files
 testthat::test_file("tests/testthat/test-add_flat_template.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
 testthat::test_file("tests/testthat/test-register_config_file.R") # interactivity
@@ -47,11 +53,17 @@ Sys.setenv("FUSEN_TEST_PUBLISH" = "FALSE")
 # Run with r-devel using {rig}
 #> rig run
 devtools::check()
+suppressMessages(devtools::test()) # interactivity
 
-# Update the map of the package
-fusen::draw_the_tree()
+# Update the tree structure of the package
+fusen::draw_package_structure()
 
+# Update Readmes
 rmarkdown::render("dev/README.Rmd",
+  output_format = "github_document", output_file = "README.md"
+)
+
+rmarkdown::render("README.Rmd",
   output_format = "github_document", output_file = "README.md"
 )
 
@@ -105,37 +117,10 @@ urlchecker::url_update()
 
 # check on other distributions
 # _rhub
-devtools::check_rhub()
-# List all R-hub platforms:
-rhub::platforms()
-buildpath <- devtools::build()
-rhub::check_on_windows(
-  check_args = "--force-multiarch",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check_on_solaris(show_status = FALSE, path = buildpath)
-rhub::check(
-  platform = "debian-clang-devel",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check(
-  platform = "debian-gcc-devel",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check(
-  platform = "fedora-clang-devel",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check(
-  platform = "macos-highsierra-release-cran",
-  show_status = FALSE,
-  path = buildpath
-)
-rhub::check_for_cran(show_status = FALSE, path = buildpath)
+rhub::rhub_setup(overwrite = TRUE)
+rhub::rhub_doctor()
+rhub::rhub_platforms()
+rhub::rhub_check()
 
 # _win devel CRAN
 devtools::check_win_devel()
