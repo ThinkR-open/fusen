@@ -1,6 +1,6 @@
 Package: fusen
 Title: Build a Package from Rmarkdown Files
-Version: 0.6.0
+Version: 0.6.0.9000
 Authors@R: c(
     person("Sebastien", "Rochette", , "sebastienrochettefr@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1565-9313")),
