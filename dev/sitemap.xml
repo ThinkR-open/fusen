@@ -1,84 +1,102 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://thinkr-open.github.io/fusen/CODE_OF_CONDUCT.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/CONTRIBUTING.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/LICENSE-text.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/LICENSE.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/LICENSE.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/articles/How-to-use-fusen.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/How-to-use-fusen.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/Maintain-packages-with-fusen.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/articles/index.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/deal-with-a-fusen-flat-file.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/articles/inflate-all-your-flat-files.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/draw-a-tree-of-your-package-files-and-functions.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/articles/register-files-in-config.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/articles/share-on-a-github-website.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/inflate-all-your-flat-files.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/register-files-in-config.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/authors.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/share-on-a-github-website.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/index.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/tips-and-tricks.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/news/index.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/authors.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/add_flat_template.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/index.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/add_fusen_chunks.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/news/index.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/check_not_registered_files.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/add_flat_template.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/create_fusen.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/add_fusen_chunks.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/fill_description.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/check_not_registered_files.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/fusen-package.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/create_fusen.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/index.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/deprecate_flat_file.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/inflate.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/fill_description.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/inflate_all.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/fusen-package.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/init_share_on_github.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/get_all_created_funs.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/load_flat_functions.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/get_package_structure.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/pipe.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://thinkr-open.github.io/fusen/reference/register_all_to_config.html</loc>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/inflate.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/inflate_all.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/init_share_on_github.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/load_flat_functions.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/pipe.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/register_all_to_config.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/rename_flat_file.html</loc>
   </url>
 </urlset>
