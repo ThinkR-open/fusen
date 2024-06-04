@@ -44,7 +44,7 @@ sepuku()
 ```
 
 ```{r tests-sepuku}
-dummypackage <- tempfile("sepuku")
+dummypackage <- tempfile("sepuku.first")
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 
@@ -53,7 +53,6 @@ test_that("sepuku is a function", {
 })
 
 usethis::with_project(dummypackage, {
-  browser()
   # Add licence
   usethis::use_mit_license("John Doe")
 
@@ -88,8 +87,54 @@ usethis::with_project(dummypackage, {
     )
   })
 })
+
+unlink(dummypackage, recursive = TRUE)
 ```
 
+```{r tests-sepuku}
+dummypackage <- tempfile("sepuku.second")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  browser()
+  test_that("sepuku raises a message if no flat files have been found", {
+    #  Check for a dev folder
+    expect_error(
+      sepuku(), "No dev/ folder have been found. Are you sure that your package has been initiated with fusen ?"
+    )
+  })
+
+  dev_file <- suppressMessages(add_minimal_package(overwrite = TRUE, open = FALSE))
+
+  test_that("sepuku checks whether a fusen config file exists or not", {
+    expect_message(
+      sepuku(), "No fusen configuration file found. The flat files to be deleted will be identified as files starting with 'flat' in the dev/ folder."
+    )
+
+    # To add the config file a first inflate is needed
+    flat_file <- dev_file[grepl("flat_", dev_file)]
+
+    suppressMessages(
+      inflate(
+        pkg = dummypackage, flat_file = flat_file,
+        vignette_name = "Get started", check = FALSE,
+        open_vignette = FALSE, document = TRUE,
+        overwrite = "yes"
+      )
+    )
+
+    expect_message(
+      sepuku(), "A fusen configuration file was found. The flat files to be deleted will be identified as files listed in this configuration file as well as those starting with 'flat' in the dev/ folder."
+    )
+  })
+})
+
+unlink(dummypackage, recursive = TRUE)
+```
 
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
