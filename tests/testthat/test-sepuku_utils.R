@@ -4,7 +4,7 @@ test_that("list_flat_files_in_config_file is a function", {
   expect_true(inherits(list_flat_files_in_config_file, "function"))
 })
 
-dummypackage <- tempfile("listflatfiles.first")
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 flat_file1 <- add_minimal_package(
@@ -74,7 +74,7 @@ test_that("list_flat_files_in_dev_folder is a function", {
   expect_true(inherits(list_flat_files_in_dev_folder, "function"))
 })
 
-dummypackage <- tempfile("listflatfilesindev.first")
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 flat_file1 <- add_minimal_package(
@@ -156,7 +156,7 @@ test_that("list_flat_files is a function", {
   expect_true(inherits(list_flat_files, "function"))
 })
 
-dummypackage <- tempfile("listflatfiles.first")
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 
@@ -257,3 +257,64 @@ usethis::with_project(dummypackage, {
   })
 })
 unlink(dummypackage, recursive = TRUE)
+
+test_that("find_files_with_fusen_tags is a function", {
+  expect_true(inherits(find_files_with_fusen_tags, "function"))
+})
+
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  test_that("find_files_with_fusen_tags works with an empty pkg", {
+    files_with_fusen_tags <- find_files_with_fusen_tags()
+    expect_equal(length(files_with_fusen_tags), 0)
+  })
+
+  test_that("find_files_with_fusen_tags identifies files created by fusen", {
+    dev_file1 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "flat1.Rmd",
+      open = FALSE,
+      overwrite = TRUE
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = dev_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    files_with_fusen_tags <- find_files_with_fusen_tags()
+    expect_equal(length(files_with_fusen_tags), 3)
+    expect_true(
+      all(
+        files_with_fusen_tags %in%
+          file.path(dummypackage, c("R/flat1_rmd.R", "vignettes/get-started.Rmd", "tests/testthat/test-flat1_rmd.R"))
+      )
+    )
+  })
+
+  test_that("find_files_with_fusen_tags do not identify files not created by fusen", {
+    usethis::use_r("donotfindme.R", open = FALSE)
+    usethis::use_test("donotfindme.R", open = FALSE)
+    file.create(file.path(dummypackage, "vignettes", "donotfindme.Rmd"))
+
+    files_with_fusen_tags <- find_files_with_fusen_tags()
+    expect_equal(length(files_with_fusen_tags), 3)
+    expect_true(
+      all(
+        files_with_fusen_tags %in%
+          file.path(dummypackage, c("R/flat1_rmd.R", "vignettes/get-started.Rmd", "tests/testthat/test-flat1_rmd.R"))
+      )
+    )
+  })
+})
