@@ -14,7 +14,114 @@ library(testthat)
 pkgload::load_all(export_all = FALSE)
 ```
 
-# list_flat_files
+
+# list_flat_files_in_config_file
+    
+```{r function-list_flat_files_in_config_file}
+#' @importFrom yaml read_yaml
+#' @noRd
+list_flat_files_in_config_file <- function(
+    config_file = getOption("fusen.config_file",
+      default = "dev/config_fusen.yaml"
+    )) {
+  if (!file.exists(config_file)) {
+    return("")
+  } else {
+    config_yml <- yaml::read_yaml(config_file)
+    return(
+      unlist(
+        lapply(config_yml, "[[", "path")
+      )
+    )
+  }
+}
+```
+
+```{r tests-list_flat_files_in_config_file}
+test_that("list_flat_files_in_config_file is a function", {
+  expect_true(inherits(list_flat_files_in_config_file, "function"))
+})
+
+dummypackage <- tempfile("listflatfiles.first")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+flat_file1 <- add_minimal_package(
+  pkg = dummypackage,
+  overwrite = TRUE,
+  open = FALSE
+)
+flat_file1 <- flat_file1[grepl("flat_", flat_file1)]
+
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  test_that("list_flat_files works when no fusen config file is present", {
+    identified_flat_files <- list_flat_files_in_config_file()
+    expect_true(!is.null(identified_flat_files))
+    expect_equal(identified_flat_files, "")
+  })
+})
+
+usethis::with_project(dummypackage, {
+  test_that("list_flat_files works for a fusen config file", {
+    flat_file2 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "XXX_flat2.Rmd",
+      open = FALSE
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = flat_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = flat_file2,
+      vignette_name = "Get started 2",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    identified_flat_files <- list_flat_files_in_config_file()
+
+    expect_equal(
+      length(identified_flat_files), 2
+    )
+
+    expect_true(
+      all(
+        identified_flat_files %in% c("dev/flat_minimal.Rmd", "dev/flat_xxx_flat2.Rmd")
+      )
+    )
+
+    # Pas de config file et rien dans dev
+
+    #  Pas de config file et un fichier dans dev
+
+    #  Pas de config file et un fichier dans dev avec un nom qui ne commence pas par flat
+
+    # Inflate les 2 : on a un config file
+
+    #  Gérer les qmd
+
+    # Deprecated un flat file
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+```
+  
+
+  # list_flat_files
     
 ```{r function-list_flat_files}
 #' Title
@@ -34,11 +141,64 @@ list_flat_files()
 ```
   
 ```{r tests-list_flat_files}
-test_that("list_flat_files works", {
+test_that("list_flat_files is a function", {
   expect_true(inherits(list_flat_files, "function"))
+})
+
+dummypackage <- tempfile("listflatfiles.first")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  test_that("list_flat_files works for a fusen config file", {
+    browser()
+
+    dev_file1 <- add_minimal_flat(pkg = dummypackage, flat_name = "flat1.Rmd", open = FALSE)
+    dev_file2 <- add_minimal_flat(pkg = dummypackage, flat_name = "XXX_flat2.Rmd", open = FALSE)
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = dev_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = dev_file2,
+      vignette_name = "Get started 2",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    config_yml_ref <-
+      yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
+  })
+
+  # Pas de config file et rien dans dev
+
+  #  Pas de config file et un fichier dans dev
+
+  #  Pas de config file et un fichier dans dev avec un nom qui ne commence pas par flat
+
+  # Inflate les 2 : on a un config file
+
+  #  Gérer les qmd
+
+  # Deprecated un flat file
 })
 ```
   
+
+
 
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
