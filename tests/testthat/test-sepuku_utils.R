@@ -318,3 +318,40 @@ usethis::with_project(dummypackage, {
     )
   })
 })
+unlink(dummypackage, recursive = TRUE)
+
+test_that("clean_fusen_tags_in_files is a function", {
+  expect_true(inherits(clean_fusen_tags_in_files, "function"))
+})
+
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dev_file1 <- add_minimal_flat(
+  pkg = dummypackage,
+  flat_name = "flat1.Rmd",
+  open = FALSE,
+  overwrite = TRUE
+)
+inflate(
+  pkg = dummypackage,
+  flat_file = dev_file1,
+  vignette_name = "Get started",
+  check = FALSE,
+  open_vignette = FALSE,
+  document = TRUE,
+  overwrite = "yes"
+)
+files_with_fusen_tags <- find_files_with_fusen_tags(pkg = dummypackage)
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  test_that("clean_fusen_tags_in_files works with an empty pkg", {
+    cleaned_files <- clean_fusen_tags_in_files(files_with_fusen_tags)
+    cleaned_files_with_fusen_tags <- find_files_with_fusen_tags()
+    expect_equal(length(cleaned_files_with_fusen_tags), 0)
+  })
+})
+unlink(dummypackage, recursive = TRUE)
