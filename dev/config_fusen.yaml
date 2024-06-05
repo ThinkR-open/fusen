@@ -140,6 +140,20 @@ flat_register_config_file.Rmd:
     document: true
     overwrite: 'yes'
     clean: ask
+flat_sepuku-utils.Rmd:
+  path: dev/flat_sepuku-utils.Rmd
+  state: active
+  R: R/sepuku_utils.R
+  tests: tests/testthat/test-sepuku_utils.R
+  vignettes: []
+  inflate:
+    flat_file: dev/flat_sepuku-utils.Rmd
+    vignette_name: .na
+    open_vignette: false
+    check: false
+    document: true
+    overwrite: 'yes'
+    clean: ask
 keep:
   path: keep
   state: active
