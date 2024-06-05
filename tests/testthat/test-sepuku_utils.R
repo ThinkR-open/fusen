@@ -22,7 +22,7 @@ usethis::with_project(dummypackage, {
   test_that("list_flat_files works when no fusen config file is present", {
     identified_flat_files <- list_flat_files_in_config_file()
     expect_true(!is.null(identified_flat_files))
-    expect_equal(identified_flat_files, "")
+    expect_equal(length(identified_flat_files), 0)
   })
 })
 
@@ -62,7 +62,8 @@ usethis::with_project(dummypackage, {
 
     expect_true(
       all(
-        identified_flat_files %in% c("dev/flat_minimal.Rmd", "dev/flat_xxx_flat2.Rmd")
+        identified_flat_files %in%
+          c("dev/flat_minimal.Rmd", "dev/flat_xxx_flat2.Rmd")
       )
     )
   })
@@ -151,55 +152,108 @@ usethis::with_project(dummypackage, {
 })
 unlink(dummypackage, recursive = TRUE)
 
-# test_that("list_flat_files is a function", {
-#   expect_true(inherits(list_flat_files, "function"))
-# })
+test_that("list_flat_files is a function", {
+  expect_true(inherits(list_flat_files, "function"))
+})
 
-# dummypackage <- tempfile("listflatfiles.first")
-# dir.create(dummypackage)
-# fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+dummypackage <- tempfile("listflatfiles.first")
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 
-# usethis::with_project(dummypackage, {
-#   # Add licence
-#   usethis::use_mit_license("John Doe")
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
 
-#   test_that("list_flat_files works for a fusen config file", {
-#     dev_file1 <- add_minimal_flat(pkg = dummypackage, flat_name = "flat1.Rmd", open = FALSE)
-#     dev_file2 <- add_minimal_flat(pkg = dummypackage, flat_name = "XXX_flat2.Rmd", open = FALSE)
+  test_that("list_flat_files works with an empty pkg", {
+    flat_files <- list_flat_files()
+    expect_equal(length(flat_files), 0)
+  })
 
-#     inflate(
-#       pkg = dummypackage,
-#       flat_file = dev_file1,
-#       vignette_name = "Get started",
-#       check = FALSE,
-#       open_vignette = FALSE,
-#       document = TRUE,
-#       overwrite = "yes"
-#     )
+  test_that("list_flat_files works with flat files in dev but no config file", {
+    dev_file1 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "flat1.Rmd",
+      open = FALSE
+    )
 
-#     inflate(
-#       pkg = dummypackage,
-#       flat_file = dev_file2,
-#       vignette_name = "Get started 2",
-#       check = FALSE,
-#       open_vignette = FALSE,
-#       document = TRUE,
-#       overwrite = "yes"
-#     )
+    file.create(file.path(dummypackage, "dev", "flat_1.qmd"))
+    file.create(file.path(dummypackage, "dev", "wrong_flat1.Rmd"))
+    file.create(file.path(dummypackage, "dev", "wrong_flat1.qmd"))
 
-#     config_yml_ref <-
-#       yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
-#   })
+    flat_files <- list_flat_files()
+    expect_equal(
+      length(flat_files), 2
+    )
 
-# Pas de config file et rien dans dev
+    expect_true(
+      all(
+        flat_files %in% c("dev/flat_flat1.Rmd", "dev/flat_1.qmd")
+      )
+    )
+  })
 
-#  Pas de config file et un fichier dans dev
+  test_that("list_flat_files works with flat files in dev and a config file", {
+    dev_file1 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "flat1.Rmd",
+      open = FALSE,
+      overwrite = TRUE
+    )
 
-#  Pas de config file et un fichier dans dev avec un nom qui ne commence pas par flat
+    inflate(
+      pkg = dummypackage,
+      flat_file = dev_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
 
-# Inflate les 2 : on a un config file
+    flat_files <- list_flat_files()
+    expect_equal(
+      length(flat_files), 2
+    )
 
-#  Gérer les qmd
+    expect_true(
+      all(
+        flat_files %in% c("dev/flat_flat1.Rmd", "dev/flat_1.qmd")
+      )
+    )
+  })
 
-# Deprecated un flat file
-# })
+  test_that("list_flat_files works with a deprecated flat file", {
+    dev_file1 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "flat1.Rmd",
+      open = FALSE,
+      overwrite = TRUE
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = dev_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    deprecate_flat_file(
+      flat_file = dev_file1
+    )
+
+    flat_files <- list_flat_files()
+    expect_equal(
+      length(flat_files), 2
+    )
+
+    expect_true(
+      all(
+        flat_files %in% c("dev/flat_history/flat_flat1.Rmd", "dev/flat_1.qmd")
+      )
+    )
+  })
+})
+unlink(dummypackage, recursive = TRUE)

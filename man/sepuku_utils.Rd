@@ -2,10 +2,16 @@
 % Please edit documentation in R/sepuku_utils.R
 \name{list_flat_files}
 \alias{list_flat_files}
-\title{Title}
+\title{List all flat files present in the package}
 \usage{
-list_flat_files()
+list_flat_files(pkg = ".")
+}
+\arguments{
+\item{pkg}{Path to package}
+}
+\value{
+a vector of flat files paths
 }
 \description{
-Description
+Search for flat files listed in fusen config file, and for rmd and qmd files starting with "flat_" in dev/ folder, and dev/flat_history folder
 }

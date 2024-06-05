@@ -8,7 +8,7 @@ list_flat_files_in_config_file <- function(
       default = "dev/config_fusen.yaml"
     )) {
   if (!file.exists(config_file)) {
-    return("")
+    return(character(0))
   } else {
     config_yml <- yaml::read_yaml(config_file)
     return(
@@ -44,14 +44,20 @@ list_flat_files_in_dev_folder <- function(
   )
 }
 
-#' Title
+#' List all flat files present in the package
 #'
-#' Description
+#' Search for flat files listed in fusen config file, and for rmd and qmd files starting with "flat_" in dev/ folder, and dev/flat_history folder
 #'
-#' @return
+#' @param pkg Path to package
+#' @return a vector of flat files paths
 #'
 #' @export
 #' @rdname sepuku_utils
-list_flat_files <- function() {
-
+list_flat_files <- function(pkg = ".") {
+  c(
+    list_flat_files_in_config_file(),
+    list_flat_files_in_dev_folder(folder = "dev"),
+    list_flat_files_in_dev_folder(folder = "dev/flat_history")
+  ) %>%
+    unique()
 }
