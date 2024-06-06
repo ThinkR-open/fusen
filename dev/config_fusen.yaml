@@ -153,7 +153,6 @@ flat_sepuku-utils.Rmd:
     check: false
     document: true
     overwrite: 'yes'
-    clean: ask
 keep:
   path: keep
   state: active

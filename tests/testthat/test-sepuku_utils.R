@@ -269,7 +269,6 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 usethis::with_project(dummypackage, {
   # Add licence
   usethis::use_mit_license("John Doe")
-
   test_that("find_files_with_fusen_tags works with an empty pkg", {
     files_with_fusen_tags <- find_files_with_fusen_tags()
     expect_equal(length(files_with_fusen_tags), 0)
@@ -298,7 +297,7 @@ usethis::with_project(dummypackage, {
     expect_true(
       all(
         files_with_fusen_tags %in%
-          file.path(dummypackage, c("R/flat1_rmd.R", "vignettes/get-started.Rmd", "tests/testthat/test-flat1_rmd.R"))
+          c("R/flat1_rmd.R", "vignettes/get-started.Rmd", "tests/testthat/test-flat1_rmd.R")
       )
     )
   })
@@ -313,7 +312,7 @@ usethis::with_project(dummypackage, {
     expect_true(
       all(
         files_with_fusen_tags %in%
-          file.path(dummypackage, c("R/flat1_rmd.R", "vignettes/get-started.Rmd", "tests/testthat/test-flat1_rmd.R"))
+          c("R/flat1_rmd.R", "vignettes/get-started.Rmd", "tests/testthat/test-flat1_rmd.R")
       )
     )
   })
@@ -349,7 +348,7 @@ usethis::with_project(dummypackage, {
   usethis::use_mit_license("John Doe")
 
   test_that("clean_fusen_tags_in_files works with an empty pkg", {
-    cleaned_files <- clean_fusen_tags_in_files(files_with_fusen_tags)
+    cleaned_files <- clean_fusen_tags_in_files(pkg = dummypackage, files_to_clean = files_with_fusen_tags)
     cleaned_files_with_fusen_tags <- find_files_with_fusen_tags()
     expect_equal(length(cleaned_files_with_fusen_tags), 0)
   })
