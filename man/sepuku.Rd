@@ -2,8 +2,7 @@
 % Please edit documentation in R/sepuku.R
 \name{sepuku}
 \alias{sepuku}
-\title{Clean a package from fusen-related files and tags
-This function will remove all the flat files and the fusen-related tags from the package. It will also remove the configuration file if it exists.}
+\title{Clean a package from fusen-related files and tags}
 \usage{
 sepuku(pkg = ".", force = FALSE)
 }
@@ -16,8 +15,7 @@ sepuku(pkg = ".", force = FALSE)
 a cleaned package
 }
 \description{
-Clean a package from fusen-related files and tags
-This function will remove all the flat files and the fusen-related tags from the package. It will also remove the configuration file if it exists.
+This function will deleted all the flat files (i.e files listed in the fusen configuration file, as well as rmd or qmd files starting with "flat" in the "dev/" and "dev/flat_history" folder). It will also remove the fusen-related tags added by calls to \code{fusen::inflate()} in files located in the "R/", "tests/" and "vignettes/" folders. It will also remove the configuration file if it exists.
 }
 \examples{
 \dontrun{
@@ -89,7 +87,7 @@ usethis::with_project(dummypackage, {
   # We check that all the flat files have been deleted
   length(
     list.files(file.path(dummypackage, "dev"),
-      pattern = "flat.*\\\\.Rmd"
+      pattern = "^flat.*\\\\.Rmd"
     )
   )
 
@@ -102,7 +100,7 @@ usethis::with_project(dummypackage, {
 
   length(
     list.files(file.path(dummypackage, "dev", "flat_history"),
-      pattern = "flat.*\\\\.Rmd"
+      pattern = "^flat.*\\\\.Rmd"
     )
   )
 
