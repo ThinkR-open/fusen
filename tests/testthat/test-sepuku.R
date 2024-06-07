@@ -157,19 +157,47 @@ usethis::with_project(dummypackage, {
       overwrite = "yes"
     )
 
-    # if (interactive()) {
-    #   test_that("sepuku tells the users that files will be modified or deleted and that it is irreversible", {
-    #     expect_message(
-    #       sepuku(force = FALSE),
-    #       "Some files are about to be deleted or modified. This operation is irreversible."
-    #     )
-    #   })
-    # }
-
     expect_message(
       sepuku(force = TRUE),
       "The following files have been identified as containing fusen-related tags and will therefore be modified:\nR/flat1_rmd.R\nR/flat2_rmd.R\ntests/testthat/test-flat1_rmd.R\ntests/testthat/test-flat2_rmd.R\nvignettes/get-started-2.Rmd\nvignettes/get-started.Rmd"
     )
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+  test_that("sepuku informs the user than modifying / deleting files can not be undone if force = FALSE", {
+    dev_file1 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "flat1.Rmd",
+      open = FALSE
+    )
+    inflate(
+      pkg = dummypackage,
+      flat_file = dev_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+
+    if (interactive()) {
+      test_that("sepuku tells the users that files will be modified or deleted and that it is irreversible", {
+        expect_message(
+          sepuku(force = FALSE),
+          "Some files are about to be deleted or modified. This operation is irreversible."
+        )
+      })
+    }
   })
 })
 unlink(dummypackage, recursive = TRUE)
