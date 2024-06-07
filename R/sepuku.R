@@ -77,27 +77,27 @@
 #'   # We check that all the flat files have been deleted
 #'   length(
 #'     list.files(file.path(dummypackage, "dev"),
-#'       pattern = "flat_.*\\.Rmd"
+#'       pattern = "flat.*\\.Rmd"
 #'     )
 #'   )
 #'
 #'   length(
 #'     list.files(file.path(dummypackage, "dev"),
-#'       pattern = "flat_.*\\.qmd"
+#'       pattern = "^flat.*\\.qmd"
 #'     )
 #'   )
 #'
 #'
 #'   length(
 #'     list.files(file.path(dummypackage, "dev", "flat_history"),
-#'       pattern = "flat_.*\\.Rmd"
+#'       pattern = "flat.*\\.Rmd"
 #'     )
 #'   )
 #'
 #'
 #'   length(
 #'     list.files(file.path(dummypackage, "dev", "flat_history"),
-#'       pattern = "flat_.*\\.qmd"
+#'       pattern = "^flat.*\\.qmd"
 #'     )
 #'   )
 #'

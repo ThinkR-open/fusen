@@ -262,7 +262,7 @@ usethis::with_project(dummypackage, {
   expect_equal(
     length(
       list.files(file.path(dummypackage, "dev"),
-        pattern = "flat_.*\\.Rmd"
+        pattern = "flat.*\\.Rmd"
       )
     ),
     0
@@ -271,7 +271,7 @@ usethis::with_project(dummypackage, {
   expect_equal(
     length(
       list.files(file.path(dummypackage, "dev"),
-        pattern = "flat_.*\\.qmd"
+        pattern = "^flat.*\\.qmd"
       )
     ),
     0
@@ -280,7 +280,7 @@ usethis::with_project(dummypackage, {
   expect_equal(
     length(
       list.files(file.path(dummypackage, "dev", "flat_history"),
-        pattern = "flat_.*\\.Rmd"
+        pattern = "flat.*\\.Rmd"
       )
     ),
     0
@@ -289,7 +289,7 @@ usethis::with_project(dummypackage, {
   expect_equal(
     length(
       list.files(file.path(dummypackage, "dev", "flat_history"),
-        pattern = "flat_.*\\.qmd"
+        pattern = "^flat.*\\.qmd"
       )
     ),
     0

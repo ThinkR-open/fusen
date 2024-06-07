@@ -123,12 +123,12 @@ list_flat_files_in_dev_folder <- function(
     c(
       list.files(
         path = file.path(pkg, folder),
-        pattern = "flat_.*\\.Rmd",
+        pattern = "^flat.*\\.Rmd",
         full.names = FALSE
       ),
       list.files(
         path = file.path(pkg, folder),
-        pattern = "flat_.*\\.qmd",
+        pattern = "^flat.*\\.qmd",
         full.names = FALSE
       )
     )
