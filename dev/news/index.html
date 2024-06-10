@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">fusen</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.6.0.9000</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.6.0.9001</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -31,6 +31,7 @@
     <a class="dropdown-item" href="../articles/Maintain-packages-with-fusen.html">Maintain packages with {fusen}</a>
     <a class="dropdown-item" href="../articles/register-files-in-config.html">Register files in config</a>
     <a class="dropdown-item" href="../articles/share-on-a-github-website.html">Share on a GitHub website</a>
+    <a class="dropdown-item" href="../articles/switch-from-a-package-developed-with-fusen-to-a-classical-package.html">Switch from a package developed with fusen to a classical package</a>
     <a class="dropdown-item" href="../articles/tips-and-tricks.html">Tips and tricks</a>
   </div>
 </li>
@@ -58,7 +59,14 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.6.0" id="fusen-060">fusen 0.6.0<a class="anchor" aria-label="anchor" href="#fusen-060"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.6.0.9001" id="fusen-development-version-0609001">fusen (development version 0.6.0.9001)<a class="anchor" aria-label="anchor" href="#fusen-development-version-0609001"></a></h2>
+<div class="section level3">
+<h3 id="new-features-0-6-0-9001">New features<a class="anchor" aria-label="anchor" href="#new-features-0-6-0-9001"></a></h3>
+<ul><li>Adding <code><a href="../reference/sepuku.html">sepuku()</a></code>, allowing to remove all traces of a fusen-related files and tags in the package (<a href="https://github.com/Thinkr-open/fusen/issues/257" class="external-link">#257</a> <a href="https://github.com/Thinkr-open/fusen/issues/258" class="external-link">#258</a> <a href="https://github.com/Thinkr-open/fusen/issues/259" class="external-link">#259</a>) <a href="https://github.com/ymansiaux" class="external-link">@ymansiaux</a></li>
+</ul></div>
+</div>
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="0.6.0" id="fusen-060">fusen 0.6.0<a class="anchor" aria-label="anchor" href="#fusen-060"></a></h2><p class="text-muted">CRAN release: 2024-05-14</p>
 <div class="section level3">
 <h3 id="breaking-changes-0-6-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-6-0"></a></h3>
 <ul><li>{fusen} now relies on {lightparser} instead of {parsermd} to parse flat file. This allows to avoid installation problems with {parsermd}, which is not updated anymore. As {lightparser} is lighter, this may have unattended effects on specific flat file cases. Please report any issue you may encounter. (<a href="https://github.com/Thinkr-open/fusen/issues/233" class="external-link">#233</a>)</li>

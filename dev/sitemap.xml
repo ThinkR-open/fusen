@@ -37,6 +37,9 @@
     <loc>https://thinkr-open.github.io/fusen/dev/articles/share-on-a-github-website.html</loc>
   </url>
   <url>
+    <loc>https://thinkr-open.github.io/fusen/dev/articles/switch-from-a-package-developed-with-fusen-to-a-classical-package.html</loc>
+  </url>
+  <url>
     <loc>https://thinkr-open.github.io/fusen/dev/articles/tips-and-tricks.html</loc>
   </url>
   <url>
@@ -98,5 +101,11 @@
   </url>
   <url>
     <loc>https://thinkr-open.github.io/fusen/dev/reference/rename_flat_file.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/sepuku.html</loc>
+  </url>
+  <url>
+    <loc>https://thinkr-open.github.io/fusen/dev/reference/sepuku_utils.html</loc>
   </url>
 </urlset>

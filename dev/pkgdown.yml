@@ -9,8 +9,9 @@ articles:
   Maintain-packages-with-fusen: Maintain-packages-with-fusen.html
   register-files-in-config: register-files-in-config.html
   share-on-a-github-website: share-on-a-github-website.html
+  switch-from-a-package-developed-with-fusen-to-a-classical-package: switch-from-a-package-developed-with-fusen-to-a-classical-package.html
   tips-and-tricks: tips-and-tricks.html
-last_built: 2024-05-14T08:48Z
+last_built: 2024-06-10T08:38Z
 urls:
   reference: https://thinkr-open.github.io/fusen/reference
   article: https://thinkr-open.github.io/fusen/articles
