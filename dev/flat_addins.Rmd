@@ -126,6 +126,10 @@ build_fusen_chunks <- function(function_name, export = TRUE) {
     sep = "\n",
     sprintf("# %s", function_name),
     "    ",
+    sprintf("```{r development-%s}", function_name),
+    sprintf("# You can prepare the code of the %s() function here", function_name),
+    "```",
+    "  ",
     sprintf("```{r function-%s}", function_name),
     "#' Title",
     "#' ",
@@ -169,6 +173,11 @@ test_that("build_fusen_chunks works properly", {
   expect_true(
     grepl("^# pouet", res)
   )
+  
+  expect_true(
+    grepl("development-pouet", res)
+  )
+  
   expect_true(
     grepl("function-pouet", res)
   )
@@ -208,6 +217,11 @@ test_that("build_fusen_chunks cleans functions names", {
   expect_true(
     grepl("^# po_uet", res)
   )
+  
+  expect_true(
+    grepl("development-po_uet}", res)
+  )
+  
   expect_true(
     grepl("function-po_uet}", res)
   )
@@ -263,7 +277,7 @@ test_that("build_fusen_chunks add lines with export as expected", {
       curr_editor <- rstudioapi::getSourceEditorContext()
       curr_position <- curr_editor$selection[[1L]]$range$start
       # Change file
-      rstudioapi::navigateToFile(path_dev_history, line = 40)
+      rstudioapi::navigateToFile(path_dev_history, line = 44)
       Sys.sleep(1)
       open_editor <- rstudioapi::getSourceEditorContext()
       id <- open_editor$id
@@ -282,18 +296,18 @@ test_that("build_fusen_chunks add lines with export as expected", {
     } else {
       print("test without interactive")
       dev_lines <- readLines(path_dev_history)
-      dev_lines[40] <- build_fusen_chunks("zaza", export = TRUE)
+      dev_lines[44] <- build_fusen_chunks("zaza", export = TRUE)
       cat(dev_lines, sep = "\n", file = path_dev_history)
     }
-
     dev_lines_new <- readLines(path_dev_history)
-    expect_equal(length(dev_lines_new), length(dev_lines_orig) + 24)
-    expect_equal(dev_lines_new[40], "# zaza")
-    expect_equal(dev_lines_new[42], "```{r function-zaza}")
-    expect_equal(dev_lines_new[49], "#' @export")
-    expect_equal(dev_lines_new[55], "```{r example-zaza}")
-    expect_equal(dev_lines_new[56], "zaza()")
-    expect_equal(dev_lines_new[59], "```{r tests-zaza}")
+    expect_equal(length(dev_lines_new), length(dev_lines_orig) + 28)
+    expect_equal(dev_lines_new[44], "# zaza")
+    expect_equal(dev_lines_new[46], "```{r development-zaza}")
+    expect_equal(dev_lines_new[50], "```{r function-zaza}")
+    expect_equal(dev_lines_new[57], "#' @export")
+    expect_equal(dev_lines_new[63], "```{r example-zaza}")
+    expect_equal(dev_lines_new[64], "zaza()")
+    expect_equal(dev_lines_new[67], "```{r tests-zaza}")
 
     unlink(path_foosen, recursive = TRUE)
   })
@@ -324,7 +338,7 @@ test_that("build_fusen_chunks add lines with noRd as expected", {
       curr_editor <- rstudioapi::getSourceEditorContext()
       curr_position <- curr_editor$selection[[1L]]$range$start
       # Change file
-      rstudioapi::navigateToFile(path_dev_history, line = 40)
+      rstudioapi::navigateToFile(path_dev_history, line = 44)
       Sys.sleep(1)
       open_editor <- rstudioapi::getSourceEditorContext()
       id <- open_editor$id
@@ -343,18 +357,18 @@ test_that("build_fusen_chunks add lines with noRd as expected", {
     } else {
       print("test without interactive")
       dev_lines <- readLines(path_dev_history)
-      dev_lines[40] <- build_fusen_chunks("zaza", export = FALSE)
+      dev_lines[44] <- build_fusen_chunks("zaza", export = FALSE)
       cat(dev_lines, sep = "\n", file = path_dev_history)
     }
-
     dev_lines_new <- readLines(path_dev_history)
-    expect_equal(length(dev_lines_new), length(dev_lines_orig) + 24)
-    expect_equal(dev_lines_new[40], "# zaza")
-    expect_equal(dev_lines_new[42], "```{r function-zaza}")
-    expect_equal(dev_lines_new[49], "#' @noRd")
-    expect_equal(dev_lines_new[55], "```{r example-zaza}")
-    expect_equal(dev_lines_new[56], "zaza()")
-    expect_equal(dev_lines_new[59], "```{r tests-zaza}")
+    expect_equal(length(dev_lines_new), length(dev_lines_orig) + 28)
+    expect_equal(dev_lines_new[44], "# zaza")
+    expect_equal(dev_lines_new[46], "```{r development-zaza}")
+    expect_equal(dev_lines_new[50], "```{r function-zaza}")
+    expect_equal(dev_lines_new[57], "#' @noRd")
+    expect_equal(dev_lines_new[63], "```{r example-zaza}")
+    expect_equal(dev_lines_new[64], "zaza()")
+    expect_equal(dev_lines_new[67], "```{r tests-zaza}")
     unlink(path_foosen, recursive = TRUE)
   })
 })

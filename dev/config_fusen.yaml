@@ -11,6 +11,7 @@ flat_addins.Rmd:
     check: false
     document: true
     overwrite: ask
+    clean: ask
 flat_create_flat.Rmd:
   path: dev/flat_create_flat.Rmd
   state: active
