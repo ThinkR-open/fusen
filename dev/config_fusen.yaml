@@ -145,10 +145,10 @@ flat_sepuku.Rmd:
   state: active
   R: R/sepuku.R
   tests: tests/testthat/test-sepuku.R
-  vignettes: []
+  vignettes: vignettes/switch-from-a-package-developed-with-fusen-to-a-classical-package.Rmd
   inflate:
     flat_file: dev/flat_sepuku.Rmd
-    vignette_name: .na
+    vignette_name: Switch from a package developed with fusen to a classical package
     open_vignette: false
     check: false
     document: true

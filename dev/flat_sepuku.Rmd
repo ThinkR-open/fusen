@@ -14,38 +14,46 @@ library(testthat)
 pkgload::load_all(export_all = FALSE)
 ```
 
-# sepuku
+# Move from a package developed with fusen to a "classical" package
+
+After a while, you may want to move from a package developed with fusen to a "classical" package. This is possible with the `sepuku()` function. This function will delete all the flat files (i.e files listed in the fusen configuration file, as well as rmd or qmd files starting with "flat" in the "dev/" and "dev/flat_history" folders). It will also remove the fusen-related tags added by calls to `fusen::inflate()` in files located in the "R/", "tests/" and "vignettes/" folders. Finally, it will also remove the fusen configuration file if it exists.
+
+Switching from a package developed with fusen to a "classical" package might be useful if you want to share your package with someone who is not familiar with fusen or if you want to stop using fusen for any reason.
+
+Please be aware that this operation is irreversible. You will lose all the history of your flat files and the fusen-related tags in your package. Therefore, it is recommended to use code versioning to be able to revert this, in case you would change your mind.
+
 
 ```{r function-sepuku}
 #' Clean a package from fusen-related files and tags
 #'
-#' This function will deleted all the flat files (i.e files listed in the fusen configuration file, as well as rmd or qmd files starting with "flat" in the "dev/" and "dev/flat_history" folder). It will also remove the fusen-related tags added by calls to `fusen::inflate()` in files located in the "R/", "tests/" and "vignettes/" folders. It will also remove the configuration file if it exists.
+#' This function will delete all the flat files (i.e files listed in the fusen configuration file, as well as rmd or qmd files starting with "flat" in the "dev/" and "dev/flat_history" folders). It will also remove the fusen-related tags added by calls to `fusen::inflate()` in files located in the "R/", "tests/" and "vignettes/" folders. Finally, it will also remove the fusen configuration file if it exists.
 #'
 #' @param pkg Character. Path of the current package
 #' @param force logical. whether to force the cleaning or not, without asking if the user is sure about making this operation (default: FALSE)
-#' @return a cleaned package
+#' @return side effect. A package cleaned from fusen-related files or tags
+#' @importFrom cli cli_alert_info cli_alert_danger cli_abort cli_alert_success
 #' @export
 sepuku <- function(
     pkg = ".",
     force = FALSE) {
   if (!dir.exists(file.path(pkg, "dev"))) {
-    cli::cli_abort("No dev/ folder have been found. Are you sure that your package has been initiated with fusen ?")
+    cli_abort("No dev/ folder have been found. Are you sure that your package has been initiated with fusen ?")
   }
 
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
-    cli::cli_alert_info("No fusen configuration file found. The flat files to be deleted will be identified as rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders.")
+    cli_alert_info("No fusen configuration file found. The flat files to be deleted will be identified as rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders.")
   } else {
-    cli::cli_alert_info("A fusen configuration file was found. The flat files to be deleted will be identified as files listed in this configuration file as well as rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders. The configuration file will also be deleted.")
+    cli_alert_info("A fusen configuration file was found. The flat files to be deleted will be identified as files listed in this configuration file as well as rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders. The configuration file will also be deleted.")
   }
 
   flat_files <- list_flat_files(pkg = pkg)
 
   if (length(flat_files) == 0) {
-    cli::cli_alert_info("No flat files were detected.")
+    cli_alert_info("No flat files were detected.")
   } else {
-    cli::cli_alert_info(
+    cli_alert_info(
       paste0(
         "The following flat files were detected and will therefore be deleted from your package:\n",
         paste0(flat_files, collapse = "\n")
@@ -55,9 +63,9 @@ sepuku <- function(
 
   files_to_be_modified <- find_files_with_fusen_tags(pkg = pkg)
   if (length(files_to_be_modified) == 0) {
-    cli::cli_alert_info("No fusen-related tags have been found in any files located in R/, tests/ and vignettes/ folders.")
+    cli_alert_info("No fusen-related tags have been found in any files located in R/, tests/ and vignettes/ folders.")
   } else {
-    cli::cli_alert_info(
+    cli_alert_info(
       paste0(
         "The following files have been identified as containing fusen-related tags and will therefore be modified:\n",
         paste0(files_to_be_modified, collapse = "\n")
@@ -72,7 +80,7 @@ sepuku <- function(
   do_it <- force
 
   if (!force) {
-    cli::cli_alert_danger("Some files are about to be deleted or modified. This operation is irreversible.")
+    cli_alert_danger("Some files are about to be deleted or modified. This operation is irreversible.")
     sure <- paste(
       "\nAre you sure of what you are doing? (y/n)\n"
     )
@@ -113,7 +121,7 @@ sepuku <- function(
     }
   }
 
-  cli::cli_alert_info("Cleaning is done !")
+  cli_alert_success("Cleaning is done !")
 
   return(invisible(TRUE))
 }
@@ -534,7 +542,7 @@ usethis::with_project(dummypackage, {
 # Execute in the console directly
 fusen::inflate(
   flat_file = "dev/flat_sepuku.Rmd",
-  vignette_name = NA,
+  vignette_name = "Switch from a package developed with fusen to a classical package",
   check = FALSE,
   overwrite = TRUE,
   open_vignette = FALSE
