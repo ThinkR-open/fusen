@@ -15,7 +15,7 @@
 #' # If you want to force the cleaning, you can use the force argument
 #' sepuku(force = TRUE)
 #'
-#' # Example with a dummy package with a flat file
+#' # Example with a dummy package
 #' dummypackage <- tempfile("sepuku.example")
 #' dir.create(dummypackage)
 #' fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
