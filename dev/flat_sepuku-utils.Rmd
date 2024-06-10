@@ -1,0 +1,581 @@
+---
+title: "flat_sepuku-utils.Rmd empty"
+output: html_document
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r development, include=FALSE}
+library(testthat)
+```
+
+```{r development-load}
+# Load already included functions if relevant
+pkgload::load_all(export_all = FALSE)
+```
+
+
+# list_flat_files_in_config_file
+    
+```{r function-list_flat_files_in_config_file}
+#' @importFrom yaml read_yaml
+#' @noRd
+#' @rdname sepuku_utils
+list_flat_files_in_config_file <- function(
+    config_file = getOption("fusen.config_file",
+      default = "dev/config_fusen.yaml"
+    )) {
+  if (!file.exists(config_file)) {
+    return(character(0))
+  } else {
+    config_yml <- yaml::read_yaml(config_file)
+    return(
+      unlist(
+        lapply(config_yml, "[[", "path")
+      )
+    )
+  }
+}
+```
+
+```{r tests-list_flat_files_in_config_file}
+test_that("list_flat_files_in_config_file is a function", {
+  expect_true(inherits(list_flat_files_in_config_file, "function"))
+})
+
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+flat_file1 <- add_minimal_package(
+  pkg = dummypackage,
+  overwrite = TRUE,
+  open = FALSE
+)
+flat_file1 <- flat_file1[grepl("flat_", flat_file1)]
+
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  test_that("list_flat_files works when no fusen config file is present", {
+    identified_flat_files <- list_flat_files_in_config_file()
+    expect_true(!is.null(identified_flat_files))
+    expect_equal(length(identified_flat_files), 0)
+  })
+})
+
+usethis::with_project(dummypackage, {
+  test_that("list_flat_files works for a fusen config file", {
+    flat_file2 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "XXX_flat2.Rmd",
+      open = FALSE
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = flat_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = flat_file2,
+      vignette_name = "Get started 2",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    identified_flat_files <- list_flat_files_in_config_file()
+
+    expect_equal(
+      length(identified_flat_files), 2
+    )
+
+    expect_true(
+      all(
+        identified_flat_files %in%
+          c("dev/flat_minimal.Rmd", "dev/flat_xxx_flat2.Rmd")
+      )
+    )
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+```
+  
+
+# list_flat_files_in_dev_folder
+    
+```{r function-list_flat_files_in_dev_folder}
+#' @noRd
+#' @rdname sepuku_utils
+list_flat_files_in_dev_folder <- function(
+    pkg = ".",
+    folder = "dev") {
+  files_identified <-
+    c(
+      list.files(
+        path = file.path(pkg, folder),
+        pattern = "^flat.*\\.Rmd",
+        full.names = FALSE
+      ),
+      list.files(
+        path = file.path(pkg, folder),
+        pattern = "^flat.*\\.qmd",
+        full.names = FALSE
+      )
+    )
+
+  file.path(
+    folder,
+    files_identified
+  )
+}
+```
+``
+  
+```{r tests-list_flat_files_in_dev_folder}
+test_that("list_flat_files_in_dev_folder is a function", {
+  expect_true(inherits(list_flat_files_in_dev_folder, "function"))
+})
+
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+flat_file1 <- add_minimal_package(
+  pkg = dummypackage,
+  overwrite = TRUE,
+  open = FALSE
+)
+flat_file1 <- flat_file1[grepl("flat_", flat_file1)]
+
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  test_that("list_flat_files_in_dev_folder works for rmd and qmd files in dev folder starting with flat", {
+    flat_file_with_bad_name <- "xxx_flat2.Rmd"
+    file.create(file.path(dummypackage, "dev", flat_file_with_bad_name))
+
+    identified_flat_files <- list_flat_files_in_dev_folder()
+
+    expect_equal(identified_flat_files, "dev/flat_minimal.Rmd")
+
+    qmd_file <- "flat_minimal.qmd"
+
+    file.create(file.path(dummypackage, "dev", qmd_file))
+
+    identified_flat_files <- list_flat_files_in_dev_folder()
+
+    expect_equal(
+      length(identified_flat_files), 2
+    )
+
+    expect_true(
+      all(
+        identified_flat_files %in% c("dev/flat_minimal.Rmd", "dev/flat_minimal.qmd")
+      )
+    )
+  })
+
+  test_that("list_flat_files_in_dev_folder works for rmd and qmd files in flat_history folder starting with flat", {
+    inflate(
+      pkg = dummypackage,
+      flat_file = flat_file1,
+      vignette_name = NA,
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    deprecate_flat_file(
+      flat_file = flat_file1
+    )
+
+    identified_flat_files <- list_flat_files_in_dev_folder(folder = "dev/flat_history")
+
+    expect_equal(identified_flat_files, "dev/flat_history/flat_minimal.Rmd")
+
+    qmd_file <- "flat_minimal.qmd"
+
+    file.create(file.path(dummypackage, "dev/flat_history", qmd_file))
+
+    identified_flat_files <- list_flat_files_in_dev_folder(folder = "dev/flat_history")
+
+    expect_equal(
+      length(identified_flat_files), 2
+    )
+
+    expect_true(
+      all(
+        identified_flat_files %in% c("dev/flat_history/flat_minimal.Rmd", "dev/flat_history/flat_minimal.qmd")
+      )
+    )
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+```
+  
+
+# list_flat_files
+
+
+
+
+```{r function-list_flat_files}
+#' List all flat files present in the package
+#'
+#' Search for flat files listed in fusen config file, and for rmd and qmd files starting with "flat_" in dev/ folder, and dev/flat_history folder
+#'
+#' @param pkg Path to package
+#' @return a vector of flat files paths
+#'
+#' @export
+#' @rdname sepuku_utils
+list_flat_files <- function(pkg = ".") {
+  c(
+    list_flat_files_in_config_file(),
+    list_flat_files_in_dev_folder(folder = "dev"),
+    list_flat_files_in_dev_folder(folder = "dev/flat_history")
+  ) %>%
+    unique()
+}
+```
+  
+  
+```{r tests-list_flat_files}
+test_that("list_flat_files is a function", {
+  expect_true(inherits(list_flat_files, "function"))
+})
+
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  test_that("list_flat_files works with an empty pkg", {
+    flat_files <- list_flat_files()
+    expect_equal(length(flat_files), 0)
+  })
+
+  test_that("list_flat_files works with flat files in dev but no config file", {
+    dev_file1 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "flat1.Rmd",
+      open = FALSE
+    )
+
+    file.create(file.path(dummypackage, "dev", "flat_1.qmd"))
+    file.create(file.path(dummypackage, "dev", "wrong_flat1.Rmd"))
+    file.create(file.path(dummypackage, "dev", "wrong_flat1.qmd"))
+
+    flat_files <- list_flat_files()
+    expect_equal(
+      length(flat_files), 2
+    )
+
+    expect_true(
+      all(
+        flat_files %in% c("dev/flat_flat1.Rmd", "dev/flat_1.qmd")
+      )
+    )
+  })
+
+  test_that("list_flat_files works with flat files in dev and a config file", {
+    dev_file1 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "flat1.Rmd",
+      open = FALSE,
+      overwrite = TRUE
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = dev_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    flat_files <- list_flat_files()
+    expect_equal(
+      length(flat_files), 2
+    )
+
+    expect_true(
+      all(
+        flat_files %in% c("dev/flat_flat1.Rmd", "dev/flat_1.qmd")
+      )
+    )
+  })
+
+  test_that("list_flat_files works with a deprecated flat file", {
+    dev_file1 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "flat1.Rmd",
+      open = FALSE,
+      overwrite = TRUE
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = dev_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    deprecate_flat_file(
+      flat_file = dev_file1
+    )
+
+    flat_files <- list_flat_files()
+    expect_equal(
+      length(flat_files), 2
+    )
+
+    expect_true(
+      all(
+        flat_files %in% c("dev/flat_history/flat_flat1.Rmd", "dev/flat_1.qmd")
+      )
+    )
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+```
+  
+
+# find_files_with_fusen_tags
+    
+```{r function-find_files_with_fusen_tags}
+#' @noRd
+#' @rdname sepuku_utils
+find_files_with_fusen_tags <- function(pkg = ".") {
+  R_files_to_parse <-
+    lapply(
+      c("R", "tests/testthat"),
+      function(folder) {
+        file.path(
+          folder,
+          list.files(
+            path = file.path(pkg, folder),
+            pattern = "*\\.R",
+            full.names = FALSE
+          )
+        )
+      }
+    ) %>%
+    unlist()
+
+
+
+  Rmd_files_to_parse <- lapply(
+    "vignettes",
+    function(folder) {
+      file.path(
+        folder,
+        list.files(
+          path = file.path(pkg, folder),
+          pattern = "*\\.Rmd",
+          full.names = FALSE
+        )
+      )
+    }
+  ) %>%
+    unlist()
+
+  files_to_parse <- c(R_files_to_parse, Rmd_files_to_parse)
+
+  if (length(files_to_parse) == 0) {
+    return(character(0))
+  }
+
+  fusen_tags <- tolower(
+    c("WARNING - Generated by", "Previously generated by", "WARNING - This vignette is generated by")
+  )
+  files_with_fusen_tags <-
+    lapply(
+      files_to_parse,
+      function(file) {
+        if (
+          length(
+            grep(paste(fusen_tags, collapse = "|"), tolower(readLines(file)))
+          ) > 0
+        ) {
+          return(file)
+        } else {
+          return(character(0))
+        }
+      }
+    ) %>%
+    unlist() %>%
+    unique()
+
+  return(files_with_fusen_tags)
+}
+```
+  
+```{r tests-find_files_with_fusen_tags}
+test_that("find_files_with_fusen_tags is a function", {
+  expect_true(inherits(find_files_with_fusen_tags, "function"))
+})
+
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+  test_that("find_files_with_fusen_tags works with an empty pkg", {
+    files_with_fusen_tags <- find_files_with_fusen_tags()
+    expect_equal(length(files_with_fusen_tags), 0)
+  })
+
+  test_that("find_files_with_fusen_tags identifies files created by fusen", {
+    dev_file1 <- add_minimal_flat(
+      pkg = dummypackage,
+      flat_name = "flat1.Rmd",
+      open = FALSE,
+      overwrite = TRUE
+    )
+
+    inflate(
+      pkg = dummypackage,
+      flat_file = dev_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
+      overwrite = "yes"
+    )
+
+    files_with_fusen_tags <- find_files_with_fusen_tags()
+    expect_equal(length(files_with_fusen_tags), 3)
+    expect_true(
+      all(
+        files_with_fusen_tags %in%
+          c("R/flat1_rmd.R", "vignettes/get-started.Rmd", "tests/testthat/test-flat1_rmd.R")
+      )
+    )
+  })
+
+  test_that("find_files_with_fusen_tags do not identify files not created by fusen", {
+    usethis::use_r("donotfindme.R", open = FALSE)
+    usethis::use_test("donotfindme.R", open = FALSE)
+    file.create(file.path(dummypackage, "vignettes", "donotfindme.Rmd"))
+
+    files_with_fusen_tags <- find_files_with_fusen_tags()
+    expect_equal(length(files_with_fusen_tags), 3)
+    expect_true(
+      all(
+        files_with_fusen_tags %in%
+          c("R/flat1_rmd.R", "vignettes/get-started.Rmd", "tests/testthat/test-flat1_rmd.R")
+      )
+    )
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+```
+  
+
+# clean_fusen_tags_in_files
+    
+```{r function-clean_fusen_tags_in_files}
+#' @noRd
+#' @rdname sepuku_utils
+clean_fusen_tags_in_files <- function(
+    pkg = ".",
+    files_to_clean) {
+  fusen_tags <- tolower(
+    c("WARNING - Generated by", "Previously generated by", "WARNING - This vignette is generated by")
+  )
+  fusen_tags <- tolower(c(
+    "WARNING - Generated by.*do not edit by hand",
+    "Previously generated by.*now deprecated",
+    "This vignette is generated by.*do not edit by hand"
+  ))
+
+  for (file in files_to_clean) {
+    lines <- readLines(file.path(pkg, file))
+    lines <- lines[!grepl(paste(fusen_tags, collapse = "|"), tolower(lines))]
+    writeLines(lines, file)
+  }
+
+  return(files_to_clean)
+}
+```
+  
+
+  
+```{r tests-clean_fusen_tags_in_files}
+test_that("clean_fusen_tags_in_files is a function", {
+  expect_true(inherits(clean_fusen_tags_in_files, "function"))
+})
+
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+
+  dev_file1 <- add_minimal_flat(
+    pkg = dummypackage,
+    flat_name = "flat1.Rmd",
+    open = FALSE,
+    overwrite = TRUE
+  )
+  inflate(
+    pkg = dummypackage,
+    flat_file = dev_file1,
+    vignette_name = "Get started",
+    check = FALSE,
+    open_vignette = FALSE,
+    document = TRUE,
+    overwrite = "yes"
+  )
+  files_with_fusen_tags <- find_files_with_fusen_tags(pkg = dummypackage)
+
+
+
+  test_that("clean_fusen_tags_in_files works with an empty pkg", {
+    cleaned_files <- clean_fusen_tags_in_files(pkg = dummypackage, files_to_clean = files_with_fusen_tags)
+    cleaned_files_with_fusen_tags <- find_files_with_fusen_tags()
+    expect_equal(length(cleaned_files_with_fusen_tags), 0)
+  })
+})
+unlink(dummypackage, recursive = TRUE)
+```
+  
+
+    
+
+```{r development-inflate, eval=FALSE}
+# Run but keep eval=FALSE to avoid infinite loop
+# Execute in the console directly
+fusen::inflate(
+  flat_file = "dev/flat_sepuku-utils.Rmd",
+  vignette_name = NA,
+  check = FALSE,
+  overwrite = TRUE,
+  open_vignette = FALSE
+)
+```
+
