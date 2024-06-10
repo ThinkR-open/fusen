@@ -158,13 +158,12 @@ sepuku <- function(
 
   if (!force) {
     cli_alert_danger("Some files are about to be deleted or modified. This operation is irreversible.")
-    sure <- paste(
-      "\nAre you sure of what you are doing? (y/n)\n"
+    clean <- readline(
+      prompt = "Are you sure of what you are doing? (y/n)"
     )
-    clean <- readline(sure) == "y" || readline(sure) == "yes"
-    if (isTRUE(clean) || clean == "yes") {
+    if (tolower(clean) %in% c("yes", "y")) {
       do_it <- TRUE
-    } else if (isFALSE(clean) || clean == "no") {
+    } else if (tolower(clean) %in% c("no", "n")) {
       do_it <- FALSE
     } else {
       stop("clean should be TRUE, FALSE, 'yes'or 'no'")
@@ -181,6 +180,17 @@ sepuku <- function(
           }
         )
       )
+      try(
+        unlink(
+          file.path(
+            pkg,
+            "dev",
+            "flat_history"
+          ),
+          recursive = TRUE
+        ),
+        silent = TRUE
+      )
     }
 
     if (length(files_to_be_modified) > 0) {
@@ -196,9 +206,7 @@ sepuku <- function(
     if (file.exists(config_file)) {
       file.remove(config_file)
     }
+    cli_alert_success("Cleaning is done !")
   }
-
-  cli_alert_success("Cleaning is done !")
-
   return(invisible(TRUE))
 }
