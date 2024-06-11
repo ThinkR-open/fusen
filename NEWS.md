@@ -1,3 +1,10 @@
+# fusen (development version 0.6.0.9002)
+
+## New features
+
+- RStudio Addin "Fusen : Add fusen chunks" as well as `fusen::add_fusen_chunks()` add a development chunk in complement to the "function", "example" and "test" chunks already provided (#255) @ymansiaux
+
+
 # fusen (development version 0.6.0.9001)
 
 ## New features
