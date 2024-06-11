@@ -14,6 +14,8 @@ inflate(
   overwrite = "ask",
   clean = "ask",
   update_params = TRUE,
+  codecov = FALSE,
+  codecov_fun = c("package_coverage", "report"),
   ...
 )
 }
@@ -43,6 +45,8 @@ in the flat file. Default to "ask".}
 
 \item{update_params}{Logical. Whether to update the inflate parameters
 in the configuration file.}
+
+\item{codecov}{Logical. Whether to compute code coverage (with \code{covr::package_coverage()} or \code{covr::report()}).}
 
 \item{...}{Arguments passed to \code{devtools::check()}.
 For example, you can do \code{inflate(check = TRUE, quiet = TRUE)},

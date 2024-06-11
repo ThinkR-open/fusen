@@ -33,7 +33,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #'  in the flat file. Default to "ask".
 #' @param update_params Logical. Whether to update the inflate parameters
 #'  in the configuration file.
-#' @param codecov Logical. Whether to compute code coverage (with `covr::package_coverage()`).
+#' @param codecov Logical. Whether to compute code coverage (with `covr::package_coverage()` or `covr::report()`).
 #' @param ... Arguments passed to `devtools::check()`.
 #'  For example, you can do `inflate(check = TRUE, quiet = TRUE)`,
 #'  where `quiet` is passed to `devtools::check()`.
@@ -41,7 +41,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @importFrom utils getFromNamespace
 #' @importFrom glue glue
 #' @importFrom methods formalArgs
-#' @importFrom covr package_coverage
+#' @importFrom covr package_coverage report
 #'
 #' @return
 #' Package structure. Return path to current package.
@@ -82,6 +82,10 @@ inflate <- function(pkg = ".", flat_file,
                     clean = "ask",
                     update_params = TRUE,
                     codecov = FALSE,
+                    codecov_fun = c(
+                      "package_coverage",
+                      "report"
+                    ),
                     ...) {
   if (!is.null(list(...)[["name"]])) {
     stop(paste0(
@@ -367,11 +371,20 @@ inflate <- function(pkg = ".", flat_file,
   )
 
   if (codecov) {
+    if (!codecov_fun %in% c("package_coverage", "report")) {
+      cli::cli_abort("codecov_fun must be either 'package_coverage' or 'report'")
+    }
+
     cli::cli_alert_info("Computing code coverage - it might take some time")
-    print(covr::package_coverage(path = pkg))
+
+    print(
+      get(
+        sprintf(
+          "%s", codecov_fun[1]
+        )
+      )()
+    )
   }
-
-
 
   # Restart RStudio
   is_rstudio <- Sys.getenv("RSTUDIO") == "1"
