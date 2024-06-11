@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">fusen</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.6.0.9001</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.6.0.9002</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -150,15 +150,15 @@ where <code>quiet</code> is passed to <code><a href="https://devtools.r-lib.org/
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># {fusen} steps</span></span></span>
 <span class="r-in"><span><span class="va">dev_file</span> <span class="op">&lt;-</span> <span class="fu"><a href="add_flat_template.html">add_flat_template</a></span><span class="op">(</span>template <span class="op">=</span> <span class="st">"full"</span>, pkg <span class="op">=</span> <span class="va">dummypackage</span>, overwrite <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpERNo3g/dummy.package17e82e653ad7 . Please start a new R session in the new project directory.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpOefTU9/dummy.package174c502ede5a . Please start a new R session in the new project directory.</span>
 <span class="r-in"><span><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">dev_file</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl</a></span><span class="op">(</span><span class="st">"flat"</span>, <span class="va">dev_file</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="fill_description.html">fill_description</a></span><span class="op">(</span>pkg <span class="op">=</span> <span class="va">dummypackage</span>, fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"Dummy Package"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">inflate</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  pkg <span class="op">=</span> <span class="va">dummypackage</span>, flat_file <span class="op">=</span> <span class="va">flat_file</span>,</span></span>
 <span class="r-in"><span>  vignette_name <span class="op">=</span> <span class="st">"Exploration of my Data"</span>, check <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpERNo3g/dummy.package17e82e653ad7'</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummy.package17e82e653ad7</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">'/tmp/RtmpOefTU9/dummy.package174c502ede5a'</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummy.package174c502ede5a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">'knitr'</span> to <span style="color: #00BB00;">Suggests</span> field in DESCRIPTION</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">•</span> Use <span style="color: #555555;">`requireNamespace("knitr", quietly = TRUE)`</span> to test if package is installed</span>
@@ -171,13 +171,13 @@ where <code>quiet</code> is passed to <code><a href="https://devtools.r-lib.org/
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> tests: tests/testthat/test-my_other_median.R was added to the config file</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> vignettes: vignettes/exploration-of-my-data.Rmd was added to the config file</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Saving attachment parameters to yaml config file</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating dummy.package17e82e653ad7 documentation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummy.package17e82e653ad7</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating dummy.package174c502ede5a documentation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummy.package174c502ede5a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">my_median.Rd</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">my_other_median.Rd</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">sub_median.Rd</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummy.package17e82e653ad7</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">dummy.package174c502ede5a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> [+] 3 package(s) added: stats, rmarkdown, testthat.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Explore directory of the package</span></span></span>
