@@ -33,6 +33,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #'  in the flat file. Default to "ask".
 #' @param update_params Logical. Whether to update the inflate parameters
 #'  in the configuration file.
+#' @param codecov Logical. Whether to compute code coverage (with `covr::package_coverage()`).
 #' @param ... Arguments passed to `devtools::check()`.
 #'  For example, you can do `inflate(check = TRUE, quiet = TRUE)`,
 #'  where `quiet` is passed to `devtools::check()`.
@@ -40,6 +41,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @importFrom utils getFromNamespace
 #' @importFrom glue glue
 #' @importFrom methods formalArgs
+#' @importFrom covr package_coverage
 #'
 #' @return
 #' Package structure. Return path to current package.
@@ -79,6 +81,7 @@ inflate <- function(pkg = ".", flat_file,
                     overwrite = "ask",
                     clean = "ask",
                     update_params = TRUE,
+                    codecov = FALSE,
                     ...) {
   if (!is.null(list(...)[["name"]])) {
     stop(paste0(
@@ -362,6 +365,12 @@ inflate <- function(pkg = ".", flat_file,
     document = document,
     ...
   )
+
+  if (codecov) {
+    cli::cli_alert_info("Computing code coverage - it might take some time")
+    print(covr::package_coverage(path = pkg))
+  }
+
 
 
   # Restart RStudio
