@@ -13,6 +13,7 @@ usethis::with_project(dummypackage, {
     open = FALSE,
     overwrite = TRUE
   )
+
   capture.output(
     inflate(
       pkg = dummypackage,

@@ -371,7 +371,15 @@ inflate <- function(pkg = ".", flat_file,
   )
 
   if (codecov) {
-    if (!codecov_fun %in% c("package_coverage", "report")) {
+    codecov_fun <- try(
+      match.arg(
+        codecov_fun,
+        c("package_coverage", "report"),
+        several.ok = FALSE
+      ),
+      silent = TRUE
+    )
+    if (inherits(codecov_fun, "try-error")) {
       cli::cli_abort("codecov_fun must be either 'package_coverage' or 'report'")
     }
 
