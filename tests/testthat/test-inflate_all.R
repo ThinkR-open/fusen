@@ -560,7 +560,8 @@ usethis::with_project(dummypackage, {
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
         "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite", "clean"
+        "check", "document", "overwrite", "clean",
+        "codecov"
       )
     )
   })
@@ -610,7 +611,8 @@ usethis::with_project(dummypackage, {
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
         "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite", "clean"
+        "check", "document", "overwrite", "clean",
+        "codecov"
       )
     )
     expect_true(is.na(config_content[["flat_full.Rmd"]][["inflate"]][["vignette_name"]]))
@@ -673,3 +675,4 @@ usethis::with_project(dummypackage, {
     )
   })
 })
+unlink(dummypackage, recursive = TRUE)

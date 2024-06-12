@@ -166,6 +166,7 @@ inflate_all <- function(
           flat_file$document <- FALSE
           flat_file$check <- FALSE
           flat_file$update_params <- FALSE
+          flat_file$codecov <- FALSE
           suppressMessages(do.call(inflate, flat_file))
         })
       )
@@ -830,7 +831,8 @@ usethis::with_project(dummypackage, {
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
         "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite", "clean"
+        "check", "document", "overwrite", "clean",
+        "codecov"
       )
     )
   })
@@ -880,7 +882,8 @@ usethis::with_project(dummypackage, {
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
         "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite", "clean"
+        "check", "document", "overwrite", "clean",
+        "codecov"
       )
     )
     expect_true(is.na(config_content[["flat_full.Rmd"]][["inflate"]][["vignette_name"]]))
@@ -943,6 +946,7 @@ usethis::with_project(dummypackage, {
     )
   })
 })
+unlink(dummypackage, recursive = TRUE)
 ```
 
 ```{r development-inflate, eval=FALSE}

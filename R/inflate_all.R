@@ -162,6 +162,7 @@ inflate_all <- function(
           flat_file$document <- FALSE
           flat_file$check <- FALSE
           flat_file$update_params <- FALSE
+          flat_file$codecov <- FALSE
           suppressMessages(do.call(inflate, flat_file))
         })
       )
