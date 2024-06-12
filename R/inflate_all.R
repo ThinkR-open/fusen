@@ -106,6 +106,7 @@ inflate_all <- function(
     open_vignette = FALSE,
     overwrite = TRUE,
     check_unregistered = TRUE,
+    codecov = FALSE,
     stylers, ...) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
@@ -198,11 +199,19 @@ inflate_all <- function(
     ...
   )
 
+  if (codecov) {
+    print("entering codecov")
+    cli::cli_alert_info("Computing code coverage - it might take some time")
+    print(
+      covr::package_coverage()
+    )
+  }
+
   invisible(pkg)
 }
 
 #' @rdname inflate_all
 #' @export
-inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, check_unregistered = TRUE, stylers, ...) {
-  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, check_unregistered = check_unregistered, stylers, ...)
+inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, check_unregistered = TRUE, codecov = FALSE, stylers, ...) {
+  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, check_unregistered = check_unregistered, codecov = codecov, stylers, ...)
 }

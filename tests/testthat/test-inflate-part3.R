@@ -106,8 +106,7 @@ usethis::with_project(dummypackage, {
       open_vignette = FALSE,
       document = TRUE,
       overwrite = "yes",
-      codecov = TRUE,
-      codecov_fun = "report"
+      codecov = TRUE
     ),
     file = console_output_file,
     type = "message"
