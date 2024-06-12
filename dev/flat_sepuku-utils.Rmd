@@ -415,7 +415,12 @@ find_files_with_fusen_tags <- function(pkg = ".") {
       function(file) {
         if (
           length(
-            grep(paste(fusen_tags, collapse = "|"), tolower(readLines(file)))
+            grep(
+              paste(fusen_tags, collapse = "|"),
+              tolower(
+                suppressWarnings(readLines(file))
+              )
+            )
           ) > 0
         ) {
           return(file)
