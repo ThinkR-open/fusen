@@ -96,6 +96,7 @@ flat_inflate_all.Rmd:
     document: true
     overwrite: 'yes'
     clean: ask
+    codecov: false
 flat_inflate_all_utils.Rmd:
   path: dev/flat_inflate_all_utils.Rmd
   state: active
@@ -114,6 +115,7 @@ flat_inflate_all_utils.Rmd:
     document: true
     overwrite: 'yes'
     clean: ask
+    codecov: false
 flat_init_share_on_github.Rmd:
   path: dev/flat_init_share_on_github.Rmd
   state: active

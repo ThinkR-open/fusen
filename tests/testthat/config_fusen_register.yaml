@@ -11,11 +11,12 @@ flat_full.Rmd:
   inflate:
     flat_file: dev/flat_full.Rmd
     vignette_name: Get started
-    open_vignette: no
-    check: no
-    document: yes
+    open_vignette: false
+    check: false
+    document: true
     overwrite: ask
     clean: ask
+    codecov: false
 flat_new_one.Rmd:
   path: dev/flat_new_one.Rmd
   state: active
@@ -25,11 +26,12 @@ flat_new_one.Rmd:
   inflate:
     flat_file: dev/flat_new_one.Rmd
     vignette_name: new_one
-    open_vignette: no
-    check: no
-    document: yes
+    open_vignette: false
+    check: false
+    document: true
     overwrite: ask
     clean: ask
+    codecov: false
 keep:
   path: keep
   state: active
