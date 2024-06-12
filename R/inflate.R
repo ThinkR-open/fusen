@@ -41,7 +41,7 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @importFrom utils getFromNamespace
 #' @importFrom glue glue
 #' @importFrom methods formalArgs
-#' @importFrom covr package_coverage report
+#' @importFrom covr package_coverage
 #'
 #' @return
 #' Package structure. Return path to current package.
@@ -82,10 +82,6 @@ inflate <- function(pkg = ".", flat_file,
                     clean = "ask",
                     update_params = TRUE,
                     codecov = FALSE,
-                    codecov_fun = c(
-                      "package_coverage",
-                      "report"
-                    ),
                     ...) {
   if (!is.null(list(...)[["name"]])) {
     stop(paste0(
@@ -371,26 +367,9 @@ inflate <- function(pkg = ".", flat_file,
   )
 
   if (codecov) {
-    codecov_fun <- try(
-      match.arg(
-        codecov_fun,
-        c("package_coverage", "report"),
-        several.ok = FALSE
-      ),
-      silent = TRUE
-    )
-    if (inherits(codecov_fun, "try-error")) {
-      cli::cli_abort("codecov_fun must be either 'package_coverage' or 'report'")
-    }
-
     cli::cli_alert_info("Computing code coverage - it might take some time")
-
     print(
-      get(
-        sprintf(
-          "%s", codecov_fun[1]
-        )
-      )()
+      covr::package_coverage()
     )
   }
 

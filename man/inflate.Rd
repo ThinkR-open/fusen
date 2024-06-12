@@ -15,7 +15,6 @@ inflate(
   clean = "ask",
   update_params = TRUE,
   codecov = FALSE,
-  codecov_fun = c("package_coverage", "report"),
   ...
 )
 }
