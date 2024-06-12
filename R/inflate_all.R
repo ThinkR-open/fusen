@@ -97,6 +97,12 @@
 #'   inflate_all(check = FALSE, document = TRUE)
 #' })
 #'
+#' # If you wish, the code coverage can be computed
+#' usethis::with_project(dummypackage, {
+#'   # now you can run inflate_all()
+#'   inflate_all(check = FALSE, document = TRUE, codecov = TRUE)
+#' })
+#'
 #' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
 inflate_all <- function(
@@ -200,7 +206,6 @@ inflate_all <- function(
   )
 
   if (codecov) {
-    print("entering codecov")
     cli::cli_alert_info("Computing code coverage - it might take some time")
     print(
       covr::package_coverage()
