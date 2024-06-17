@@ -54,7 +54,8 @@ load_flat_functions <- function(flat_file, envir = globalenv()) {
     cli_alert_success(
       paste0(
         "'function' chunks from '",
-        flat_file, "' sourced in global env."
+        flat_file,
+        "' sourced in global env."
       )
     )
   } else {

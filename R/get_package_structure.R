@@ -43,8 +43,10 @@
 #'   # Works with 'fusen' package
 #'   suppressMessages(
 #'     inflate(
-#'       pkg = dummypackage, flat_file = flat_file,
-#'       vignette_name = "Get started", check = FALSE,
+#'       pkg = dummypackage,
+#'       flat_file = flat_file,
+#'       vignette_name = "Get started",
+#'       check = FALSE,
 #'       open_vignette = FALSE
 #'     )
 #'   )
@@ -53,9 +55,10 @@
 #'   draw_package_structure(pkg_structure)
 #' })
 get_package_structure <- function(
-    config_file,
-    emoji = TRUE,
-    silent = FALSE) {
+  config_file,
+  emoji = TRUE,
+  silent = FALSE
+) {
   if (missing(config_file)) {
     yaml_fusen_file_orig <- getOption(
       "fusen_config_file",
@@ -117,10 +120,14 @@ get_package_structure <- function(
     if (emoji) {
       flat_state <- yaml_fusen[[flat_file]]$state
       yaml_fusen[[flat_file]]$state <-
-        paste(ifelse(
-          flat_state == "active",
-          "\U0001f34f", "\U0001f6d1"
-        ), flat_state)
+        paste(
+          ifelse(
+            flat_state == "active",
+            "\U0001f34f",
+            "\U0001f6d1"
+          ),
+          flat_state
+        )
     }
 
     # Get the list of R files with their functions
@@ -132,9 +139,12 @@ get_package_structure <- function(
       exported <- paste0("export(", functions, ")") %in% namespace
       if (emoji) {
         functions <- paste(
-          ifelse(exported,
-            "\U0001f440", "\U0001f648"
-          ), functions
+          ifelse(
+            exported,
+            "\U0001f440",
+            "\U0001f648"
+          ),
+          functions
         )
       } else {
         functions <- paste(

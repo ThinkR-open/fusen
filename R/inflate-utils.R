@@ -39,7 +39,8 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
   # Get lines before "function" if code on multiple lines
   # Parse only code and not all the rest
   code_clean_first_fun <- gsub(
-    "\\n", " ",
+    "\\n",
+    " ",
     as.character(parse(text = code))
   )
   code_clean_first_fun <- code_clean_first_fun[grepl(regex_isfunction, code_clean_first_fun)][1]
@@ -77,7 +78,7 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
     # If chunk all empty
     code <- character(0)
   } else if (!is.na(first_function_start) &&
-             !any(grepl("@export|@noRd", code[1:first_function_start]))) {
+    !any(grepl("@export|@noRd", code[1:first_function_start]))) {
     if (!is.na(last_hastags_above_first_fun)) {
       code <- c(
         code[1:last_hastags_above_first_fun],
@@ -113,11 +114,13 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
 
   # Get @rdname and @filename for grouping functions
   tag_filename <- gsub(
-    "^#'\\s*@filename\\s*", "",
+    "^#'\\s*@filename\\s*",
+    "",
     code[grep("^#'\\s*@filename", code)]
   )
   tag_rdname <- gsub(
-    "^#'\\s*@rdname\\s*", "",
+    "^#'\\s*@rdname\\s*",
+    "",
     code[grep("^#'\\s*@rdname", code)]
   )
   rox_filename <- c(tag_filename, tag_rdname)[1]
@@ -142,7 +145,7 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
 add_names_to_parsed <- function(parsed_tbl, fun_code) {
   # Which parts were functions
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-                              grepl(regex_functions, parsed_tbl$label))
+    grepl(regex_functions, parsed_tbl$label))
 
   # From fun_code, we retrieve fun_name & rox_filename
   parsed_tbl[["fun_name"]] <- NA_character_
@@ -172,29 +175,42 @@ add_names_to_parsed <- function(parsed_tbl, fun_code) {
       # reorder chunks for fun, ex, test ?
       # however, what happens when multiple groups under same title ?
       sec_fun_name <- sec_title_name[
-        sec_title_name[["sec_title"]] == x, "sec_fun_name"
+        sec_title_name[["sec_title"]] == x,
+        "sec_fun_name"
       ]
-      parsed_tbl[group, "sec_fun_name"] <- ifelse(length(sec_fun_name) == 0,
-                                                  NA_character_, as.character(sec_fun_name)
+      parsed_tbl[group, "sec_fun_name"] <- ifelse(
+        length(sec_fun_name) == 0,
+        NA_character_,
+        as.character(sec_fun_name)
       )
       parsed_tbl[group, ] <- tidyr::fill(
         parsed_tbl[group, ],
-        fun_name, rox_filename, chunk_filename,
+        fun_name,
+        rox_filename,
+        chunk_filename,
         .direction = "down"
       )
       parsed_tbl[group, ] <- tidyr::fill(
         parsed_tbl[group, ],
-        fun_name, rox_filename, chunk_filename,
+        fun_name,
+        rox_filename,
+        chunk_filename,
         .direction = "up"
       )
     }) %>%
       do.call("rbind", .)
     parsed_tbl[["fun_name"]][pkg_filled[["order"]]] <- pkg_filled[["fun_name"]]
   } else {
-    pkg_filled <- parsed_tbl[, c(
-      "fun_name", "chunk_filename", "rox_filename",
-      "sec_fun_name", "sec_title"
-    )]
+    pkg_filled <- parsed_tbl[
+      ,
+      c(
+        "fun_name",
+        "chunk_filename",
+        "rox_filename",
+        "sec_fun_name",
+        "sec_title"
+      )
+    ]
     pkg_filled[, "order"] <- 1:nrow(pkg_filled)
   }
 
@@ -203,8 +219,10 @@ add_names_to_parsed <- function(parsed_tbl, fun_code) {
   # If sec_title, choose fun_name of the first function
   pkg_filled[["file_name"]] <- NA_character_
   # chunk_filename
-  pkg_filled[["file_name"]] <- ifelse(!is.na(pkg_filled[["chunk_filename"]]),
-                                      pkg_filled[["chunk_filename"]], NA_character_
+  pkg_filled[["file_name"]] <- ifelse(
+    !is.na(pkg_filled[["chunk_filename"]]),
+    pkg_filled[["chunk_filename"]],
+    NA_character_
   )
   # rox_filename
   pkg_filled[["file_name"]] <- ifelse(
@@ -255,7 +273,9 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
   file_name <- x[["file_name"]]
 
   test_file <- file.path(
-    pkg, "tests", "testthat",
+    pkg,
+    "tests",
+    "testthat",
     paste0("test-", asciify_name(file_name), ".R")
   )
 
@@ -280,7 +300,7 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
   # Example in separate chunk
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
-                             grepl(regex_example, parsed_tbl$label))
+    grepl(regex_example, parsed_tbl$label))
   rmd_ex <- parsed_tbl[which_parsed_ex, ]
 
   # Get file_name variable
@@ -291,9 +311,10 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   fun_code <- as_tibble(merge(fun_code, fun_file_groups, by = "fun_name", all.x = TRUE, sort = FALSE))
   fun_code <- fun_code[order(fun_code[["order"]]), ]
   # Get file_name for not functions. Only last place where possible
-  fun_code[["file_name"]] <- ifelse(is.na(fun_code[["file_name"]]),
-                                    fun_code[["sec_title"]],
-                                    fun_code[["file_name"]]
+  fun_code[["file_name"]] <- ifelse(
+    is.na(fun_code[["file_name"]]),
+    fun_code[["sec_title"]],
+    fun_code[["file_name"]]
   )
 
   #  Example already in skeleton
@@ -313,7 +334,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   if (nrow(ex_alone) != 0) {
     message(
       "Some example chunks are not associated to any function: ",
-      paste(ex_alone[["label"]], collapse = ", "), ".",
+      paste(ex_alone[["label"]], collapse = ", "),
+      ".",
       "\nIf you plan to include them only in the vignette, then ",
       "you can give them any other name except `dev*`, `fun*`, `test*`"
     )
@@ -377,9 +399,10 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
         )
       }
 
-      end_skeleton <- ifelse(is.na(fun_code_x[["example_pos_start"]]),
-                             fun_code_x[["example_pos_end"]],
-                             fun_code_x[["example_pos_start"]] - 1
+      end_skeleton <- ifelse(
+        is.na(fun_code_x[["example_pos_start"]]),
+        fun_code_x[["example_pos_end"]],
+        fun_code_x[["example_pos_start"]] - 1
       )
 
       all_fun_code <- stats::na.omit(c(
@@ -392,7 +415,7 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
         # end
         unlist(fun_code_x[["code"]])[
           (fun_code_x[["example_pos_end"]] + 1):
-            length(unlist(fun_code_x[["code"]]))
+          length(unlist(fun_code_x[["code"]]))
         ]
       ))
       return(all_fun_code)
@@ -475,15 +498,17 @@ create_vignette_head <- function(pkg, vignette_name, yaml_options = NULL) {
       '---
 title: ".{vignette_title}."
 output: rmarkdown::html_vignette',
-      ifelse(length(yaml_options) != 0,
-             glue::glue_collapse(
-               c(
-                 "",
-                 glue("{names(yaml_options)}: \"{yaml_options}\""), ""
-               ),
-               sep = "\n"
-             ),
-             "\n"
+      ifelse(
+        length(yaml_options) != 0,
+        glue::glue_collapse(
+          c(
+            "",
+            glue("{names(yaml_options)}: \"{yaml_options}\""),
+            ""
+          ),
+          sep = "\n"
+        ),
+        "\n"
       ),
       'vignette: >
   %\\VignetteIndexEntry{.{vignette_name}.}
@@ -502,7 +527,8 @@ knitr::opts_chunk$set(
 library(.{pkgname}.)
 ```
     ',
-    .open = ".{", .close = "}."
+      .open = ".{",
+      .close = "}."
     )
   )
 }
@@ -557,11 +583,14 @@ asciify_name <- function(name, to_pkg = FALSE) {
   name <- stri_trans_general(name, id = "Latin-ASCII")
 
   cleaned_name <- gsub(
-    "^[.]*|^-|-$", "",
+    "^[.]*|^-|-$",
+    "",
     gsub(
-      "-+", "-",
+      "-+",
+      "-",
       gsub(
-        "-_|_-", "-",
+        "-_|_-",
+        "-",
         gsub("[^([:alnum:]*_*-*)*]", "-", name)
       )
     )
@@ -569,7 +598,8 @@ asciify_name <- function(name, to_pkg = FALSE) {
 
   if (isTRUE(to_pkg)) {
     cleaned_name <- gsub(
-      "[^a-zA-Z0-9]+", ".",
+      "[^a-zA-Z0-9]+",
+      ".",
       gsub("^[0-9]+", "", cleaned_name)
     )
   } else {
@@ -585,9 +615,11 @@ asciify_name <- function(name, to_pkg = FALSE) {
 #' @noRd
 clean_function_name <- function(name) {
   gsub(
-    "-", "_",
+    "-",
+    "_",
     gsub(
-      "^\\s*|\\s*$|^[0-9]*|^-*|-*$", "",
+      "^\\s*|\\s*$|^[0-9]*|^-*|-*$",
+      "",
       asciify_name(name, to_pkg = FALSE)
     )
   )

@@ -20,19 +20,22 @@
 #' @examples
 #' my_path <- tempfile("mypkg")
 #' create_fusen(path = my_path, template = "full", open = FALSE)
-create_fusen <- function(path,
-                         template = c("full", "minimal", "teaching", "dev_history"),
-                         flat_name = template,
-                         open = TRUE,
-                         overwrite = FALSE,
-                         with_git = FALSE) {
+create_fusen <- function(
+  path,
+  template = c("full", "minimal", "teaching", "dev_history"),
+  flat_name = template,
+  open = TRUE,
+  overwrite = FALSE,
+  with_git = FALSE
+) {
   path <- normalizePath(path, mustWork = FALSE)
   template <- match.arg(template, choices = create_fusen_choices)
 
   project_name <- get_pkg_name(pkg = path)
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
     stop(
-      "Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
+      "Please rename your project/directory with: `",
+      asciify_name(project_name, to_pkg = TRUE),
       "` as a package name should only contain letters, numbers and dots."
     )
   }
@@ -40,7 +43,9 @@ create_fusen <- function(path,
   if (dir.exists(path)) {
     cli::cli_alert_warning(
       paste(
-        "The path:", path, "already exists."
+        "The path:",
+        path,
+        "already exists."
       )
     )
     if (!isTRUE(overwrite)) {
@@ -120,10 +125,12 @@ create_fusen <- function(path,
 
 #' This will only work with Rstudio Project Wizard
 #' @noRd
-create_fusen_gui <- function(path,
-                             template,
-                             flat_name = template,
-                             with_git) {
+create_fusen_gui <- function(
+  path,
+  template,
+  flat_name = template,
+  with_git
+) {
   create_fusen(
     path = file.path(normalize_path_winslash(getwd()), path),
     template = template,

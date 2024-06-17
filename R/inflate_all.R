@@ -106,14 +106,16 @@
 #' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
 inflate_all <- function(
-    pkg = ".",
-    document = TRUE,
-    check = TRUE,
-    open_vignette = FALSE,
-    overwrite = TRUE,
-    check_unregistered = TRUE,
-    codecov = FALSE,
-    stylers, ...) {
+  pkg = ".",
+  document = TRUE,
+  check = TRUE,
+  open_vignette = FALSE,
+  overwrite = TRUE,
+  check_unregistered = TRUE,
+  codecov = FALSE,
+  stylers,
+  ...
+) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
@@ -150,7 +152,8 @@ inflate_all <- function(
     message("No flat files were inflated")
   } else {
     apply_inflate <- function(inflate_params, pkg, overwrite, open_vignette) {
-      config_file <- getOption("fusen.config_file",
+      config_file <- getOption(
+        "fusen.config_file",
         default = "dev/config_fusen.yaml"
       )
       # Change config option temporary, to be able to modify it on the fly
@@ -175,8 +178,10 @@ inflate_all <- function(
       )
     }
 
-    apply_inflate(inflate_params,
-      pkg = pkg, overwrite = overwrite,
+    apply_inflate(
+      inflate_params,
+      pkg = pkg,
+      overwrite = overwrite,
       open_vignette = open_vignette
     )
   }

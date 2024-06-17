@@ -21,7 +21,8 @@ usethis::with_project(dummypackage, {
     # if no config file exists, we raise an error
     withr::with_options(list(cli.width = 80), {
       # cli.width is requires as cli output is wrapped to the console size
-      expect_error(inflate_all(),
+      expect_error(
+        inflate_all(),
         regexp = "requires a configuration file to[[:space:]]work properly"
       )
     })
@@ -30,16 +31,20 @@ usethis::with_project(dummypackage, {
   # we inflate the flat file
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
-      open_vignette = FALSE, document = TRUE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
       overwrite = "yes"
     )
   )
   config_yml_ref <- yaml::read_yaml(getOption("fusen.config_file", default = "dev/config_fusen.yaml"))
 
   test_that("inflate_all says which is going to be inflated", {
-    expect_message(inflate_all(check = FALSE),
+    expect_message(
+      inflate_all(check = FALSE),
       regexp = glue::glue("The flat file {basename(flat_file)} is going to be inflated")
     )
   })
@@ -56,7 +61,8 @@ usethis::with_project(dummypackage, {
     expect_true(file.exists(fun_file))
     file.remove(fun_file)
 
-    expect_message(inflate_all(check = FALSE),
+    expect_message(
+      inflate_all(check = FALSE),
       regexp = glue::glue("The flat file {basename(flat_file)} is not going to be inflated because it is in state 'inactive or deprecated'")
     )
 
@@ -68,7 +74,8 @@ usethis::with_project(dummypackage, {
     flat_file2 <- gsub(x = flat_file, pattern = "flat_minimal.Rmd", replacement = "flat_minimal_2.Rmd")
     file.copy(from = flat_file, to = flat_file2, overwrite = TRUE)
 
-    expect_message(inflate_all(check = FALSE),
+    expect_message(
+      inflate_all(check = FALSE),
       regexp = glue::glue("The flat file flat_minimal_2.Rmd is not going to be inflated. It was detected in your flats directory but it is absent from the config file.")
     )
 
@@ -101,9 +108,12 @@ usethis::with_project(dummypackage, {
 
     suppressMessages(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "Get started", check = FALSE,
-        open_vignette = FALSE, document = TRUE,
+        pkg = dummypackage,
+        flat_file = flat_file,
+        vignette_name = "Get started",
+        check = FALSE,
+        open_vignette = FALSE,
+        document = TRUE,
         overwrite = "yes"
       )
     )
@@ -174,9 +184,12 @@ usethis::with_project(dummypackage, {
 
     suppressMessages(
       inflate(
-        pkg = dummypackage, flat_file = flat_file2,
-        vignette_name = "Get started_2", check = FALSE,
-        open_vignette = FALSE, document = TRUE,
+        pkg = dummypackage,
+        flat_file = flat_file2,
+        vignette_name = "Get started_2",
+        check = FALSE,
+        open_vignette = FALSE,
+        document = TRUE,
         overwrite = "yes"
       )
     )
@@ -233,9 +246,12 @@ usethis::with_project(dummypackage, {
     # Let's check a other way to choose the vignette name
     suppressMessages(
       inflate(
-        pkg = dummypackage, flat_file = flat_file2,
-        vignette_name = c("name" = "index"), check = FALSE,
-        open_vignette = FALSE, document = TRUE,
+        pkg = dummypackage,
+        flat_file = flat_file2,
+        vignette_name = c("name" = "index"),
+        check = FALSE,
+        open_vignette = FALSE,
+        document = TRUE,
         overwrite = "yes"
       )
     )
@@ -246,7 +262,8 @@ usethis::with_project(dummypackage, {
     inflate_all(check = FALSE)
 
     expect_true(all(list.files(file.path(
-      dummypackage, "vignettes/"
+      dummypackage,
+      "vignettes/"
     )) %in% c("get-started.Rmd", "index.Rmd")))
   })
 })
@@ -343,20 +360,23 @@ usethis::with_project(dummypackage, {
 
   test_that("when check = FALSE we ensure no check has been performed", {
     # no check
-    utils::capture.output(inflate_all_no_check(),
+    utils::capture.output(
+      inflate_all_no_check(),
       file = file.path(dummypackage, "dev/inflate_all_nocheck.txt")
     )
 
     expect_false(any(grepl(
       pattern = "R CMD check",
       x = readLines(file.path(
-        dummypackage, "dev/inflate_all_nocheck.txt"
+        dummypackage,
+        "dev/inflate_all_nocheck.txt"
       ))
     )))
   })
 
   test_that("rmdcheck does not raise errors on the created package", {
-    check_out <- rcmdcheck::rcmdcheck(dummypackage,
+    check_out <- rcmdcheck::rcmdcheck(
+      dummypackage,
       quiet = TRUE,
       args = c("--no-manual")
     )
@@ -405,13 +425,17 @@ usethis::with_project(dummypackage, {
 
   test_that("inflate_all detects unregistered files", {
     # Create an unregistered file
-    cat("# unregistered file in R\n",
+    cat(
+      "# unregistered file in R\n",
       file = file.path(dummypackage, "R", "unregistered_r.R")
     )
-    cat("# unregistered file in test\n",
+    cat(
+      "# unregistered file in test\n",
       file = file.path(
         dummypackage,
-        "tests", "testthat", "test-unregistered_r.R"
+        "tests",
+        "testthat",
+        "test-unregistered_r.R"
       )
     )
 
@@ -530,8 +554,10 @@ usethis::with_project(dummypackage, {
 
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -559,8 +585,13 @@ usethis::with_project(dummypackage, {
     expect_equal(
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
-        "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite", "clean",
+        "flat_file",
+        "vignette_name",
+        "open_vignette",
+        "check",
+        "document",
+        "overwrite",
+        "clean",
         "codecov"
       )
     )
@@ -581,8 +612,10 @@ usethis::with_project(dummypackage, {
 
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = NA, check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = NA,
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -610,8 +643,13 @@ usethis::with_project(dummypackage, {
     expect_equal(
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
-        "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite", "clean",
+        "flat_file",
+        "vignette_name",
+        "open_vignette",
+        "check",
+        "document",
+        "overwrite",
+        "clean",
         "codecov"
       )
     )

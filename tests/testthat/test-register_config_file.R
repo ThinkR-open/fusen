@@ -17,8 +17,10 @@ usethis::with_project(dummypackage, {
   # Inflate once
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -35,13 +37,15 @@ usethis::with_project(dummypackage, {
   test_that("check_not_registered_files works", {
     # All files were registered during inflate
     expect_true(file.exists(file.path(dummypackage, "dev", "config_fusen.yaml")))
-    expect_message(out_csv <- check_not_registered_files(open = FALSE),
+    expect_message(
+      out_csv <- check_not_registered_files(open = FALSE),
       regexp = "There are no unregistered files"
     )
 
     # Delete config file to check if al sub-functions work
     file.remove(file.path(dummypackage, "dev", "config_fusen.yaml"))
-    expect_message(out_csv <- check_not_registered_files(open = FALSE),
+    expect_message(
+      out_csv <- check_not_registered_files(open = FALSE),
       regexp = "Some files in your package are not registered in the configuration file"
     )
 
@@ -153,8 +157,10 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 usethis::with_project(dummypackage_fixed, {
   suppressMessages(
     inflate(
-      pkg = dummypackage_fixed, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage_fixed,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -188,8 +194,10 @@ test_that("register_all_to_config can be run twice", {
     suppressMessages(
       inflate(
         pkg = dummypackage_fixed,
-        flat_file = "dev/flat_new_one.Rmd", vignette_name = NA,
-        check = FALSE, open_vignette = FALSE
+        flat_file = "dev/flat_new_one.Rmd",
+        vignette_name = NA,
+        check = FALSE,
+        open_vignette = FALSE
       )
     )
 
@@ -204,7 +212,8 @@ test_that("register_all_to_config can be run twice", {
         pkg = dummypackage_fixed,
         flat_file = "dev/flat_new_one.Rmd",
         vignette_name = "new_one",
-        check = FALSE, open_vignette = FALSE
+        check = FALSE,
+        open_vignette = FALSE
       )
     )
 
@@ -244,8 +253,10 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 usethis::with_project(dummypackage, {
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -302,7 +313,8 @@ usethis::with_project(dummypackage, {
     )
     # expect config file with my_old_fun.R in "keep" section
     file.remove("R/my_old_fun.R")
-    expect_message(check_not_registered_files(open = FALSE),
+    expect_message(
+      check_not_registered_files(open = FALSE),
       regexp = "There are no unregistered files"
     )
 
@@ -319,7 +331,8 @@ usethis::with_project(dummypackage, {
     config_file$keep$R <- "R/to_keep.R"
     write_yaml_verbatim(config_file, "dev/config_fusen.yaml")
 
-    expect_message(register_all_to_config(),
+    expect_message(
+      register_all_to_config(),
       regexp = "R: R/my_second_old_fun.R was added to the config file"
     )
     config_file <- yaml::read_yaml("dev/config_fusen.yaml")
@@ -330,7 +343,8 @@ usethis::with_project(dummypackage, {
 
     # add new file to add to keep
     cat("new_to_keep\n", file = "R/newfile_to_keep.R")
-    expect_message(register_all_to_config(),
+    expect_message(
+      register_all_to_config(),
       regexp = "R: R/newfile_to_keep.R was added to the config file"
     )
     config_file <- yaml::read_yaml("dev/config_fusen.yaml")
@@ -368,17 +382,22 @@ withr::with_dir(temp_clean_inflate, {
 
   cat("# test R file\n", file = file.path("R", "to_keep.R"))
   cat("# test R file\n", file = file.path("R", "to_remove.R"))
-  cat("# test test file\n",
+  cat(
+    "# test test file\n",
     file = file.path("tests", "testthat", "test-zaza.R")
   )
   cat("# test flat file\n", file = file.path("dev", "flat_test.Rmd"))
 
 
   all_files <- tibble::tribble(
-    ~type, ~path,
-    "R", "R/to_keep.R",
-    "R", "R/to_remove.R",
-    "test", "tests/testthat/test-zaza.R"
+    ~type,
+    ~path,
+    "R",
+    "R/to_keep.R",
+    "R",
+    "R/to_remove.R",
+    "test",
+    "tests/testthat/test-zaza.R"
   )
 
 
@@ -409,10 +428,18 @@ withr::with_dir(temp_clean_inflate, {
   cat("# test R file\n", file = file.path("R", "to_add.R"))
 
   all_files_new <- tibble::tribble(
-    ~origin, ~type, ~path,
-    "dev/flat_test.Rmd", "R", "R/to_keep.R",
-    "dev/flat_test.Rmd", "R", "R/to_add.R",
-    "dev/flat_test.Rmd", "test", "tests/testthat/test-zaza.R"
+    ~origin,
+    ~type,
+    ~path,
+    "dev/flat_test.Rmd",
+    "R",
+    "R/to_keep.R",
+    "dev/flat_test.Rmd",
+    "R",
+    "R/to_add.R",
+    "dev/flat_test.Rmd",
+    "test",
+    "tests/testthat/test-zaza.R"
   )
 
   # Get all messages once with snapshot
@@ -484,10 +511,14 @@ config_file_path <- tempfile(fileext = ".yaml")
 test_that("df_to_config fails when appropriate", {
   withr::with_options(list(fusen.config_file = config_file_path), {
     all_files <- tibble::tribble(
-      ~type, ~files,
-      "R", "zaza.R",
-      "R", "zozo.R",
-      "test", "test-zaza.R"
+      ~type,
+      ~files,
+      "R",
+      "zaza.R",
+      "R",
+      "zozo.R",
+      "test",
+      "test-zaza.R"
     )
 
     expect_error(
@@ -496,10 +527,14 @@ test_that("df_to_config fails when appropriate", {
     )
 
     all_files <- tibble::tribble(
-      ~type, ~path,
-      "R", "zaza.R",
-      "R", "zozo.R",
-      "test", "test-zaza.R"
+      ~type,
+      ~path,
+      "R",
+      "zaza.R",
+      "R",
+      "zozo.R",
+      "test",
+      "test-zaza.R"
     )
 
     expect_error(
@@ -537,13 +572,18 @@ test_that("df_to_config works", {
       # Use full path
 
       all_files <- tibble::tribble(
-        ~type, ~path,
-        "R", "zaza.R",
-        "R", "zozo.R",
-        "test", "test-zaza.R"
+        ~type,
+        ~path,
+        "R",
+        "zaza.R",
+        "R",
+        "zozo.R",
+        "test",
+        "test-zaza.R"
       )
 
-      expect_message(config_file_out <- df_to_config(all_files),
+      expect_message(
+        config_file_out <- df_to_config(all_files),
         regexp = "R: zaza.R was added to the config file"
       )
     })
@@ -565,11 +605,16 @@ test_that("df_to_config works", {
 
 # Second pass
 all_files <- tibble::tribble(
-  ~type, ~path,
-  "r", "tata.R",
-  "R", "toto.R",
-  "tests", "test-tata.R",
-  "vignettes", "tata_vignette.Rmd"
+  ~type,
+  ~path,
+  "r",
+  "tata.R",
+  "R",
+  "toto.R",
+  "tests",
+  "test-tata.R",
+  "vignettes",
+  "tata_vignette.Rmd"
 )
 
 file.create(file.path(
@@ -605,11 +650,16 @@ test_that("df_to_config works with files having no content", {
     withr::with_dir(dir_tmp, {
       # Use relative path
       all_files <- tibble::tribble(
-        ~type, ~path,
-        "R", "zaza.R",
-        "R", "zozo.R",
-        "test", "test-zaza.R",
-        "vignette", file.path("vignettes", "my-vignette.Rmd")
+        ~type,
+        ~path,
+        "R",
+        "zaza.R",
+        "R",
+        "zozo.R",
+        "test",
+        "test-zaza.R",
+        "vignette",
+        file.path("vignettes", "my-vignette.Rmd")
       )
 
       expect_message(
@@ -642,14 +692,20 @@ test_that("df_to_config works with files having no content", {
     withr::with_dir(dir_tmp, {
       # Use relative path
       all_files <- tibble::tribble(
-        ~type, ~path,
-        "R", "zaza.R",
-        "R", "zozo.R",
-        "test", "test-zaza.R",
-        "vignette", file.path("vignettes", "my-vignette.Rmd")
+        ~type,
+        ~path,
+        "R",
+        "zaza.R",
+        "R",
+        "zozo.R",
+        "test",
+        "test-zaza.R",
+        "vignette",
+        file.path("vignettes", "my-vignette.Rmd")
       )
 
-      expect_error(config_file_out <- df_to_config(all_files),
+      expect_error(
+        config_file_out <- df_to_config(all_files),
         regexp = "zaza.R"
       )
     })
@@ -671,14 +727,19 @@ test_that(
     withr::with_dir(dir_tmp, {
       withr::with_options(list(fusen.config_file = config_file_path), {
         all_files <- tibble::tribble(
-          ~type, ~path,
-          "R", "zaza.R",
-          "R", "zozo.R",
-          "test", "test-zaza.R"
+          ~type,
+          ~path,
+          "R",
+          "zaza.R",
+          "R",
+          "zozo.R",
+          "test",
+          "test-zaza.R"
         )
 
         expect_error(
-          df_to_config(all_files,
+          df_to_config(
+            all_files,
             inflate_parameters = list(
               flat_file = "dev/my_flat.Rmd",
               vignette_name = "My new vignette",
@@ -703,7 +764,8 @@ dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(add_minimal_package(
   pkg = dummypackage,
-  overwrite = TRUE, open = FALSE
+  overwrite = TRUE,
+  open = FALSE
 ))
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -720,14 +782,18 @@ file.create(file.path(dummypackage, "vignettes", "minimal.Rmd"))
 
 
 usethis::with_project(dummypackage, {
-  all_files <- structure(list(
-    type = c("R", "test", "vignette"),
-    path = c(
-      file.path(dummypackage, "R", "my_fun.R"),
-      file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
-      "vignettes/minimal.Rmd"
-    )
-  ), row.names = c(NA, -3L), class = c("tbl_df", "tbl", "data.frame"))
+  all_files <- structure(
+    list(
+      type = c("R", "test", "vignette"),
+      path = c(
+        file.path(dummypackage, "R", "my_fun.R"),
+        file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
+        "vignettes/minimal.Rmd"
+      )
+    ),
+    row.names = c(NA, -3L),
+    class = c("tbl_df", "tbl", "data.frame")
+  )
 
   relative_flat_file <- "dev/flat_minimal.Rmd"
 
@@ -775,16 +841,20 @@ usethis::with_project(dummypackage, {
     file.path(dummypackage, "vignettes", "minimal2.Rmd")
   )
 
-  all_files <- structure(list(
-    type = c("R", "R", "test", "test", "vignette"),
-    path = c(
-      file.path(dummypackage, "R", "my_fun.R"),
-      file.path(dummypackage, "R", "my_fun2.R"),
-      file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
-      file.path(dummypackage, "tests/testthat", "test-my_fun2.R"),
-      "vignettes/minimal2.Rmd"
-    )
-  ), row.names = c(NA, -5L), class = c("tbl_df", "tbl", "data.frame"))
+  all_files <- structure(
+    list(
+      type = c("R", "R", "test", "test", "vignette"),
+      path = c(
+        file.path(dummypackage, "R", "my_fun.R"),
+        file.path(dummypackage, "R", "my_fun2.R"),
+        file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
+        file.path(dummypackage, "tests/testthat", "test-my_fun2.R"),
+        "vignettes/minimal2.Rmd"
+      )
+    ),
+    row.names = c(NA, -5L),
+    class = c("tbl_df", "tbl", "data.frame")
+  )
 
   config_file <- df_to_config(
     df_files = all_files,
@@ -856,8 +926,10 @@ test_that("inflate parameters are put into config_fusen.yaml", {
   usethis::with_project(dummypackage, {
     suppressMessages(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "Get started", check = FALSE,
+        pkg = dummypackage,
+        flat_file = flat_file,
+        vignette_name = "Get started",
+        check = FALSE,
         open_vignette = FALSE,
         extra_param = "toto"
       )
@@ -903,12 +975,15 @@ test_that("inflate parameters are put into config_fusen.yaml", {
     # Let's inflate a second time with different parameters
     suppressMessages(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
+        pkg = dummypackage,
+        flat_file = flat_file,
         vignette_name = "Get started again",
         clean = TRUE, # clean previous vignette
         check = FALSE,
-        open_vignette = FALSE, overwrite = "yes",
-        extra_param = "tutu", document = FALSE
+        open_vignette = FALSE,
+        overwrite = "yes",
+        extra_param = "tutu",
+        document = FALSE
       )
     )
 

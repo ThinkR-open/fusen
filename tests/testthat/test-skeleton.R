@@ -5,7 +5,8 @@ test_that("rmardown skeleton exists", {
       rmarkdown::draft(
         file = "flat_skeleton.Rmd",
         template = "additional",
-        package = "fusen", edit = FALSE
+        package = "fusen",
+        edit = FALSE
       ),
       regexp = NA
     )

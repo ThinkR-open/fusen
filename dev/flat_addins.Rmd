@@ -35,8 +35,10 @@ pkgload::load_all(export_all = FALSE)
 #' \dontrun{
 #' add_fusen_chunks("this", export = TRUE)
 #' }
-add_fusen_chunks <- function(function_name = NULL,
-                             export = getOption("fusen.export.functions")) {
+add_fusen_chunks <- function(
+  function_name = NULL,
+  export = getOption("fusen.export.functions")
+) {
   if (
     requireNamespace("rstudioapi") &&
       rstudioapi::isAvailable() &&
@@ -115,7 +117,10 @@ build_fusen_chunks <- function(function_name, export = TRUE) {
 
   if (function_name != cleaned_function_name) {
     message(
-      "Your function name was cleaned: `", function_name, "` is now `", cleaned_function_name,
+      "Your function name was cleaned: `",
+      function_name,
+      "` is now `",
+      cleaned_function_name,
       "` as a function name should only contain letters, numbers and underscores."
     )
     function_name <- cleaned_function_name
@@ -173,11 +178,11 @@ test_that("build_fusen_chunks works properly", {
   expect_true(
     grepl("^# pouet", res)
   )
-  
+
   expect_true(
     grepl("development-pouet", res)
   )
-  
+
   expect_true(
     grepl("function-pouet", res)
   )
@@ -217,11 +222,11 @@ test_that("build_fusen_chunks cleans functions names", {
   expect_true(
     grepl("^# po_uet", res)
   )
-  
+
   expect_true(
     grepl("development-po_uet}", res)
   )
-  
+
   expect_true(
     grepl("function-po_uet}", res)
   )

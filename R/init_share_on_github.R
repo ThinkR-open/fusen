@@ -149,7 +149,8 @@ init_share_on_github <- function(ask = TRUE, organisation = NULL) {
   add_line <- grep("## Example", readme_lines)[1]
   readme_lines[add_line] <- paste0(
     "## Documentation\n\n",
-    "Full documentation website on: ", url_pages,
+    "Full documentation website on: ",
+    url_pages,
     "\n\n",
     readme_lines[add_line]
   )

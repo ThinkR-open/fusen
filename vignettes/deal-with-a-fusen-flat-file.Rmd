@@ -36,7 +36,9 @@ This function should avoid remaining inflated files in the repository, and ensur
 dev_file <- suppressMessages(
   add_flat_template(
     template = "add",
-    pkg = ".", overwrite = TRUE, open = FALSE
+    pkg = ".",
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 rename_flat_file(
@@ -73,7 +75,9 @@ To facilitate this transition, the function `deprecate_flat_file()` is provided.
 dev_file <- suppressMessages(
   add_flat_template(
     template = "add",
-    pkg = dummypackage, overwrite = TRUE, open = FALSE
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 deprecate_flat_file(flat_file = "dev/flat_additional.Rmd")

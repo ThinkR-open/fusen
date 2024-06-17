@@ -26,9 +26,12 @@
 #'       "Everything can be set from a Rmarkdown file in your project."
 #'     ),
 #'     `Authors@R` = c(
-#'       person("John", "Doe",
+#'       person(
+#'         "John",
+#'         "Doe",
 #'         email = "john@email.me",
-#'         role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000")
+#'         role = c("aut", "cre"),
+#'         comment = c(ORCID = "0000-0000-0000-0000")
 #'       )
 #'     )
 #'   )
@@ -46,7 +49,8 @@ fill_description <- function(pkg = ".", fields, overwrite = FALSE) {
   clean_pkg_name <- asciify_name(project_name, to_pkg = TRUE)
   if (project_name != clean_pkg_name) {
     warning(
-      "Your package was renamed: `", clean_pkg_name,
+      "Your package was renamed: `",
+      clean_pkg_name,
       "` as a package name should only contain letters, numbers and dots."
     )
   }

@@ -79,27 +79,31 @@
 #'
 #'   # We check that all the flat files have been deleted
 #'   length(
-#'     list.files(file.path(dummypackage, "dev"),
+#'     list.files(
+#'       file.path(dummypackage, "dev"),
 #'       pattern = "^flat.*\\.Rmd"
 #'     )
 #'   )
 #'
 #'   length(
-#'     list.files(file.path(dummypackage, "dev"),
+#'     list.files(
+#'       file.path(dummypackage, "dev"),
 #'       pattern = "^flat.*\\.qmd"
 #'     )
 #'   )
 #'
 #'
 #'   length(
-#'     list.files(file.path(dummypackage, "dev", "flat_history"),
+#'     list.files(
+#'       file.path(dummypackage, "dev", "flat_history"),
 #'       pattern = "^flat.*\\.Rmd"
 #'     )
 #'   )
 #'
 #'
 #'   length(
-#'     list.files(file.path(dummypackage, "dev", "flat_history"),
+#'     list.files(
+#'       file.path(dummypackage, "dev", "flat_history"),
 #'       pattern = "^flat.*\\.qmd"
 #'     )
 #'   )
@@ -112,9 +116,10 @@
 #' unlink(dummypackage, recursive = TRUE)
 #' }
 sepuku <- function(
-    pkg = ".",
-    force = FALSE,
-    verbose = FALSE) {
+  pkg = ".",
+  force = FALSE,
+  verbose = FALSE
+) {
   if (!dir.exists(file.path(pkg, "dev"))) {
     cli_abort("No dev/ folder have been found. Are you sure that your package has been initiated with fusen ?")
   }

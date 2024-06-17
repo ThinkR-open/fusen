@@ -168,7 +168,9 @@ check_not_registered_files <- function(path = ".", config_file, guess = TRUE, to
       rep("vignette", length(all_vignette))
     ),
     path = c(
-      all_r, all_test, all_vignette
+      all_r,
+      all_test,
+      all_vignette
     ),
     stringsAsFactors = FALSE
   )
@@ -232,7 +234,8 @@ check_not_registered_files <- function(path = ".", config_file, guess = TRUE, to
 
   # config_file may not exist already
   csv_file <- file.path(
-    gsub(paste0(normalize_path_winslash(getwd()), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE)), fixed = TRUE), "config_not_registered.csv"
+    gsub(paste0(normalize_path_winslash(getwd()), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE)), fixed = TRUE),
+    "config_not_registered.csv"
   )
 
   # Save for manual modification
@@ -278,14 +281,16 @@ guess_flat_origin <- function(path) {
   lines <- readLines(path)
 
   guess_path <- sub(
-    ".* from\\s*(/){0,1}(.+[.].{1}md).*", "\\2",
+    ".* from\\s*(/){0,1}(.+[.].{1}md).*",
+    "\\2",
     lines[grep("(G|g)enerated by \\{fusen\\} from", lines)][1]
   )
 
   guess_path <- normalize_path_winslash(guess_path, mustWork = FALSE)
   if (file.exists(guess_path)) {
     guess_path <- gsub(
-      paste0(normalize_path_winslash(getwd()), "/"), "",
+      paste0(normalize_path_winslash(getwd()), "/"),
+      "",
       normalize_path_winslash(guess_path, mustWork = FALSE)
     )
     return(guess_path)
@@ -329,8 +334,10 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 usethis::with_project(dummypackage, {
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -372,8 +379,10 @@ usethis::with_project(dummypackage, {
   # Inflate once
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -390,13 +399,15 @@ usethis::with_project(dummypackage, {
   test_that("check_not_registered_files works", {
     # All files were registered during inflate
     expect_true(file.exists(file.path(dummypackage, "dev", "config_fusen.yaml")))
-    expect_message(out_csv <- check_not_registered_files(open = FALSE),
+    expect_message(
+      out_csv <- check_not_registered_files(open = FALSE),
       regexp = "There are no unregistered files"
     )
 
     # Delete config file to check if al sub-functions work
     file.remove(file.path(dummypackage, "dev", "config_fusen.yaml"))
-    expect_message(out_csv <- check_not_registered_files(open = FALSE),
+    expect_message(
+      out_csv <- check_not_registered_files(open = FALSE),
       regexp = "Some files in your package are not registered in the configuration file"
     )
 
@@ -527,8 +538,11 @@ register_all_to_config <- function(pkg = ".", config_file) {
   }
 
   # Use the function to check the list of files
-  out_df <- check_not_registered_files(pkg,
-    config_file = config_file, to_csv = FALSE, open = FALSE
+  out_df <- check_not_registered_files(
+    pkg,
+    config_file = config_file,
+    to_csv = FALSE,
+    open = FALSE
   )
 
 
@@ -549,7 +563,8 @@ register_all_to_config <- function(pkg = ".", config_file) {
   # Delete out_df
   csv_file <- file.path(
     gsub(
-      paste0(normalize_path_winslash(getwd()), "/"), "",
+      paste0(normalize_path_winslash(getwd()), "/"),
+      "",
       dirname(normalize_path_winslash(config_file, mustWork = FALSE)),
       fixed = TRUE
     ),
@@ -597,8 +612,10 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 usethis::with_project(dummypackage, {
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -623,8 +640,10 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 usethis::with_project(dummypackage_fixed, {
   suppressMessages(
     inflate(
-      pkg = dummypackage_fixed, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage_fixed,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -658,8 +677,10 @@ test_that("register_all_to_config can be run twice", {
     suppressMessages(
       inflate(
         pkg = dummypackage_fixed,
-        flat_file = "dev/flat_new_one.Rmd", vignette_name = NA,
-        check = FALSE, open_vignette = FALSE
+        flat_file = "dev/flat_new_one.Rmd",
+        vignette_name = NA,
+        check = FALSE,
+        open_vignette = FALSE
       )
     )
 
@@ -674,7 +695,8 @@ test_that("register_all_to_config can be run twice", {
         pkg = dummypackage_fixed,
         flat_file = "dev/flat_new_one.Rmd",
         vignette_name = "new_one",
-        check = FALSE, open_vignette = FALSE
+        check = FALSE,
+        open_vignette = FALSE
       )
     )
 
@@ -714,8 +736,10 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 usethis::with_project(dummypackage, {
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -772,7 +796,8 @@ usethis::with_project(dummypackage, {
     )
     # expect config file with my_old_fun.R in "keep" section
     file.remove("R/my_old_fun.R")
-    expect_message(check_not_registered_files(open = FALSE),
+    expect_message(
+      check_not_registered_files(open = FALSE),
       regexp = "There are no unregistered files"
     )
 
@@ -789,7 +814,8 @@ usethis::with_project(dummypackage, {
     config_file$keep$R <- "R/to_keep.R"
     write_yaml_verbatim(config_file, "dev/config_fusen.yaml")
 
-    expect_message(register_all_to_config(),
+    expect_message(
+      register_all_to_config(),
       regexp = "R: R/my_second_old_fun.R was added to the config file"
     )
     config_file <- yaml::read_yaml("dev/config_fusen.yaml")
@@ -800,7 +826,8 @@ usethis::with_project(dummypackage, {
 
     # add new file to add to keep
     cat("new_to_keep\n", file = "R/newfile_to_keep.R")
-    expect_message(register_all_to_config(),
+    expect_message(
+      register_all_to_config(),
       regexp = "R: R/newfile_to_keep.R was added to the config file"
     )
     config_file <- yaml::read_yaml("dev/config_fusen.yaml")
@@ -859,14 +886,16 @@ unlink(dummypackage, recursive = TRUE)
 #'
 #' @noRd
 
-df_to_config <- function(df_files,
-                         flat_file_path = "keep",
-                         state = c("active", "deprecated"),
-                         config_file,
-                         force = FALSE,
-                         clean = "ask",
-                         inflate_parameters = NULL,
-                         update_params = TRUE) {
+df_to_config <- function(
+  df_files,
+  flat_file_path = "keep",
+  state = c("active", "deprecated"),
+  config_file,
+  force = FALSE,
+  clean = "ask",
+  inflate_parameters = NULL,
+  update_params = TRUE
+) {
   if (missing(config_file)) {
     config_file <- getOption(
       "fusen.config_file",
@@ -886,7 +915,9 @@ df_to_config <- function(df_files,
     df_files <- read.csv(df_files, stringsAsFactors = FALSE)
   } else if (!is.data.frame(df_files) && !file.exists(df_files)) {
     stop(
-      "'", df_files, "' does not exist. You can run ",
+      "'",
+      df_files,
+      "' does not exist. You can run ",
       "`check_not_registered_files()` before."
     )
   }
@@ -908,7 +939,9 @@ df_to_config <- function(df_files,
         "Some 'origin' in df_files do not exist:",
         paste(
           paste0(
-            "row ", which(!all_exists), ": ",
+            "row ",
+            which(!all_exists),
+            ": ",
             df_files[["origin"]][!all_exists]
           ),
           collapse = ", "
@@ -951,8 +984,11 @@ df_to_config <- function(df_files,
       "Some 'path' in df_files do not exist:",
       paste(
         paste0(
-          "row ", which(!all_exists), "- ",
-          df_files[["type"]][!all_exists], ": ",
+          "row ",
+          which(!all_exists),
+          "- ",
+          df_files[["type"]][!all_exists],
+          ": ",
           df_files[["path"]][!all_exists]
         ),
         collapse = ", "
@@ -1057,7 +1093,8 @@ df_to_config <- function(df_files,
           paste(
             yaml_paths[!all_exists],
             collapse = ", "
-          ), ".\n",
+          ),
+          ".\n",
           "Please open the configuration file: ",
           config_file,
           " to verify, and delete the non-existing files if needed."
@@ -1086,7 +1123,8 @@ df_to_config <- function(df_files,
     seq_along(each_flat_file_path),
     function(x) {
       update_one_group_yaml(
-        df_files, complete_yaml,
+        df_files,
+        complete_yaml,
         each_flat_file_path[x],
         state = state[x],
         clean = ifelse(each_flat_file_path[x] == "keep", FALSE, clean),
@@ -1144,7 +1182,8 @@ df_to_config <- function(df_files,
 #' @importFrom yaml write_yaml read_yaml
 #' @noRd
 write_yaml_verbatim <- function(x, file) {
-  write_yaml(x,
+  write_yaml(
+    x,
     file = file,
     handlers = list(
       logical = function(x) {
@@ -1178,13 +1217,14 @@ files_list_to_vector <- function(list_of_files) {
 #' @importFrom cli cli_alert_warning cli_alert_success
 #' @noRd
 update_one_group_yaml <- function(
-    df_files,
-    complete_yaml,
-    flat_file_path,
-    state = c("active", "deprecated"),
-    clean = "ask",
-    inflate_parameters = NULL,
-    update_params = TRUE) {
+  df_files,
+  complete_yaml,
+  flat_file_path,
+  state = c("active", "deprecated"),
+  clean = "ask",
+  inflate_parameters = NULL,
+  update_params = TRUE
+) {
   state <- match.arg(state, several.ok = FALSE)
   all_keep_before <- complete_yaml[[basename(flat_file_path)]]
 
@@ -1256,7 +1296,8 @@ update_one_group_yaml <- function(
       inflate_parameters_new <- inflate_parameters
     }
     this_group_list_return <- c(
-      this_group_list, list(inflate = inflate_parameters_new)
+      this_group_list,
+      list(inflate = inflate_parameters_new)
     )
   }
 
@@ -1292,14 +1333,18 @@ update_one_group_yaml <- function(
       cli_alert_warning(
         paste0(
           "Some files are not anymore created from ",
-          flat_file_path, ".\n",
+          flat_file_path,
+          ".\n",
           "You may have rename some functions or moved them to another flat:",
           "\n",
-          paste(files_removed_vec, collapse = ", "), ".\n\n",
+          paste(files_removed_vec, collapse = ", "),
+          ".\n\n",
           "Below, you are ask if you want to remove them from the repository.",
           "\n\n",
           "Note: to not see this message again, use `clean = TRUE` in the ",
-          "`inflate()` command of this flat file : ", flat_file_path, ".\n",
+          "`inflate()` command of this flat file : ",
+          flat_file_path,
+          ".\n",
           "Use with caution. ",
           "It is recommended to use git to check the changes...\n"
         )
@@ -1326,7 +1371,8 @@ update_one_group_yaml <- function(
 
       silent <- lapply(
         paste(
-          files_removed_vec, "was removed from the config file",
+          files_removed_vec,
+          "was removed from the config file",
           "and from the repository"
         ),
         cli_alert_warning
@@ -1334,7 +1380,8 @@ update_one_group_yaml <- function(
     } else if (isFALSE(do_it)) {
       silent <- lapply(
         paste(
-          files_removed_vec, "was removed from the config file",
+          files_removed_vec,
+          "was removed from the config file",
           "but kept in the repository"
         ),
         cli_alert_warning
@@ -1358,11 +1405,16 @@ update_one_group_yaml <- function(
 # if they are not in any flat file.
 # Otherwise, they may be deleted with your next `inflate()`
 my_files_to_protect <- tibble::tribble(
-  ~type, ~path,
-  "R", "R/zaza.R",
-  "R", "R/zozo.R",
-  "test", "tests/testthat/test-zaza.R",
-  "vignette", "vignettes/my-zaza-vignette.Rmd"
+  ~type,
+  ~path,
+  "R",
+  "R/zaza.R",
+  "R",
+  "R/zozo.R",
+  "test",
+  "tests/testthat/test-zaza.R",
+  "vignette",
+  "vignettes/my-zaza-vignette.Rmd"
 )
 
 #' \dontrun{
@@ -1386,8 +1438,10 @@ files_created_from_fake_flat <- structure(
   list(
     type = c("R", "test", "vignette"),
     path = c(
-      "R", "my_fun.R",
-      "tests/testthat", "test-my_fun.R",
+      "R",
+      "my_fun.R",
+      "tests/testthat",
+      "test-my_fun.R",
       "vignettes/minimal.Rmd"
     )
   ),
@@ -1442,17 +1496,22 @@ withr::with_dir(temp_clean_inflate, {
 
   cat("# test R file\n", file = file.path("R", "to_keep.R"))
   cat("# test R file\n", file = file.path("R", "to_remove.R"))
-  cat("# test test file\n",
+  cat(
+    "# test test file\n",
     file = file.path("tests", "testthat", "test-zaza.R")
   )
   cat("# test flat file\n", file = file.path("dev", "flat_test.Rmd"))
 
 
   all_files <- tibble::tribble(
-    ~type, ~path,
-    "R", "R/to_keep.R",
-    "R", "R/to_remove.R",
-    "test", "tests/testthat/test-zaza.R"
+    ~type,
+    ~path,
+    "R",
+    "R/to_keep.R",
+    "R",
+    "R/to_remove.R",
+    "test",
+    "tests/testthat/test-zaza.R"
   )
 
 
@@ -1483,10 +1542,18 @@ withr::with_dir(temp_clean_inflate, {
   cat("# test R file\n", file = file.path("R", "to_add.R"))
 
   all_files_new <- tibble::tribble(
-    ~origin, ~type, ~path,
-    "dev/flat_test.Rmd", "R", "R/to_keep.R",
-    "dev/flat_test.Rmd", "R", "R/to_add.R",
-    "dev/flat_test.Rmd", "test", "tests/testthat/test-zaza.R"
+    ~origin,
+    ~type,
+    ~path,
+    "dev/flat_test.Rmd",
+    "R",
+    "R/to_keep.R",
+    "dev/flat_test.Rmd",
+    "R",
+    "R/to_add.R",
+    "dev/flat_test.Rmd",
+    "test",
+    "tests/testthat/test-zaza.R"
   )
 
   # Get all messages once with snapshot
@@ -1558,10 +1625,14 @@ config_file_path <- tempfile(fileext = ".yaml")
 test_that("df_to_config fails when appropriate", {
   withr::with_options(list(fusen.config_file = config_file_path), {
     all_files <- tibble::tribble(
-      ~type, ~files,
-      "R", "zaza.R",
-      "R", "zozo.R",
-      "test", "test-zaza.R"
+      ~type,
+      ~files,
+      "R",
+      "zaza.R",
+      "R",
+      "zozo.R",
+      "test",
+      "test-zaza.R"
     )
 
     expect_error(
@@ -1570,10 +1641,14 @@ test_that("df_to_config fails when appropriate", {
     )
 
     all_files <- tibble::tribble(
-      ~type, ~path,
-      "R", "zaza.R",
-      "R", "zozo.R",
-      "test", "test-zaza.R"
+      ~type,
+      ~path,
+      "R",
+      "zaza.R",
+      "R",
+      "zozo.R",
+      "test",
+      "test-zaza.R"
     )
 
     expect_error(
@@ -1611,13 +1686,18 @@ test_that("df_to_config works", {
       # Use full path
 
       all_files <- tibble::tribble(
-        ~type, ~path,
-        "R", "zaza.R",
-        "R", "zozo.R",
-        "test", "test-zaza.R"
+        ~type,
+        ~path,
+        "R",
+        "zaza.R",
+        "R",
+        "zozo.R",
+        "test",
+        "test-zaza.R"
       )
 
-      expect_message(config_file_out <- df_to_config(all_files),
+      expect_message(
+        config_file_out <- df_to_config(all_files),
         regexp = "R: zaza.R was added to the config file"
       )
     })
@@ -1639,11 +1719,16 @@ test_that("df_to_config works", {
 
 # Second pass
 all_files <- tibble::tribble(
-  ~type, ~path,
-  "r", "tata.R",
-  "R", "toto.R",
-  "tests", "test-tata.R",
-  "vignettes", "tata_vignette.Rmd"
+  ~type,
+  ~path,
+  "r",
+  "tata.R",
+  "R",
+  "toto.R",
+  "tests",
+  "test-tata.R",
+  "vignettes",
+  "tata_vignette.Rmd"
 )
 
 file.create(file.path(
@@ -1679,11 +1764,16 @@ test_that("df_to_config works with files having no content", {
     withr::with_dir(dir_tmp, {
       # Use relative path
       all_files <- tibble::tribble(
-        ~type, ~path,
-        "R", "zaza.R",
-        "R", "zozo.R",
-        "test", "test-zaza.R",
-        "vignette", file.path("vignettes", "my-vignette.Rmd")
+        ~type,
+        ~path,
+        "R",
+        "zaza.R",
+        "R",
+        "zozo.R",
+        "test",
+        "test-zaza.R",
+        "vignette",
+        file.path("vignettes", "my-vignette.Rmd")
       )
 
       expect_message(
@@ -1716,14 +1806,20 @@ test_that("df_to_config works with files having no content", {
     withr::with_dir(dir_tmp, {
       # Use relative path
       all_files <- tibble::tribble(
-        ~type, ~path,
-        "R", "zaza.R",
-        "R", "zozo.R",
-        "test", "test-zaza.R",
-        "vignette", file.path("vignettes", "my-vignette.Rmd")
+        ~type,
+        ~path,
+        "R",
+        "zaza.R",
+        "R",
+        "zozo.R",
+        "test",
+        "test-zaza.R",
+        "vignette",
+        file.path("vignettes", "my-vignette.Rmd")
       )
 
-      expect_error(config_file_out <- df_to_config(all_files),
+      expect_error(
+        config_file_out <- df_to_config(all_files),
         regexp = "zaza.R"
       )
     })
@@ -1745,14 +1841,19 @@ test_that(
     withr::with_dir(dir_tmp, {
       withr::with_options(list(fusen.config_file = config_file_path), {
         all_files <- tibble::tribble(
-          ~type, ~path,
-          "R", "zaza.R",
-          "R", "zozo.R",
-          "test", "test-zaza.R"
+          ~type,
+          ~path,
+          "R",
+          "zaza.R",
+          "R",
+          "zozo.R",
+          "test",
+          "test-zaza.R"
         )
 
         expect_error(
-          df_to_config(all_files,
+          df_to_config(
+            all_files,
             inflate_parameters = list(
               flat_file = "dev/my_flat.Rmd",
               vignette_name = "My new vignette",
@@ -1777,7 +1878,8 @@ dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(add_minimal_package(
   pkg = dummypackage,
-  overwrite = TRUE, open = FALSE
+  overwrite = TRUE,
+  open = FALSE
 ))
 # let's create a flat file
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -1794,14 +1896,18 @@ file.create(file.path(dummypackage, "vignettes", "minimal.Rmd"))
 
 
 usethis::with_project(dummypackage, {
-  all_files <- structure(list(
-    type = c("R", "test", "vignette"),
-    path = c(
-      file.path(dummypackage, "R", "my_fun.R"),
-      file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
-      "vignettes/minimal.Rmd"
-    )
-  ), row.names = c(NA, -3L), class = c("tbl_df", "tbl", "data.frame"))
+  all_files <- structure(
+    list(
+      type = c("R", "test", "vignette"),
+      path = c(
+        file.path(dummypackage, "R", "my_fun.R"),
+        file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
+        "vignettes/minimal.Rmd"
+      )
+    ),
+    row.names = c(NA, -3L),
+    class = c("tbl_df", "tbl", "data.frame")
+  )
 
   relative_flat_file <- "dev/flat_minimal.Rmd"
 
@@ -1849,16 +1955,20 @@ usethis::with_project(dummypackage, {
     file.path(dummypackage, "vignettes", "minimal2.Rmd")
   )
 
-  all_files <- structure(list(
-    type = c("R", "R", "test", "test", "vignette"),
-    path = c(
-      file.path(dummypackage, "R", "my_fun.R"),
-      file.path(dummypackage, "R", "my_fun2.R"),
-      file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
-      file.path(dummypackage, "tests/testthat", "test-my_fun2.R"),
-      "vignettes/minimal2.Rmd"
-    )
-  ), row.names = c(NA, -5L), class = c("tbl_df", "tbl", "data.frame"))
+  all_files <- structure(
+    list(
+      type = c("R", "R", "test", "test", "vignette"),
+      path = c(
+        file.path(dummypackage, "R", "my_fun.R"),
+        file.path(dummypackage, "R", "my_fun2.R"),
+        file.path(dummypackage, "tests/testthat", "test-my_fun.R"),
+        file.path(dummypackage, "tests/testthat", "test-my_fun2.R"),
+        "vignettes/minimal2.Rmd"
+      )
+    ),
+    row.names = c(NA, -5L),
+    class = c("tbl_df", "tbl", "data.frame")
+  )
 
   config_file <- df_to_config(
     df_files = all_files,
@@ -1930,8 +2040,10 @@ test_that("inflate parameters are put into config_fusen.yaml", {
   usethis::with_project(dummypackage, {
     suppressMessages(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "Get started", check = FALSE,
+        pkg = dummypackage,
+        flat_file = flat_file,
+        vignette_name = "Get started",
+        check = FALSE,
         open_vignette = FALSE,
         extra_param = "toto"
       )
@@ -1977,12 +2089,15 @@ test_that("inflate parameters are put into config_fusen.yaml", {
     # Let's inflate a second time with different parameters
     suppressMessages(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
+        pkg = dummypackage,
+        flat_file = flat_file,
         vignette_name = "Get started again",
         clean = TRUE, # clean previous vignette
         check = FALSE,
-        open_vignette = FALSE, overwrite = "yes",
-        extra_param = "tutu", document = FALSE
+        open_vignette = FALSE,
+        overwrite = "yes",
+        extra_param = "tutu",
+        document = FALSE
       )
     )
 
@@ -2041,7 +2156,9 @@ unlink(dummypackage, recursive = TRUE)
 fusen::inflate(
   flat_file = "dev/flat_register_config_file.Rmd",
   vignette_name = "Register files in config",
-  check = FALSE, overwrite = TRUE, open_vignette = FALSE
+  check = FALSE,
+  overwrite = TRUE,
+  open_vignette = FALSE
 )
 # rstudioapi::navigateToFile("dev/dev_history.R", line = 105)
 ```

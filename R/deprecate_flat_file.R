@@ -20,7 +20,9 @@
 #' dev_file <- suppressMessages(
 #'   add_flat_template(
 #'     template = "add",
-#'     pkg = dummypackage, overwrite = TRUE, open = FALSE
+#'     pkg = dummypackage,
+#'     overwrite = TRUE,
+#'     open = FALSE
 #'   )
 #' )
 #' deprecate_flat_file(flat_file = "dev/flat_additional.Rmd")
@@ -33,14 +35,16 @@ deprecate_flat_file <- function(flat_file) {
   if (!file.exists(flat_file)) {
     stop(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " does not exist."
       )
     )
   } else if (!basename(flat_file) %in% names(config)) {
     stop(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " is not in the config file.",
         "Did you inflate it with {fusen}?"
       )
@@ -48,7 +52,8 @@ deprecate_flat_file <- function(flat_file) {
   } else if (config[[basename(flat_file)]]$state == "deprecated") {
     cli_alert_warning(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " is already deprecated."
       )
     )
@@ -126,7 +131,8 @@ deprecate_flat_file <- function(flat_file) {
 
   cli_alert_success(
     paste0(
-      "The flat file ", basename(flat_file),
+      "The flat file ",
+      basename(flat_file),
       " has been deprecated."
     )
   )

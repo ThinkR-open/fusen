@@ -8,7 +8,9 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(
   add_flat_template(
     template = "full",
-    pkg = dummypackage, overwrite = TRUE, open = FALSE
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -20,8 +22,10 @@ usethis::with_project(dummypackage, {
   # Inflate once
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -100,14 +104,16 @@ usethis::with_project(dummypackage, {
   })
 
   test_that("deprecate_flat_file stops if flat file does not exist", {
-    expect_error(deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
+    expect_error(
+      deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
       regexp = "does not exist"
     )
   })
 
   file.create("dev/flat_nonexistent.Rmd")
   test_that("deprecate_flat_file stops if flat file is not in config file", {
-    expect_error(deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
+    expect_error(
+      deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
       regexp = "is not in the config file"
     )
   })

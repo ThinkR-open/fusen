@@ -38,9 +38,12 @@ usethis::with_project(dummypackage, {
   # To add the config file a first inflate is needed
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = dev_file1,
-      vignette_name = "Get started", check = FALSE,
-      open_vignette = FALSE, document = TRUE,
+      pkg = dummypackage,
+      flat_file = dev_file1,
+      vignette_name = "Get started",
+      check = FALSE,
+      open_vignette = FALSE,
+      document = TRUE,
       overwrite = "yes"
     )
   )
@@ -261,7 +264,8 @@ usethis::with_project(dummypackage, {
   )
   expect_equal(
     length(
-      list.files(file.path(dummypackage, "dev"),
+      list.files(
+        file.path(dummypackage, "dev"),
         pattern = "flat.*\\.Rmd"
       )
     ),
@@ -270,7 +274,8 @@ usethis::with_project(dummypackage, {
 
   expect_equal(
     length(
-      list.files(file.path(dummypackage, "dev"),
+      list.files(
+        file.path(dummypackage, "dev"),
         pattern = "^flat.*\\.qmd"
       )
     ),
@@ -279,7 +284,8 @@ usethis::with_project(dummypackage, {
 
   expect_equal(
     length(
-      list.files(file.path(dummypackage, "dev", "flat_history"),
+      list.files(
+        file.path(dummypackage, "dev", "flat_history"),
         pattern = "flat.*\\.Rmd"
       )
     ),
@@ -288,7 +294,8 @@ usethis::with_project(dummypackage, {
 
   expect_equal(
     length(
-      list.files(file.path(dummypackage, "dev", "flat_history"),
+      list.files(
+        file.path(dummypackage, "dev", "flat_history"),
         pattern = "^flat.*\\.qmd"
       )
     ),

@@ -15,7 +15,9 @@
 #' dev_file <- suppressMessages(
 #'   add_flat_template(
 #'     template = "add",
-#'     pkg = ".", overwrite = TRUE, open = FALSE
+#'     pkg = ".",
+#'     overwrite = TRUE,
+#'     open = FALSE
 #'   )
 #' )
 #' rename_flat_file(
@@ -23,12 +25,12 @@
 #'   new_name = "flat_new.Rmd"
 #' )
 #' }
-
 rename_flat_file <- function(flat_file, new_name) {
   if (!file.exists(flat_file)) {
     stop(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " does not exist."
       )
     )
@@ -47,7 +49,8 @@ rename_flat_file <- function(flat_file, new_name) {
   if (file.exists(new_name_path)) {
     stop(
       paste0(
-        "The new file ", new_name_path,
+        "The new file ",
+        new_name_path,
         " already exists."
       )
     )
@@ -81,8 +84,10 @@ rename_flat_file <- function(flat_file, new_name) {
 
   cli_alert_info(
     paste0(
-      "The flat file ", flat_file,
-      " has been renamed to ", new_name_path
+      "The flat file ",
+      flat_file,
+      " has been renamed to ",
+      new_name_path
     )
   )
 
@@ -105,7 +110,8 @@ rename_flat_file <- function(flat_file, new_name) {
 
     cli_alert_info(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " has been updated in the config file."
       )
     )
@@ -130,7 +136,8 @@ rename_flat_file <- function(flat_file, new_name) {
     }
     cli_alert_info(
       paste0(
-        "The flat file ", basename(new_name_path),
+        "The flat file ",
+        basename(new_name_path),
         " has been updated in the inflated files."
       )
     )

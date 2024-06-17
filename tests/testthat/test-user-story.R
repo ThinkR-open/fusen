@@ -33,8 +33,10 @@ for (template in all_templates_second) {
 
     # Inflate first flat file
     suppressMessages(inflate(
-      flat_file = "dev/flat_first.Rmd", vignette_name = "My First",
-      open_vignette = FALSE, check = FALSE
+      flat_file = "dev/flat_first.Rmd",
+      vignette_name = "My First",
+      open_vignette = FALSE,
+      check = FALSE
     ))
 
     test_that(paste0("full process -", template, "- first minimal basis ok"), {
@@ -57,8 +59,10 @@ for (template in all_templates_second) {
 
       # Inflate second flat file
       suppressMessages(inflate(
-        flat_file = "dev/flat_second.Rmd", vignette_name = "My Second",
-        open_vignette = FALSE, check = FALSE
+        flat_file = "dev/flat_second.Rmd",
+        vignette_name = "My Second",
+        open_vignette = FALSE,
+        check = FALSE
       ))
       expect_true(file.exists("vignettes/my-second.Rmd"))
 

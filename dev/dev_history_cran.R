@@ -59,12 +59,16 @@ suppressMessages(devtools::test()) # interactivity
 fusen::draw_package_structure()
 
 # Update Readmes
-rmarkdown::render("dev/README.Rmd",
-  output_format = "github_document", output_file = "README.md"
+rmarkdown::render(
+  "dev/README.Rmd",
+  output_format = "github_document",
+  output_file = "README.md"
 )
 
-rmarkdown::render("README.Rmd",
-  output_format = "github_document", output_file = "README.md"
+rmarkdown::render(
+  "README.Rmd",
+  output_format = "github_document",
+  output_file = "README.md"
 )
 
 

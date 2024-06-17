@@ -6,7 +6,8 @@ test_that("pre_inflate_all_diagnosis_eval works", {
   diagnostic <- structure(
     list(
       flat = c(
-        "flat_minimal.Rmd", "flat_minimal_2.Rmd",
+        "flat_minimal.Rmd",
+        "flat_minimal_2.Rmd",
         "missing_file.Rmd"
       ),
       status = structure(
@@ -18,14 +19,16 @@ test_that("pre_inflate_all_diagnosis_eval works", {
         class = c("glue", "character")
       ),
       type = c(
-        "cli::cli_alert_success", "cli::cli_alert_warning",
+        "cli::cli_alert_success",
+        "cli::cli_alert_warning",
         "stop"
       ),
       params = c(NA, NA, "call. = FALSE")
     ),
     row.names = c(NA, -3L),
     class = c(
-      "tbl_df", "tbl",
+      "tbl_df",
+      "tbl",
       "data.frame"
     )
   )

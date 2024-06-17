@@ -36,8 +36,10 @@
 #' usethis::with_project(dummypackage, {
 #'   suppressMessages(
 #'     inflate(
-#'       pkg = dummypackage, flat_file = flat_file,
-#'       vignette_name = "Get started", check = FALSE,
+#'       pkg = dummypackage,
+#'       flat_file = flat_file,
+#'       vignette_name = "Get started",
+#'       check = FALSE,
 #'       open_vignette = FALSE
 #'     )
 #'   )
@@ -72,7 +74,9 @@ check_not_registered_files <- function(path = ".", config_file, guess = TRUE, to
       rep("vignette", length(all_vignette))
     ),
     path = c(
-      all_r, all_test, all_vignette
+      all_r,
+      all_test,
+      all_vignette
     ),
     stringsAsFactors = FALSE
   )
@@ -136,7 +140,8 @@ check_not_registered_files <- function(path = ".", config_file, guess = TRUE, to
 
   # config_file may not exist already
   csv_file <- file.path(
-    gsub(paste0(normalize_path_winslash(getwd()), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE)), fixed = TRUE), "config_not_registered.csv"
+    gsub(paste0(normalize_path_winslash(getwd()), "/"), "", dirname(normalize_path_winslash(config_file, mustWork = FALSE)), fixed = TRUE),
+    "config_not_registered.csv"
   )
 
   # Save for manual modification
@@ -182,14 +187,16 @@ guess_flat_origin <- function(path) {
   lines <- readLines(path)
 
   guess_path <- sub(
-    ".* from\\s*(/){0,1}(.+[.].{1}md).*", "\\2",
+    ".* from\\s*(/){0,1}(.+[.].{1}md).*",
+    "\\2",
     lines[grep("(G|g)enerated by \\{fusen\\} from", lines)][1]
   )
 
   guess_path <- normalize_path_winslash(guess_path, mustWork = FALSE)
   if (file.exists(guess_path)) {
     guess_path <- gsub(
-      paste0(normalize_path_winslash(getwd()), "/"), "",
+      paste0(normalize_path_winslash(getwd()), "/"),
+      "",
       normalize_path_winslash(guess_path, mustWork = FALSE)
     )
     return(guess_path)
@@ -248,14 +255,16 @@ get_list_paths <- function(config_list) {
 #'
 #' @noRd
 
-df_to_config <- function(df_files,
-                         flat_file_path = "keep",
-                         state = c("active", "deprecated"),
-                         config_file,
-                         force = FALSE,
-                         clean = "ask",
-                         inflate_parameters = NULL,
-                         update_params = TRUE) {
+df_to_config <- function(
+  df_files,
+  flat_file_path = "keep",
+  state = c("active", "deprecated"),
+  config_file,
+  force = FALSE,
+  clean = "ask",
+  inflate_parameters = NULL,
+  update_params = TRUE
+) {
   if (missing(config_file)) {
     config_file <- getOption(
       "fusen.config_file",
@@ -275,7 +284,9 @@ df_to_config <- function(df_files,
     df_files <- read.csv(df_files, stringsAsFactors = FALSE)
   } else if (!is.data.frame(df_files) && !file.exists(df_files)) {
     stop(
-      "'", df_files, "' does not exist. You can run ",
+      "'",
+      df_files,
+      "' does not exist. You can run ",
       "`check_not_registered_files()` before."
     )
   }
@@ -297,7 +308,9 @@ df_to_config <- function(df_files,
         "Some 'origin' in df_files do not exist:",
         paste(
           paste0(
-            "row ", which(!all_exists), ": ",
+            "row ",
+            which(!all_exists),
+            ": ",
             df_files[["origin"]][!all_exists]
           ),
           collapse = ", "
@@ -340,8 +353,11 @@ df_to_config <- function(df_files,
       "Some 'path' in df_files do not exist:",
       paste(
         paste0(
-          "row ", which(!all_exists), "- ",
-          df_files[["type"]][!all_exists], ": ",
+          "row ",
+          which(!all_exists),
+          "- ",
+          df_files[["type"]][!all_exists],
+          ": ",
           df_files[["path"]][!all_exists]
         ),
         collapse = ", "
@@ -446,7 +462,8 @@ df_to_config <- function(df_files,
           paste(
             yaml_paths[!all_exists],
             collapse = ", "
-          ), ".\n",
+          ),
+          ".\n",
           "Please open the configuration file: ",
           config_file,
           " to verify, and delete the non-existing files if needed."
@@ -475,7 +492,8 @@ df_to_config <- function(df_files,
     seq_along(each_flat_file_path),
     function(x) {
       update_one_group_yaml(
-        df_files, complete_yaml,
+        df_files,
+        complete_yaml,
         each_flat_file_path[x],
         state = state[x],
         clean = ifelse(each_flat_file_path[x] == "keep", FALSE, clean),
@@ -533,7 +551,8 @@ df_to_config <- function(df_files,
 #' @importFrom yaml write_yaml read_yaml
 #' @noRd
 write_yaml_verbatim <- function(x, file) {
-  write_yaml(x,
+  write_yaml(
+    x,
     file = file,
     handlers = list(
       logical = function(x) {
@@ -567,13 +586,14 @@ files_list_to_vector <- function(list_of_files) {
 #' @importFrom cli cli_alert_warning cli_alert_success
 #' @noRd
 update_one_group_yaml <- function(
-    df_files,
-    complete_yaml,
-    flat_file_path,
-    state = c("active", "deprecated"),
-    clean = "ask",
-    inflate_parameters = NULL,
-    update_params = TRUE) {
+  df_files,
+  complete_yaml,
+  flat_file_path,
+  state = c("active", "deprecated"),
+  clean = "ask",
+  inflate_parameters = NULL,
+  update_params = TRUE
+) {
   state <- match.arg(state, several.ok = FALSE)
   all_keep_before <- complete_yaml[[basename(flat_file_path)]]
 
@@ -645,7 +665,8 @@ update_one_group_yaml <- function(
       inflate_parameters_new <- inflate_parameters
     }
     this_group_list_return <- c(
-      this_group_list, list(inflate = inflate_parameters_new)
+      this_group_list,
+      list(inflate = inflate_parameters_new)
     )
   }
 
@@ -681,14 +702,18 @@ update_one_group_yaml <- function(
       cli_alert_warning(
         paste0(
           "Some files are not anymore created from ",
-          flat_file_path, ".\n",
+          flat_file_path,
+          ".\n",
           "You may have rename some functions or moved them to another flat:",
           "\n",
-          paste(files_removed_vec, collapse = ", "), ".\n\n",
+          paste(files_removed_vec, collapse = ", "),
+          ".\n\n",
           "Below, you are ask if you want to remove them from the repository.",
           "\n\n",
           "Note: to not see this message again, use `clean = TRUE` in the ",
-          "`inflate()` command of this flat file : ", flat_file_path, ".\n",
+          "`inflate()` command of this flat file : ",
+          flat_file_path,
+          ".\n",
           "Use with caution. ",
           "It is recommended to use git to check the changes...\n"
         )
@@ -715,7 +740,8 @@ update_one_group_yaml <- function(
 
       silent <- lapply(
         paste(
-          files_removed_vec, "was removed from the config file",
+          files_removed_vec,
+          "was removed from the config file",
           "and from the repository"
         ),
         cli_alert_warning
@@ -723,7 +749,8 @@ update_one_group_yaml <- function(
     } else if (isFALSE(do_it)) {
       silent <- lapply(
         paste(
-          files_removed_vec, "was removed from the config file",
+          files_removed_vec,
+          "was removed from the config file",
           "but kept in the repository"
         ),
         cli_alert_warning
@@ -771,8 +798,10 @@ update_one_group_yaml <- function(
 #' usethis::with_project(dummypackage, {
 #'   suppressMessages(
 #'     inflate(
-#'       pkg = dummypackage, flat_file = flat_file,
-#'       vignette_name = "Get started", check = FALSE,
+#'       pkg = dummypackage,
+#'       flat_file = flat_file,
+#'       vignette_name = "Get started",
+#'       check = FALSE,
 #'       open_vignette = FALSE
 #'     )
 #'   )
@@ -790,8 +819,11 @@ register_all_to_config <- function(pkg = ".", config_file) {
   }
 
   # Use the function to check the list of files
-  out_df <- check_not_registered_files(pkg,
-    config_file = config_file, to_csv = FALSE, open = FALSE
+  out_df <- check_not_registered_files(
+    pkg,
+    config_file = config_file,
+    to_csv = FALSE,
+    open = FALSE
   )
 
 
@@ -812,7 +844,8 @@ register_all_to_config <- function(pkg = ".", config_file) {
   # Delete out_df
   csv_file <- file.path(
     gsub(
-      paste0(normalize_path_winslash(getwd()), "/"), "",
+      paste0(normalize_path_winslash(getwd()), "/"),
+      "",
       dirname(normalize_path_winslash(config_file, mustWork = FALSE)),
       fixed = TRUE
     ),
