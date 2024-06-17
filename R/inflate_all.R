@@ -97,6 +97,12 @@
 #'   inflate_all(check = FALSE, document = TRUE)
 #' })
 #'
+#' # If you wish, the code coverage can be computed
+#' usethis::with_project(dummypackage, {
+#'   # now you can run inflate_all()
+#'   inflate_all(check = FALSE, document = TRUE, codecov = TRUE)
+#' })
+#'
 #' # Clean the temporary directory
 #' unlink(dummypackage, recursive = TRUE)
 inflate_all <- function(
@@ -106,6 +112,7 @@ inflate_all <- function(
     open_vignette = FALSE,
     overwrite = TRUE,
     check_unregistered = TRUE,
+    codecov = FALSE,
     stylers, ...) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
@@ -162,6 +169,7 @@ inflate_all <- function(
           flat_file$document <- FALSE
           flat_file$check <- FALSE
           flat_file$update_params <- FALSE
+          flat_file$codecov <- FALSE
           suppressMessages(do.call(inflate, flat_file))
         })
       )
@@ -197,11 +205,16 @@ inflate_all <- function(
     ...
   )
 
+  if (codecov) {
+    cli::cli_alert_info("Computing code coverage - it might take some time")
+    compute_codecov(pkg = pkg)
+  }
+
   invisible(pkg)
 }
 
 #' @rdname inflate_all
 #' @export
-inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, check_unregistered = TRUE, stylers, ...) {
-  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, check_unregistered = check_unregistered, stylers, ...)
+inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, check_unregistered = TRUE, codecov = FALSE, stylers, ...) {
+  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, check_unregistered = check_unregistered, codecov = codecov, stylers, ...)
 }

@@ -444,7 +444,8 @@ usethis::with_project(dummypackage, {
         check = FALSE,
         document = TRUE,
         overwrite = "ask",
-        clean = "ask"
+        clean = "ask",
+        codecov = FALSE
       )
     )
 
@@ -457,7 +458,8 @@ usethis::with_project(dummypackage, {
         check = FALSE,
         document = TRUE,
         overwrite = "ask",
-        clean = "ask"
+        clean = "ask",
+        codecov = FALSE
       )
     )
   })

@@ -12,6 +12,7 @@ inflate_all(
   open_vignette = FALSE,
   overwrite = TRUE,
   check_unregistered = TRUE,
+  codecov = FALSE,
   stylers,
   ...
 )
@@ -22,6 +23,7 @@ inflate_all_no_check(
   open_vignette = FALSE,
   overwrite = TRUE,
   check_unregistered = TRUE,
+  codecov = FALSE,
   stylers,
   ...
 )
@@ -42,6 +44,8 @@ Whether to overwrite vignette and functions if already exists.}
 
 \item{check_unregistered}{Logical. Whether to help detect unregistered files.
 Typically files not created from a flat file and added manually in the repository.}
+
+\item{codecov}{Logical. Whether to compute code coverage (with \code{covr::package_coverage()} or \code{covr::report()}).}
 
 \item{stylers}{Function to be run at the end of the process,
 like \code{styler::style_pkg} or \code{lintr::lint_package}
@@ -127,6 +131,12 @@ usethis::with_project(dummypackage, {
 usethis::with_project(dummypackage, {
   # now you can run inflate_all()
   inflate_all(check = FALSE, document = TRUE)
+})
+
+# If you wish, the code coverage can be computed
+usethis::with_project(dummypackage, {
+  # now you can run inflate_all()
+  inflate_all(check = FALSE, document = TRUE, codecov = TRUE)
 })
 
 # Clean the temporary directory

@@ -55,6 +55,10 @@ There is a wrapper named `inflate_all_no_check()` that will prevent running `dev
 
 Note also that all files stored in R, tests and vignettes directories are checked to detect those not created from a flat file. They will need to be registered in the config file too, in order to help you keep your package clean of deprecated files. `inflate_all()` thus runs `check_not_registered_files()` behind the scene and informs about the procedure. Read `vignette('register-files-in-config', package = 'fusen')` to get more information.
 
+## Compute the code coverage
+
+If you want to compute the code coverage of your package, you can run `inflate_all(codecov = TRUE)`. It will run `covr::package_coverage()` at the end of the process.
+
 ## Complete the process with your own code style
 
 You can run your preferred styling functions just before the check of the package in `inflate_all()`. For instance, if you want {styler} package to clean your code during the inflate process, you can run `inflate_all(stylers = styler::style_pkg)`. If you also would like to clean the "dev/" directory, you can run `inflate_all(stylers = function() {styler::style_pkg(); styler::style_dir("dev")})`.
@@ -110,6 +114,7 @@ inflate_all <- function(
     open_vignette = FALSE,
     overwrite = TRUE,
     check_unregistered = TRUE,
+    codecov = FALSE,
     stylers, ...) {
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
@@ -166,6 +171,7 @@ inflate_all <- function(
           flat_file$document <- FALSE
           flat_file$check <- FALSE
           flat_file$update_params <- FALSE
+          flat_file$codecov <- FALSE
           suppressMessages(do.call(inflate, flat_file))
         })
       )
@@ -201,13 +207,18 @@ inflate_all <- function(
     ...
   )
 
+  if (codecov) {
+    cli::cli_alert_info("Computing code coverage - it might take some time")
+    compute_codecov(pkg = pkg)
+  }
+
   invisible(pkg)
 }
 
 #' @rdname inflate_all
 #' @export
-inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, check_unregistered = TRUE, stylers, ...) {
-  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, check_unregistered = check_unregistered, stylers, ...)
+inflate_all_no_check <- function(pkg = ".", document = TRUE, open_vignette = FALSE, overwrite = TRUE, check_unregistered = TRUE, codecov = FALSE, stylers, ...) {
+  inflate_all(pkg = pkg, document = document, check = FALSE, open_vignette = open_vignette, overwrite = overwrite, check_unregistered = check_unregistered, codecov = codecov, stylers, ...)
 }
 ```
   
@@ -263,6 +274,12 @@ usethis::with_project(dummypackage, {
 usethis::with_project(dummypackage, {
   # now you can run inflate_all()
   inflate_all(check = FALSE, document = TRUE)
+})
+
+# If you wish, the code coverage can be computed
+usethis::with_project(dummypackage, {
+  # now you can run inflate_all()
+  inflate_all(check = FALSE, document = TRUE, codecov = TRUE)
 })
 
 # Clean the temporary directory
@@ -830,7 +847,8 @@ usethis::with_project(dummypackage, {
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
         "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite", "clean"
+        "check", "document", "overwrite", "clean",
+        "codecov"
       )
     )
   })
@@ -880,7 +898,8 @@ usethis::with_project(dummypackage, {
       names(config_content[["flat_full.Rmd"]][["inflate"]]),
       c(
         "flat_file", "vignette_name", "open_vignette",
-        "check", "document", "overwrite", "clean"
+        "check", "document", "overwrite", "clean",
+        "codecov"
       )
     )
     expect_true(is.na(config_content[["flat_full.Rmd"]][["inflate"]][["vignette_name"]]))
@@ -943,6 +962,159 @@ usethis::with_project(dummypackage, {
     )
   })
 })
+unlink(dummypackage, recursive = TRUE)
+
+
+## codecov
+dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
+dir.create(dummypackage)
+fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+console_output_file <- tempfile(
+  pattern = paste0(sample(letters, 10), collapse = ""),
+  fileext = ".txt"
+)
+
+file.create(console_output_file)
+
+usethis::with_project(dummypackage, {
+  # Add licence
+  usethis::use_mit_license("John Doe")
+  dev_file1 <- add_minimal_flat(
+    pkg = dummypackage,
+    flat_name = "flat1.Rmd",
+    open = FALSE,
+    overwrite = TRUE
+  )
+
+  inflate(
+    pkg = dummypackage,
+    flat_file = dev_file1,
+    vignette_name = "Get started",
+    check = FALSE,
+    open_vignette = FALSE,
+    document = TRUE,
+    overwrite = "yes",
+    codecov = TRUE
+  )
+
+
+  capture.output(
+    inflate_all(
+      pkg = dummypackage,
+      check = FALSE,
+      codecov = TRUE
+    ),
+    file = console_output_file,
+    type = "message"
+  )
+
+  test_that("inflate_all outputs compute codecov if asked", {
+    res <- readLines(console_output_file)
+
+    expect_true(
+      any(grepl(
+        pattern = "Computing code coverage - it might take some time",
+        x = res
+      ))
+    )
+
+    expect_true(
+      any(grepl(
+        pattern = "R/flat1_rmd.R: 0.00%",
+        x = res
+      ))
+    )
+
+
+    expect_true(
+      any(grepl(
+        pattern = paste(
+          basename(dummypackage),
+          "Coverage: 0.00%"
+        ),
+        x = res
+      ))
+    )
+  })
+
+  # We add a "real" unit test in our flat file to reach a 100% coverage
+  flat_content <- readLines(dev_file1)
+  flat_content[grepl("expect_true", flat_content)] <- "expect_equal(flat1_rmd(), 1)"
+  writeLines(flat_content, dev_file1)
+
+  capture.output(
+    inflate_all(
+      pkg = dummypackage,
+      check = FALSE,
+      codecov = TRUE
+    ),
+    file = console_output_file,
+    type = "message"
+  )
+
+  test_that("inflate outputs compute codecov correctly", {
+    res <- readLines(console_output_file)
+
+    expect_true(
+      any(grepl(
+        pattern = "Computing code coverage - it might take some time",
+        x = res
+      ))
+    )
+
+    expect_true(
+      any(grepl(
+        pattern = "R/flat1_rmd.R: 100.00%",
+        x = res
+      ))
+    )
+
+
+    expect_true(
+      any(grepl(
+        pattern = paste(
+          basename(dummypackage),
+          "Coverage: 100.00%"
+        ),
+        x = res
+      ))
+    )
+  })
+
+  capture.output(
+    inflate_all(
+      check = FALSE,
+      codecov = FALSE
+    ),
+    file = console_output_file,
+    type = "message"
+  )
+
+
+  test_that("inflate does not compute codecov if not asked", {
+    res <- readLines(console_output_file)
+
+    expect_false(
+      any(grepl(
+        pattern = "Computing code coverage - it might take some time",
+        x = res
+      ))
+    )
+
+    expect_false(
+      any(grepl(
+        pattern = paste(
+          basename(dummypackage),
+          "Coverage:"
+        ),
+        x = res
+      ))
+    )
+  })
+})
+
+unlink(console_output_file)
+unlink(dummypackage, recursive = TRUE)
 ```
 
 ```{r development-inflate, eval=FALSE}
