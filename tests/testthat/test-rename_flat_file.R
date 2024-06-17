@@ -8,7 +8,9 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(
   add_flat_template(
     template = "full",
-    pkg = dummypackage, overwrite = TRUE, open = FALSE
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -19,7 +21,8 @@ usethis::with_project(dummypackage, {
   write_yaml_verbatim(list(), config_file)
 
   test_that("rename_flat_file fails if file does not exists", {
-    expect_error(rename_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
+    expect_error(
+      rename_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
       regexp = "does not exist"
     )
   })
@@ -95,8 +98,10 @@ usethis::with_project(dummypackage, {
     # Inflate the new file
     suppressMessages(
       inflate(
-        pkg = dummypackage, flat_file = other_new_path,
-        vignette_name = "Get started", check = FALSE,
+        pkg = dummypackage,
+        flat_file = other_new_path,
+        vignette_name = "Get started",
+        check = FALSE,
         open_vignette = FALSE
       )
     )

@@ -31,7 +31,8 @@ test_that("fill_description adds DESCRIPTION", {
   expect_error(
     expect_message(
       fill_description(
-        pkg = dummypackage, fields = list(Title = "Second launch")
+        pkg = dummypackage,
+        fields = list(Title = "Second launch")
       )
     )
   )
@@ -57,13 +58,17 @@ test_that("no dot description fails", {
           "Everything can be set from a Rmarkdown file in your project"
         ),
         `Authors@R` = c(
-          person("Jack", "Doe",
+          person(
+            "Jack",
+            "Doe",
             email = "jack@email.me",
-            role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0001")
+            role = c("aut", "cre"),
+            comment = c(ORCID = "0000-0000-0000-0001")
           ),
           person(given = "ThinkR", role = "cph")
         )
-      ), overwrite = TRUE
+      ),
+      overwrite = TRUE
     ),
     "A dot was added."
   )
@@ -89,17 +94,20 @@ dir.create(dummypackage)
 
 test_that("curly bracket in title and description works", {
   # Works with {} in text although not allowed by CRAN
-  expect_message(fill_description(
-    pkg = dummypackage,
-    fields = list(
-      Title = "Build a package with {fusen}",
-      Description = "Use Rmarkdown First method to build your package with {fusen}.",
-      `Authors@R` = c(
-        person("Jack", "Doe", email = "jack@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0001")),
-        person(given = "ThinkR", role = "cph")
+  expect_message(
+    fill_description(
+      pkg = dummypackage,
+      fields = list(
+        Title = "Build a package with {fusen}",
+        Description = "Use Rmarkdown First method to build your package with {fusen}.",
+        `Authors@R` = c(
+          person("Jack", "Doe", email = "jack@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0001")),
+          person(given = "ThinkR", role = "cph")
+        )
       )
-    )
-  ), "Title Case")
+    ),
+    "Title Case"
+  )
 })
 
 # Delete dummy package

@@ -23,8 +23,10 @@ usethis::with_project(dummypackage, {
     expect_error(
       suppressMessages(
         inflate(
-          pkg = dummypackage, flat_file = flat_file,
-          check = FALSE, open_vignette = FALSE
+          pkg = dummypackage,
+          flat_file = flat_file,
+          check = FALSE,
+          open_vignette = FALSE
         )
       ),
       regexp = NA
@@ -40,7 +42,8 @@ usethis::with_project(dummypackage, {
     skip_on_cran()
 
     # Could not find function "my_norox2 in the vignette ?
-    expect_error(rcmdcheck::rcmdcheck(dummypackage,
+    expect_error(rcmdcheck::rcmdcheck(
+      dummypackage,
       quiet = TRUE,
       args = c("--no-manual")
     ))
@@ -114,7 +117,8 @@ for (pkgname in create_choices_test) {
         skip_on_cran()
 
         # If this check is run inside a not "--as-cran" check, then it wont work as expected
-        check_out <- rcmdcheck::rcmdcheck(path_foosen,
+        check_out <- rcmdcheck::rcmdcheck(
+          path_foosen,
           quiet = TRUE,
           args = c("--no-manual")
         )
@@ -219,14 +223,16 @@ usethis::with_project(dummypackage, {
 
     flat_lines <- readLines(flat_file)
     # Change directory to current
-    flatlines <- gsub("here::here()",
+    flatlines <- gsub(
+      "here::here()",
       paste0('"', dummypackage, '"'),
       flat_lines,
       fixed = TRUE
     )
 
     flatlines_chunk <- grep("```", flatlines)
-    flatlines_chunk_data <- grep("```{r development-dataset}",
+    flatlines_chunk_data <- grep(
+      "```{r development-dataset}",
       flatlines,
       fixed = TRUE
     )
@@ -298,7 +304,8 @@ usethis::with_project(dummypackage, {
     # Should not be any errors with templates
     # If this check is run inside a not "--as-cran" check,
     # then it wont work as expected
-    check_out <- rcmdcheck::rcmdcheck(dummypackage,
+    check_out <- rcmdcheck::rcmdcheck(
+      dummypackage,
       quiet = TRUE,
       args = c("--no-manual")
     )
@@ -331,7 +338,8 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(
   add_flat_template(
     pkg = dummypackage,
-    overwrite = TRUE, open = FALSE
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -353,8 +361,10 @@ usethis::with_project(dummypackage, {
     expect_error(
       suppressMessages(
         inflate(
-          pkg = dummypackage, flat_file = flat_file,
-          vignette_name = "Get started", check = FALSE,
+          pkg = dummypackage,
+          flat_file = flat_file,
+          vignette_name = "Get started",
+          check = FALSE,
           open_vignette = FALSE
         )
       ),
@@ -365,8 +375,10 @@ usethis::with_project(dummypackage, {
     expect_equal(
       sort(list.files(file.path(dummypackage, "R"))),
       sort(c(
-        "internal-variables.R", "my-data-doc.R",
-        "my-pkg-doc.R", "onload.R"
+        "internal-variables.R",
+        "my-data-doc.R",
+        "my-pkg-doc.R",
+        "onload.R"
       ))
     )
     pkgdoc <- file.path(dummypackage, "R", "my-pkg-doc.R")
@@ -376,7 +388,8 @@ usethis::with_project(dummypackage, {
     expect_equal(pkgdoc_lines[4], "\"_PACKAGE\"")
     expect_true(file.exists(
       file.path(
-        dummypackage, "man",
+        dummypackage,
+        "man",
         paste0(basename(dummypackage), "-package.Rd")
       )
     ))
@@ -416,10 +429,13 @@ usethis::with_project(dummypackage, {
       expect_error(
         suppressMessages(
           inflate(
-            pkg = dummypackage, flat_file = flat_file,
-            vignette_name = "Get started", check = FALSE,
+            pkg = dummypackage,
+            flat_file = flat_file,
+            vignette_name = "Get started",
+            check = FALSE,
             quiet = TRUE,
-            overwrite = TRUE, open_vignette = FALSE
+            overwrite = TRUE,
+            open_vignette = FALSE
           )
         ),
         regexp = NA
@@ -430,7 +446,8 @@ usethis::with_project(dummypackage, {
 
       # If this check is run inside a not "--as-cran" check,
       #  then it wont work as expected
-      check_out <- rcmdcheck::rcmdcheck(dummypackage,
+      check_out <- rcmdcheck::rcmdcheck(
+        dummypackage,
         quiet = TRUE,
         args = c("--no-manual"),
         check_dir = checkdir
@@ -465,10 +482,14 @@ usethis::with_project(dummypackage, {
       expect_error(
         suppressMessages(
           inflate(
-            pkg = dummypackage, flat_file = flat_file,
-            vignette_name = "Get started", check = TRUE,
-            check_dir = checkdir, quiet = TRUE,
-            overwrite = TRUE, open_vignette = FALSE
+            pkg = dummypackage,
+            flat_file = flat_file,
+            vignette_name = "Get started",
+            check = TRUE,
+            check_dir = checkdir,
+            quiet = TRUE,
+            overwrite = TRUE,
+            open_vignette = FALSE
           )
         ),
         regexp = NA
@@ -477,7 +498,8 @@ usethis::with_project(dummypackage, {
       # Should not be any errors with templates in interactive
       check_lines <- readLines(
         file.path(
-          checkdir, paste0(basename(dummypackage), ".Rcheck"),
+          checkdir,
+          paste0(basename(dummypackage), ".Rcheck"),
           "00check.log"
         )
       )
@@ -497,7 +519,8 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(
   add_flat_template(
     pkg = dummypackage,
-    overwrite = TRUE, open = FALSE
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -516,8 +539,10 @@ usethis::with_project(dummypackage, {
     expect_error(
       suppressMessages(
         inflate(
-          pkg = dummypackage, flat_file = flat_file,
-          vignette_name = "Get started", check = FALSE,
+          pkg = dummypackage,
+          flat_file = flat_file,
+          vignette_name = "Get started",
+          check = FALSE,
           open_vignette = FALSE,
           # To avoid having {R6} in suggests
           document = FALSE
@@ -561,8 +586,10 @@ test_that("rmd and name are deprecated works", {
           # flat_file = flat_file,
           rmd = flat_file,
           vignette_name = "Get started",
-          check = FALSE, document = TRUE,
-          overwrite = TRUE, open_vignette = FALSE
+          check = FALSE,
+          document = TRUE,
+          overwrite = TRUE,
+          open_vignette = FALSE
         )
       ),
       regexp = "The `rmd` argument"
@@ -574,8 +601,10 @@ test_that("rmd and name are deprecated works", {
           flat_file = flat_file,
           # vignette_name = "Get started",
           name = "Get started",
-          check = FALSE, document = TRUE,
-          overwrite = TRUE, open_vignette = FALSE
+          check = FALSE,
+          document = TRUE,
+          overwrite = TRUE,
+          open_vignette = FALSE
         )
       ),
       regexp = "The `name` argument"
@@ -597,8 +626,10 @@ usethis::with_project(dummypackage, {
   test_that("inflate() worked correctly", {
     expect_message(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = NA, check = FALSE,
+        pkg = dummypackage,
+        flat_file = flat_file,
+        vignette_name = NA,
+        check = FALSE,
         open_vignette = FALSE
       ),
       regexp = "no vignette created"
@@ -607,8 +638,10 @@ usethis::with_project(dummypackage, {
 
     expect_message(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = NULL, check = FALSE,
+        pkg = dummypackage,
+        flat_file = flat_file,
+        vignette_name = NULL,
+        check = FALSE,
         open_vignette = FALSE
       ),
       regexp = "no vignette created"
@@ -617,8 +650,10 @@ usethis::with_project(dummypackage, {
 
     expect_message(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "", check = FALSE,
+        pkg = dummypackage,
+        flat_file = flat_file,
+        vignette_name = "",
+        check = FALSE,
         open_vignette = FALSE
       ),
       regexp = "no vignette created"
@@ -628,8 +663,10 @@ usethis::with_project(dummypackage, {
     expect_error(
       suppressMessages(
         inflate(
-          pkg = dummypackage, flat_file = flat_file,
-          vignette_name = "It works then", check = FALSE,
+          pkg = dummypackage,
+          flat_file = flat_file,
+          vignette_name = "It works then",
+          check = FALSE,
           open_vignette = FALSE
         )
       ),
@@ -661,8 +698,10 @@ usethis::with_project(dummypackage, {
   )
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -719,8 +758,10 @@ usethis::with_project(dummypackage, {
       r_lines[21:25],
       c(
         "#' @rdname same_rdname",
-        "#' @importFrom stats median", "#' @export",
-        "#' @examples", "#' my_fun_rdname2(1:12)"
+        "#' @importFrom stats median",
+        "#' @export",
+        "#' @examples",
+        "#' my_fun_rdname2(1:12)"
       )
     )
     # Same chunk name
@@ -823,8 +864,10 @@ usethis::with_project(dummypackage, {
 
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -872,8 +915,10 @@ usethis::with_project(dummypackage, {
 
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -920,8 +965,10 @@ usethis::with_project(dummypackage, {
     expect_error(
       suppressMessages(
         inflate(
-          pkg = dummypackage, flat_file = flat_file,
-          vignette_name = "Get started", check = FALSE,
+          pkg = dummypackage,
+          flat_file = flat_file,
+          vignette_name = "Get started",
+          check = FALSE,
           open_vignette = FALSE
         )
       ),
@@ -969,8 +1016,10 @@ usethis::with_project(dummypackage, {
     expect_error(
       suppressMessages(
         inflate(
-          pkg = dummypackage, flat_file = flat_file,
-          vignette_name = "Get started", check = FALSE,
+          pkg = dummypackage,
+          flat_file = flat_file,
+          vignette_name = "Get started",
+          check = FALSE,
           open_vignette = FALSE
         )
       ),
@@ -1019,8 +1068,10 @@ usethis::with_project(dummypackage, {
     # no title may return
     expect_message(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "Get started", check = FALSE,
+        pkg = dummypackage,
+        flat_file = flat_file,
+        vignette_name = "Get started",
+        check = FALSE,
         open_vignette = FALSE
       ),
       regexp = "Some example chunks are not associated to any function"
@@ -1060,8 +1111,10 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 usethis::with_project(dummypackage, {
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = c("Super title" = "01-Super Slug"), check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = c("Super title" = "01-Super Slug"),
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -1098,8 +1151,10 @@ usethis::with_project(dummypackage, {
   )
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = NA, check = FALSE
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = NA,
+      check = FALSE
     )
   )
 
@@ -1137,8 +1192,10 @@ usethis::with_project(dummypackage, {
     expect_error(
       suppressMessages(
         inflate(
-          pkg = dummypackage, flat_file = flat_file,
-          check = FALSE, open_vignette = FALSE
+          pkg = dummypackage,
+          flat_file = flat_file,
+          check = FALSE,
+          open_vignette = FALSE
         )
       ),
       regexp = NA
@@ -1158,7 +1215,8 @@ usethis::with_project(dummypackage, {
       "#' @examples",
       "#' \\dontrun{",
       "#' my_twoexamples(10)",
-      "#' }", "#'",
+      "#' }",
+      "#'",
       "#' my_twoexamples(20)",
       "my_twoexamples <- function(x) {",
       "  x + 10",
@@ -1192,8 +1250,10 @@ usethis::with_project(dummypackage, {
 
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = NA, check = FALSE
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = NA,
+      check = FALSE
     )
   )
 
@@ -1205,23 +1265,39 @@ usethis::with_project(dummypackage, {
     # Example is included in .R in the right place for the first 3 functions
     code_fct1 <- readLines(file.path(dummypackage, "R", "real_name1.R"))
     expect_true(all(code_fct1[5:8] == c(
-      "#' @examples", "#' real_name1(1)", "real_name1 <-", "  function(x){"
+      "#' @examples",
+      "#' real_name1(1)",
+      "real_name1 <-",
+      "  function(x){"
     )))
     code_fct2 <- readLines(file.path(dummypackage, "R", "real_name2.R"))
     expect_true(all(code_fct2[5:10] == c(
-      "#' @examples", "#' real_name2(2)", "", "# a comment", "real_name2 <- ", "  function(x){"
+      "#' @examples",
+      "#' real_name2(2)",
+      "",
+      "# a comment",
+      "real_name2 <- ",
+      "  function(x){"
     )))
     code_fct3 <- readLines(file.path(dummypackage, "R", "real_name3.R"))
     expect_true(all(code_fct3[5:8] == c(
-      "#' @examples", "#' real_name3(3)", "real_name3 <- # a comment", "  function(x){"
+      "#' @examples",
+      "#' real_name3(3)",
+      "real_name3 <- # a comment",
+      "  function(x){"
     )))
     code_fct10 <- readLines(file.path(dummypackage, "R", "real_name10.R"))
     expect_true(all(code_fct10[10:12] == c(
-      "#' @examples", "#' real_name10(2)", "real_name10 <- function(x){"
+      "#' @examples",
+      "#' real_name10(2)",
+      "real_name10 <- function(x){"
     )))
     code_fct11 <- readLines(file.path(dummypackage, "R", "real_name11.R"))
     expect_true(all(code_fct11[5:8] == c(
-      "#' @examples", "#' real_name11(1)", "real_name11 <-", "  function(x) {"
+      "#' @examples",
+      "#' real_name11(1)",
+      "real_name11 <-",
+      "  function(x) {"
     )))
 
 
@@ -1236,8 +1312,10 @@ usethis::with_project(dummypackage, {
     expect_equal(
       sort(list.files(file.path(dummypackage, "tests", "testthat"))),
       sort(c(
-        "test-real_name1.R", "test-real_name11.R",
-        "test-real_name2.R", "test-real_name3.R"
+        "test-real_name1.R",
+        "test-real_name11.R",
+        "test-real_name2.R",
+        "test-real_name3.R"
       ))
     )
   })
@@ -1278,8 +1356,10 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 usethis::with_project(dummypackage.special, {
   suppressMessages(
     inflate(
-      pkg = dummypackage.special, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage.special,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )

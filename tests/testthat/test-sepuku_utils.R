@@ -57,7 +57,8 @@ usethis::with_project(dummypackage, {
     identified_flat_files <- list_flat_files_in_config_file()
 
     expect_equal(
-      length(identified_flat_files), 2
+      length(identified_flat_files),
+      2
     )
 
     expect_true(
@@ -104,7 +105,8 @@ usethis::with_project(dummypackage, {
     identified_flat_files <- list_flat_files_in_dev_folder()
 
     expect_equal(
-      length(identified_flat_files), 2
+      length(identified_flat_files),
+      2
     )
 
     expect_true(
@@ -140,7 +142,8 @@ usethis::with_project(dummypackage, {
     identified_flat_files <- list_flat_files_in_dev_folder(folder = "dev/flat_history")
 
     expect_equal(
-      length(identified_flat_files), 2
+      length(identified_flat_files),
+      2
     )
 
     expect_true(
@@ -182,7 +185,8 @@ usethis::with_project(dummypackage, {
 
     flat_files <- list_flat_files()
     expect_equal(
-      length(flat_files), 2
+      length(flat_files),
+      2
     )
 
     expect_true(
@@ -212,7 +216,8 @@ usethis::with_project(dummypackage, {
 
     flat_files <- list_flat_files()
     expect_equal(
-      length(flat_files), 2
+      length(flat_files),
+      2
     )
 
     expect_true(
@@ -246,7 +251,8 @@ usethis::with_project(dummypackage, {
 
     flat_files <- list_flat_files()
     expect_equal(
-      length(flat_files), 2
+      length(flat_files),
+      2
     )
 
     expect_true(

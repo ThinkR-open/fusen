@@ -20,16 +20,20 @@ usethis::with_project(dummypackage, {
   # We inflate both flat files
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
 
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file2,
-      vignette_name = "Get started2", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file2,
+      vignette_name = "Get started2",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -202,7 +206,8 @@ usethis::with_project(dummypackage, {
     diag_expected <- structure(
       list(
         flat = c(
-          "flat_minimal.Rmd", "flat_minimal_2.Rmd",
+          "flat_minimal.Rmd",
+          "flat_minimal_2.Rmd",
           "missing_file.Rmd"
         ),
         status = structure(
@@ -214,14 +219,16 @@ usethis::with_project(dummypackage, {
           class = c("glue", "character")
         ),
         type = c(
-          "cli::cli_alert_success", "cli::cli_alert_success",
+          "cli::cli_alert_success",
+          "cli::cli_alert_success",
           "stop"
         ),
         params = c(NA, NA, "call. = FALSE")
       ),
       row.names = c(NA, -3L),
       class = c(
-        "tbl_df", "tbl",
+        "tbl_df",
+        "tbl",
         "data.frame"
       )
     )
@@ -252,8 +259,10 @@ usethis::with_project(dummypackage, {
     file.create(file.path(dummypackage, "R/zaza.R"))
 
     my_files_to_protect <- tibble::tribble(
-      ~type, ~path,
-      "R", "R/zaza.R"
+      ~type,
+      ~path,
+      "R",
+      "R/zaza.R"
     )
 
     df_to_config(my_files_to_protect, force = TRUE)
@@ -281,8 +290,10 @@ usethis::with_project(dummypackage, {
     expect_error(
       suppressMessages(
         inflate(
-          pkg = dummypackage, flat_file = new_name,
-          vignette_name = "Get started", check = FALSE,
+          pkg = dummypackage,
+          flat_file = new_name,
+          vignette_name = "Get started",
+          check = FALSE,
           open_vignette = FALSE,
           overwrite = TRUE
         )
@@ -297,7 +308,8 @@ usethis::with_project(dummypackage, {
     diag_expected <- structure(
       list(
         flat = c(
-          "test_minimal.Rmd", "flat_minimal_2.Rmd"
+          "test_minimal.Rmd",
+          "flat_minimal_2.Rmd"
         ),
         status = structure(
           c(
@@ -307,13 +319,15 @@ usethis::with_project(dummypackage, {
           class = c("glue", "character")
         ),
         type = c(
-          "cli::cli_alert_success", "cli::cli_alert_success"
+          "cli::cli_alert_success",
+          "cli::cli_alert_success"
         ),
         params = c(NA, NA)
       ),
       row.names = c(NA, -2L),
       class = c(
-        "tbl_df", "tbl",
+        "tbl_df",
+        "tbl",
         "data.frame"
       )
     )
@@ -341,7 +355,8 @@ usethis::with_project(dummypackage, {
     diag_expected <- structure(
       list(
         flat = c(
-          "flat_minimal.Rmd", "flat_minimal_2.Rmd"
+          "flat_minimal.Rmd",
+          "flat_minimal_2.Rmd"
         ),
         status = structure(
           c(
@@ -351,13 +366,15 @@ usethis::with_project(dummypackage, {
           class = c("glue", "character")
         ),
         type = c(
-          "stop", "stop"
+          "stop",
+          "stop"
         ),
         params = c("call. = FALSE", "call. = FALSE")
       ),
       row.names = c(NA, -2L),
       class = c(
-        "tbl_df", "tbl",
+        "tbl_df",
+        "tbl",
         "data.frame"
       )
     )
@@ -406,16 +423,20 @@ usethis::with_project(dummypackage, {
   # We inflate both flat files
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
 
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file2,
-      vignette_name = "Get started2", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file2,
+      vignette_name = "Get started2",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -484,8 +505,10 @@ usethis::with_project(dummypackage, {
     file.create(file.path(dummypackage, "R/zaza.R"))
 
     my_files_to_protect <- tibble::tribble(
-      ~type, ~path,
-      "R", "R/zaza.R"
+      ~type,
+      ~path,
+      "R",
+      "R/zaza.R"
     )
 
     df_to_config(my_files_to_protect, force = TRUE)

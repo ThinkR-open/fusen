@@ -2,11 +2,13 @@
 
 #' @rdname add_flat_template
 #' @export
-add_additional <- function(pkg = ".",
-                           dev_dir = "dev",
-                           flat_name = "additional",
-                           overwrite = FALSE,
-                           open = TRUE) {
+add_additional <- function(
+  pkg = ".",
+  dev_dir = "dev",
+  flat_name = "additional",
+  overwrite = FALSE,
+  open = TRUE
+) {
   add_flat_template(
     template = "additional",
     pkg = pkg,
@@ -19,11 +21,13 @@ add_additional <- function(pkg = ".",
 
 #' @rdname add_flat_template
 #' @export
-add_minimal_flat <- function(pkg = ".",
-                             dev_dir = "dev",
-                             flat_name = "minimal",
-                             overwrite = FALSE,
-                             open = TRUE) {
+add_minimal_flat <- function(
+  pkg = ".",
+  dev_dir = "dev",
+  flat_name = "minimal",
+  overwrite = FALSE,
+  open = TRUE
+) {
   add_flat_template(
     template = "minimal_flat",
     pkg = pkg,
@@ -36,11 +40,13 @@ add_minimal_flat <- function(pkg = ".",
 
 #' @rdname add_flat_template
 #' @export
-add_minimal_package <- function(pkg = ".",
-                                dev_dir = "dev",
-                                flat_name = "minimal",
-                                overwrite = FALSE,
-                                open = TRUE) {
+add_minimal_package <- function(
+  pkg = ".",
+  dev_dir = "dev",
+  flat_name = "minimal",
+  overwrite = FALSE,
+  open = TRUE
+) {
   add_flat_template(
     template = "minimal_package",
     pkg = pkg,
@@ -53,11 +59,13 @@ add_minimal_package <- function(pkg = ".",
 
 #' @rdname add_flat_template
 #' @export
-add_full <- function(pkg = ".",
-                     dev_dir = "dev",
-                     flat_name = "full",
-                     overwrite = FALSE,
-                     open = TRUE) {
+add_full <- function(
+  pkg = ".",
+  dev_dir = "dev",
+  flat_name = "full",
+  overwrite = FALSE,
+  open = TRUE
+) {
   add_flat_template(
     template = "full",
     pkg = pkg,
@@ -70,10 +78,12 @@ add_full <- function(pkg = ".",
 
 #' @rdname add_flat_template
 #' @export
-add_dev_history <- function(pkg = ".",
-                            dev_dir = "dev",
-                            overwrite = FALSE,
-                            open = TRUE) {
+add_dev_history <- function(
+  pkg = ".",
+  dev_dir = "dev",
+  overwrite = FALSE,
+  open = TRUE
+) {
   add_flat_template(
     template = "dev_history",
     pkg = pkg,
@@ -86,10 +96,16 @@ add_dev_history <- function(pkg = ".",
 
 flat_template_choices <- c(
   "full",
-  "minimal_package", "minpkg",
-  "minimal_flat", "minflat", "add", "additional",
-  "teach", "teaching",
-  "dev_history", "dev"
+  "minimal_package",
+  "minpkg",
+  "minimal_flat",
+  "minflat",
+  "add",
+  "additional",
+  "teach",
+  "teaching",
+  "dev_history",
+  "dev"
 )
 
 create_fusen_choices <- c("full", "minimal", "teaching", "dev_history")
@@ -156,17 +172,20 @@ create_fusen_choices <- c("full", "minimal", "teaching", "dev_history")
 #' # add new flat template for teaching (a reduced full template)
 #' add_flat_template("teaching")
 #' }
-add_flat_template <- function(template = c("full", "minimal_package", "minimal_flat", "additional", "teaching", "dev_history"),
-                              pkg = ".",
-                              dev_dir = "dev",
-                              flat_name = NULL,
-                              overwrite = FALSE,
-                              open = TRUE) {
+add_flat_template <- function(
+  template = c("full", "minimal_package", "minimal_flat", "additional", "teaching", "dev_history"),
+  pkg = ".",
+  dev_dir = "dev",
+  flat_name = NULL,
+  overwrite = FALSE,
+  open = TRUE
+) {
   project_name <- get_pkg_name(pkg = pkg)
 
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
     stop(
-      "Please rename your project/directory with: `", asciify_name(project_name, to_pkg = TRUE),
+      "Please rename your project/directory with: `",
+      asciify_name(project_name, to_pkg = TRUE),
       "` as a package name should only contain letters, numbers and dots."
     )
   }
@@ -207,7 +226,8 @@ add_flat_template <- function(template = c("full", "minimal_package", "minimal_f
   }
   flat_name <- paste0(
     "flat_",
-    asciify_name(gsub("[.]Rmd$", "", flat_name[1])), ".Rmd"
+    asciify_name(gsub("[.]Rmd$", "", flat_name[1])),
+    ".Rmd"
   )
 
   pkg <- normalizePath(pkg)
@@ -227,8 +247,10 @@ add_flat_template <- function(template = c("full", "minimal_package", "minimal_f
       n <- length(list.files(full_dev_dir, pattern = "^flat_.*[.]Rmd"))
       dev_file_path <- file.path(full_dev_dir, paste0(file_path_sans_ext(flat_name), "_", n + 1, ".Rmd"))
       message(
-        flat_name, " already exists. New flat file is renamed '",
-        basename(dev_file_path), "'. Use overwrite = TRUE, if you want to ",
+        flat_name,
+        " already exists. New flat file is renamed '",
+        basename(dev_file_path),
+        "'. Use overwrite = TRUE, if you want to ",
         "overwrite the existing file or rename it."
       )
     }
@@ -239,7 +261,8 @@ add_flat_template <- function(template = c("full", "minimal_package", "minimal_f
 
     lines_template[grepl("<my_package_name>", lines_template)] <-
       gsub(
-        "<my_package_name>", project_name,
+        "<my_package_name>",
+        project_name,
         lines_template[grepl("<my_package_name>", lines_template)]
       )
 
@@ -247,13 +270,15 @@ add_flat_template <- function(template = c("full", "minimal_package", "minimal_f
     # _inflate
     lines_template[grepl("dev/flat_template.Rmd", lines_template)] <-
       gsub(
-        "dev/flat_template.Rmd", file.path(dev_dir, dev_name),
+        "dev/flat_template.Rmd",
+        file.path(dev_dir, dev_name),
         lines_template[grepl("dev/flat_template.Rmd", lines_template)]
       )
     # _title
     lines_template[grepl("flat_template.Rmd", lines_template)] <-
       gsub(
-        "flat_template.Rmd", dev_name,
+        "flat_template.Rmd",
+        dev_name,
         lines_template[grepl("flat_template.Rmd", lines_template)]
       )
 
@@ -261,7 +286,8 @@ add_flat_template <- function(template = c("full", "minimal_package", "minimal_f
     if (!is.na(fun_name)) {
       lines_template[grepl("my_fun", lines_template)] <-
         gsub(
-          "my_fun", fun_name,
+          "my_fun",
+          fun_name,
           lines_template[grepl("my_fun", lines_template)]
         )
     }

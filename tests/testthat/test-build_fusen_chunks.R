@@ -7,11 +7,11 @@ test_that("build_fusen_chunks works properly", {
   expect_true(
     grepl("^# pouet", res)
   )
-  
+
   expect_true(
     grepl("development-pouet", res)
   )
-  
+
   expect_true(
     grepl("function-pouet", res)
   )
@@ -51,11 +51,11 @@ test_that("build_fusen_chunks cleans functions names", {
   expect_true(
     grepl("^# po_uet", res)
   )
-  
+
   expect_true(
     grepl("development-po_uet}", res)
   )
-  
+
   expect_true(
     grepl("function-po_uet}", res)
   )

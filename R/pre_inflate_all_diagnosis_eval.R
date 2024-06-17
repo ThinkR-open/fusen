@@ -33,12 +33,16 @@ pre_inflate_all_diagnosis_eval <- function(diag_table, type_stop = FALSE) {
     if (is.na(params)) {
       status_text <- paste0(
         diag_to_eval[["type"]][flat_file_diag],
-        "(\"", diag_to_eval[["status"]][flat_file_diag], "\")"
+        "(\"",
+        diag_to_eval[["status"]][flat_file_diag],
+        "\")"
       )
     } else {
       status_text <- paste0(
         diag_to_eval[["type"]][flat_file_diag],
-        "(\"", diag_to_eval[["status"]][flat_file_diag], "\", ",
+        "(\"",
+        diag_to_eval[["status"]][flat_file_diag],
+        "\", ",
         diag_to_eval[["params"]][flat_file_diag],
         ")"
       )

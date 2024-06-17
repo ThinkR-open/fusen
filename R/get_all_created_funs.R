@@ -26,7 +26,8 @@ get_all_created_funs <- function(file) {
   parts <- lapply(attr(parts_parsed, "srcref"), as.character)
 
   all_functions <- lapply(
-    seq_along(parts), function(x) {
+    seq_along(parts),
+    function(x) {
       out <- list()
       out$code <- as.character(parts[x])
       name <- parse_fun(out)$fun_name

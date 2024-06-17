@@ -5,7 +5,9 @@ df <- tibble::tibble(
   id = c(1, 2, 3),
   the_group = c("A", "A", "B"),
   the_code = list(
-    c("text 1.1", "text 1.2"), c("text 2.1", "text 2.2"), c("text 3.1", "text 3.2")
+    c("text 1.1", "text 1.2"),
+    c("text 2.1", "text 2.2"),
+    c("text 3.1", "text 3.2")
   )
 )
 
@@ -47,8 +49,10 @@ usethis::with_project(dummypackage, {
   # create_vignette
   usethis::with_project(dummypackage, {
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
     # See RStudio restart needed
@@ -82,18 +86,24 @@ test_that(
 )
 
 # create_vignette_head ----
-yaml_options <- structure(list(
-  title = "dev_history.Rmd for working package",
-  author = "S\\u00e9bastien Rochette", date = "`r Sys.Date()`",
-  output = "html_document", editor_options = list(chunk_output_type = "console")
-), class = "rmd_yaml_list")
+yaml_options <- structure(
+  list(
+    title = "dev_history.Rmd for working package",
+    author = "S\\u00e9bastien Rochette",
+    date = "`r Sys.Date()`",
+    output = "html_document",
+    editor_options = list(chunk_output_type = "console")
+  ),
+  class = "rmd_yaml_list"
+)
 
 
 
 test_that("create_vignette_head works", {
   # Full with authors
   output <- create_vignette_head(
-    pkg = "mypkg", vignette_name = "the_name",
+    pkg = "mypkg",
+    vignette_name = "the_name",
     yaml_options
   )
 
@@ -106,7 +116,8 @@ test_that("create_vignette_head works", {
   # Only not extra yaml
   yaml_options <- yaml_options[c("title", "output", "editor_options")]
   output <- create_vignette_head(
-    pkg = "mypkg", vignette_name = "the_name",
+    pkg = "mypkg",
+    vignette_name = "the_name",
     yaml_options
   )
 
@@ -118,7 +129,8 @@ test_that("create_vignette_head works", {
 
   # No yaml options
   output <- create_vignette_head(
-    pkg = "mypkg", vignette_name = "the_name",
+    pkg = "mypkg",
+    vignette_name = "the_name",
     yaml_options = NULL
   )
 
@@ -138,7 +150,8 @@ dir.create(dummypackage)
 # {fusen} steps
 
 test_that("create_vignette_head works", {
-  expect_error(fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package")),
+  expect_error(
+    fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package")),
     regexp = NA
   )
   usethis::with_project(dummypackage, {
@@ -180,8 +193,10 @@ flat_file <- dev_file[grepl("flat_", dev_file)]
 test_that("get_pkg_name inflates", {
   usethis::with_project(dummypackage, {
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   })

@@ -85,7 +85,9 @@ chameleon::build_pkgdown(
   # lazy = TRUE,
   yml = system.file("pkgdown/_pkgdown.yml", package = "thinkridentity"),
   favicon = system.file("pkgdown/favicon.ico", package = "thinkridentity"),
-  move = FALSE, clean_before = TRUE, clean_after = FALSE
+  move = FALSE,
+  clean_before = TRUE,
+  clean_after = FALSE
 )
 
 # Doc
@@ -115,12 +117,22 @@ styler::style_file(list.files("dev", pattern = "[.](Rmd|qmd|rmd)$", full.names =
 # attachment::att_from_namespace()
 attachment::att_amend_desc(
   pkg_ignore = c(
-    "testthat", "dummypackage", "rstudioapi",
-    "knitr", "rmarkdown", "R6", "gert"
+    "testthat",
+    "dummypackage",
+    "rstudioapi",
+    "knitr",
+    "rmarkdown",
+    "R6",
+    "gert"
   ),
   extra.suggests = c(
-    "testthat", "pkgload", "rstudioapi",
-    "rmarkdown", "knitr", "gert", "styler"
+    "testthat",
+    "pkgload",
+    "rstudioapi",
+    "rmarkdown",
+    "knitr",
+    "gert",
+    "styler"
   ),
   # "MASS", "lattice", "Matrix")
   update.config = TRUE # attachment >= 0.4.0.

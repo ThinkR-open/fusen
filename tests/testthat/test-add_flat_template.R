@@ -7,7 +7,8 @@ pkg_name <- basename(dummypackage)
 
 # add_flat_template ----
 test_that("add_flat_template adds flat_template.Rmd and co.", {
-  dev_file_path <- expect_error(add_flat_template(pkg = dummypackage, open = FALSE),
+  dev_file_path <- expect_error(
+    add_flat_template(pkg = dummypackage, open = FALSE),
     regexp = NA
   )
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
@@ -22,7 +23,7 @@ test_that("add_flat_template adds flat_template.Rmd and co.", {
   rbuildignore_lines <- readLines(rbuildignore_file)
   expect_true(any(grepl("^dev$", rbuildignore_lines, fixed = TRUE)))
   expect_true(any(grepl("[.]here", rbuildignore_lines)))
-  
+
   gitignore_file <- file.path(dummypackage, "dev", ".gitignore")
   expect_true(file.exists(gitignore_file))
   gitignore_lines <- readLines(gitignore_file)
@@ -80,14 +81,14 @@ test_that("add dev_history template works", {
     expect_true(file.exists(dev_file_path))
 
     usethis::with_project(dummypackage, {
-
       # Extract and test the description chunk
       dev_lines <- readLines(dev_file_path)
       # Change path of project
       dev_lines <- gsub(
         "here::here()",
         # To correct for Windows path
-        paste0('"', gsub("\\\\", "\\\\\\\\", dummypackage), '"'), dev_lines,
+        paste0('"', gsub("\\\\", "\\\\\\\\", dummypackage), '"'),
+        dev_lines,
         fixed = TRUE
       )
 
@@ -127,7 +128,8 @@ test_that("add dev_history template works with windows \\users path", {
   withr::with_dir(dummypackage, {
     dev_file_path <- expect_error(
       add_flat_template(
-        pkg = dummypackage, template = "dev_history",
+        pkg = dummypackage,
+        template = "dev_history",
         open = FALSE
       ),
       regexp = NA
@@ -145,7 +147,8 @@ test_that("add dev_history template works with windows \\users path", {
       dev_lines <- gsub(
         "here::here()",
         # To correct for Windows path
-        paste0('"', gsub("\\\\", "\\\\\\\\", newdir_uu), '"'), dev_lines,
+        paste0('"', gsub("\\\\", "\\\\\\\\", newdir_uu), '"'),
+        dev_lines,
         # paste0('"', newdir_uu, '"'), dev_lines,
         fixed = TRUE
       )
@@ -208,8 +211,10 @@ for (template in all_templates) {
   # template <- all_templates[1]
   main_flat_file_name <- template
   if (template %in% c(
-    "minimal_package", "minpkg",
-    "minimal_flat", "minflat"
+    "minimal_package",
+    "minpkg",
+    "minimal_flat",
+    "minflat"
   )) {
     main_flat_file_name <- "minimal"
   } else if (template == "add") {
@@ -267,14 +272,17 @@ for (template in all_templates) {
             rmarkdown::render(
               input = dev_hist_path,
               output_file = file.path(dummypackage4, "dev", "dev_history.html"),
-              envir = new.env(), quiet = TRUE
+              envir = new.env(),
+              quiet = TRUE
             ),
             regexp = NA
           )
         })
       } else if (template %in% c(
-        "additional", "add",
-        "minimal_flat", "minflat"
+        "additional",
+        "add",
+        "minimal_flat",
+        "minflat"
       )) {
         fusen::fill_description(
           pkg = here::here(),
@@ -292,7 +300,8 @@ for (template in all_templates) {
           rmarkdown::render(
             input = flat_to_render,
             output_file = file.path(dummypackage4, "dev", paste0("flat_", main_flat_file_name, ".html")),
-            envir = new.env(), quiet = TRUE
+            envir = new.env(),
+            quiet = TRUE
           ),
           regexp = NA
         )
@@ -353,7 +362,9 @@ test_that("Other flat_name works", {
   dev_file_path <- expect_error(
     add_flat_template(
       template = "add",
-      pkg = dummypackage, flat_name = "hello", open = FALSE
+      pkg = dummypackage,
+      flat_name = "hello",
+      open = FALSE
     ),
     regexp = NA
   )
@@ -368,7 +379,9 @@ test_that("Other flat_name works", {
   expect_message(
     add_flat_template(
       template = "minpkg",
-      pkg = dummypackage, flat_name = "hello", open = FALSE
+      pkg = dummypackage,
+      flat_name = "hello",
+      open = FALSE
     ),
     regexp = "flat_hello.Rmd already exists."
   )
@@ -385,8 +398,10 @@ test_that("Other flat_name works", {
     fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
     expect_error(
       inflate(
-        pkg = dummypackage, flat_file = flat_file,
-        vignette_name = "hello", check = FALSE,
+        pkg = dummypackage,
+        flat_file = flat_file,
+        vignette_name = "hello",
+        check = FALSE,
         open_vignette = FALSE
       ),
       regexp = NA
@@ -415,7 +430,8 @@ test_that("Other dev_dir works", {
   dev_file_path <- expect_error(
     add_flat_template(
       template = "add",
-      pkg = dummypackage, flat_name = "hello",
+      pkg = dummypackage,
+      flat_name = "hello",
       dev_dir = "devdir",
       open = FALSE
     ),
@@ -468,23 +484,32 @@ pkg_name <- basename(dummypackage)
 
 test_that(
   "add_flat_template allows bad flat_name for function name with full",
-   {
-  dev_file_path <- expect_error(
-    suppressMessages(
-      add_flat_template(
-        pkg = dummypackage, 
-        flat_name = "bad for function ! but.ok", open = FALSE)
-    ),
-    regexp = NA
-  )
-  flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
+  {
+    dev_file_path <- expect_error(
+      suppressMessages(
+        add_flat_template(
+          pkg = dummypackage,
+          flat_name = "bad for function ! but.ok",
+          open = FALSE
+        )
+      ),
+      regexp = NA
+    )
+    flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
 
-  expect_true(all(file.exists(dev_file_path)))
-  expect_true(file.exists(file.path(dummypackage,
-   "dev", "flat_bad-for-function-but-ok.Rmd")))
-  expect_true(file.exists(file.path(dummypackage,
-   "dev", "0-dev_history.Rmd")))
-})
+    expect_true(all(file.exists(dev_file_path)))
+    expect_true(file.exists(file.path(
+      dummypackage,
+      "dev",
+      "flat_bad-for-function-but-ok.Rmd"
+    )))
+    expect_true(file.exists(file.path(
+      dummypackage,
+      "dev",
+      "0-dev_history.Rmd"
+    )))
+  }
+)
 unlink(dummypackage, recursive = TRUE)
 
 # add_flat_template allows bad flat_name for function name ----
@@ -495,16 +520,22 @@ pkg_name <- basename(dummypackage)
 test_that("add_flat_template allows bad flat_name for function name with add", {
   dev_file_path <- expect_error(
     suppressMessages(
-      add_additional(pkg = dummypackage, 
-      flat_name = "bad for function ! but.ok2", open = FALSE)
+      add_additional(
+        pkg = dummypackage,
+        flat_name = "bad for function ! but.ok2",
+        open = FALSE
+      )
     ),
     regexp = NA
   )
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]
 
   expect_true(all(file.exists(dev_file_path)))
-  expect_true(file.exists(file.path(dummypackage,
-   "dev", "flat_bad-for-function-but-ok2.Rmd")))
+  expect_true(file.exists(file.path(
+    dummypackage,
+    "dev",
+    "flat_bad-for-function-but-ok2.Rmd"
+  )))
 
   dev_lines <- readLines(flat_file)
   # title x 1, function x 3, example x 2, tests x 3
@@ -518,7 +549,8 @@ dir.create(dummypackage)
 pkg_name <- basename(dummypackage)
 
 test_that("add_full adds flat_full.Rmd", {
-  dev_file_path <- expect_error(suppressMessages(add_full(pkg = dummypackage, open = FALSE)),
+  dev_file_path <- expect_error(
+    suppressMessages(add_full(pkg = dummypackage, open = FALSE)),
     regexp = NA
   )
   flat_file <- dev_file_path[grepl("flat_", dev_file_path)]

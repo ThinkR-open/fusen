@@ -18,8 +18,10 @@
 #' \dontrun{
 #' add_fusen_chunks("this", export = TRUE)
 #' }
-add_fusen_chunks <- function(function_name = NULL,
-                             export = getOption("fusen.export.functions")) {
+add_fusen_chunks <- function(
+  function_name = NULL,
+  export = getOption("fusen.export.functions")
+) {
   if (
     requireNamespace("rstudioapi") &&
       rstudioapi::isAvailable() &&
@@ -94,7 +96,10 @@ build_fusen_chunks <- function(function_name, export = TRUE) {
 
   if (function_name != cleaned_function_name) {
     message(
-      "Your function name was cleaned: `", function_name, "` is now `", cleaned_function_name,
+      "Your function name was cleaned: `",
+      function_name,
+      "` is now `",
+      cleaned_function_name,
       "` as a function name should only contain letters, numbers and underscores."
     )
     function_name <- cleaned_function_name

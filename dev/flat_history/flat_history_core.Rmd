@@ -84,13 +84,18 @@ Deprecated. See `add_flat_template()` instead.
 #' @export
 #'
 #' @examples
-add_dev_history <- function(pkg = ".", overwrite = FALSE,
-                            open = TRUE, dev_dir = "dev",
-                            name = c("full", "minimal", "additional", "teaching")) {
+add_dev_history <- function(
+  pkg = ".",
+  overwrite = FALSE,
+  open = TRUE,
+  dev_dir = "dev",
+  name = c("full", "minimal", "additional", "teaching")
+) {
   project_name <- basename(normalizePath(pkg))
   if (project_name != asciify_name(project_name, to_pkg = TRUE)) {
     stop(
-      "Please rename your project/directory with: ", asciify_name(project_name, to_pkg = TRUE),
+      "Please rename your project/directory with: ",
+      asciify_name(project_name, to_pkg = TRUE),
       " as a package name should only contain letters, numbers and dots."
     )
   }
@@ -113,7 +118,8 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
     dev_path <- file.path(pkg, dev_dir, paste0("dev_history_", n + 1, ".Rmd"))
     message(
       "dev_history.Rmd already exists. New dev file is renamed '",
-      basename(dev_path), "'. Use overwrite = TRUE, if you want to ",
+      basename(dev_path),
+      "'. Use overwrite = TRUE, if you want to ",
       "overwrite the existing dev_history.Rmd file, or rename it."
     )
   }
@@ -123,7 +129,8 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
 
   lines_template[grepl("<my_package_name>", lines_template)] <-
     gsub(
-      "<my_package_name>", basename(pkg),
+      "<my_package_name>",
+      basename(pkg),
       lines_template[grepl("<my_package_name>", lines_template)]
     )
 
@@ -182,11 +189,14 @@ add_dev_history <- function(pkg = ".", overwrite = FALSE,
 asciify_name <- function(name, to_pkg = FALSE) {
   # name <- "y  _ p n@ é ! 1"
   cleaned_name <- gsub(
-    "^-|-$", "",
+    "^-|-$",
+    "",
     gsub(
-      "-+", "-",
+      "-+",
+      "-",
       gsub(
-        "-_|_-", "-",
+        "-_|_-",
+        "-",
         gsub("[^([:alnum:]*_*-*)*]", "-", name)
       )
     )
@@ -195,7 +205,8 @@ asciify_name <- function(name, to_pkg = FALSE) {
 
   if (isTRUE(to_pkg)) {
     cleaned_name <- gsub(
-      "[^a-zA-Z0-9]+", ".",
+      "[^a-zA-Z0-9]+",
+      ".",
       gsub("^[0-9]+", "", cleaned_name)
     )
   } else {
@@ -293,7 +304,8 @@ dev_path <- add_dev_history(pkg = dummypackage4, open = FALSE)
 lines_template <- readLines(system.file("tests-templates/dev-template-tests.Rmd", package = "fusen"))
 lines_template[grepl("<my_package_name>", lines_template)] <-
   gsub(
-    "<my_package_name>", basename(dummypackage4),
+    "<my_package_name>",
+    basename(dummypackage4),
     lines_template[grepl("<my_package_name>", lines_template)]
   )
 cat(enc2utf8(lines_template), file = dev_path, sep = "\n")
@@ -305,7 +317,8 @@ withr::with_dir(dummypackage4, {
   rmarkdown::render(
     input = file.path(dummypackage4, "dev/dev_history.Rmd"),
     output_file = file.path(dummypackage4, "dev/dev_history.html"),
-    envir = new.env(), quiet = TRUE
+    envir = new.env(),
+    quiet = TRUE
   )
 })
 
@@ -380,9 +393,12 @@ fill_description(
       "Everything can be set from a Rmarkdown file in your project."
     ),
     `Authors@R` = c(
-      person("John", "Doe",
+      person(
+        "John",
+        "Doe",
         email = "john@email.me",
-        role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000")
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0000-0000-0000")
       ),
       person(given = "Company", role = "cph")
     )
@@ -418,7 +434,8 @@ test_that("fill_description adds DESCRIPTION", {
 
   # Second launch error and no change
   expect_error(fill_description(
-    pkg = dummypackage, fields = list(Title = "Second launch")
+    pkg = dummypackage,
+    fields = list(Title = "Second launch")
   ))
   lines <- readLines(file.path(dummypackage, "DESCRIPTION"))
   expect_true(lines[1] == "Package: dummypackage")
@@ -485,7 +502,9 @@ inflate <- function(pkg = ".", flat_file = file.path("dev", "dev_history.Rmd"), 
 
   if (!file.exists(file.path(normalizePath(pkg), "DESCRIPTION"))) {
     stop(
-      "DESCRIPTION file does not exist in your directory:", normalizePath(pkg), ".\n",
+      "DESCRIPTION file does not exist in your directory:",
+      normalizePath(pkg),
+      ".\n",
       "Have you run the content of the 'description' chunk of your {fusen} template?"
     )
   }
@@ -570,7 +589,8 @@ create_functions_all <- function(parsed_tbl, fun_code, pkg) {
       "There are duplicated chunk names, ",
       "please rename chunks with 'name-01' for instance.\n",
       "Duplicates: ",
-      paste(labels_in_vignette[duplicated(labels_in_vignette)],
+      paste(
+        labels_in_vignette[duplicated(labels_in_vignette)],
         collapse = ", "
       )
     )
@@ -613,7 +633,8 @@ get_functions <- function(parsed_tbl) {
       example_pos_start <- grep("^#'\\s*@example", code)[1]
 
       example_pos_end <- all_arobase[all_arobase > example_pos_start][1] - 1
-      example_pos_end <- ifelse(is.na(example_pos_end),
+      example_pos_end <- ifelse(
+        is.na(example_pos_end),
         grep("function(\\s*)\\(", code) - 1,
         example_pos_end
       )
@@ -720,7 +741,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
       return(NA_character_)
     }
 
-    end_skeleton <- ifelse(is.na(fun_code_x[["example_pos_start"]]),
+    end_skeleton <- ifelse(
+      is.na(fun_code_x[["example_pos_start"]]),
       fun_code_x[["example_pos_end"]],
       fun_code_x[["example_pos_start"]] - 1
     )
@@ -756,7 +778,8 @@ create_r_files <- function(fun_code, pkg) {
     }
     cat(
       enc2utf8(unlist(fun_code[x, ][["code_example"]])),
-      file = r_file, sep = "\n"
+      file = r_file,
+      sep = "\n"
     )
     r_file
   })
@@ -767,8 +790,10 @@ create_r_files <- function(fun_code, pkg) {
 #' @param pkg Path to package
 #' @importFrom parsermd rmd_get_chunk
 create_tests_files <- function(parsed_tbl, pkg) {
-  rmd_test <- parsed_tbl[!is.na(parsed_tbl$label) &
-    grepl("test", parsed_tbl$label), ]
+  rmd_test <- parsed_tbl[
+    !is.na(parsed_tbl$label) &
+      grepl("test", parsed_tbl$label),
+  ]
 
   rmd_test <- rmd_test[!is.na(rmd_test[["fun_name"]]), ]
 
@@ -851,14 +876,18 @@ create_vignette <- function(parsed_tbl, pkg, name) {
 
   # Write vignette
   if (nrow(vignette_tbl) == 0) {
-    cat("",
-      sep = "\n", append = TRUE,
+    cat(
+      "",
+      sep = "\n",
+      append = TRUE,
       file = vignette_file
     )
   } else {
-    cat("",
+    cat(
+      "",
       enc2utf8(parsermd::as_document(vignette_tbl)),
-      sep = "\n", append = TRUE,
+      sep = "\n",
+      append = TRUE,
       file = vignette_file
     )
   }
@@ -917,12 +946,16 @@ usethis::with_project(dummypackage, {
     # examples in R files
     my_median_lines <- readLines(my_median_file)
     expect_true(all(my_median_lines[10:12] == c(
-      "#' @examples", "#' my_median(2:20)", "#' my_median(1:12)"
+      "#' @examples",
+      "#' my_median(2:20)",
+      "#' my_median(1:12)"
     )))
     my_other_median_lines <- readLines(my_other_median_file)
     expect_true(all(my_other_median_lines[10:13] == c(
-      "#' @examples", "#' my_other_median(1:12)",
-      "#' my_other_median(8:20)", "#' my_other_median(20:50)"
+      "#' @examples",
+      "#' my_other_median(1:12)",
+      "#' my_other_median(8:20)",
+      "#' my_other_median(20:50)"
     )))
     my_third_median_lines <- readLines(my_third_median_file)
     # _no example
@@ -946,7 +979,8 @@ usethis::with_project(dummypackage, {
 
 # Test package no check errors ----
 usethis::with_project(dummypackage, {
-  check_out <- rcmdcheck::rcmdcheck(dummypackage,
+  check_out <- rcmdcheck::rcmdcheck(
+    dummypackage,
     quiet = TRUE,
     args = c("--no-manual")
   )

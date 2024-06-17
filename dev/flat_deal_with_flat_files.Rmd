@@ -34,7 +34,8 @@ rename_flat_file <- function(flat_file, new_name) {
   if (!file.exists(flat_file)) {
     stop(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " does not exist."
       )
     )
@@ -53,7 +54,8 @@ rename_flat_file <- function(flat_file, new_name) {
   if (file.exists(new_name_path)) {
     stop(
       paste0(
-        "The new file ", new_name_path,
+        "The new file ",
+        new_name_path,
         " already exists."
       )
     )
@@ -87,8 +89,10 @@ rename_flat_file <- function(flat_file, new_name) {
 
   cli_alert_info(
     paste0(
-      "The flat file ", flat_file,
-      " has been renamed to ", new_name_path
+      "The flat file ",
+      flat_file,
+      " has been renamed to ",
+      new_name_path
     )
   )
 
@@ -111,7 +115,8 @@ rename_flat_file <- function(flat_file, new_name) {
 
     cli_alert_info(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " has been updated in the config file."
       )
     )
@@ -136,7 +141,8 @@ rename_flat_file <- function(flat_file, new_name) {
     }
     cli_alert_info(
       paste0(
-        "The flat file ", basename(new_name_path),
+        "The flat file ",
+        basename(new_name_path),
         " has been updated in the inflated files."
       )
     )
@@ -152,7 +158,9 @@ rename_flat_file <- function(flat_file, new_name) {
 dev_file <- suppressMessages(
   add_flat_template(
     template = "add",
-    pkg = ".", overwrite = TRUE, open = FALSE
+    pkg = ".",
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 rename_flat_file(
@@ -171,7 +179,9 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(
   add_flat_template(
     template = "full",
-    pkg = dummypackage, overwrite = TRUE, open = FALSE
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -182,7 +192,8 @@ usethis::with_project(dummypackage, {
   write_yaml_verbatim(list(), config_file)
 
   test_that("rename_flat_file fails if file does not exists", {
-    expect_error(rename_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
+    expect_error(
+      rename_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
       regexp = "does not exist"
     )
   })
@@ -258,8 +269,10 @@ usethis::with_project(dummypackage, {
     # Inflate the new file
     suppressMessages(
       inflate(
-        pkg = dummypackage, flat_file = other_new_path,
-        vignette_name = "Get started", check = FALSE,
+        pkg = dummypackage,
+        flat_file = other_new_path,
+        vignette_name = "Get started",
+        check = FALSE,
         open_vignette = FALSE
       )
     )
@@ -371,14 +384,16 @@ deprecate_flat_file <- function(flat_file) {
   if (!file.exists(flat_file)) {
     stop(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " does not exist."
       )
     )
   } else if (!basename(flat_file) %in% names(config)) {
     stop(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " is not in the config file.",
         "Did you inflate it with {fusen}?"
       )
@@ -386,7 +401,8 @@ deprecate_flat_file <- function(flat_file) {
   } else if (config[[basename(flat_file)]]$state == "deprecated") {
     cli_alert_warning(
       paste0(
-        "The flat file ", basename(flat_file),
+        "The flat file ",
+        basename(flat_file),
         " is already deprecated."
       )
     )
@@ -464,7 +480,8 @@ deprecate_flat_file <- function(flat_file) {
 
   cli_alert_success(
     paste0(
-      "The flat file ", basename(flat_file),
+      "The flat file ",
+      basename(flat_file),
       " has been deprecated."
     )
   )
@@ -478,7 +495,9 @@ deprecate_flat_file <- function(flat_file) {
 dev_file <- suppressMessages(
   add_flat_template(
     template = "add",
-    pkg = dummypackage, overwrite = TRUE, open = FALSE
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 deprecate_flat_file(flat_file = "dev/flat_additional.Rmd")
@@ -495,7 +514,9 @@ fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 dev_file <- suppressMessages(
   add_flat_template(
     template = "full",
-    pkg = dummypackage, overwrite = TRUE, open = FALSE
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 flat_file <- dev_file[grepl("flat_", dev_file)]
@@ -507,8 +528,10 @@ usethis::with_project(dummypackage, {
   # Inflate once
   suppressMessages(
     inflate(
-      pkg = dummypackage, flat_file = flat_file,
-      vignette_name = "Get started", check = FALSE,
+      pkg = dummypackage,
+      flat_file = flat_file,
+      vignette_name = "Get started",
+      check = FALSE,
       open_vignette = FALSE
     )
   )
@@ -587,14 +610,16 @@ usethis::with_project(dummypackage, {
   })
 
   test_that("deprecate_flat_file stops if flat file does not exist", {
-    expect_error(deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
+    expect_error(
+      deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
       regexp = "does not exist"
     )
   })
 
   file.create("dev/flat_nonexistent.Rmd")
   test_that("deprecate_flat_file stops if flat file is not in config file", {
-    expect_error(deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
+    expect_error(
+      deprecate_flat_file(flat_file = "dev/flat_nonexistent.Rmd"),
       regexp = "is not in the config file"
     )
   })
@@ -618,8 +643,10 @@ usethis::with_project(dummypackage, {
 # Execute in the console directly
 fusen::inflate(
   flat_file = "dev/flat_deal_with_flat_files.Rmd",
-  vignette_name = "Deal with a 'fusen' flat file", check = FALSE,
-  overwrite = TRUE, open_vignette = FALSE,
+  vignette_name = "Deal with a 'fusen' flat file",
+  check = FALSE,
+  overwrite = TRUE,
+  open_vignette = FALSE,
   clean = TRUE
 )
 ```
