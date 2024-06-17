@@ -77,7 +77,7 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
     # If chunk all empty
     code <- character(0)
   } else if (!is.na(first_function_start) &&
-    !any(grepl("@export|@noRd", code[1:first_function_start]))) {
+             !any(grepl("@export|@noRd", code[1:first_function_start]))) {
     if (!is.na(last_hastags_above_first_fun)) {
       code <- c(
         code[1:last_hastags_above_first_fun],
@@ -142,7 +142,7 @@ parse_fun <- function(x) { # x <- rmd_fun[3,]
 add_names_to_parsed <- function(parsed_tbl, fun_code) {
   # Which parts were functions
   which_parsed_fun <- which(!is.na(parsed_tbl$label) &
-    grepl(regex_functions, parsed_tbl$label))
+                              grepl(regex_functions, parsed_tbl$label))
 
   # From fun_code, we retrieve fun_name & rox_filename
   parsed_tbl[["fun_name"]] <- NA_character_
@@ -175,7 +175,7 @@ add_names_to_parsed <- function(parsed_tbl, fun_code) {
         sec_title_name[["sec_title"]] == x, "sec_fun_name"
       ]
       parsed_tbl[group, "sec_fun_name"] <- ifelse(length(sec_fun_name) == 0,
-        NA_character_, as.character(sec_fun_name)
+                                                  NA_character_, as.character(sec_fun_name)
       )
       parsed_tbl[group, ] <- tidyr::fill(
         parsed_tbl[group, ],
@@ -204,7 +204,7 @@ add_names_to_parsed <- function(parsed_tbl, fun_code) {
   pkg_filled[["file_name"]] <- NA_character_
   # chunk_filename
   pkg_filled[["file_name"]] <- ifelse(!is.na(pkg_filled[["chunk_filename"]]),
-    pkg_filled[["chunk_filename"]], NA_character_
+                                      pkg_filled[["chunk_filename"]], NA_character_
   )
   # rox_filename
   pkg_filled[["file_name"]] <- ifelse(
@@ -280,7 +280,7 @@ parse_test <- function(x, pkg, relative_flat_file) { # x <- rmd_test[1,]
 add_fun_code_examples <- function(parsed_tbl, fun_code) {
   # Example in separate chunk
   which_parsed_ex <- which(!is.na(parsed_tbl$label) &
-    grepl(regex_example, parsed_tbl$label))
+                             grepl(regex_example, parsed_tbl$label))
   rmd_ex <- parsed_tbl[which_parsed_ex, ]
 
   # Get file_name variable
@@ -292,8 +292,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
   fun_code <- fun_code[order(fun_code[["order"]]), ]
   # Get file_name for not functions. Only last place where possible
   fun_code[["file_name"]] <- ifelse(is.na(fun_code[["file_name"]]),
-    fun_code[["sec_title"]],
-    fun_code[["file_name"]]
+                                    fun_code[["sec_title"]],
+                                    fun_code[["file_name"]]
   )
 
   #  Example already in skeleton
@@ -378,8 +378,8 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
       }
 
       end_skeleton <- ifelse(is.na(fun_code_x[["example_pos_start"]]),
-        fun_code_x[["example_pos_end"]],
-        fun_code_x[["example_pos_start"]] - 1
+                             fun_code_x[["example_pos_end"]],
+                             fun_code_x[["example_pos_start"]] - 1
       )
 
       all_fun_code <- stats::na.omit(c(
@@ -392,7 +392,7 @@ add_fun_code_examples <- function(parsed_tbl, fun_code) {
         # end
         unlist(fun_code_x[["code"]])[
           (fun_code_x[["example_pos_end"]] + 1):
-          length(unlist(fun_code_x[["code"]]))
+            length(unlist(fun_code_x[["code"]]))
         ]
       ))
       return(all_fun_code)
@@ -476,14 +476,14 @@ create_vignette_head <- function(pkg, vignette_name, yaml_options = NULL) {
 title: ".{vignette_title}."
 output: rmarkdown::html_vignette',
       ifelse(length(yaml_options) != 0,
-        glue::glue_collapse(
-          c(
-            "",
-            glue("{names(yaml_options)}: \"{yaml_options}\""), ""
-          ),
-          sep = "\n"
-        ),
-        "\n"
+             glue::glue_collapse(
+               c(
+                 "",
+                 glue("{names(yaml_options)}: \"{yaml_options}\""), ""
+               ),
+               sep = "\n"
+             ),
+             "\n"
       ),
       'vignette: >
   %\\VignetteIndexEntry{.{vignette_name}.}
@@ -502,7 +502,7 @@ knitr::opts_chunk$set(
 library(.{pkgname}.)
 ```
     ',
-      .open = ".{", .close = "}."
+    .open = ".{", .close = "}."
     )
   )
 }
@@ -622,4 +622,28 @@ document_and_check_pkg <- function(pkg = ".", document = TRUE, check = TRUE, ...
     )
     print(res)
   }
+}
+
+#' Document and check current package
+#' @param pkg Path to package
+#' @importFrom pkgload unload
+#' @importFrom covr package_coverage
+#' @importFrom utils osVersion
+#' @noRd
+compute_codecov <- function(pkg = ".") {
+  on_windows <- grepl("windows", tolower(osVersion))
+  if (on_windows) {
+    # On windows, package_coverage() will fail
+    # if called right alfer a pkgload::load_all()
+    pkgload::unload(
+      basename(
+        normalizePath(
+          pkg
+        )
+      )
+    )
+  }
+  print(
+    covr::package_coverage()
+  )
 }
