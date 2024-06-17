@@ -207,9 +207,7 @@ inflate_all <- function(
 
   if (codecov) {
     cli::cli_alert_info("Computing code coverage - it might take some time")
-    print(
-      covr::package_coverage()
-    )
+    compute_codecov(pkg = pkg)
   }
 
   invisible(pkg)

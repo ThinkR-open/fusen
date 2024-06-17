@@ -368,15 +368,7 @@ inflate <- function(pkg = ".", flat_file,
 
   if (codecov) {
     cli::cli_alert_info("Computing code coverage - it might take some time")
-    on_windows <- grepl("windows", tolower(osVersion))
-    if (on_windows) {
-      # On windows, package_coverage() will fail
-      # if called right alfer a pkgload::load_all()
-      pkgload::unload(pkg)
-    }
-    print(
-      covr::package_coverage()
-    )
+    compute_codecov(pkg = pkg)
   }
 
   # Restart RStudio
