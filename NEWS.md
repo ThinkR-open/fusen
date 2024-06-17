@@ -1,3 +1,9 @@
+# fusen (development version 0.6.0.9003)
+
+## New features
+
+- `inflate` and `inflate_all()` proposes to compute the package code coverage using `covr::package_coverage()` using the `codecov` parameter (default is FALSE)
+
 # fusen (development version 0.6.0.9002)
 
 ## New features
