@@ -166,6 +166,13 @@ about the procedure. Read
 get more information.</p>
 </div>
 <div class="section level3">
+<h3 id="compute-the-code-coverage">Compute the code coverage<a class="anchor" aria-label="anchor" href="#compute-the-code-coverage"></a>
+</h3>
+<p>If you want to compute the code coverage of your package, you can run
+<code>inflate_all(codecov = TRUE)</code>. It will run
+<code><a href="http://covr.r-lib.org/reference/package_coverage.html" class="external-link">covr::package_coverage()</a></code> at the end of the process.</p>
+</div>
+<div class="section level3">
 <h3 id="complete-the-process-with-your-own-code-style">Complete the process with your own code style<a class="anchor" aria-label="anchor" href="#complete-the-process-with-your-own-code-style"></a>
 </h3>
 <p>You can run your preferred styling functions just before the check of
@@ -226,6 +233,12 @@ would like to clean the “dev/” directory, you can run
 <span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">with_project</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="op">{</span></span>
 <span>  <span class="co"># now you can run inflate_all()</span></span>
 <span>  <span class="fu"><a href="../reference/inflate_all.html">inflate_all</a></span><span class="op">(</span>check <span class="op">=</span> <span class="cn">FALSE</span>, document <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
+<span><span class="op">}</span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># If you wish, the code coverage can be computed</span></span>
+<span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">with_project</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="op">{</span></span>
+<span>  <span class="co"># now you can run inflate_all()</span></span>
+<span>  <span class="fu"><a href="../reference/inflate_all.html">inflate_all</a></span><span class="op">(</span>check <span class="op">=</span> <span class="cn">FALSE</span>, document <span class="op">=</span> <span class="cn">TRUE</span>, codecov <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="op">}</span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># Clean the temporary directory</span></span>
