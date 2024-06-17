@@ -750,6 +750,50 @@ usethis::with_project(dummypackage, {
     )
   })
 
+  # We add a "real" unit test in our flat file to reach a 100% coverage
+  flat_content <- readLines(dev_file1)
+  flat_content[grepl("expect_true", flat_content)] <- "expect_equal(flat1_rmd(), 1)"
+  writeLines(flat_content, dev_file1)
+
+  capture.output(
+    inflate_all(
+      pkg = dummypackage,
+      check = FALSE,
+      codecov = TRUE
+    ),
+    file = console_output_file,
+    type = "message"
+  )
+
+  test_that("inflate outputs compute codecov correctly", {
+    res <- readLines(console_output_file)
+
+    expect_true(
+      any(grepl(
+        pattern = "Computing code coverage - it might take some time",
+        x = res
+      ))
+    )
+
+    expect_true(
+      any(grepl(
+        pattern = "R/flat1_rmd.R: 100.00%",
+        x = res
+      ))
+    )
+
+
+    expect_true(
+      any(grepl(
+        pattern = paste(
+          basename(dummypackage),
+          "Coverage: 100.00%"
+        ),
+        x = res
+      ))
+    )
+  })
+
   capture.output(
     inflate_all(
       check = FALSE,
@@ -758,6 +802,7 @@ usethis::with_project(dummypackage, {
     file = console_output_file,
     type = "message"
   )
+
 
   test_that("inflate does not compute codecov if not asked", {
     res <- readLines(console_output_file)
