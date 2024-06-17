@@ -4,12 +4,14 @@
 \alias{sepuku}
 \title{Clean a package from fusen-related files and tags}
 \usage{
-sepuku(pkg = ".", force = FALSE)
+sepuku(pkg = ".", force = FALSE, verbose = FALSE)
 }
 \arguments{
 \item{pkg}{Character. Path of the current package}
 
 \item{force}{logical. whether to force the cleaning or not, without asking if the user is sure about making this operation (default: FALSE)}
+
+\item{verbose}{logical. whether to display the files that will be deleted or modified (default: FALSE)}
 }
 \value{
 side effect. A package cleaned from fusen-related files or tags

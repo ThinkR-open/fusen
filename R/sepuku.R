@@ -6,6 +6,7 @@
 #'
 #' @param pkg Character. Path of the current package
 #' @param force logical. whether to force the cleaning or not, without asking if the user is sure about making this operation (default: FALSE)
+#' @param verbose logical. whether to display the files that will be deleted or modified (default: FALSE)
 #' @return side effect. A package cleaned from fusen-related files or tags
 #' @importFrom cli cli_alert_info cli_alert_danger cli_abort cli_alert_success
 #' @export
@@ -112,7 +113,8 @@
 #' }
 sepuku <- function(
     pkg = ".",
-    force = FALSE) {
+    force = FALSE,
+    verbose = FALSE) {
   if (!dir.exists(file.path(pkg, "dev"))) {
     cli_abort("No dev/ folder have been found. Are you sure that your package has been initiated with fusen ?")
   }
@@ -130,24 +132,28 @@ sepuku <- function(
   if (length(flat_files) == 0) {
     cli_alert_info("No flat files were detected.")
   } else {
-    cli_alert_info(
-      paste0(
-        "The following flat files were detected and will therefore be deleted from your package:\n",
-        paste0(flat_files, collapse = "\n")
+    if (verbose) {
+      cli_alert_info(
+        paste0(
+          "The following flat files were detected and will therefore be deleted from your package:\n",
+          paste0(flat_files, collapse = "\n")
+        )
       )
-    )
+    }
   }
 
   files_to_be_modified <- find_files_with_fusen_tags(pkg = pkg)
   if (length(files_to_be_modified) == 0) {
     cli_alert_info("No fusen-related tags have been found in any files located in R/, tests/ and vignettes/ folders.")
   } else {
-    cli_alert_info(
-      paste0(
-        "The following files have been identified as containing fusen-related tags and will therefore be modified:\n",
-        paste0(files_to_be_modified, collapse = "\n")
+    if (verbose) {
+      cli_alert_info(
+        paste0(
+          "The following files have been identified as containing fusen-related tags and will therefore be modified:\n",
+          paste0(files_to_be_modified, collapse = "\n")
+        )
       )
-    )
+    }
   }
 
   if (length(flat_files) == 0 && length(files_to_be_modified) == 0) {

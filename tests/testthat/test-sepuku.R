@@ -95,7 +95,7 @@ usethis::with_project(dummypackage, {
     )
 
     expect_message(
-      sepuku(force = TRUE),
+      sepuku(force = TRUE, verbose = TRUE),
       "The following flat files were detected and will therefore be deleted from your package:\ndev/flat_flat1.Rmd\ndev/flat_qmd.qmd\ndev/flat_history/flat_old.Rmd\ndev/flat_history/flat_old.qmd"
     )
   })
@@ -158,7 +158,7 @@ usethis::with_project(dummypackage, {
     )
 
     expect_message(
-      sepuku(force = TRUE),
+      sepuku(force = TRUE, verbose = TRUE),
       "The following files have been identified as containing fusen-related tags and will therefore be modified:\nR/flat1_rmd.R\nR/flat2_rmd.R\ntests/testthat/test-flat1_rmd.R\ntests/testthat/test-flat2_rmd.R\nvignettes/get-started-2.Rmd\nvignettes/get-started.Rmd"
     )
   })
