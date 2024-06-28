@@ -30,6 +30,7 @@ list_flat_files_in_config_file <- function(
     return(character(0))
   } else {
     config_yml <- yaml::read_yaml(config_file)
+    config_yml <- config_yml[!names(config_yml) %in% "keep"]
     return(
       unlist(
         lapply(config_yml, "[[", "path")
