@@ -665,9 +665,9 @@ test_that("Other flat_name works", {
   )
   expect_true(file.exists(file.path(dummypackage, "dev/flat_hello.Rmd")))
   hello_flat <- readLines(dev_file_path)
-  # 9 times hello for function name
+  # 10 times hello for function name
   # 2 times hello in flat_hello.Rmd
-  expect_equal(length(grep("hello", hello_flat)), 9 + 2)
+  expect_equal(length(grep("hello", hello_flat)), 10 + 2)
   expect_equal(length(grep("flat_hello[.]Rmd", hello_flat)), 2)
 
   # Template minimal used with "minpkg", same name, flat changes name
@@ -683,9 +683,9 @@ test_that("Other flat_name works", {
   flat_file <- file.path(dummypackage, "dev/flat_hello_2.Rmd")
   expect_true(file.exists(flat_file))
   hello_flat <- readLines(flat_file)
-  # 9 times hello for function name
+  # 10 times hello for function name
   # 2 times hello in flat_hello_2.Rmd
-  expect_equal(length(grep("hello", hello_flat)), 9 + 2)
+  expect_equal(length(grep("hello", hello_flat)), 10 + 2)
   expect_equal(length(grep("flat_hello_2[.]Rmd", hello_flat)), 2)
 
   # Try inflate to see if files get hello name
@@ -735,11 +735,11 @@ test_that("Other dev_dir works", {
   expect_true(file.exists(file.path(dummypackage, "devdir/flat_hello.Rmd")))
   hello_flat <- readLines(dev_file_path)
 
-  # 9 times hello for function name
+  # 10 times hello for function name
   # 2 times hello in flat_hello.Rmd
   # 1 time devdir/flat_hello.Rmd
   # O time dev/flat_hello.Rmd
-  expect_equal(length(grep("hello", hello_flat)), 9 + 2)
+  expect_equal(length(grep("hello", hello_flat)), 10 + 2)
   expect_equal(length(grep("flat_hello[.]Rmd", hello_flat)), 2)
   expect_equal(length(grep("devdir/flat_hello[.]Rmd", hello_flat)), 1)
   expect_equal(length(grep("dev/flat_hello[.]Rmd", hello_flat)), 0)
@@ -833,8 +833,8 @@ test_that("add_flat_template allows bad flat_name for function name with add", {
   )))
 
   dev_lines <- readLines(flat_file)
-  # title x 1, function x 3, example x 2, tests x 3
-  expect_equal(length(grep("bad_for_function_but_ok2", dev_lines)), 9)
+  # title x 1, development x 1, function x 3, example x 2, tests x 3
+  expect_equal(length(grep("bad_for_function_but_ok2", dev_lines)), 10)
 })
 unlink(dummypackage, recursive = TRUE)
 ```
