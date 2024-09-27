@@ -63,6 +63,10 @@ After inflating the template
 -  This function code will automatically be added in a new file in the "R/" directory
 -->
 
+```{r development-function}
+# Prepare the code of your function here
+```
+
 ```{r function}
 #' My median
 #'
@@ -75,7 +79,9 @@ After inflating the template
 #'
 #' @examples
 my_median <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
   stats::median(x, na.rm = na.rm)
 }
 ```
@@ -101,7 +107,7 @@ my_median(1:12)
 datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>")
 nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
 # Apply my function
-my_median(nyc_squirrels[,"hectare_squirrel_number"])
+my_median(nyc_squirrels[, "hectare_squirrel_number"])
 ```
 
 <!--
@@ -128,7 +134,7 @@ datafile <- system.file("nyc_squirrels_sample.csv", package = "<my_package_name>
 nyc_squirrels <- read.csv(datafile, encoding = "UTF-8")
 # Apply test on my function
 test_that("my_median works properly with internal dataset", {
-  expect_equal(my_median(nyc_squirrels[,"hectare_squirrel_number"]), 3)
+  expect_equal(my_median(nyc_squirrels[, "hectare_squirrel_number"]), 3)
 })
 ```
 
@@ -153,8 +159,10 @@ Each of them will be inflated in a different file, provided that there is a leve
 #'
 #' @examples
 my_other_median <- function(x, na.rm = TRUE) {
-  if (!is.numeric(x)) {stop("x should be numeric")}
-  sub_median(x, na.rm =na.rm)
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
+  sub_median(x, na.rm = na.rm)
 }
 
 #' Core of the median not exported

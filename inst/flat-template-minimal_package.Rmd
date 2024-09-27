@@ -20,6 +20,10 @@ pkgload::load_all(export_all = FALSE)
 
 # my_fun
 
+```{r development-my_fun}
+# Prepare the code of your function here
+```
+
 ```{r function-my_fun}
 #' my_fun Title
 #'
