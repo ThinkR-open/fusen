@@ -92,6 +92,8 @@ dir.create(dummydir)
 path_foosen <- file.path(dummydir, "foosen")
 
 test_that("build_fusen_chunks add lines with export as expected", {
+  skip_if_not(interactive())
+
   withr::with_dir(dummydir, {
     dev_file <- create_fusen(path_foosen, template = "minimal", open = FALSE)
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))
@@ -153,6 +155,7 @@ dir.create(dummydir)
 path_foosen <- file.path(dummydir, "foosen")
 
 test_that("build_fusen_chunks add lines with noRd as expected", {
+  skip_if_not(interactive())
   withr::with_dir(dummydir, {
     dev_file <- create_fusen(path_foosen, template = "minimal", open = FALSE)
     fill_description(pkg = path_foosen, fields = list(Title = "Dummy Package"))

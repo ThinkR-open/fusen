@@ -62,6 +62,7 @@ for (pkgname in create_choices_test) {
   # pkgname <- create_choices_test[1]
   # No "additional" with create_fusen
   # {fusen} steps
+  skip_if_not(interactive())
   path_foosen <- normalize_path_winslash(file.path(alltemp, pkgname), mustWork = FALSE)
   dev_file <- create_fusen(path_foosen, template = pkgname, open = FALSE)
   flat_file <- dev_file[grepl("flat_", dev_file)]

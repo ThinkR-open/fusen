@@ -8,6 +8,8 @@ expected_rmd_template_with_fusen_name <- readLines(system.file("flat-template-fu
 
 withr::with_dir(dummypackage, {
   test_that("Create fusen works", {
+    skip_if_not(interactive())
+
     path_foosen <- file.path(dummypackage, "foosen")
 
     path_dev_history <- suppressMessages(
@@ -35,6 +37,8 @@ withr::with_dir(dummypackage, {
 ## Test overwrite existing dir ----
 withr::with_dir(dummypackage, {
   test_that("Overwrite fusen dir is possible with message", {
+    skip_if_not(interactive())
+
     path_foosen <- file.path(dummypackage, "foosen")
 
     # Can not overwrite
@@ -74,6 +78,8 @@ for (template.to.try in fusen:::create_fusen_choices) {
 
   withr::with_dir(dummypackage, {
     test_that(paste("Create fusen works with template:", template.to.try), {
+      skip_if_not(interactive())
+
       if (template.to.try %in% "dev_history") {
         expected_rmd_template_with_fusen_name <- NULL
       } else {
@@ -138,6 +144,8 @@ for (template.to.try in fusen:::create_fusen_choices) {
 ## Create in a subdirectory ----
 dummysubdir <- tempfile(pattern = "subdir/subdir2/dummy")
 test_that("Can create in a subdirectory", {
+  skip_if_not(interactive())
+
   expect_error(suppressMessages(create_fusen(dummysubdir, template = "full", open = FALSE)), regexp = NA)
   expect_true(dir.exists(dummysubdir))
 })
@@ -159,6 +167,8 @@ for (template.to.try in c("full", "minimal", "teaching", "dev_history")) {
   dummygui <- create_dummygui()
   withr::with_dir(dummygui$dirname, {
     test_that(paste("Can create in a project with gui for:", template.to.try), {
+      skip_if_not(interactive())
+
       dev_path <- expect_error(
         suppressMessages(
           create_fusen_gui(dummygui$basename, template = template.to.try, with_git = FALSE)
@@ -191,6 +201,8 @@ if (git_output != 0) {
   dir.create(dummypackage)
   withr::with_dir(dummypackage, {
     test_that("Create a fusen project with git at the cli", {
+      skip_if_not(interactive())
+
       path_gigit <- file.path(dummypackage, "gigit")
       expect_warning(
         create_fusen(path_gigit, template = "full", open = FALSE, with_git = TRUE),
@@ -216,6 +228,8 @@ if (git_output != 0) {
   dir.create(dummypackage)
   withr::with_dir(dummypackage, {
     test_that("Create a fusen project with git at the cli", {
+      skip_if_not(interactive())
+
       path_gigit <- file.path(dummypackage, "gigit")
       dev_path <- suppressMessages(create_fusen(path_gigit, template = "full", open = FALSE, with_git = TRUE))
 
@@ -235,6 +249,8 @@ if (git_output != 0) {
   dir.create(dummypackage)
   withr::with_dir(dummypackage, {
     test_that("Create a fusen project without git at the cli", {
+      skip_if_not(interactive())
+
       path_gigit <- file.path(dummypackage, "gigit")
       dev_path <- suppressMessages(create_fusen(path_gigit, template = "full", open = FALSE, with_git = FALSE))
 
@@ -253,6 +269,8 @@ if (git_output != 0) {
   dummygui <- create_dummygui()
   withr::with_dir(dummygui$dirname, {
     test_that("Create a fusen project with git using Rstudio GUI", {
+      skip_if_not(interactive())
+
       dev_file <- expect_error(
         suppressMessages(
           create_fusen_gui(dummygui$basename, template = "teaching", with_git = TRUE)
@@ -273,6 +291,8 @@ if (git_output != 0) {
   dummygui <- create_dummygui()
   withr::with_dir(dummygui$dirname, {
     test_that("Create a fusen project without git using Rstudio GUI", {
+      skip_if_not(interactive())
+
       dev_file <- expect_error(
         suppressMessages(
           create_fusen_gui(dummygui$basename, template = "teaching", with_git = FALSE)
@@ -295,6 +315,8 @@ dummypackage <- tempfile(pattern = "dummy")
 dir.create(dummypackage)
 withr::with_dir(dummypackage, {
   test_that("Create a fusen project with git at the cli", {
+    skip_if_not(interactive())
+
     path_bad_name <- file.path(dummypackage, "bad-name")
     expect_error(
       create_fusen(path_bad_name, template = "full", open = FALSE),

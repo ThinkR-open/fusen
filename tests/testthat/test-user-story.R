@@ -1,3 +1,5 @@
+skip_if_not(interactive())
+
 # Test users full classical process ----
 all_templates_second <- fusen:::flat_template_choices[!fusen:::flat_template_choices %in% c("dev_history", "dev")]
 test_that("create_fusen and use it as users do", {
@@ -38,6 +40,7 @@ for (template in all_templates_second) {
       open_vignette = FALSE,
       check = FALSE
     ))
+
 
     test_that(paste0("full process -", template, "- first minimal basis ok"), {
       expect_true(file.exists("DESCRIPTION"))
