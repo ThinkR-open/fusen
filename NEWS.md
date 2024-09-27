@@ -1,21 +1,10 @@
-# fusen (development version 0.6.0.9003)
+# fusen 0.7.0
 
 ## New features
 
-- `inflate` and `inflate_all()` proposes to compute the package code coverage using `covr::package_coverage()` using the `codecov` parameter (default is FALSE)
-
-# fusen (development version 0.6.0.9002)
-
-## New features
-
-- RStudio Addin "Fusen : Add fusen chunks" as well as `fusen::add_fusen_chunks()` add a development chunk in complement to the "function", "example" and "test" chunks already provided (#255) @ymansiaux
-
-
-# fusen (development version 0.6.0.9001)
-
-## New features
-
-- Adding `sepuku()`, allowing to remove all traces of a fusen-related files and tags in the package (#257 #258 #259) @ymansiaux
+- `inflate` and `inflate_all()` propose to compute the package code coverage using `covr::package_coverage()` using the `codecov` parameter (default is FALSE) @ymansiaux
+- RStudio Addin "Fusen : Add fusen chunks" as well as `fusen::add_fusen_chunks()` add a "development" chunk in complement to the "function", "example" and "test" chunks already provided (#255) @ymansiaux
+- Adding `sepuku()`, removing all fusen-related files and tags in the package (#257 #258 #259) @ymansiaux
 
 # fusen 0.6.0
 

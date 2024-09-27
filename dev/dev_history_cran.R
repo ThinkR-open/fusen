@@ -39,6 +39,8 @@ testthat::test_file("tests/testthat/test-register_config_file.R") # interactivit
 testthat::test_file("tests/testthat/test-rename_flat_file.R")
 testthat::test_file("tests/testthat/test-deprecate_flat_file.R")
 testthat::test_file("tests/testthat/test-get_package_structure.R")
+testthat::test_file("tests/testthat/test-sepuku.R")
+testthat::test_file("tests/testthat/test-sepuku_utils.R")
 Sys.setenv("NOT_CRAN" = "false")
 
 # Run line by line

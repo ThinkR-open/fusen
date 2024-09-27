@@ -26,7 +26,9 @@ The flat file is moved to "dev/flat_history".
 dev_file <- suppressMessages(
   add_flat_template(
     template = "add",
-    pkg = dummypackage, overwrite = TRUE, open = FALSE
+    pkg = dummypackage,
+    overwrite = TRUE,
+    open = FALSE
   )
 )
 deprecate_flat_file(flat_file = "dev/flat_additional.Rmd")
