@@ -48,10 +48,15 @@ You can add `1` to any `value` using function `add_one()`.
 <!-- 
 This first section shows:
 
+- a development part to prepare the code of the function
 - the three parts necessary for a package: 'function', 'examples' and 'tests'.  
-  + Note that the three following chunks have names accordingly.
+  + Note that the four following chunks have names accordingly.
 
 -->
+
+```{r development-add_one}
+# Prepare the code of your function here
+```
 
 ```{r function-add_one}
 #' Add one to any value
