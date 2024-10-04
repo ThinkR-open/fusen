@@ -18,8 +18,10 @@
 #' @return Path to dev and flat files. Side-effect: Create a new directory to build
 #' a package
 #' @examples
+#' if(interactive()) {
 #' my_path <- tempfile("mypkg")
 #' create_fusen(path = my_path, template = "full", open = FALSE)
+#' }
 create_fusen <- function(
   path,
   template = c("full", "minimal", "teaching", "dev_history"),

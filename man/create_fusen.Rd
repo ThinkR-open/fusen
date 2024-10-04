@@ -40,6 +40,8 @@ Template "additional" is not available here as it is meant to be used with an al
 existing 'fusen'.
 }
 \examples{
+if(interactive()) {
 my_path <- tempfile("mypkg")
 create_fusen(path = my_path, template = "full", open = FALSE)
+}
 }

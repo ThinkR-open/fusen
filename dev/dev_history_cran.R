@@ -1,4 +1,32 @@
-# Prepare for CRAN
+# Prepare for CRAN ----
+
+## Copy the latest version of PREPARE_FOR_CRAN ----
+
+url <- "https://raw.githubusercontent.com/ThinkR-open/prepare-for-cran/master/README.md"
+destination <- "dev/dev_history_PREPARE_FOR_CRAN.md"
+download.file(url, destfile = destination, mode = "wb")
+
+line <- grep(pattern = "# Prepare for CRAN ----", readLines(destination))
+rstudioapi::navigateToFile(destination, line = line)
+
+### Run the automated tests
+
+## BEFORE RELEASE: ----
+
+# Add comments for CRAN
+# Need to .gitignore this file
+
+usethis::use_cran_comments(open = rlang::is_interactive())
+usethis::use_git_ignore("cran-comments.md")
+usethis::use_git_ignore("CRAN-SUBMISSION")
+
+
+
+
+
+
+################################
+# Old procedure Prepare for CRAN
 
 # > Special for {fusen} ====================
 # _Update template Rmd ----
