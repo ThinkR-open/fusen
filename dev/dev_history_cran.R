@@ -93,6 +93,7 @@ rmarkdown::render(
   output_format = "github_document",
   output_file = "README.md"
 )
+file.remove("dev/README.html")
 
 rmarkdown::render(
   "README.Rmd",
