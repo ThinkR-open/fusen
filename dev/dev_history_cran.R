@@ -27,8 +27,8 @@ pkgload::load_all()
 # Unit tests open files interactively and close them
 # The focus needs to be kept on what the test is doing
 Sys.setenv("NOT_CRAN" = "true")
-Sys.setenv("_R_CHECK_SYSTEM_CLOCK_" = 0)
-testthat::test_dir("tests/testthat/")
+Sys.setenv("_R_CHECK_SYSTEM_CLOCK_" = 0) # If clock not available
+testthat::test_dir("tests/testthat/") # interactivity - answer yes
 testthat::test_file("tests/testthat/test-inflate-part1.R")
 testthat::test_file("tests/testthat/test-inflate-part2.R")
 testthat::test_file("tests/testthat/test-inflate_all.R")
@@ -36,10 +36,11 @@ testthat::test_file("tests/testthat/test-inflate_all_utils.R")
 testthat::test_file("tests/testthat/test-build_fusen_chunks.R") # Opens files
 testthat::test_file("tests/testthat/test-add_flat_template.R")
 testthat::test_file("tests/testthat/test-skeleton.R")
-testthat::test_file("tests/testthat/test-register_config_file.R") # interactivity
+testthat::test_file("tests/testthat/test-register_config_file.R") # interactivity - answer yes
 testthat::test_file("tests/testthat/test-rename_flat_file.R")
 testthat::test_file("tests/testthat/test-deprecate_flat_file.R")
 testthat::test_file("tests/testthat/test-get_package_structure.R")
+testthat::test_file("tests/testthat/test-sepuku.R") # interactivity - answer yes
 Sys.setenv("NOT_CRAN" = "false")
 
 # Test on Windows if directory is like `D:\\2025` messes with regex
@@ -64,6 +65,7 @@ if (.Platform$OS.type == "windows") {
   # Back to normal
   Sys.setenv(TMPDIR = tmpdir_orig) # Windows only
   unlink(file.path(tmpdir_new, basename(tmpdir_orig)), recursive = TRUE)
+  unlink(list.files(tmpdir_new, pattern = "Rtmp", full.names = TRUE), recursive = TRUE)
   tempdir(check = TRUE)
   tempdir()
 }

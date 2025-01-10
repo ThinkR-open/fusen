@@ -172,36 +172,40 @@ dummypackage <- tempfile(paste0(sample(letters, 10), collapse = ""))
 dir.create(dummypackage)
 fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
 
-
 usethis::with_project(dummypackage, {
   # Add licence
   usethis::use_mit_license("John Doe")
-  test_that("sepuku informs the user than modifying / deleting files can not be undone if force = FALSE", {
-    dev_file1 <- add_minimal_flat(
-      pkg = dummypackage,
-      flat_name = "flat1.Rmd",
-      open = FALSE
-    )
-    inflate(
-      pkg = dummypackage,
-      flat_file = dev_file1,
-      vignette_name = "Get started",
-      check = FALSE,
-      open_vignette = FALSE,
-      document = TRUE,
-      overwrite = "yes"
-    )
+
+  dev_file1 <- add_minimal_flat(
+    pkg = dummypackage,
+    flat_name = "flat1.Rmd",
+    open = FALSE
+  )
+  inflate(
+    pkg = dummypackage,
+    flat_file = dev_file1,
+    vignette_name = "Get started",
+    check = FALSE,
+    open_vignette = FALSE,
+    document = TRUE,
+    overwrite = "yes"
+  )
 
 
-    if (interactive()) {
-      test_that("sepuku tells the users that files will be modified or deleted and that it is irreversible", {
-        expect_message(
-          sepuku(force = FALSE),
-          "Some files are about to be deleted or modified. This operation is irreversible."
-        )
-      })
-    }
-  })
+  if (interactive()) {
+    cli::cat_rule(
+      "Test: You should be asked a question: please answer 'y' during tests"
+    )
+    test_that("sepuku tells the users that files will be modified or deleted and that it is irreversible", {
+      expect_message(
+        sepuku(force = FALSE),
+        "Some files are about to be deleted or modified. This operation is irreversible."
+      )
+
+      do_it <- readline("Test: Were you just asked you were sure what you were doing? (y/n)") == "y"
+      expect_true(do_it)
+    })
+  }
 })
 unlink(dummypackage, recursive = TRUE)
 

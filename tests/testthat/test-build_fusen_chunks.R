@@ -103,8 +103,7 @@ test_that("build_fusen_chunks add lines with export as expected", {
       requireNamespace("rstudioapi") &&
         rstudioapi::isAvailable() &&
         rstudioapi::hasFun("navigateToFile") &&
-        rstudioapi::hasFun("documentSave") # &&
-      # rstudioapi::hasFun("documentClose")
+        rstudioapi::hasFun("documentSave")
     ) {
       print("Test with RStudio")
       # current position
@@ -115,10 +114,6 @@ test_that("build_fusen_chunks add lines with export as expected", {
       Sys.sleep(1)
       open_editor <- rstudioapi::getSourceEditorContext()
       id <- open_editor$id
-      # the_open_path <- rstudioapi::documentPath(id)
-      # if (basename(the_open_path) != basename(path_dev_history)) {
-      #   stop("Open the file was short to get the correct Id of the opened file")
-      # }
       # add chunks
       add_fusen_chunks(function_name = "zaza", export = TRUE)
       rstudioapi::documentSave(id)
@@ -164,8 +159,7 @@ test_that("build_fusen_chunks add lines with noRd as expected", {
       requireNamespace("rstudioapi") &&
         rstudioapi::isAvailable() &&
         rstudioapi::hasFun("navigateToFile") &&
-        rstudioapi::hasFun("documentSave") # &&
-      # rstudioapi::hasFun("documentClose")
+        rstudioapi::hasFun("documentSave")
     ) {
       print("Test with RStudio")
       # current position
@@ -176,10 +170,6 @@ test_that("build_fusen_chunks add lines with noRd as expected", {
       Sys.sleep(1)
       open_editor <- rstudioapi::getSourceEditorContext()
       id <- open_editor$id
-      # the_open_path <- rstudioapi::documentPath(id)
-      # if (basename(the_open_path) != basename(path_dev_history)) {
-      #   stop("Open the file was short to get the correct Id of the opened file")
-      # }
       # add chunks
       add_fusen_chunks(function_name = "zaza", export = FALSE)
       rstudioapi::documentSave(id)
