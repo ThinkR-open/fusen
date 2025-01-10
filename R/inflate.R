@@ -38,7 +38,8 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #'  in the flat file. Default to "ask".
 #' @param update_params Logical. Whether to update the inflate parameters
 #'  in the configuration file.
-#' @param codecov Logical. Whether to compute code coverage (with `covr::package_coverage()` or `covr::report()`).
+#' @param codecov Logical.
+#' Whether to compute code coverage with `covr::package_coverage()`.
 #' @param ... Arguments passed to `devtools::check()`.
 #'  For example, you can do `inflate(check = TRUE, quiet = TRUE)`,
 #'  where `quiet` is passed to `devtools::check()`.
@@ -46,7 +47,6 @@ regex_example <- paste(regex_example_vec, collapse = "|")
 #' @importFrom utils getFromNamespace
 #' @importFrom glue glue
 #' @importFrom methods formalArgs
-#' @importFrom covr package_coverage
 #'
 #' @return
 #' Package structure. Return path to current package.

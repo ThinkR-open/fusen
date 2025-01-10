@@ -183,6 +183,7 @@ keep:
   - R/load_flat_functions.R
   - R/utils-pipe.R
   tests:
+  - tests/testthat/test-inflate-part3.R
   - tests/testthat/test-user-story.R
   - tests/testthat/test-create_fusen_rsproject.R
   - tests/testthat/test-inflate_qmd.R

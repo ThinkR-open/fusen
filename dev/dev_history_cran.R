@@ -27,6 +27,7 @@ pkgload::load_all()
 # Unit tests open files interactively and close them
 # The focus needs to be kept on what the test is doing
 Sys.setenv("NOT_CRAN" = "true")
+Sys.setenv("_R_CHECK_SYSTEM_CLOCK_" = 0)
 testthat::test_dir("tests/testthat/")
 testthat::test_file("tests/testthat/test-inflate-part1.R")
 testthat::test_file("tests/testthat/test-inflate-part2.R")
@@ -40,6 +41,32 @@ testthat::test_file("tests/testthat/test-rename_flat_file.R")
 testthat::test_file("tests/testthat/test-deprecate_flat_file.R")
 testthat::test_file("tests/testthat/test-get_package_structure.R")
 Sys.setenv("NOT_CRAN" = "false")
+
+# Test on Windows if directory is like `D:\\2025` messes with regex
+if (.Platform$OS.type == "windows") {
+  tmpdir_orig <- tempdir()
+  tmpdir_new <- "D:\\2025"
+  Sys.setenv(TMPDIR = tmpdir_new) # Windows only
+  file.copy(tmpdir_orig, tmpdir_new, recursive = TRUE)
+  unlink(tempdir(), recursive = TRUE)
+  tempdir(check = TRUE)
+  # To manage temp vscode config files
+  dir.create(tmpdir_orig, recursive = TRUE)
+  fs::dir_copy(
+    file.path(tmpdir_new, basename(tmpdir_orig), "vscode-R"),
+    tmpdir_orig
+  )
+  # That should be ok
+  tempdir()
+  tempfile()
+  # Run tests
+  testthat::test_dir("tests/testthat/")
+  # Back to normal
+  Sys.setenv(TMPDIR = tmpdir_orig) # Windows only
+  unlink(file.path(tmpdir_new, basename(tmpdir_orig)), recursive = TRUE)
+  tempdir(check = TRUE)
+  tempdir()
+}
 
 # Run line by line
 Sys.setenv("FUSEN_TEST_PUBLISH" = "TRUE")
@@ -70,7 +97,7 @@ rmarkdown::render(
   output_format = "github_document",
   output_file = "README.md"
 )
-
+file.remove("README.html")
 
 # > Copy from Prepare-for-cran - https://github.com/ThinkR-open/prepare-for-cran ====================
 
@@ -124,7 +151,7 @@ urlchecker::url_update()
 rhub::rhub_setup(overwrite = TRUE)
 rhub::rhub_doctor()
 rhub::rhub_platforms()
-rhub::rhub_check()
+rhub::rhub_check(gh_url = "https://github.com/ThinkR-open/fusen")
 
 # _win devel CRAN
 devtools::check_win_devel()

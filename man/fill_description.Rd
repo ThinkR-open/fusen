@@ -36,9 +36,12 @@ fill_description(
       "Everything can be set from a Rmarkdown file in your project."
     ),
     `Authors@R` = c(
-      person("John", "Doe",
+      person(
+        "John",
+        "Doe",
         email = "john@email.me",
-        role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000")
+        role = c("aut", "cre"),
+        comment = c(ORCID = "0000-0000-0000-0000")
       )
     )
   )

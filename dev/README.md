@@ -12,215 +12,248 @@ usethis::with_project(here::here(), {
 })
 ```
 
-  - flat\_addins.Rmd
-      - flat\_title
-          - addins
-      - path
-          - dev/flat\_addins.Rmd
-      - state
-          - 🍏 active
-      - R
-          - R/build\_fusen\_chunks.R
-              - 👀 add\_fusen\_chunks
-              - 🙈 build\_fusen\_chunks
-      - tests
-          - tests/testthat/test-build\_fusen\_chunks.R
-      - vignettes
-  - flat\_create\_flat.Rmd
-      - flat\_title
-          - dev\_history.Rmd empty
-      - path
-          - dev/flat\_create\_flat.Rmd
-      - state
-          - 🍏 active
-      - R
-          - R/add\_flat\_template.R
-              - 👀 add\_additional
-              - 👀 add\_minimal\_flat
-              - 👀 add\_minimal\_package
-              - 👀 add\_full
-              - 👀 add\_dev\_history
-              - 👀 add\_flat\_template
-              - 🙈 local\_file\_ignore
-      - tests
-          - tests/testthat/test-add\_flat\_template.R
-      - vignettes
-  - flat\_deal\_with\_flat\_files.Rmd
-      - flat\_title
-          - flat\_deal\_with\_flat\_files.Rmd empty
-      - path
-          - dev/flat\_deal\_with\_flat\_files.Rmd
-      - state
-          - 🍏 active
-      - R
-          - R/deprecate\_flat\_file.R
-              - 👀 deprecate\_flat\_file
-          - R/rename\_flat\_file.R
-              - 👀 rename\_flat\_file
-      - tests
-          - tests/testthat/test-rename\_flat\_file.R
-          - tests/testthat/test-deprecate\_flat\_file.R
-      - vignettes
-          - vignettes/deal-with-a-fusen-flat-file.Rmd
-  - flat\_get\_package\_structure.Rmd
-      - flat\_title
-          - flat\_get\_package\_structure.Rmd empty
-      - path
-          - dev/flat\_get\_package\_structure.Rmd
-      - state
-          - 🍏 active
-      - R
-          - R/get\_all\_created\_funs.R
-              - 👀 get\_all\_created\_funs
-          - R/get\_package\_structure.R
-              - 👀 get\_package\_structure
-              - 👀 draw\_package\_structure
-      - tests
-          - tests/testthat/test-get\_package\_structure.R
-          - tests/testthat/test-get\_all\_created\_funs.R
-      - vignettes
-          - vignettes/draw-a-tree-of-your-package-files-and-functions.Rmd
-  - flat\_history\_core.Rmd
-      - flat\_title
-          - dev\_history.Rmd
-      - path
-          - dev/flat\_history/flat\_history\_core.Rmd
-      - state
-          - 🛑 deprecated
-      - R
-          - R/fill\_description.R
-              - 👀 fill\_description
-          - R/inflate.R
-              - 👀 inflate
-              - 🙈 create\_functions\_all
-              - 🙈 get\_functions\_tests
-              - 🙈 create\_r\_files
-              - 🙈 create\_tests\_files
-              - 🙈 create\_vignette
-      - tests
-          - tests/testthat/test-fill\_description.R
-          - tests/testthat/test-inflate-part1.R
-          - tests/testthat/test-inflate-part2.R
-      - vignettes
-          - vignettes/How-to-use-fusen.Rmd
-  - flat\_history\_maintain.Rmd
-      - flat\_title
-          - flat\_history\_maintain.Rmd for working package
-      - path
-          - dev/flat\_history/flat\_history\_maintain.Rmd
-      - state
-          - 🛑 deprecated
-      - R
-      - tests
-      - vignettes
-          - vignettes/Maintain-packages-with-fusen.Rmd
-  - flat\_inflate\_all.Rmd
-      - flat\_title
-          - flat\_inflate\_all.Rmd empty
-      - path
-          - dev/flat\_inflate\_all.Rmd
-      - state
-          - 🍏 active
-      - R
-          - R/inflate\_all.R
-              - 👀 inflate\_all
-              - 👀 inflate\_all\_no\_check
-      - tests
-          - tests/testthat/test-inflate\_all.R
-      - vignettes
-          - vignettes/inflate-all-your-flat-files.Rmd
-  - flat\_inflate\_all\_utils.Rmd
-      - flat\_title
-          - flat\_inflate\_all\_utils.Rmd empty
-      - path
-          - dev/flat\_inflate\_all\_utils.Rmd
-      - state
-          - 🍏 active
-      - R
-          - R/inflate\_all\_utils.R
-              - 🙈 pre\_inflate\_all\_diagnosis
-              - 🙈 read\_inflate\_params
-          - R/pre\_inflate\_all\_diagnosis\_eval.R
-              - 🙈 pre\_inflate\_all\_diagnosis\_eval
-      - tests
-          - tests/testthat/test-pre\_inflate\_all\_diagnosis\_eval.R
-          - tests/testthat/test-inflate\_all\_utils.R
-      - vignettes
-  - flat\_init\_share\_on\_github.Rmd
-      - flat\_title
-          - flat\_init\_share\_on\_github.Rmd empty
-      - path
-          - dev/flat\_init\_share\_on\_github.Rmd
-      - state
-          - 🍏 active
-      - R
-          - R/init\_share\_on\_github.R
-              - 👀 init\_share\_on\_github
-      - tests
-          - tests/testthat/test-init\_share\_on\_github.R
-      - vignettes
-          - vignettes/share-on-a-github-website.Rmd
-  - flat\_register\_config\_file.Rmd
-      - flat\_title
-          - flat\_df\_to\_config.Rmd empty
-      - path
-          - dev/flat\_register\_config\_file.Rmd
-      - state
-          - 🍏 active
-      - R
-          - R/register\_config\_file.R
-              - 👀 check\_not\_registered\_files
-              - 🙈 guess\_flat\_origin
-              - 🙈 get\_list\_paths
-              - 🙈 df\_to\_config
-              - 🙈 write\_yaml\_verbatim
-              - 🙈 files\_list\_to\_vector
-              - 🙈 update\_one\_group\_yaml
-              - 👀 register\_all\_to\_config
-              - 🙈 deal\_with\_registered\_keep
-      - tests
-          - tests/testthat/test-register\_config\_file.R
-      - vignettes
-          - vignettes/register-files-in-config.Rmd
-  - keep
-      - path
-          - keep
-      - state
-          - 🍏 active
-      - R
-          - R/addins.R
-              - 🙈 addin\_add\_template
-          - R/create\_fusen\_rsproject.R
-              - 👀 create\_fusen
-              - 🙈 create\_fusen\_gui
-          - R/fusen-package.R
-              - 🙈
-          - R/globals.R
-              - 🙈
-          - R/inflate-utils.R
-              - 🙈 parse\_fun
-              - 🙈 add\_names\_to\_parsed
-              - 🙈 parse\_test
-              - 🙈 add\_fun\_code\_examples
-              - 🙈 group\_code
-              - 🙈 get\_pkg\_name
-              - 🙈 create\_vignette\_head
-              - 🙈 write\_utf8
-              - 🙈 is\_pkg\_proj
-              - 🙈 asciify\_name
-              - 🙈 clean\_function\_name
-              - 🙈 normalize\_path\_winslash
-              - 🙈 document\_and\_check\_pkg
-          - R/load\_flat\_functions.R
-              - 👀 load\_flat\_functions
-          - R/utils-pipe.R
-              - 🙈
-      - tests
-          - tests/testthat/test-user-story.R
-          - tests/testthat/test-create\_fusen\_rsproject.R
-          - tests/testthat/test-inflate\_qmd.R
-          - tests/testthat/test-inflate\_utils.R
-          - tests/testthat/test-load\_flat\_functions.R
-          - tests/testthat/test-skeleton.R
-      - vignettes
-          - vignettes/tips-and-tricks.Rmd
+- flat_addins.Rmd
+  - flat_title
+    - addins
+  - path
+    - dev/flat_addins.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/build_fusen_chunks.R
+      - 👀 add_fusen_chunks
+      - 🙈 build_fusen_chunks
+  - tests
+    - tests/testthat/test-build_fusen_chunks.R
+  - vignettes
+- flat_create_flat.Rmd
+  - flat_title
+    - dev_history.Rmd empty
+  - path
+    - dev/flat_create_flat.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/add_flat_template.R
+      - 👀 add_additional
+      - 👀 add_minimal_flat
+      - 👀 add_minimal_package
+      - 👀 add_full
+      - 👀 add_dev_history
+      - 👀 add_flat_template
+      - 🙈 local_file_ignore
+  - tests
+    - tests/testthat/test-add_flat_template.R
+  - vignettes
+- flat_deal_with_flat_files.Rmd
+  - flat_title
+    - flat_deal_with_flat_files.Rmd empty
+  - path
+    - dev/flat_deal_with_flat_files.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/deprecate_flat_file.R
+      - 👀 deprecate_flat_file
+    - R/rename_flat_file.R
+      - 👀 rename_flat_file
+  - tests
+    - tests/testthat/test-rename_flat_file.R
+    - tests/testthat/test-deprecate_flat_file.R
+  - vignettes
+    - vignettes/deal-with-a-fusen-flat-file.Rmd
+- flat_get_package_structure.Rmd
+  - flat_title
+    - flat_get_package_structure.Rmd empty
+  - path
+    - dev/flat_get_package_structure.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/get_all_created_funs.R
+      - 👀 get_all_created_funs
+    - R/get_package_structure.R
+      - 👀 get_package_structure
+      - 👀 draw_package_structure
+  - tests
+    - tests/testthat/test-get_package_structure.R
+    - tests/testthat/test-get_all_created_funs.R
+  - vignettes
+    - vignettes/draw-a-tree-of-your-package-files-and-functions.Rmd
+- flat_history_core.Rmd
+  - flat_title
+    - dev_history.Rmd
+  - path
+    - dev/flat_history/flat_history_core.Rmd
+  - state
+    - 🛑 deprecated
+  - R
+    - R/fill_description.R
+      - 👀 fill_description
+    - R/inflate.R
+      - 👀 inflate
+      - 🙈 create_functions_all
+      - 🙈 get_functions_tests
+      - 🙈 create_r_files
+      - 🙈 create_tests_files
+      - 🙈 create_vignette
+  - tests
+    - tests/testthat/test-fill_description.R
+    - tests/testthat/test-inflate-part1.R
+    - tests/testthat/test-inflate-part2.R
+  - vignettes
+    - vignettes/How-to-use-fusen.Rmd
+- flat_history_maintain.Rmd
+  - flat_title
+    - flat_history_maintain.Rmd for working package
+  - path
+    - dev/flat_history/flat_history_maintain.Rmd
+  - state
+    - 🛑 deprecated
+  - R
+  - tests
+  - vignettes
+    - vignettes/Maintain-packages-with-fusen.Rmd
+- flat_inflate_all.Rmd
+  - flat_title
+    - flat_inflate_all.Rmd empty
+  - path
+    - dev/flat_inflate_all.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/inflate_all.R
+      - 👀 inflate_all
+      - 👀 inflate_all_no_check
+  - tests
+    - tests/testthat/test-inflate_all.R
+  - vignettes
+    - vignettes/inflate-all-your-flat-files.Rmd
+- flat_inflate_all_utils.Rmd
+  - flat_title
+    - flat_inflate_all_utils.Rmd empty
+  - path
+    - dev/flat_inflate_all_utils.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/inflate_all_utils.R
+      - 🙈 pre_inflate_all_diagnosis
+      - 🙈 read_inflate_params
+    - R/pre_inflate_all_diagnosis_eval.R
+      - 🙈 pre_inflate_all_diagnosis_eval
+  - tests
+    - tests/testthat/test-pre_inflate_all_diagnosis_eval.R
+    - tests/testthat/test-inflate_all_utils.R
+  - vignettes
+- flat_init_share_on_github.Rmd
+  - flat_title
+    - flat_init_share_on_github.Rmd empty
+  - path
+    - dev/flat_init_share_on_github.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/init_share_on_github.R
+      - 👀 init_share_on_github
+  - tests
+    - tests/testthat/test-init_share_on_github.R
+  - vignettes
+    - vignettes/share-on-a-github-website.Rmd
+- flat_register_config_file.Rmd
+  - flat_title
+    - flat_df_to_config.Rmd empty
+  - path
+    - dev/flat_register_config_file.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/register_config_file.R
+      - 👀 check_not_registered_files
+      - 🙈 guess_flat_origin
+      - 🙈 get_list_paths
+      - 🙈 df_to_config
+      - 🙈 write_yaml_verbatim
+      - 🙈 files_list_to_vector
+      - 🙈 update_one_group_yaml
+      - 👀 register_all_to_config
+      - 🙈 deal_with_registered_keep
+  - tests
+    - tests/testthat/test-register_config_file.R
+  - vignettes
+    - vignettes/register-files-in-config.Rmd
+- flat_sepuku.Rmd
+  - flat_title
+    - flat_sepuku.Rmd empty
+  - path
+    - dev/flat_sepuku.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/sepuku.R
+      - 👀 sepuku
+  - tests
+    - tests/testthat/test-sepuku.R
+  - vignettes
+    - vignettes/switch-from-a-package-developed-with-fusen-to-a-classical-package.Rmd
+- flat_sepuku-utils.Rmd
+  - flat_title
+    - flat_sepuku-utils.Rmd empty
+  - path
+    - dev/flat_sepuku-utils.Rmd
+  - state
+    - 🍏 active
+  - R
+    - R/sepuku_utils.R
+      - 🙈 list_flat_files_in_config_file
+      - 🙈 list_flat_files_in_dev_folder
+      - 👀 list_flat_files
+      - 🙈 find_files_with_fusen_tags
+      - 🙈 clean_fusen_tags_in_files
+  - tests
+    - tests/testthat/test-sepuku_utils.R
+  - vignettes
+- keep
+  - path
+    - keep
+  - state
+    - 🍏 active
+  - R
+    - R/addins.R
+      - 🙈 addin_add_template
+    - R/create_fusen_rsproject.R
+      - 👀 create_fusen
+      - 🙈 create_fusen_gui
+    - R/fusen-package.R
+      - 🙈
+    - R/globals.R
+      - 🙈
+    - R/inflate-utils.R
+      - 🙈 parse_fun
+      - 🙈 add_names_to_parsed
+      - 🙈 parse_test
+      - 🙈 add_fun_code_examples
+      - 🙈 group_code
+      - 🙈 get_pkg_name
+      - 🙈 create_vignette_head
+      - 🙈 write_utf8
+      - 🙈 is_pkg_proj
+      - 🙈 asciify_name
+      - 🙈 clean_function_name
+      - 🙈 normalize_path_winslash
+      - 🙈 document_and_check_pkg
+      - 🙈 compute_codecov
+    - R/load_flat_functions.R
+      - 👀 load_flat_functions
+    - R/utils-pipe.R
+      - 🙈
+  - tests
+    - tests/testthat/test-inflate-part3.R
+    - tests/testthat/test-user-story.R
+    - tests/testthat/test-create_fusen_rsproject.R
+    - tests/testthat/test-inflate_qmd.R
+    - tests/testthat/test-inflate_utils.R
+    - tests/testthat/test-load_flat_functions.R
+    - tests/testthat/test-skeleton.R
+  - vignettes
+    - vignettes/tips-and-tricks.Rmd

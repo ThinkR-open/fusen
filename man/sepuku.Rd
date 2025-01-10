@@ -88,27 +88,31 @@ usethis::with_project(dummypackage, {
 
   # We check that all the flat files have been deleted
   length(
-    list.files(file.path(dummypackage, "dev"),
+    list.files(
+      file.path(dummypackage, "dev"),
       pattern = "^flat.*\\\\.Rmd"
     )
   )
 
   length(
-    list.files(file.path(dummypackage, "dev"),
+    list.files(
+      file.path(dummypackage, "dev"),
       pattern = "^flat.*\\\\.qmd"
     )
   )
 
 
   length(
-    list.files(file.path(dummypackage, "dev", "flat_history"),
+    list.files(
+      file.path(dummypackage, "dev", "flat_history"),
       pattern = "^flat.*\\\\.Rmd"
     )
   )
 
 
   length(
-    list.files(file.path(dummypackage, "dev", "flat_history"),
+    list.files(
+      file.path(dummypackage, "dev", "flat_history"),
       pattern = "^flat.*\\\\.qmd"
     )
   )
