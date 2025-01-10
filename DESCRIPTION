@@ -1,9 +1,10 @@
 Package: fusen
 Title: Build a Package from Rmarkdown Files
-Version: 0.6.0.9003
+Version: 0.6.0.9004
 Authors@R: c(
     person("Sebastien", "Rochette", , "sebastienrochettefr@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-1565-9313")),
+    person("Yohann", "Mansiaux", , "yohann.mansiaux@gmail.com.com", role = "aut"),
     person("ThinkR", role = "cph")
   )
 Description: Use Rmarkdown First method to build your package. Start your
@@ -20,7 +21,6 @@ Depends:
 Imports: 
     attachment,
     cli,
-    covr,
     desc,
     devtools,
     glue,
@@ -39,6 +39,7 @@ Imports:
     utils,
     yaml
 Suggests: 
+    covr,
     gert,
     knitr,
     rcmdcheck,
@@ -49,11 +50,11 @@ Suggests:
     withr
 VignetteBuilder: 
     knitr
-Config/fusen/version: 0.6.0.9002
+Config/fusen/version: 0.6.0.9004
 Config/testthat/edition: 3
 Config/testthat/parallel: false
 Encoding: UTF-8
 Language: en-US
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.3.1
+RoxygenNote: 7.3.2

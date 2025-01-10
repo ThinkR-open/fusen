@@ -5,6 +5,8 @@
 #' @param flat_file Path to the flat file to rename
 #' @param new_name New name for the flat file
 #'
+#' @importFrom cli cli_alert_info
+#'
 #' @return Used for side effect. Flat file renamed, config file updated,
 #' inflated files modified when needed.
 #'
