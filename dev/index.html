@@ -8,8 +8,8 @@
 <title>Build a Package from Rmarkdown Files • fusen</title>
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
-<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.4.2/css/all.min.css" rel="stylesheet">
-<link href="deps/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet">
+<script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
+<link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Build a Package from Rmarkdown Files">
 <meta name="description" content="Use Rmarkdown First method to build your package. Start your package with documentation, functions, examples and tests in the same unique file. Everything can be set from the Rmarkdown template file provided in your project, then inflated as a package. Inflating the template copies the relevant chunks and sections in the appropriate files required for package development.">
 <meta property="og:description" content="Use Rmarkdown First method to build your package. Start your package with documentation, functions, examples and tests in the same unique file. Everything can be set from the Rmarkdown template file provided in your project, then inflated as a package. Inflating the template copies the relevant chunks and sections in the appropriate files required for package development.">
@@ -24,7 +24,7 @@
 
     <a class="navbar-brand me-2" href="index.html">fusen</a>
 
-    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.6.0.9003</small>
+    <small class="nav-text text-danger me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="In-development version">0.6.0.9004</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -116,7 +116,7 @@ After that, your {pkgdown} documentation website is one command away to be share
 <li>Choose the template <code>teaching</code> the first time to see how {fusen} works,</li>
 <li>Choose the template <code>full</code> the second time to answer most of your questions<br><img src="reference/figures/create_fusen_rstudio.png" width="50%">
 </li>
-<li><em>Or command line: <code>create_fusen("path/to/new/project", template     = "teaching")</code></em></li>
+<li><em>Or command line: <code>create_fusen("path/to/new/project", template = "teaching")</code></em></li>
 </ul>
 </li>
 <li>Open the “dev/flat_teaching.Rmd” to start setting up the package</li>
@@ -126,7 +126,7 @@ After that, your {pkgdown} documentation website is one command away to be share
 </ul>
 </li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="reference/fill_description.html">fill_description</a></span><span class="op">(</span>fields <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Title <span class="op">=</span> <span class="st">"My Awesome Package"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/licenses.html" class="external-link">use_mit_license</a></span><span class="op">(</span><span class="st">"John Doe"</span><span class="op">)</span></span></code></pre></div>
 <ul>
@@ -142,7 +142,7 @@ After that, your {pkgdown} documentation website is one command away to be share
 </ul>
 </li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/inflate.html">inflate</a></span><span class="op">(</span></span>
 <span>  flat_file <span class="op">=</span> <span class="st">"dev/flat_teaching.Rmd"</span>,</span>
 <span>  vignette_name <span class="op">=</span> <span class="st">"Get started"</span>,</span>
@@ -151,14 +151,14 @@ After that, your {pkgdown} documentation website is one command away to be share
 <ul>
 <li>Share it on a website on GitHub</li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">fusen</span><span class="fu">::</span><span class="fu"><a href="reference/init_share_on_github.html">init_share_on_github</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <p><strong>That’s it! You built a package! A documented and tested package!</strong><br><strong>You even have a website for it!</strong></p>
 <p>Let’s test it now:</p>
 <ul>
 <li>Install your package locally</li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">remotes</span><span class="fu">::</span><span class="fu"><a href="https://remotes.r-lib.org/reference/install_local.html" class="external-link">install_local</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <ul>
 <li>Restart your R session to clean environment
@@ -168,7 +168,7 @@ After that, your {pkgdown} documentation website is one command away to be share
 </li>
 <li>Test functions of your package</li>
 </ul>
-<!-- end list --><div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">my.package</span><span class="fu">::</span><span class="fu">my_median</span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">12</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
@@ -253,8 +253,7 @@ After that, your {pkgdown} documentation website is one command away to be share
 <p>Similarly, the {fusen} package uses a flat Rmd template, that you fill in a specific way so that at the end, you can magically <code><a href="reference/inflate.html">inflate()</a></code> it to let a nice package appear.</p>
 <details><summary>
 Click here to fold your {fusen}…
-</summary><p><img src="reference/figures/fusen-fold-origami.gif"></p>
-</details>
+</summary><img src="reference/figures/fusen-fold-origami.gif"></details>
 </div>
 <div class="section level2">
 <h2 id="contributing">Contributing<a class="anchor" aria-label="anchor" href="#contributing"></a>
@@ -319,6 +318,7 @@ Knowing that, if you want to contribute to ‘fusen’, you can follow the instr
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
 <li>Sebastien Rochette <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-1565-9313" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a> </li>
+<li>Yohann Mansiaux <br><small class="roles"> Author </small>  </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -339,7 +339,7 @@ Knowing that, if you want to contribute to ‘fusen’, you can follow the instr
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Sebastien Rochette.</p>
+  <p>Developed by Sebastien Rochette, Yohann Mansiaux.</p>
 </div>
 
 <div class="pkgdown-footer-right">
