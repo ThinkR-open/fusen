@@ -21,6 +21,11 @@ Useful links:
 \author{
 \strong{Maintainer}: Sebastien Rochette \email{sebastienrochettefr@gmail.com} (\href{https://orcid.org/0000-0002-1565-9313}{ORCID})
 
+Authors:
+\itemize{
+  \item Yohann Mansiaux \email{yohann.mansiaux@gmail.com.com}
+}
+
 Other contributors:
 \itemize{
   \item ThinkR [copyright holder]

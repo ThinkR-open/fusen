@@ -16,6 +16,10 @@ pkgload::load_all(export_all = FALSE)
 
 # skeleton
 
+```{r development-skeleton}
+# Prepare the code of your function here
+```
+
 ```{r function-skeleton}
 #' skeleton Title
 #'

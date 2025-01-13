@@ -31,7 +31,10 @@ add_fusen_chunks <- function(
     # This will allow to interactively have the function name
     if (is.null(function_name)) {
       if (rstudioapi::hasFun("showPrompt")) {
-        function_name <- rstudioapi::showPrompt("{fusen}", "Enter the function name")
+        function_name <- rstudioapi::showPrompt(
+          "{fusen}",
+          "Enter the function name"
+        )
         if (is.null(function_name)) {
           return(NULL)
         }
@@ -42,7 +45,12 @@ add_fusen_chunks <- function(
 
     if (is.null(export)) {
       if (rstudioapi::hasFun("showQuestion")) {
-        export <- rstudioapi::showQuestion("{fusen}", "Should the function be exported?", ok = "yes", cancel = "no")
+        export <- rstudioapi::showQuestion(
+          "{fusen}",
+          "Should the function be exported?",
+          ok = "yes",
+          cancel = "no"
+        )
       } else {
         export <- readline("Should the function be exported? (y/n) ") == "y"
       }
@@ -111,7 +119,10 @@ build_fusen_chunks <- function(function_name, export = TRUE) {
     sprintf("# %s", function_name),
     "    ",
     sprintf("```{r development-%s}", function_name),
-    sprintf("# You can prepare the code of the %s() function here", function_name),
+    sprintf(
+      "# You can prepare the code of the %s() function here",
+      function_name
+    ),
     "```",
     "  ",
     sprintf("```{r function-%s}", function_name),

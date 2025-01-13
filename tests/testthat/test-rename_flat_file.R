@@ -39,19 +39,19 @@ usethis::with_project(dummypackage, {
   test_that("rename_flat_file renames inside the flat file", {
     lines <- readLines(new_path)
     expect_equal(
-      length(grep(flat_file, lines)),
+      length(grep(flat_file, lines, fixed = TRUE)),
       0
     )
     expect_equal(
-      length(grep(basename(flat_file), lines)),
+      length(grep(basename(flat_file), lines, fixed = TRUE)),
       0
     )
     expect_equal(
-      length(grep(new_path, lines)),
+      length(grep(new_path, lines, fixed = TRUE)),
       1
     )
     expect_equal(
-      length(grep(new_name, lines)),
+      length(grep(new_name, lines, fixed = TRUE)),
       2
     )
   })

@@ -659,10 +659,14 @@ document_and_check_pkg <- function(pkg = ".", document = TRUE, check = TRUE, ...
 #' Document and check current package
 #' @param pkg Path to package
 #' @importFrom pkgload unload
-#' @importFrom covr package_coverage
 #' @importFrom utils osVersion
 #' @noRd
 compute_codecov <- function(pkg = ".") {
+  if (!requireNamespace("covr", quietly = TRUE)) {
+    stop(
+      "Please install the {covr} package to be able to compute code coverage."
+    )
+  }
   on_windows <- grepl("windows", tolower(osVersion))
   if (on_windows) {
     # On windows, package_coverage() will fail

@@ -25,6 +25,8 @@ This function should avoid remaining inflated files in the repository, and ensur
 #' @param flat_file Path to the flat file to rename
 #' @param new_name New name for the flat file
 #'
+#' @importFrom cli cli_alert_info
+#'
 #' @return Used for side effect. Flat file renamed, config file updated,
 #' inflated files modified when needed.
 #'
@@ -210,19 +212,19 @@ usethis::with_project(dummypackage, {
   test_that("rename_flat_file renames inside the flat file", {
     lines <- readLines(new_path)
     expect_equal(
-      length(grep(flat_file, lines)),
+      length(grep(flat_file, lines, fixed = TRUE)),
       0
     )
     expect_equal(
-      length(grep(basename(flat_file), lines)),
+      length(grep(basename(flat_file), lines, fixed = TRUE)),
       0
     )
     expect_equal(
-      length(grep(new_path, lines)),
+      length(grep(new_path, lines, fixed = TRUE)),
       1
     )
     expect_equal(
-      length(grep(new_name, lines)),
+      length(grep(new_name, lines, fixed = TRUE)),
       2
     )
   })
