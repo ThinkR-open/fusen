@@ -17,7 +17,7 @@ sepuku(pkg = ".", force = FALSE, verbose = FALSE)
 side effect. A package cleaned from fusen-related files or tags
 }
 \description{
-This function will delete all the flat files (i.e files listed in the fusen configuration file, as well as rmd or qmd files starting with "flat" in the "dev/" and "dev/flat_history" folders). It will also remove the fusen-related tags added by calls to \code{fusen::inflate()} in files located in the "R/", "tests/" and "vignettes/" folders. Finally, it will also remove the fusen configuration file if it exists.
+This function will delete all the flat files (i.e files listed in the fusen configuration file, as well as Rmd or qmd files starting with "flat" in the "dev/" and "dev/flat_history" folders). It will also remove the fusen-related tags added by calls to \code{fusen::inflate()} in files located in the "R/", "tests/" and "vignettes/" folders. Finally, it will also remove the fusen configuration file if it exists.
 }
 \examples{
 \dontrun{

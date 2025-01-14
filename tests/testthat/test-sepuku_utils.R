@@ -90,7 +90,7 @@ usethis::with_project(dummypackage, {
   # Add licence
   usethis::use_mit_license("John Doe")
 
-  test_that("list_flat_files_in_dev_folder works for rmd and qmd files in dev folder starting with flat", {
+  test_that("list_flat_files_in_dev_folder works for Rmd and qmd files in dev folder starting with flat", {
     flat_file_with_bad_name <- "xxx_flat2.Rmd"
     file.create(file.path(dummypackage, "dev", flat_file_with_bad_name))
 
@@ -116,7 +116,7 @@ usethis::with_project(dummypackage, {
     )
   })
 
-  test_that("list_flat_files_in_dev_folder works for rmd and qmd files in flat_history folder starting with flat", {
+  test_that("list_flat_files_in_dev_folder works for Rmd and qmd files in flat_history folder starting with flat", {
     inflate(
       pkg = dummypackage,
       flat_file = flat_file1,

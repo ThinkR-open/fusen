@@ -25,7 +25,7 @@ usethis::with_project(dummypackage, {
     dir.create(file.path(dummypackage, "dev"))
     expect_message(
       sepuku(force = TRUE),
-      "No fusen configuration file found. The flat files to be deleted will be identified as rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders."
+      "No fusen configuration file found. The flat files to be deleted will be identified as Rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders."
     )
   })
 
@@ -50,7 +50,7 @@ usethis::with_project(dummypackage, {
 
   expect_message(
     sepuku(force = TRUE),
-    "A fusen configuration file was found. The flat files to be deleted will be identified as files listed in this configuration file as well as rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders. The configuration file will also be deleted."
+    "A fusen configuration file was found. The flat files to be deleted will be identified as files listed in this configuration file as well as Rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders. The configuration file will also be deleted."
   )
 })
 

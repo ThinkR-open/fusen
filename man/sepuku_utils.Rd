@@ -13,5 +13,5 @@ list_flat_files(pkg = ".")
 a vector of flat files paths
 }
 \description{
-Search for flat files listed in fusen config file, and for rmd and qmd files starting with "flat_" in dev/ folder, and dev/flat_history folder
+Search for flat files listed in fusen config file, and for Rmd and qmd files starting with "flat_" in dev/ folder, and dev/flat_history folder
 }

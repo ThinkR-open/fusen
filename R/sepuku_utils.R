@@ -49,7 +49,7 @@ list_flat_files_in_dev_folder <- function(
 
 #' List all flat files present in the package
 #'
-#' Search for flat files listed in fusen config file, and for rmd and qmd files starting with "flat_" in dev/ folder, and dev/flat_history folder
+#' Search for flat files listed in fusen config file, and for Rmd and qmd files starting with "flat_" in dev/ folder, and dev/flat_history folder
 #'
 #' @param pkg Path to package
 #' @return a vector of flat files paths

@@ -2,7 +2,7 @@
 
 #' Clean a package from fusen-related files and tags
 #'
-#' This function will delete all the flat files (i.e files listed in the fusen configuration file, as well as rmd or qmd files starting with "flat" in the "dev/" and "dev/flat_history" folders). It will also remove the fusen-related tags added by calls to `fusen::inflate()` in files located in the "R/", "tests/" and "vignettes/" folders. Finally, it will also remove the fusen configuration file if it exists.
+#' This function will delete all the flat files (i.e files listed in the fusen configuration file, as well as Rmd or qmd files starting with "flat" in the "dev/" and "dev/flat_history" folders). It will also remove the fusen-related tags added by calls to `fusen::inflate()` in files located in the "R/", "tests/" and "vignettes/" folders. Finally, it will also remove the fusen configuration file if it exists.
 #'
 #' @param pkg Character. Path of the current package
 #' @param force logical. whether to force the cleaning or not, without asking if the user is sure about making this operation (default: FALSE)
@@ -127,9 +127,9 @@ sepuku <- function(
   config_file <- getOption("fusen.config_file", default = "dev/config_fusen.yaml")
 
   if (!file.exists(config_file)) {
-    cli_alert_info("No fusen configuration file found. The flat files to be deleted will be identified as rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders.")
+    cli_alert_info("No fusen configuration file found. The flat files to be deleted will be identified as Rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders.")
   } else {
-    cli_alert_info("A fusen configuration file was found. The flat files to be deleted will be identified as files listed in this configuration file as well as rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders. The configuration file will also be deleted.")
+    cli_alert_info("A fusen configuration file was found. The flat files to be deleted will be identified as files listed in this configuration file as well as Rmd or qmd files starting with 'flat' in the dev/ and dev/flat_history folders. The configuration file will also be deleted.")
   }
 
   flat_files <- list_flat_files(pkg = pkg)

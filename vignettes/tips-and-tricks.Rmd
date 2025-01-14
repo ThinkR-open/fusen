@@ -149,7 +149,7 @@ If this is the second function inside an existing template:
 
 ## How to pre-fill multiple functions in one template
 
-This can be added in the "dev_history.Rmd", and will replace a place holder in your flat rmd (`HERE` in this case) with proper fusen chunks for all your future functions to be.
+This can be added in the "dev_history.Rmd", and will replace a place holder in your flat Rmd (`HERE` in this case) with proper fusen chunks for all your future functions to be.
 
 - Add a line with `HERE` in your flat file
 ```r
