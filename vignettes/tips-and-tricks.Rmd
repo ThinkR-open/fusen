@@ -425,3 +425,7 @@ Although default {golem} "dev/" files already contain the main actions to mainta
 
 You can draw the structure of your package with `fusen:::draw_package_structure().  
 Read vignette "Draw a tree of your package files and functions"" for more details. 
+
+# How can I get rid of everything related to 'fusen' in my package ?
+
+You can use `sepuku()` to remove all the flat files, the fusen tags in the R files and the fusen configuration file. Hence, you will get a project that looks like any other R package.

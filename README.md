@@ -1,6 +1,5 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
-
 <!-- badges: start -->
 
 [![fusen status
@@ -174,7 +173,7 @@ There is a dedicated vignette to answer this:
   deprecate your flat file with `fusen::deprecate_flat_file()` and
   develop in the package files directly, as for any other R package.
   ‘fusen’ has no impact on the structure of a classical package once
-  inflated.
+  inflated. You can even use `sepuku()` to remove all traces of ‘fusen’.
 
 > Advice: Use git as soon as possible, this will avoid losing your work
 > if you made some modifications in the wrong place
@@ -233,6 +232,7 @@ place.
 - Can I inflate a Quarto qmd file?
 - Can I use {fusen} with {golem}?
 - How can I know if R files were created from a flat or not ?
+- How can I get rid of everything related to ‘fusen’ in my package ?
 
 =\> See vignette Tips and Tricks:
 <https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html>
@@ -250,12 +250,9 @@ in a specific way so that at the end, you can magically `inflate()` it
 to let a nice package appear.
 
 <details>
-
 <summary>
-
 Click here to fold your {fusen}…
 </summary>
-
 <img src="man/figures/fusen-fold-origami.gif" />
 </details>
 

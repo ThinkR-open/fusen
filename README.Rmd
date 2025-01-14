@@ -140,7 +140,7 @@ _Note that the `"flat*.Rmd"` files created with templates `full` and `teaching` 
 There is a dedicated vignette to answer this: https://thinkr-open.github.io/fusen/articles/Maintain-packages-with-fusen.html
 
 - **Option 1**: After a first inflate of your flat file, you can continue developing in the "flat_template.Rmd" file, and then inflate it using `fusen::inflate_all()`
-- **Option 2**: After you're done with inflating, you can decide to deprecate your flat file with `fusen::deprecate_flat_file()` and develop in the package files directly, as for any other R package. 'fusen' has no impact on the structure of a classical package once inflated.
+- **Option 2**: After you're done with inflating, you can decide to deprecate your flat file with `fusen::deprecate_flat_file()` and develop in the package files directly, as for any other R package. 'fusen' has no impact on the structure of a classical package once inflated. You can even use `sepuku()` to remove all traces of 'fusen'.
 
 > Advice: Use git as soon as possible, this will avoid losing your work if you made some modifications in the wrong place
 
@@ -175,6 +175,7 @@ Write them all in the same file while you explore the possibilities and let {fus
 - Can I inflate a Quarto qmd file?
 - Can I use {fusen} with {golem}?
 - How can I know if R files were created from a flat or not ?
+- How can I get rid of everything related to 'fusen' in my package ?
 
 => See vignette Tips and Tricks: https://thinkr-open.github.io/fusen/articles/tips-and-tricks.html
 
