@@ -1,3 +1,9 @@
+# fusen 0.7.1
+
+## Bug fix
+
+- Skip some tests on MacOS on CRAN to avoid errors
+
 # fusen 0.7.0
 
 ## New features
