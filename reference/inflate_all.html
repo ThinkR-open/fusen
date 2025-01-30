@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">fusen</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.7.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -40,7 +40,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="../logo.png" class="logo" alt=""><h1>Inflate all your flat files</h1>
-      <small class="dont-index">Source: <a href="https://github.com/Thinkr-open/fusen/blob/v0.7.0/R/inflate_all.R" class="external-link"><code>R/inflate_all.R</code></a></small>
+      <small class="dont-index">Source: <a href="https://github.com/Thinkr-open/fusen/blob/main/R/inflate_all.R" class="external-link"><code>R/inflate_all.R</code></a></small>
       <div class="d-none name"><code>inflate_all.Rd</code></div>
     </div>
 
@@ -175,7 +175,7 @@ all files already present in the project before the first <code>inflate_all()</c
 <span class="r-in"><span>  overwrite <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
 <span class="r-in"><span>  open <span class="op">=</span> <span class="cn">FALSE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmpXd2QRY/inflateall.otherpkg1fba76ae289e . Please start a new R session in the new project directory.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Created file .here in /tmp/RtmprvpkOS/inflateall.otherpkg200a2d46315a . Please start a new R session in the new project directory.</span>
 <span class="r-in"><span><span class="va">flat_file</span> <span class="op">&lt;-</span> <span class="va">flat_files</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/grep.html" class="external-link">grep</a></span><span class="op">(</span><span class="st">"flat"</span>, <span class="fu"><a href="https://rdrr.io/r/base/basename.html" class="external-link">basename</a></span><span class="op">(</span><span class="va">flat_files</span><span class="op">)</span><span class="op">)</span><span class="op">]</span></span></span>
 <span class="r-in"><span><span class="co"># Inflate the flat file once</span></span></span>
 <span class="r-in"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">with_project</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="op">{</span></span></span>
@@ -202,12 +202,12 @@ all files already present in the project before the first <code>inflate_all()</c
 <span class="r-in"><span>  <span class="va">config_yml_ref</span> <span class="op">&lt;-</span></span></span>
 <span class="r-in"><span>    <span class="fu">yaml</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/yaml/man/read_yaml.html" class="external-link">read_yaml</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">getOption</a></span><span class="op">(</span><span class="st">"fusen.config_file"</span>, default <span class="op">=</span> <span class="st">"dev/config_fusen.yaml"</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmpXd2QRY/inflateall.otherpkg1fba76ae289e"</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmprvpkOS/inflateall.otherpkg200a2d46315a"</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">"MIT + file LICENSE"</span> to <span style="color: #00BB00;">License</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Writing <span style="color: #0000BB;">LICENSE</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Writing <span style="color: #0000BB;">LICENSE.md</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">"^LICENSE\\.md$"</span> to <span style="color: #0000BB;">.Rbuildignore</span>.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg1fba76ae289e</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg200a2d46315a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Adding <span style="color: #0000BB;">knitr</span> to <span style="color: #00BB00;">Suggests</span> field in DESCRIPTION.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #BB0000;">☐</span> Use `requireNamespace("knitr", quietly = TRUE)` to test if <span style="color: #0000BB;">knitr</span> is</span>
@@ -219,50 +219,50 @@ all files already present in the project before the first <code>inflate_all()</c
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> tests: tests/testthat/test-my_fun.R was added to the config file</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> vignettes: vignettes/get-started.Rmd was added to the config file</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Saving attachment parameters to yaml config file</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg1fba76ae289e documentation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg1fba76ae289e</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg200a2d46315a documentation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg200a2d46315a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">my_fun.Rd</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg1fba76ae289e</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg200a2d46315a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> [+] 2 package(s) added: rmarkdown, testthat.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmpXd2QRY/dummy.package1fba683379bc"</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmprvpkOS/dummy.package200a7c13232f"</span>.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Next time, you can run inflate_all() directly</span></span></span>
 <span class="r-in"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">with_project</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="co"># now you can run inflate_all()</span></span></span>
 <span class="r-in"><span>  <span class="fu">inflate_all</span><span class="op">(</span>check <span class="op">=</span> <span class="cn">FALSE</span>, document <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmpXd2QRY/inflateall.otherpkg1fba76ae289e"</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmprvpkOS/inflateall.otherpkg200a2d46315a"</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> The flat file flat_minimal.Rmd is going to be inflated</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── config file for dev/flat_minimal.Rmd ────────────────────────────────────────</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── check not registered files ──────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There are no unregistered files.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Documentation parameters were restored from attachment config file.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg1fba76ae289e documentation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg1fba76ae289e</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg200a2d46315a documentation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg200a2d46315a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg1fba76ae289e</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmpXd2QRY/dummy.package1fba683379bc"</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg200a2d46315a</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmprvpkOS/dummy.package200a7c13232f"</span>.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># If you wish, the code coverage can be computed</span></span></span>
 <span class="r-in"><span><span class="fu">usethis</span><span class="fu">::</span><span class="fu"><a href="https://usethis.r-lib.org/reference/proj_utils.html" class="external-link">with_project</a></span><span class="op">(</span><span class="va">dummypackage</span>, <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="co"># now you can run inflate_all()</span></span></span>
 <span class="r-in"><span>  <span class="fu">inflate_all</span><span class="op">(</span>check <span class="op">=</span> <span class="cn">FALSE</span>, document <span class="op">=</span> <span class="cn">TRUE</span>, codecov <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmpXd2QRY/inflateall.otherpkg1fba76ae289e"</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmprvpkOS/inflateall.otherpkg200a2d46315a"</span>.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> The flat file flat_minimal.Rmd is going to be inflated</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── config file for dev/flat_minimal.Rmd ────────────────────────────────────────</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> ── check not registered files ──────────────────────────────────────────────────</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> There are no unregistered files.</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Documentation parameters were restored from attachment config file.</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg1fba76ae289e documentation</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg1fba76ae289e</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Updating inflateall.otherpkg200a2d46315a documentation</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg200a2d46315a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Writing <span style="color: #0000BB;">NAMESPACE</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg1fba76ae289e</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Loading <span style="color: #0000BB;">inflateall.otherpkg200a2d46315a</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Computing code coverage - it might take some time</span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">inflateall.otherpkg1fba76ae289e Coverage: </span><span style="color: #BB0000;">0.00%</span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">inflateall.otherpkg200a2d46315a Coverage: </span><span style="color: #BB0000;">0.00%</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="font-weight: bold;">R/my_fun.R: </span><span style="color: #BB0000;">0.00%</span></span>
-<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmpXd2QRY/dummy.package1fba683379bc"</span>.</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> <span style="color: #00BB00;">✔</span> Setting active project to <span style="color: #0000BB;">"/tmp/RtmprvpkOS/dummy.package200a7c13232f"</span>.</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># Clean the temporary directory</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/unlink.html" class="external-link">unlink</a></span><span class="op">(</span><span class="va">dummypackage</span>, recursive <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
