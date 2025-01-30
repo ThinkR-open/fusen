@@ -1,3 +1,26 @@
+# v0.7.1
+## R CMD check results
+
+A new error appeared on CRAN for x86-64 MacOS architecture after the release of v0.7.0
+The present release fixes the problem
+
+0 errors | 0 warnings | 0 note
+
+* OK on GitHub Actions, rhub, winbuilder and macbuilder
+* Fixes error on CRAN checks: "DESCRIPTION file does not exist"
+
+# v0.7.0
+## R CMD check results
+
+0 errors | 0 warnings | 1 note
+
+* Maintainer was changed for Vincent Guyader, instead Sébastien Rochette.
+* OK on GitHub Actions, rhub, winbuilder and macbuilder
+* Fixes error on CRAN checks: "invalid regular expression"
+
+
+
+
 # v0.6.0
 ## R CMD check results
 
@@ -5,7 +28,7 @@
 
 * Maintainer email was changed for my personal address, instead of my professional one.
 * OK on GitHub Actions, rhub, winbuilder and macbuilder
-
+* Fixes notes on CRAN checks: "Lost braces; missing escapes or markup?"
 
 # v0.5.2
 ## R CMD check results

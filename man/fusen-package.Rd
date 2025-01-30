@@ -19,11 +19,12 @@ Useful links:
 
 }
 \author{
-\strong{Maintainer}: Sebastien Rochette \email{sebastienrochettefr@gmail.com} (\href{https://orcid.org/0000-0002-1565-9313}{ORCID})
+\strong{Maintainer}: Vincent Guyader \email{vincent@thinkr.fr} (\href{https://orcid.org/0000-0003-0671-9270}{ORCID})
 
 Authors:
 \itemize{
-  \item Yohann Mansiaux \email{yohann.mansiaux@gmail.com.com}
+  \item Sebastien Rochette \email{sebastienrochettefr@gmail.com} (\href{https://orcid.org/0000-0002-1565-9313}{ORCID}) (creator)
+  \item Yohann Mansiaux \email{yohann.mansiaux@gmail.com}
 }
 
 Other contributors:

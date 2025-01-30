@@ -348,7 +348,7 @@ usethis::with_project(dummypackage, {
 
 ## Fully deprecate a flat file after inflate
 
-'fusen' serves as a framework to ensure that developers prioritize end-users during the function development process. By employing 'fusen' within Rmd/Qmd files, developers can conceptualize their product and articulate their ideas in plain text before initiating any code. This approach encourages consideration of the package's users: their intended actions, and the potential impact on their experiences. Consequently, developers can draft function documentation prior to its implementation, thinking about explaining what's behind the black box, as well as reminding that this may end into the vignette.
+'fusen' serves as a framework to ensure that developers prioritize end-users during the function development process. By employing 'fusen' within Rmd/qmd files, developers can conceptualize their product and articulate their ideas in plain text before initiating any code. This approach encourages consideration of the package's users: their intended actions, and the potential impact on their experiences. Consequently, developers can draft function documentation prior to its implementation, thinking about explaining what's behind the black box, as well as reminding that this may end into the vignette.
 
 Additionally, 'fusen' offers a minimal template comprising 'function', 'doc', and 'test' components. We advocate for Test Driven Development (TDD), where writing tests precedes function implementation. This practice aids in function design and enables anticipation of future behavior.
 

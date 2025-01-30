@@ -1,21 +1,24 @@
-# fusen (development version 0.6.0.9003)
+# fusen 0.7.1
 
-## New features
+## Bug fix
 
-- `inflate` and `inflate_all()` proposes to compute the package code coverage using `covr::package_coverage()` using the `codecov` parameter (default is FALSE)
+- Skip some tests on MacOS on CRAN to avoid errors
 
-# fusen (development version 0.6.0.9002)
-
-## New features
-
-- RStudio Addin "Fusen : Add fusen chunks" as well as `fusen::add_fusen_chunks()` add a development chunk in complement to the "function", "example" and "test" chunks already provided (#255) @ymansiaux
-
-
-# fusen (development version 0.6.0.9001)
+# fusen 0.7.0
 
 ## New features
 
 - Adding `sepuku()`, allowing to remove all traces of a fusen-related files and tags in the package (#257 #258 #259) @ymansiaux
+- `inflate` and `inflate_all()` proposes to compute the package code coverage using `covr::package_coverage()` using the `codecov` parameter (default is FALSE)
+- RStudio Addin "Fusen : Add fusen chunks" as well as `fusen::add_fusen_chunks()` add a development chunk in complement to the "function", "example" and "test" chunks already provided (#255) @ymansiaux
+
+## Minor changes
+
+- Add `# nolint: line_length_linter` in created files to avoid line length linter warnings (#278) @LBeaulaton
+
+## Bug fixes
+
+- Fix `grep()` calls in unit tests (#271) @statnmap
 
 # fusen 0.6.0
 
