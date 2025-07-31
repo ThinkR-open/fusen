@@ -137,6 +137,7 @@ for (template.to.try in fusen:::create_fusen_choices) {
 
 ## Create in a subdirectory ----
 dummysubdir <- tempfile(pattern = "subdir/subdir2/dummy")
+dir.create(dirname(dummysubdir), recursive = TRUE)
 test_that("Can create in a subdirectory", {
   expect_error(suppressMessages(create_fusen(dummysubdir, template = "full", open = FALSE)), regexp = NA)
   expect_true(dir.exists(dummysubdir))
