@@ -1,3 +1,9 @@
+# fusen 0.7.2
+
+## Minor changes
+
+- Fixed compatibility issue with upcoming `usethis` v3.2.0. Thanks to @jennybc for the report and investigation.
+
 # fusen 0.7.1
 
 ## Bug fix
