@@ -1,5 +1,5 @@
 pandoc: 3.1.11
-pkgdown: 2.1.1
+pkgdown: 2.1.3
 pkgdown_sha: ~
 articles:
   deal-with-a-fusen-flat-file: deal-with-a-fusen-flat-file.html
@@ -11,7 +11,7 @@ articles:
   share-on-a-github-website: share-on-a-github-website.html
   switch-from-a-package-developed-with-fusen-to-a-classical-package: switch-from-a-package-developed-with-fusen-to-a-classical-package.html
   tips-and-tricks: tips-and-tricks.html
-last_built: 2025-01-30T07:07Z
+last_built: 2025-08-04T13:44Z
 urls:
   reference: https://thinkr-open.github.io/fusen/reference
   article: https://thinkr-open.github.io/fusen/articles
