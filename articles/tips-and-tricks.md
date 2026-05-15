@@ -1,0 +1,476 @@
+# Tips and tricks
+
+## Can I be lazy in names used?
+
+- Chunk short names are possible:
+  - `function` can be named `fun-` or `fun_` or `fun-my_function_name`
+  - `example` can be named `ex-` or `ex_` or `ex-my_function_name`
+  - `tests` can be named `test-` or `test-my_function_name`
+  - `development` can be named `dev-` or `dev_` or
+    `dev-my_function_name`
+- There are wrappers around
+  [`add_flat_template()`](https://thinkr-open.github.io/fusen/reference/add_flat_template.md)
+  for lazy developers:
+  [`add_additional()`](https://thinkr-open.github.io/fusen/reference/add_flat_template.md),
+  [`add_full()`](https://thinkr-open.github.io/fusen/reference/add_flat_template.md),
+  `add_minimal()`
+
+## Can I knit the content of the flat template ?
+
+Yes. Although this is not the real goal, the flat template can be filled
+and run like any other Rmarkdown file.  
+However, you need to keep in mind that this will be transformed as a R
+package, which requires some specific attention.
+
+- Use a `development` chunk at the beginning of your flat template to
+  declare all packages that you will need to explore your code
+
+&nbsp;
+
+    ```{r dev}
+    library(glue)
+    library(stringi)
+    ```
+
+*Note that this will not be used anywhere in the package. A
+`development` chunk is only there for your code exploration, during
+development.*
+
+- Remember that in the package structure, examples and tests code will
+  be run independently. Thus, `examples` and `tests` chunk need to have
+  all code required to run independently.
+
+- The `development` chunk that contains the
+  [`inflate()`](https://thinkr-open.github.io/fusen/reference/inflate.md)
+  call need to have `eval=FALSE` parameter to avoid side effects if you
+  knit the flat file.
+
+## How to declare packages with `library()` for the future vignette ?
+
+If you use a classical chunk, without any specific name, it will be
+copied as is in the vignette.
+
+    ```{r}
+    library(glue)
+    library(stringi)
+    ```
+
+## How to include examples that cannot be run ?
+
+I created a chunk `example` but I do not want the example to be run in
+the function example and I do not want it to be run in the vignette.
+
+- Use `eval=FALSE` in the chunk options, so that it wont be run in the
+  vignette
+- Use `#' \dontrun{}` syntax, with `#'` before so that examples in the
+  function example will not be run
+
+&nbsp;
+
+    ```{r function-myfunction}
+    myfunction <- function(x) {
+      x
+    }
+    ```
+
+    ```{r example-myfunction, eval=FALSE}
+    # Will be run in example but not in vignette
+    myfunction(10)
+
+    # Will not be run in example
+    #' \dontrun{
+    myfunction(12)
+    #' }
+
+    #' \dontrun{
+    #' myfunction(12)
+    #' }
+    ```
+
+## Document your internal datasets in a `function` chunk as usual
+
+To document datasets, pkgdoc, special R files, you can write them as is
+in the `function` chunk.  
+If {fusen} does not detect the keyword `function()` or `R6Class()` in
+the `function` chunk code, then the chunk is copied as is in a “R/”
+file.
+
+    ```{r function-cars}
+    #' cars
+    #'
+    #' data in 'datasets'.
+    #'
+    #' @format A data frame with 50 rows and 2 variables:
+    #' \describe{
+    #'   \item{ speed }{  numeric }
+    #'   \item{ dist }{  numeric }
+    #' }
+    #' @source Ezekiel, M. (1930) Methods of Correlation Analysis. Wiley.
+    "cars"
+    ```
+
+## How to ignore some chunks ?
+
+All chunks named `dev` or `development` will not be used in the
+package.  
+Use them for your exploration that you do not want to keep at the end of
+the process.  
+This won’t affect your package.
+
+    ```{r dev}
+    # Some code exploration
+    ```
+
+## How to create a vignette with different title and Index Entry?
+
+You can use
+`inflate(vignette_name = c("Super title" = "01-Super Slug"))` for
+vignette title different from vignette Entry
+
+``` r
+
+inflate(vignette_name = c("Super title" = "01-Super Vignette Index Entry"))
+```
+
+## How not to create a vignette?
+
+- If I only build internal functions, I may not want to inflate the flat
+  file as a vignette.
+- The flat file is the developer’s documentation and that may be enough
+
+``` r
+
+inflate(vignette_name = NA)
+```
+
+## How to get a pre-filled template for a specific function name ?
+
+If it is the first function of the flat template:
+
+- you can create the template with
+  `add_flat_template("minimal", flat_name = "my_function_name")`. In
+  this case, the template will be pre-filled with your function name:
+  chunk names, function calls.
+- You can also use the RStudio Addin “Add {fusen} flat template” to
+  create a new template in your “dev/” directory. You will be prompt for
+  the template type and the function name
+
+If this is the second function inside an existing template:
+
+- Position your prompt where you want to add the new function and use
+  the RStudio Addin: “Add {fusen} chunks”. You will be asked for the
+  function name.
+- The Addin uses `add_fusen_chunks("my_function_name")`
+
+### How to pre-fill multiple functions in one template
+
+This can be added in the “dev_history.Rmd”, and will replace a place
+holder in your flat Rmd (`HERE` in this case) with proper fusen chunks
+for all your future functions to be.
+
+- Add a line with `HERE` in your flat file
+
+``` r
+
+# Path of the flat file
+path_flat_rmd <- here::here("dev/flat_minimal.Rmd")
+
+# Name of future functions to add - example
+fun_nms <- c(
+  "get_contract_by_country_of",
+  "get_contract_subsidies_of",
+  "get_contract_effort_of",
+  "get_contract_fees_of",
+  "get_contract_target_countries_of",
+  "get_contract_all_info_of"
+)
+
+# Create content
+l_chunks <- purrr::map_chr(fun_nms, fusen:::build_fusen_chunks)
+chunks <- paste(l_chunks, collapse = "")
+
+# Add in the flat file
+flat_rmd <- readLines(path_flat_rmd)
+flat_rmd <- sub("^HERE$", chunks, flat_rmd)
+writeLines(flat_rmd, path_flat_rmd)
+```
+
+## How to inflate multiple flat files ?
+
+- Use
+  [`inflate_all()`](https://thinkr-open.github.io/fusen/reference/inflate_all.md)
+
+Read the dedicated vignette “inflate-all-your-flat-files”
+
+    vignette("inflate-all-your-flat-files", package = "fusen")
+
+## How to store multiple functions in a unique R file ?
+
+There are multiple ways of doing it. Choose one of: use the section
+title structure, use roxygen tags or use chunk parameter.
+
+### All functions under one title section
+
+Use the 3-set of chunks (`fun`, `example`, `test`) twice, under the same
+title section of the Rmd
+
+```` md
+# One title for both groups of chunk
+
+The code and tests for the first function
+
+```{r function-fun1}
+```
+
+```{r example-fun1}
+```
+
+```{r test-fun1}
+```
+
+The code and tests for the second function
+
+```{r function-fun2}
+```
+
+```{r example-fun2}
+```
+
+```{r test-fun2}
+```
+````
+
+### Use same `@rdname` in function roxygen
+
+```` md
+# Title 1 for function 1
+
+```{r function-fun_rdname1}
+#' My fun_rdname1
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @rdname same_rdname
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_rdname1(2:20)
+my_fun_rdname1 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+# Title  2 for function 2
+
+```{r function-fun_rdname2}
+#' My fun_rdname2
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @rdname same_rdname
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_rdname2(2:20)
+my_fun_rdname2 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
+  stats::median(x, na.rm = na.rm)
+}
+```
+````
+
+### Use same `@filename` in function roxygen
+
+`@filename` is recognized only by {fusen} as a proper roxygen tag to
+merge multiple functions in the same “R/” and “tests/” files.  
+This code line is removed in the resulting “R/” files to avoid any
+interference with Roxygenize.
+
+```` md
+# Title 1 for function 1
+
+```{r function-fun_filename1}
+#' My fun_filename1
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @filename same_filename
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_filename1(2:20)
+my_fun_filename1 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
+  stats::median(x, na.rm = na.rm)
+}
+```
+
+# Title  2 for function 2
+
+```{r function-fun_filename2}
+#' My fun_filename2
+#'
+#' @param x Vector of Numeric values
+#' @inheritParams stats::median
+#'
+#' @filename same_filename
+#' @return
+#' Median of vector x
+#' @export
+#'
+#' @examples
+#' my_fun_filename2(2:20)
+my_fun_filename2 <- function(x, na.rm = TRUE) {
+  if (!is.numeric(x)) {
+    stop("x should be numeric")
+  }
+  stats::median(x, na.rm = na.rm)
+}
+```
+````
+
+### Use chunk param `filename = "the_comon_filename"`
+
+Add it in the `function` chunk only
+
+```` md
+# Title 1 for function 1
+
+```{r function-fun_chunk1, filename = "fun_chunk1"}
+#' The code of your function 1
+```
+
+```{r example-fun_chunk1}
+```
+
+```{r test-fun_chunk1}
+```
+
+# Title 2 for function 2
+
+```{r function-fun_chunk2, filename = "fun_chunk1"}
+#' The code of your function 2
+```
+
+```{r example-fun_chunk2}
+```
+
+```{r test-fun_chunk2}
+```
+````
+
+## How to read dataset that I usually put in “tests/testthat/” for my unit tests?
+
+During checks, the tests are run relative to the “tests/testthat/”
+directory.  
+You will need to anticipate the two ways of reading the data:
+
+- One from within the flat file, which needs to be modified
+- One to be use in the future test file
+
+``` r
+
+# The path relative to the "tests/testthat" directory for tests
+the_file <- "my_file.csv"
+if (!file.exists(the_file)) {
+  # The path to use during dev in the flat file
+  the_file <- file.path("tests", "testthat", the_file)
+  if (!file.exists(the_file)) {
+    stop(the_file, " does not exist")
+  }
+}
+
+my_file <- read.csv(the_file)
+```
+
+## Can I load all functions of the current flat file during development without having to `inflate()`?
+
+Yes. You can run and load `function` chunks only in the currently opened
+flat file with
+[`load_flat_functions()`](https://thinkr-open.github.io/fusen/reference/load_flat_functions.md).  
+With long flat file currently in development, and before
+[`inflate()`](https://thinkr-open.github.io/fusen/reference/inflate.md),
+it is sometimes difficult to run all chunks needed after multiple
+modifications. This can also be useful when you start again your
+development the day after.
+
+[`load_flat_functions()`](https://thinkr-open.github.io/fusen/reference/load_flat_functions.md)
+is like a `load_all()` for a flat file, although it does not account for
+dependencies.
+
+In the console, run:
+
+``` r
+
+fusen::load_flat_functions()
+```
+
+You can also run `function` chunks of a specific flat file with:
+
+``` r
+
+fusen::load_flat_functions(flat_file = "dev/flat_full.Rmd")
+```
+
+## Can I inflate a Quarto qmd file?
+
+Yes you can. As long as what you include in your qmd flat file is good
+for a R package vignette, you can use the qmd format.  
+This will not really change the output of anything as the flat file is
+not meant to be rendered.  
+The vignette created from this flat file will still be a Rmd file. But
+why not!?
+
+Hence, you can add a flat file and change its extension to “.qmd” if you
+like.
+
+## Can I use {fusen} with {golem}?
+
+Of course ! That is even recommended as it allows to properly separate
+the business logic (in “dev/” directory) from the UI (in the modules of
+the “R/” directory).  
+Start by creating a {golem} project. Then you can start adding your flat
+files.  
+We recommend to create modules with names in relation to flat files, so
+that you can better navigate in your project.
+
+    golem::create_golem('my.golem.app')
+    fusen::add_minimal_flat(flat_name = "page1")
+    golem::add_module(name = "page1")
+
+Although default {golem} “dev/” files already contain the main actions
+to maintain your package, you can still add the “0-dev_history.Rmd” file
+recommended with {fusen} using
+[`add_dev_history()`](https://thinkr-open.github.io/fusen/reference/add_flat_template.md).
+Note that some sections will be redundant with the {golem} dev files.
+
+## How can I know if R files were created from a flat or not ?
+
+You can draw the structure of your package with
+\`fusen:::draw_package_structure().  
+Read vignette “Draw a tree of your package files and functions”” for
+more details.
+
+## How can I get rid of everything related to ‘fusen’ in my package ?
+
+You can use
+[`sepuku()`](https://thinkr-open.github.io/fusen/reference/sepuku.md) to
+remove all the flat files, the fusen tags in the R files and the fusen
+configuration file. Hence, you will get a project that looks like any
+other R package.

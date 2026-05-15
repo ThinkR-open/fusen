@@ -1,0 +1,110 @@
+# Share on a GitHub website
+
+``` r
+
+library(fusen)
+```
+
+**You write R scripts and you would like to share them with other users,
+in a sustainable and maintainable way. You already know how to write a
+notebook (Rmarkdown or Quarto) and share its HTML output, but you do not
+like to present the outputs along with how to use the functions in the
+same web page.**
+
+If you plan on sharing your package on GitHub,
+[`fusen::init_share_on_github()`](https://thinkr-open.github.io/fusen/reference/init_share_on_github.md)
+creates all necessary files in your project and send them on your GitHub
+account to create the website of the package documentation. Then, you
+can focus on the content.  
+Follow the steps below and you’ll see your public website documentation
+in no time!
+
+## Initiate your package and share it on GitHub
+
+- Create a new project with {fusen} using git
+
+- Follow the “dev/0-dev_history.Rmd” to describe your project
+
+  - At least, you will have to fill the
+    [`fusen::fill_description()`](https://thinkr-open.github.io/fusen/reference/fill_description.md)
+    function with your identity as below
+
+``` r
+
+# Describe your project
+fusen::fill_description(
+  pkg = here::here(),
+  fields = list(
+    Title = "Share Your Project Following Good Development Practices From a Rmarkdown File",
+    Description = "Use Rmarkdown First method. Strengthen your work with documentation and tests. Everything can be set from a Rmarkdown file in your project.",
+    `Authors@R` = c(
+      person("John", "Doe", email = "john@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000"))
+    )
+  )
+)
+# Define License with use_*_license()
+usethis::use_mit_license("John Doe")
+```
+
+- Open the “dev/flat_full.Rmd”
+  - This is the skeleton to follow if you want a properly documented and
+    tested work
+    - Write what the code is supposed to do in plain markdown
+    - Separate the `function` from the `example` and `test` chunks
+    - Create new sections below in your flat template with the Addin \>
+      add {fusen} chunk
+- Then
+  [`inflate()`](https://thinkr-open.github.io/fusen/reference/inflate.md)
+  the flat template to build the proper structure of the project
+  - Sections will be transferred in the correct places to get a proper
+    package
+  - A set of checks will be run to verify that your work is properly
+    documented and tested
+
+``` r
+
+fusen::inflate(flat_file = "dev/flat_full.Rmd", vignette_name = "Get started")
+```
+
+- Share your work on a website using GitHub
+  - You may need to run
+    [`usethis::create_github_token()`](https://usethis.r-lib.org/reference/github-token.html),
+    then
+    [`gitcreds::gitcreds_set()`](https://gitcreds.r-lib.org/reference/gitcreds_get.html)
+    before, if you do not have a registered GitHub token yet.
+  - You will be asked multiple times if you want to commit, you can say
+    “yes” each time.
+
+``` r
+
+#' \dontrun{
+#' # This modifies the current directory and send it on GitHub
+init_share_on_github()
+#' }
+```
+
+*In a few minutes, you’ll be able to see and share your project
+website.*  
+You won’t have to run this command line again. Each time you push new
+commits to the main branch on GitHub, your website will be updated
+thanks to GitHub Actions.
+
+## What happens behind the scene ?
+
+[`init_share_on_github()`](https://thinkr-open.github.io/fusen/reference/init_share_on_github.md)
+runs multiple steps to be able to share a proper package on GitHub:
+
+- Start versionning with git if not already
+- Connect to your GitHub account
+- Create a minimal DESCRIPTION file if missing
+  - You will have to update its content with your information after
+    deployment
+- Add NEWS file to present modifications of your releases
+- Add README.Rmd and knit it to README.md to quickly present the aim and
+  the use of your package
+- Init continuous integration (CI)
+  - Check the package on Linux, Windows and MacOS
+  - Calculate code coverage
+- Init continuous deployment (CD) of the {pkgdown} website documentation
+- Commit and push to GitHub
+- List remaining manual steps to make the website public

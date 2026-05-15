@@ -1,0 +1,168 @@
+# How to use fusen
+
+``` r
+
+library(fusen)
+```
+
+## All steps to create a package with {fusen} from one Rmd file
+
+- Create a new directory / new project with
+  - RStudio template: File \> New Project \> New directory \> Package
+    using {fusen}
+  - Choose the template `teaching` to start  
+  - *Or command line:
+    `create_fusen("path/to/new/project", template = "teaching")`*
+- Open the “dev/flat_teaching” Rmd to start setting up the package
+- Run the content of the first `development` chunk with
+  [`library(testthat)`](https://testthat.r-lib.org) inside
+- Modify and run the content of the chunk named `description` asking to
+  describe your package and license it
+  - *For the first time, you can let the code as is, this is already the
+    content for a working package*
+- Follow the `"dev/flat_teaching.Rmd"` template to write your
+  documentation and build your functions and test your examples.
+  - Chunk named `function` gets the code of a function
+  - Chunk named `example` gets the code for examples of using the
+    function. This will be used for function `@examples` and will be
+    kept for the vignette
+  - Chunk named `tests` gets the code for unit testing
+  - Chunk named `development` gets the code for development purposes,
+    usually only used once like {usethis} functions
+- Run the `dev-inflate` chunk to inflate the flat template and transform
+  it as an inflated package with functions, unit tests and the current
+  Rmd template transformed as a vignette. And check.
+- Build your {pkgdown} site to verify everything is at the right place
+
+> Create multiple `"flat_xxx.Rmd"` files with
+> `fusen::add_flat_template(template = "add")` if needed
+
+### Fill your package Description
+
+Function
+[`fill_description()`](https://thinkr-open.github.io/fusen/reference/fill_description.md)
+requires the description of your package: What does it do? Who are the
+developers?  
+This will fill the DESCRIPTION file in the proper way.
+
+``` r
+
+fill_description(
+  pkg = dummypackage,
+  fields = list(
+    Title = "Build A Package From Rmarkdown file",
+    Description = paste(
+      "Use Rmarkdown First method to build your package.",
+      "Start your package with documentation.",
+      "Everything can be set from a Rmarkdown file in your project."
+    ),
+    `Authors@R` = c(
+      person("John", "Doe", email = "john@email.me", role = c("aut", "cre"), comment = c(ORCID = "0000-0000-0000-0000")),
+      person(given = "Company", role = "cph")
+    )
+  )
+)
+```
+
+### Inflate your package from the flat Rmd template
+
+You’re one inflate from flat paper to box. Build your package from the
+flat Rmd template using the
+[`inflate()`](https://thinkr-open.github.io/fusen/reference/inflate.md)
+command below.
+
+After that, you can:
+
+- Verify your `"DESCRIPTION"` file has been updated
+- Verify your function is in `"R/"` directory
+- Verify your test is in `"tests/testthat/"` directory
+- Verify this Rmd appears in `"vignettes/"` directory
+- Build your documentation using
+  [`usethis::use_pkgdown()`](https://usethis.r-lib.org/reference/use_pkgdown.html)
+  then `pkgdown::build()` for vignette and examples checks
+
+``` r
+
+fusen::inflate(
+  flat_file = "dev/flat_teaching.Rmd",
+  vignette_name = "Exploration of my Data",
+  open_vignette = TRUE,
+  document = TRUE,
+  check = TRUE
+)
+```
+
+## Create a new package from command line directly, using a pre-defined template
+
+- Build a package from Rmd template in a temporary directory
+  - *This is for testing purposes*
+
+``` r
+
+# Create a new project
+dummypackage <- tempfile(pattern = "dummy")
+
+# {fusen} steps
+dev_file <- create_fusen(dummypackage, template = "teaching", open = FALSE)
+# Description
+fusen::fill_description(pkg = dummypackage, fields = list(Title = "Dummy Package"))
+
+# From inside the package
+usethis::with_project(dummypackage, {
+  # Define License with use_*_license()
+  usethis::use_mit_license("John Doe")
+
+  # You may need to execute inflate() in the console directly
+  fusen::inflate(
+    pkg = dummypackage,
+    flat_file = dev_file,
+    vignette_name = "Get started"
+  )
+})
+
+# Explore directory of the package
+browseURL(dummypackage)
+
+# Delete dummy package
+unlink(dummypackage, recursive = TRUE)
+```
+
+## Add a new “flat_template.Rmd” template in “dev/” directory
+
+``` r
+
+# Add an additional dev template
+add_flat_template(template = "add", pkg = dummypackage)
+# or directly
+add_additional(pkg = dummypackage)
+```
+
+## There can be development actions
+
+These are only included in the flat template file, their content will
+not be part of the package anywhere else.
+
+Name the following chunk with `{r development-something, eval=FALSE}`
+
+    ```{r development-inflate, eval=FALSE}
+    # Run but keep eval=FALSE to avoid infinite loop
+
+    usethis::use_mit_license("John Doe")
+
+    # Execute in the console directly
+
+    fusen::inflate(flat_file = "dev/dev_history.Rmd")
+    ```
+
+## Limitations
+
+- One title / one chunk is for one function
+- `examples` and `tests` chunks need to be placed after the associated
+  `function` chunk
+- You can add sub-functions in the `function` chunk to store them in the
+  same R file, but they won’t have `@examples`. Only the first function
+  of the chunk will be able to get examples.
+- As for any Rmarkdown file, chunk names need to be unique. Thus, you
+  better use `examples-myfunction`, `examples-myotherfunction`, …
+- *Do not forget to regularly clear your Workspace to avoid functions
+  hidden by global environment*
